@@ -64,7 +64,7 @@ export default async function Footer() {
 
     if (settings) {
       contact = { ...defaultContact, ...(settings as unknown as typeof defaultContact) }
-      const dynamicLinks = (settings as { footerQuickLinks?: { label: string; href: string }[] }).footerQuickLinks
+      const dynamicLinks = (settings as unknown as { footerQuickLinks?: { label: string; href: string }[] }).footerQuickLinks
       if (dynamicLinks && dynamicLinks.length > 0) {
         links = dynamicLinks
       }
@@ -72,7 +72,7 @@ export default async function Footer() {
 
     if (prodiDocs.docs.length > 0) {
       prodis = prodiDocs.docs.map((doc) => {
-        const d = doc as { nama: string; slug: string }
+        const d = doc as unknown as { nama: string; slug: string }
         return {
           label: d.nama,
           href: `/akademik/program-studi/${d.slug}`,
