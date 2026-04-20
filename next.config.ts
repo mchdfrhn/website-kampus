@@ -2,6 +2,9 @@ import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Required for Docker: bundles the server and its deps into
+  // .next/standalone so the runner stage needs no node_modules.
+  output: "standalone",
   images: {
     remotePatterns: [
       {
