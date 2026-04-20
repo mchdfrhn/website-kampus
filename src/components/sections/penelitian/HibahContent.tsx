@@ -22,7 +22,7 @@ export default async function HibahContent() {
       collection: 'hibah',
       sort: 'urutan',
     });
-    hibahList = docs;
+    hibahList = docs as unknown as HibahItem[];
   } catch (error) {
     console.error('Error fetching hibah:', error);
   }

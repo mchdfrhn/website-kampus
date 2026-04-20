@@ -21,7 +21,7 @@ export default async function UnitPenelitianContent() {
       collection: 'unit-penelitian',
       sort: 'urutan',
     });
-    units = docs;
+    units = docs as unknown as UnitItem[];
   } catch (error) {
     console.error('Error fetching units:', error);
   }
