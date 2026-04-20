@@ -48,11 +48,23 @@ async function fetchQuickLinksTabs(): Promise<Tab[]> {
   return []
 }
 
+async function fetchSiteSettings() {
+  try {
+    const payload = await getPayloadClient()
+    return await payload.findGlobal({ slug: 'site-settings' })
+  } catch {
+    return null
+  }
+}
+
 export default async function HomePage() {
-  const [artikelList, quickLinksTabs] = await Promise.all([
+  const [artikelList, quickLinksTabs, settings] = await Promise.all([
     fetchBeritaTerbaru(),
     fetchQuickLinksTabs(),
+    fetchSiteSettings(),
   ])
+
+  const waNumber = settings?.whatsapp || undefined
 
   return (
     <>
@@ -63,7 +75,7 @@ export default async function HomePage() {
       <BeritaTerakhirSection artikelList={artikelList} />
       <AkreditasiSection />
       <TestimonialSection />
-      <WhatsAppFloat />
+      <WhatsAppFloat waNumber={waNumber} />
     </>
   );
 }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { portals } from '@/lib/portals';
 
 type LinkItem = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: LinkItem[] }
@@ -11,26 +10,26 @@ const staticTabs: Tab[] = [
     id: 'calon',
     label: 'Calon Mahasiswa',
     links: [
-      { icon: '📝', label: 'Cara Mendaftar',  href: portals.pmb, external: true },
+      { icon: '📝', label: 'Cara Mendaftar',  href: 'https://pmb.sttpu.civitas.id/', external: true },
       { icon: '🎓', label: 'Program Studi',   href: '/akademik/program-studi' },
-      { icon: '💰', label: 'Biaya Kuliah',    href: portals.pmb + '#biaya', external: true },
+      { icon: '💰', label: 'Biaya Kuliah',    href: 'https://pmb.sttpu.civitas.id/#biaya', external: true },
       { icon: '🏆', label: 'Beasiswa',        href: '/akademik/beasiswa' },
       { icon: '🏛️', label: 'Fasilitas',       href: '/tentang#fasilitas' },
-      { icon: '🗓️', label: 'Jadwal PMB',      href: portals.pmb + '#jadwal', external: true },
-      { icon: '🔍', label: 'Cek Status',      href: portals.pmb + '#status', external: true },
-      { icon: '💬', label: 'Tanya WhatsApp',  href: portals.whatsapp, external: true },
+      { icon: '🗓️', label: 'Jadwal PMB',      href: 'https://pmb.sttpu.civitas.id/#jadwal', external: true },
+      { icon: '🔍', label: 'Cek Status',      href: 'https://pmb.sttpu.civitas.id/#status', external: true },
+      { icon: '💬', label: 'Tanya WhatsApp',  href: 'https://wa.me/6285771826637', external: true },
     ],
   },
   {
     id: 'aktif',
     label: 'Mahasiswa Aktif',
     links: [
-      { icon: '📊', label: 'SIAKAD',           href: portals.siakad.mahasiswa, external: true },
-      { icon: '📚', label: 'e-Learning (LMS)', href: portals.lms.mahasiswa, external: true },
-      { icon: '📝', label: 'Pengajuan Akademik', href: portals.sipekad, external: true },
+      { icon: '📊', label: 'SIAKAD',           href: 'https://mhs.sttpu.civitas.id/', external: true },
+      { icon: '📚', label: 'e-Learning (LMS)', href: 'https://sttpu.lms.civitas.id/', external: true },
+      { icon: '📝', label: 'Pengajuan Akademik', href: 'https://app.sipekad.web.id/', external: true },
       { icon: '📢', label: 'Pengumuman',       href: '/berita?kategori=pengumuman' },
-      { icon: '📜', label: 'Surat Keterangan', href: portals.sipekad, external: true },
-      { icon: '💳', label: 'Bayar SPP',        href: portals.siakad.mahasiswa, external: true },
+      { icon: '📜', label: 'Surat Keterangan', href: 'https://app.sipekad.web.id/', external: true },
+      { icon: '💳', label: 'Bayar SPP',        href: 'https://mhs.sttpu.civitas.id/', external: true },
       { icon: '🔬', label: 'Penelitian',       href: '/penelitian' },
       { icon: '🎯', label: 'Bursa Kerja',      href: '/kemahasiswaan#karir' },
     ],
@@ -39,13 +38,13 @@ const staticTabs: Tab[] = [
     id: 'dosen',
     label: 'Dosen & Staf',
     links: [
-      { icon: '👨‍💻', label: 'Portal Dosen',      href: portals.siakad.dosen, external: true },
-      { icon: '📚', label: 'LMS Pengajar',      href: portals.lms.dosen, external: true },
-      { icon: '📝', label: 'Pengajuan Akademik', href: portals.sipekad, external: true },
+      { icon: '👨‍💻', label: 'Portal Dosen',      href: 'https://sttsaptataruna.portaldosen.siakad.tech/', external: true },
+      { icon: '📚', label: 'LMS Pengajar',      href: 'https://sttpu.dosen.lms.civitas.id/', external: true },
+      { icon: '📝', label: 'Pengajuan Akademik', href: 'https://app.sipekad.web.id/', external: true },
       { icon: '🔬', label: 'Repositori Riset',  href: '/penelitian' },
       { icon: '📧', label: 'Email Kampus',      href: 'mailto:dosen@sttpu.ac.id' },
-      { icon: '📋', label: 'Absensi & Nilai',   href: portals.siakad.dosen, external: true },
-      { icon: '📑', label: 'Administrasi',      href: portals.sipekad, external: true },
+      { icon: '📋', label: 'Absensi & Nilai',   href: 'https://sttsaptataruna.portaldosen.siakad.tech/', external: true },
+      { icon: '📑', label: 'Administrasi',      href: 'https://app.sipekad.web.id/', external: true },
       { icon: '🆘', label: 'IT Helpdesk',       href: '/kontak#it' },
     ],
   },

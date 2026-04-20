@@ -2,12 +2,12 @@
 
 import { MessageCircle } from 'lucide-react';
 
-export default function WhatsAppFloat() {
-  const waNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+export default function WhatsAppFloat({ waNumber }: { waNumber?: string }) {
+  const number = waNumber || '6285771826637';
 
   return (
     <a
-      href={`https://wa.me/${waNumber}`}
+      href={`https://wa.me/${number}`}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat via WhatsApp"
