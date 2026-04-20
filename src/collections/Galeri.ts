@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { revalidateCollection } from "../lib/revalidate";
+import { revalidateCollection, revalidateDelete } from "../lib/revalidate";
 
 export const Galeri: CollectionConfig = {
   slug: "galeri",
@@ -89,5 +89,6 @@ export const Galeri: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(["/galeri", "/galeri/[slug]"])],
+    afterDelete: [revalidateDelete(["/galeri", "/galeri/[slug]"])],
   },
 };

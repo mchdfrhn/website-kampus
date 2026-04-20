@@ -28,5 +28,6 @@ export const UKM: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(['/kemahasiswaan/ukm'])],
+    afterDelete: [revalidateDelete(['/kemahasiswaan/ukm'])],
   },
 }

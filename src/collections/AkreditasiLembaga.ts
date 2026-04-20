@@ -13,6 +13,7 @@ export const AkreditasiLembaga: CollectionConfig = {
     { name: 'urutan', type: 'number', label: 'Urutan Tampil', defaultValue: 0 },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/tentang'])],
+    afterChange: [revalidateCollection(['/'])],
+    afterDelete: [revalidateDelete(['/'])],
   },
 }

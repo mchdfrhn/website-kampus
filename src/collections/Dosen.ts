@@ -94,5 +94,6 @@ export const Dosen: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(["/akademik/dosen"])],
+    afterDelete: [revalidateDelete(["/akademik/dosen"])],
   },
 };

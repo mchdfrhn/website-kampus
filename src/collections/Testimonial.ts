@@ -25,5 +25,6 @@ export const Testimonial: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(['/'])],
+    afterDelete: [revalidateDelete(['/'])],
   },
 }

@@ -17,5 +17,6 @@ export const UnitKontak: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(['/kontak'])],
+    afterDelete: [revalidateDelete(['/kontak'])],
   },
 }

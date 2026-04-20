@@ -49,5 +49,6 @@ export const Beasiswa: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(['/akademik/beasiswa'])],
+    afterDelete: [revalidateDelete(['/akademik/beasiswa'])],
   },
 }

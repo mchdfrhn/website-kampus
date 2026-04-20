@@ -26,5 +26,6 @@ export const Pimpinan: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(['/tentang/pimpinan'])],
+    afterDelete: [revalidateDelete(['/tentang/pimpinan'])],
   },
 }
