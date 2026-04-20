@@ -1,5 +1,5 @@
 import type { CollectionConfig } from "payload";
-import { revalidateCollection } from "../lib/revalidate";
+import { revalidateCollection, revalidateDelete } from "../lib/revalidate";
 
 export const Berita: CollectionConfig = {
   slug: "berita",
@@ -44,7 +44,6 @@ export const Berita: CollectionConfig = {
       type: "upload",
       relationTo: "media",
       label: "Gambar Thumbnail",
-      required: true,
     },
     {
       name: "ringkasan",
@@ -102,5 +101,6 @@ export const Berita: CollectionConfig = {
   ],
   hooks: {
     afterChange: [revalidateCollection(["/berita", "/berita/[slug]"])],
+    afterDelete: [revalidateDelete(["/berita", "/berita/[slug]"])],
   },
 };

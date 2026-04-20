@@ -20,9 +20,7 @@ export default async function AkreditasiSection() {
       sort: 'urutan',
       limit: 20,
     })
-    if (result.docs.length > 0) {
-      lembaga = result.docs as unknown as LembagaItem[]
-    }
+    lembaga = result.docs as unknown as LembagaItem[]
   } catch {
     // DB unavailable — use defaults
   }

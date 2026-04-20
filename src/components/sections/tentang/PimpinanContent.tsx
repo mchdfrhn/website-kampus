@@ -77,9 +77,8 @@ export default async function PimpinanContent() {
       sort: 'urutan',
       limit: 20,
     })
-    if (result.docs.length > 0) {
-      pimpinan = result.docs as unknown as PimpinanItem[]
-    }
+    // Jika query berhasil, gunakan data dari DB (walaupun kosong)
+    pimpinan = result.docs as unknown as PimpinanItem[]
   } catch {
     // DB unavailable — use defaults
   }

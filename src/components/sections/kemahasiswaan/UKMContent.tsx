@@ -28,11 +28,10 @@ export default async function UKMContent() {
     const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'ukm',
-      limit: 100,
+      sort: 'urutan',
+      limit: 50,
     })
-    if (result.docs.length > 0) {
-      ukm = result.docs as unknown as UKMItem[]
-    }
+    ukm = result.docs as unknown as UKMItem[]
   } catch {
     // DB unavailable — use defaults
   }

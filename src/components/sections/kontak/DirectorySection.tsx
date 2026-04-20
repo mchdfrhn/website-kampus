@@ -30,9 +30,7 @@ export default async function DirectorySection() {
       sort: 'urutan',
       limit: 50,
     })
-    if (result.docs.length > 0) {
-      units = result.docs as unknown as UnitItem[]
-    }
+    units = result.docs as unknown as UnitItem[]
   } catch {
     // DB unavailable — use defaults
   }

@@ -19,13 +19,10 @@ async function fetchArtikelList(): Promise<Artikel[]> {
       sort: '-tanggalTerbit',
       depth: 1,
     });
-    if (result.docs.length > 0) {
-      return result.docs.map(mapPayloadToArtikel);
-    }
+    return result.docs.map(mapPayloadToArtikel);
   } catch {
-    // DB not available — fall through to static data
+    return artikelStatic;
   }
-  return artikelStatic;
 }
 
 export default async function BeritaPage() {

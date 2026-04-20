@@ -28,13 +28,12 @@ async function fetchBeritaTerbaru(): Promise<Artikel[]> {
       sort: '-tanggalTerbit',
       depth: 1,
     });
-    if (result.docs.length > 0) {
-      return result.docs.map(mapPayloadToArtikel);
-    }
+    // Jika query berhasil, gunakan data dari DB (walaupun kosong)
+    return result.docs.map(mapPayloadToArtikel);
   } catch {
-    // DB not available — fall through to static data
+    // Hanya jika DB error — gunakan data statis
+    return artikelStatic.slice(0, 4);
   }
-  return artikelStatic.slice(0, 4);
 }
 
 async function fetchQuickLinksTabs(): Promise<Tab[]> {

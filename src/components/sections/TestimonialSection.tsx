@@ -31,9 +31,7 @@ export default async function TestimonialSection() {
       sort: 'urutan',
       limit: 6,
     })
-    if (result.docs.length > 0) {
-      items = result.docs as unknown as TestimonialItem[]
-    }
+    items = result.docs as unknown as TestimonialItem[]
   } catch {
     // DB unavailable — use defaults
   }
