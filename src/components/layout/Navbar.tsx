@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, Mail, ChevronDown, Accessibility } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { getPayloadClient } from '@/lib/payload';
@@ -65,7 +66,8 @@ export default async function Navbar() {
     teleponUtama: '(021) 2938-2938',
     teleponUtamaHref: '+622129382938',
     emailUtama: 'info@sttpu.ac.id',
-    namaInstitusi: 'STTPU Jakarta'
+    namaInstitusi: 'STTPU Jakarta',
+    logoUrl: null as string | null
   };
 
   try {
@@ -78,13 +80,14 @@ export default async function Navbar() {
     }
 
     // Fetch Settings
-    const siteSettings = await payload.findGlobal({ slug: 'site-settings' });
+    const siteSettings = await payload.findGlobal({ slug: 'site-settings', depth: 1 });
     if (siteSettings) {
       settings = {
         teleponUtama: siteSettings.teleponUtama || settings.teleponUtama,
         teleponUtamaHref: siteSettings.teleponUtamaHref || settings.teleponUtamaHref,
         emailUtama: siteSettings.emailUtama || settings.emailUtama,
-        namaInstitusi: siteSettings.namaInstitusi || settings.namaInstitusi
+        namaInstitusi: siteSettings.namaInstitusi || settings.namaInstitusi,
+        logoUrl: typeof siteSettings.logo === 'object' && siteSettings.logo ? siteSettings.logo.url || null : null
       };
     }
   } catch (error) {
@@ -150,12 +153,23 @@ export default async function Navbar() {
               className="flex items-center gap-3 mr-6 flex-shrink-0"
               aria-label={`STTPU — Beranda`}
             >
-              <div
-                className="w-10 h-10 bg-[#F5A623] rounded flex items-center justify-center font-black text-[#1E3A5F] text-[11px] leading-tight text-center"
-                aria-hidden="true"
-              >
-                STTPU
-              </div>
+              {settings.logoUrl ? (
+                <div className="relative w-10 h-10">
+                  <Image
+                    src={settings.logoUrl}
+                    alt={settings.namaInstitusi}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-10 h-10 bg-[#F5A623] rounded flex items-center justify-center font-black text-[#1E3A5F] text-[11px] leading-tight text-center"
+                  aria-hidden="true"
+                >
+                  STTPU
+                </div>
+              )}
               <div className="text-white">
                 <div className="font-bold text-sm leading-tight">STTPU</div>
                 <div className="text-white/70 text-[10px] leading-tight font-normal">

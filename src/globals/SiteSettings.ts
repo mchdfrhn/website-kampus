@@ -12,6 +12,8 @@ export const SiteSettings: GlobalConfig = {
           label: 'Identitas',
           fields: [
             { name: 'namaInstitusi', type: 'text', label: 'Nama Institusi', defaultValue: 'STTPU Jakarta' },
+            { name: 'logo', type: 'upload', relationTo: 'media', label: 'Logo Utama' },
+            { name: 'favicon', type: 'upload', relationTo: 'media', label: 'Favicon' },
             { name: 'deskripsiFooter', type: 'textarea', label: 'Deskripsi Singkat (Footer)' },
           ],
         },
