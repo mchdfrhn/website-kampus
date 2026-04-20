@@ -323,6 +323,62 @@ async function seed() {
     }
   });
 
+  // Main Menu
+  console.log('Seeding Main Menu...');
+  await payload.updateGlobal({
+    slug: 'main-menu',
+    data: {
+      navItems: [
+        { label: 'Beranda', href: '/' },
+        {
+          label: 'Tentang',
+          href: '/tentang',
+          children: [
+            { label: 'Sejarah & Profil', href: '/tentang/sejarah' },
+            { label: 'Visi, Misi & Nilai', href: '/tentang/visi-misi' },
+            { label: 'Profil Pimpinan', href: '/tentang/pimpinan' },
+            { label: 'Akreditasi & Legalitas', href: '/tentang/akreditasi' },
+            { label: 'Struktur Organisasi', href: '/tentang/struktur-organisasi' },
+            { label: 'Fasilitas Kampus', href: '/tentang/fasilitas' },
+          ],
+        },
+        {
+          label: 'Akademik',
+          href: '#',
+          children: [
+            { label: 'Program Studi', href: '/akademik/program-studi' },
+            { label: 'Dosen', href: '/akademik/dosen' },
+            { label: 'Kalender Akademik', href: '/akademik/kalender' },
+            { label: 'Beasiswa', href: '/akademik/beasiswa' },
+          ],
+        },
+        {
+          label: 'Kemahasiswaan',
+          href: '/kemahasiswaan',
+          children: [
+            { label: 'Organisasi Mahasiswa', href: '/kemahasiswaan/organisasi' },
+            { label: 'Unit Kegiatan Mahasiswa', href: '/kemahasiswaan/ukm' },
+            { label: 'Prestasi Mahasiswa', href: '/kemahasiswaan/prestasi' },
+            { label: 'Layanan Mahasiswa', href: '/kemahasiswaan/layanan' },
+            { label: 'Panduan Mahasiswa Baru', href: '/kemahasiswaan/mahasiswa-baru' },
+          ],
+        },
+        {
+          label: 'Penelitian',
+          href: '/penelitian',
+          children: [
+            { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
+            { label: 'Database Publikasi', href: '/penelitian/publikasi' },
+            { label: 'Hibah & Pendanaan', href: '/penelitian/hibah' },
+          ],
+        },
+        { label: 'Berita', href: '/berita' },
+        { label: 'Galeri', href: '/galeri' },
+        { label: 'Kontak', href: '/kontak' },
+      ]
+    }
+  });
+
   console.log('--- Seeding Completed Successfully ---');
 }
 

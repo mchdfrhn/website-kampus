@@ -1,8 +1,16 @@
 import Link from 'next/link';
 import { Phone, Mail, ChevronDown, Accessibility } from 'lucide-react';
 import MobileMenu from './MobileMenu';
+import { getPayloadClient } from '@/lib/payload';
 
-const navItems = [
+type NavItem = {
+  label: string;
+  href: string;
+  children?: { label: string; href: string; id?: string | null }[] | null;
+  id?: string | null;
+};
+
+const fallbackNavItems: NavItem[] = [
   { label: 'Beranda', href: '/' },
   {
     label: 'Tentang',
@@ -51,7 +59,37 @@ const navItems = [
   { label: 'Kontak', href: '/kontak' },
 ];
 
-export default function Navbar() {
+export default async function Navbar() {
+  let navItems: NavItem[] = fallbackNavItems;
+  let settings = {
+    teleponUtama: '(021) 2938-2938',
+    teleponUtamaHref: '+622129382938',
+    emailUtama: 'info@sttpu.ac.id',
+    namaInstitusi: 'STTPU Jakarta'
+  };
+
+  try {
+    const payload = await getPayloadClient();
+    
+    // Fetch Menu
+    const menu = await payload.findGlobal({ slug: 'main-menu' });
+    if (menu.navItems && menu.navItems.length > 0) {
+      navItems = menu.navItems as NavItem[];
+    }
+
+    // Fetch Settings
+    const siteSettings = await payload.findGlobal({ slug: 'site-settings' });
+    if (siteSettings) {
+      settings = {
+        teleponUtama: siteSettings.teleponUtama || settings.teleponUtama,
+        teleponUtamaHref: siteSettings.teleponUtamaHref || settings.teleponUtamaHref,
+        emailUtama: siteSettings.emailUtama || settings.emailUtama,
+        namaInstitusi: siteSettings.namaInstitusi || settings.namaInstitusi
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching navigation or settings:', error);
+  }
   return (
     <header>
       <div className="hidden md:block bg-[#F0F4F8] border-b border-gray-200">
@@ -59,20 +97,20 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-9 text-xs text-gray-600">
             <div className="flex items-center gap-5">
               <a
-                href="tel:+622129382938"
+                href={`tel:${settings.teleponUtamaHref}`}
                 className="flex items-center gap-1.5 hover:text-[#1E3A5F] transition-colors"
                 aria-label="Telepon STTPU"
               >
                 <Phone size={12} className="text-[#1E3A5F]" />
-                <span>(021) 2938-2938</span>
+                <span>{settings.teleponUtama}</span>
               </a>
               <a
-                href="mailto:info@sttpu.ac.id"
+                href={`mailto:${settings.emailUtama}`}
                 className="flex items-center gap-1.5 hover:text-[#1E3A5F] transition-colors"
                 aria-label="Email STTPU"
               >
                 <Mail size={12} className="text-[#1E3A5F]" />
-                <span>info@sttpu.ac.id</span>
+                <span>{settings.emailUtama}</span>
               </a>
             </div>
             <div className="flex items-center gap-2">
@@ -110,7 +148,7 @@ export default function Navbar() {
             <Link
               href="/"
               className="flex items-center gap-3 mr-6 flex-shrink-0"
-              aria-label="STTPU — Beranda"
+              aria-label={`STTPU — Beranda`}
             >
               <div
                 className="w-10 h-10 bg-[#F5A623] rounded flex items-center justify-center font-black text-[#1E3A5F] text-[11px] leading-tight text-center"
@@ -121,7 +159,7 @@ export default function Navbar() {
               <div className="text-white">
                 <div className="font-bold text-sm leading-tight">STTPU</div>
                 <div className="text-white/70 text-[10px] leading-tight font-normal">
-                  Sekolah Tinggi Teknologi PU Jakarta
+                  {settings.namaInstitusi}
                 </div>
               </div>
             </Link>
@@ -178,7 +216,7 @@ export default function Navbar() {
             </div>
 
             <div className="ml-auto lg:hidden">
-              <MobileMenu />
+              <MobileMenu navItems={navItems} />
             </div>
           </div>
         </div>

@@ -25,6 +25,7 @@ import { HalamanUtama } from "./src/globals/HalamanUtama";
 import { TentangKami } from "./src/globals/TentangKami";
 import { KalenderAkademik } from "./src/globals/KalenderAkademik";
 import { PortalLinks } from "./src/globals/PortalLinks";
+import { MainMenu } from "./src/globals/MainMenu";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -56,7 +57,7 @@ export default buildConfig({
     UnitPenelitian,
     Hibah,
   ],
-  globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik, PortalLinks],
+  globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik, PortalLinks, MainMenu],
   editor: lexicalEditor(),
   debug: true,
   secret: process.env.PAYLOAD_SECRET || "",
