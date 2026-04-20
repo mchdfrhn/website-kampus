@@ -1,10 +1,14 @@
 import type { GlobalConfig } from 'payload'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { revalidateGlobal } from '../lib/revalidate'
 
 export const TentangKami: GlobalConfig = {
   slug: 'tentang-kami',
   label: 'Tentang Kami',
   access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateGlobal(['/tentang', '/tentang/[slug]'])],
+  },
   fields: [
     {
       type: 'tabs',

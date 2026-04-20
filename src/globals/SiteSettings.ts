@@ -1,9 +1,13 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../lib/revalidate'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Pengaturan Situs',
   access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateGlobal(['/'])],
+  },
   fields: [
     {
       type: 'tabs',

@@ -1,9 +1,13 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../lib/revalidate'
 
 export const MainMenu: GlobalConfig = {
   slug: 'main-menu',
-  label: 'Menu Utama',
+  label: 'Menu Navigasi',
   access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateGlobal(['/'])],
+  },
   fields: [
     {
       name: 'navItems',

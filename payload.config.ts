@@ -3,6 +3,7 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import path from "path";
 import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
+import { s3Storage } from "@payloadcms/storage-s3";
 
 import { Berita } from "./src/collections/Berita";
 import { Dosen } from "./src/collections/Dosen";
@@ -86,4 +87,21 @@ export default buildConfig({
       fileSize: 10000000, // 10MB
     },
   },
+  plugins: [
+    s3Storage({
+      collections: {
+        media: true,
+      },
+      bucket: process.env.S3_BUCKET || "",
+      config: {
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
+        },
+        region: process.env.S3_REGION || "us-east-1",
+        endpoint: process.env.S3_ENDPOINT || undefined,
+        forcePathStyle: true,
+      },
+    }),
+  ],
 });

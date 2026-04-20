@@ -12,6 +12,18 @@ const nextConfig: NextConfig = {
         hostname: "*.r2.cloudflarestorage.com",
       },
       {
+        protocol: "https",
+        hostname: "website-kampus.s3.us-east-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "s3.us-east-1.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.amazonaws.com",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "3000",

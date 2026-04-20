@@ -1,9 +1,13 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../lib/revalidate'
 
 export const PortalLinks: GlobalConfig = {
   slug: 'portal-links',
-  label: 'Portal & Tautan Cepat',
+  label: 'Tautan Portal',
   access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateGlobal(['/portal'])],
+  },
   fields: [
     {
       name: 'portals',

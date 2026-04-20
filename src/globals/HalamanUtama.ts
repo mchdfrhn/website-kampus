@@ -1,9 +1,13 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../lib/revalidate'
 
 export const HalamanUtama: GlobalConfig = {
   slug: 'halaman-utama',
   label: 'Halaman Utama',
   access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateGlobal(['/'])],
+  },
   fields: [
     {
       type: 'tabs',

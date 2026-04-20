@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { revalidateGlobal } from '../lib/revalidate'
 
 const kegiatanFields = [
   { name: 'kegiatan', type: 'text' as const, label: 'Kegiatan', required: true as const },
@@ -10,6 +11,9 @@ export const KalenderAkademik: GlobalConfig = {
   slug: 'kalender-akademik',
   label: 'Kalender Akademik',
   access: { read: () => true },
+  hooks: {
+    afterChange: [revalidateGlobal(['/akademik/kalender'])],
+  },
   fields: [
     { name: 'tahunAkademik', type: 'text', label: 'Tahun Akademik (mis: 2025/2026)', required: true },
     { name: 'deskripsi', type: 'text', label: 'Deskripsi singkat' },
