@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateCollection } from "../lib/revalidate";
 
 export const Berita: CollectionConfig = {
   slug: "berita",
@@ -99,4 +100,7 @@ export const Berita: CollectionConfig = {
       admin: { position: "sidebar" },
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(["/berita", "/berita/[slug]"])],
+  },
 };

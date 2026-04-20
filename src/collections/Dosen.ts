@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateCollection } from "../lib/revalidate";
 
 export const Dosen: CollectionConfig = {
   slug: "dosen",
@@ -91,4 +92,7 @@ export const Dosen: CollectionConfig = {
       label: "Email",
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(["/akademik/dosen"])],
+  },
 };

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCollection } from '../lib/revalidate'
 
 export const UKM: CollectionConfig = {
   slug: 'ukm',
@@ -25,4 +26,7 @@ export const UKM: CollectionConfig = {
     { name: 'kontak', type: 'email', label: 'Email Kontak' },
     { name: 'logo', type: 'upload', relationTo: 'media', label: 'Logo UKM (opsional)' },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(['/kemahasiswaan/ukm'])],
+  },
 }

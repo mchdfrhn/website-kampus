@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCollection } from '../lib/revalidate'
 
 export const AkreditasiLembaga: CollectionConfig = {
   slug: 'akreditasi-lembaga',
@@ -11,4 +12,7 @@ export const AkreditasiLembaga: CollectionConfig = {
     { name: 'logo', type: 'upload', relationTo: 'media', label: 'Logo Lembaga' },
     { name: 'urutan', type: 'number', label: 'Urutan Tampil', defaultValue: 0 },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(['/tentang'])],
+  },
 }

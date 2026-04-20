@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateCollection } from "../lib/revalidate";
 
 export const ProgramStudi: CollectionConfig = {
   slug: "program-studi",
@@ -105,4 +106,7 @@ export const ProgramStudi: CollectionConfig = {
       admin: { position: "sidebar" },
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(["/akademik/program-studi", "/akademik/program-studi/[slug]"])],
+  },
 };

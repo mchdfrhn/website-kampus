@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCollection } from '../lib/revalidate'
 
 export const Pimpinan: CollectionConfig = {
   slug: 'pimpinan',
@@ -23,4 +24,7 @@ export const Pimpinan: CollectionConfig = {
     { name: 'sambutan', type: 'textarea', label: 'Sambutan (khusus Ketua, opsional)' },
     { name: 'urutan', type: 'number', label: 'Urutan Tampil (0 = paling atas)', defaultValue: 0 },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(['/tentang/pimpinan'])],
+  },
 }

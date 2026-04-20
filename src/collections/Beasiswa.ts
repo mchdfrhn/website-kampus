@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCollection } from '../lib/revalidate'
 
 export const Beasiswa: CollectionConfig = {
   slug: 'beasiswa',
@@ -46,4 +47,7 @@ export const Beasiswa: CollectionConfig = {
     { name: 'url', type: 'text', label: 'URL Website (opsional)' },
     { name: 'urutan', type: 'number', label: 'Urutan Tampil', defaultValue: 0 },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(['/akademik/beasiswa'])],
+  },
 }

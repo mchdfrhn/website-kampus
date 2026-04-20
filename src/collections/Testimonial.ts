@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCollection } from '../lib/revalidate'
 
 export const Testimonial: CollectionConfig = {
   slug: 'testimonial',
@@ -22,4 +23,7 @@ export const Testimonial: CollectionConfig = {
       ],
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(['/'])],
+  },
 }

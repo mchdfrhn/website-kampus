@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { revalidateCollection } from "../lib/revalidate";
 
 export const Galeri: CollectionConfig = {
   slug: "galeri",
@@ -86,4 +87,7 @@ export const Galeri: CollectionConfig = {
       admin: { position: "sidebar" },
     },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(["/galeri", "/galeri/[slug]"])],
+  },
 };

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { revalidateCollection } from '../lib/revalidate'
 
 export const UnitKontak: CollectionConfig = {
   slug: 'unit-kontak',
@@ -14,4 +15,7 @@ export const UnitKontak: CollectionConfig = {
     { name: 'tugas', type: 'textarea', label: 'Tugas Pokok' },
     { name: 'urutan', type: 'number', label: 'Urutan Tampil', defaultValue: 0 },
   ],
+  hooks: {
+    afterChange: [revalidateCollection(['/kontak'])],
+  },
 }
