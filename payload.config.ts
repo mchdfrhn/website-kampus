@@ -53,6 +53,7 @@ export default buildConfig({
   ],
   globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik],
   editor: lexicalEditor(),
+  debug: true,
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
@@ -60,6 +61,11 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || "",
+      ssl: process.env.DATABASE_URI?.includes("localhost")
+        ? false
+        : {
+            rejectUnauthorized: false,
+          },
     },
   }),
   upload: {
