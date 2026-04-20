@@ -98,11 +98,6 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 # server expects them: .next/static
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# payload-types.ts is a source file consumed at runtime by
-# Payload's admin UI import map; copy it to the app root so
-# relative paths resolve correctly inside the standalone bundle.
-COPY --from=builder --chown=nextjs:nodejs /app/payload-types.ts ./payload-types.ts
-
 USER nextjs
 
 EXPOSE ${PORT}
