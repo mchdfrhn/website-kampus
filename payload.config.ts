@@ -58,16 +58,18 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
-  db: postgresAdapter({
-    pool: {
-      connectionString: process.env.DATABASE_URI || "",
-      ssl: process.env.DATABASE_URI?.includes("localhost")
-        ? false
-        : {
-            rejectUnauthorized: false,
-          },
-    },
-  }),
+  db: (process.env.BUILD_SKIP_DB === "1"
+    ? () => ({}) // Mock adapter for build time
+    : postgresAdapter({
+        pool: {
+          connectionString: process.env.DATABASE_URI || "",
+          ssl: process.env.DATABASE_URI?.includes("localhost")
+            ? false
+            : {
+                rejectUnauthorized: false,
+              },
+        },
+      })) as any,
   upload: {
     limits: {
       fileSize: 10000000, // 10MB
