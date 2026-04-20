@@ -1,4 +1,8 @@
-const testimonials = [
+import { getPayloadClient } from '@/lib/payload';
+
+type TestimonialItem = { teks: string; nama: string; prodi: string }
+
+const defaults: TestimonialItem[] = [
   {
     teks: 'Kuliah di STTPU membuka banyak peluang karir di bidang konstruksi. Ilmu yang diajarkan sangat aplikatif dan langsung relevan dengan dunia kerja. Sekarang saya bekerja di salah satu BUMN konstruksi terbesar di Indonesia.',
     nama: 'Ahmad Fauzi',
@@ -16,7 +20,24 @@ const testimonials = [
   },
 ];
 
-export default function TestimonialSection() {
+export default async function TestimonialSection() {
+  let items = defaults
+
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'testimonial',
+      where: { status: { equals: 'aktif' } },
+      sort: 'urutan',
+      limit: 6,
+    })
+    if (result.docs.length > 0) {
+      items = result.docs as unknown as TestimonialItem[]
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
   return (
     <section className="bg-white py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -28,7 +49,7 @@ export default function TestimonialSection() {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((item) => (
+          {items.map((item) => (
             <div key={item.nama} className="border border-gray-200 rounded-lg p-6 relative">
               <span className="text-6xl text-gray-200 absolute top-2 left-4 leading-none font-serif select-none">
                 &ldquo;

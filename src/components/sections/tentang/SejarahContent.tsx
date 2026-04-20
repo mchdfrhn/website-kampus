@@ -1,49 +1,31 @@
-const milestones = [
-  {
-    year: '1987',
-    title: 'Pendirian STTPU',
-    description:
-      'Sekolah Tinggi Teknologi Pekerjaan Umum didirikan atas prakarsa Kementerian Pekerjaan Umum sebagai lembaga pendidikan vokasi yang berfokus pada teknologi infrastruktur dan konstruksi.',
-  },
-  {
-    year: '1995',
-    title: 'Akreditasi Pertama BAN-PT',
-    description:
-      'STTPU berhasil meraih akreditasi dari Badan Akreditasi Nasional Perguruan Tinggi (BAN-PT) untuk seluruh program studi yang ada, menandai pengakuan resmi kualitas pendidikan.',
-  },
-  {
-    year: '2003',
-    title: 'Pengembangan Program Studi Baru',
-    description:
-      'Membuka program studi Teknik Pengairan dan Teknik Lingkungan sebagai respons terhadap kebutuhan tenaga ahli di bidang pengelolaan sumber daya air dan lingkungan hidup.',
-  },
-  {
-    year: '2010',
-    title: 'Renovasi Kampus & Laboratorium',
-    description:
-      'Pembangunan gedung baru dan laboratorium modern yang dilengkapi dengan peralatan mutakhir untuk mendukung kegiatan praktikum dan penelitian mahasiswa.',
-  },
-  {
-    year: '2015',
-    title: 'Program Manajemen Konstruksi',
-    description:
-      'Pembukaan program studi Manajemen Konstruksi (D-IV) sebagai wujud komitmen STTPU mengikuti kebutuhan industri konstruksi yang semakin berkembang.',
-  },
-  {
-    year: '2020',
-    title: 'Transformasi Digital',
-    description:
-      'Implementasi sistem pembelajaran daring dan pengembangan infrastruktur IT kampus sebagai respons terhadap era digitalisasi pendidikan tinggi.',
-  },
-  {
-    year: '2024',
-    title: 'Akreditasi Unggul',
-    description:
-      'Sejumlah program studi STTPU berhasil meraih akreditasi "Unggul" dari BAN-PT, menempatkan STTPU di antara perguruan tinggi vokasi teknologi terkemuka di Indonesia.',
-  },
+import { getPayloadClient } from '@/lib/payload';
+
+type Milestone = { tahun: string; judul: string; deskripsi?: string }
+
+const defaultMilestones: Milestone[] = [
+  { tahun: '1987', judul: 'Pendirian STTPU', deskripsi: 'Sekolah Tinggi Teknologi Pekerjaan Umum didirikan atas prakarsa Kementerian Pekerjaan Umum sebagai lembaga pendidikan vokasi yang berfokus pada teknologi infrastruktur dan konstruksi.' },
+  { tahun: '1995', judul: 'Akreditasi Pertama BAN-PT', deskripsi: 'STTPU berhasil meraih akreditasi dari Badan Akreditasi Nasional Perguruan Tinggi (BAN-PT) untuk seluruh program studi yang ada.' },
+  { tahun: '2003', judul: 'Pengembangan Program Studi Baru', deskripsi: 'Membuka program studi Teknik Pengairan dan Teknik Lingkungan sebagai respons terhadap kebutuhan tenaga ahli di bidang pengelolaan sumber daya air dan lingkungan hidup.' },
+  { tahun: '2010', judul: 'Renovasi Kampus & Laboratorium', deskripsi: 'Pembangunan gedung baru dan laboratorium modern yang dilengkapi dengan peralatan mutakhir untuk mendukung kegiatan praktikum dan penelitian mahasiswa.' },
+  { tahun: '2015', judul: 'Program Manajemen Konstruksi', deskripsi: 'Pembukaan program studi Manajemen Konstruksi (D-IV) sebagai wujud komitmen STTPU mengikuti kebutuhan industri konstruksi yang semakin berkembang.' },
+  { tahun: '2020', judul: 'Transformasi Digital', deskripsi: 'Implementasi sistem pembelajaran daring dan pengembangan infrastruktur IT kampus sebagai respons terhadap era digitalisasi pendidikan tinggi.' },
+  { tahun: '2024', judul: 'Akreditasi Unggul', deskripsi: 'Sejumlah program studi STTPU berhasil meraih akreditasi "Unggul" dari BAN-PT, menempatkan STTPU di antara perguruan tinggi vokasi teknologi terkemuka di Indonesia.' },
 ];
 
-export default function SejarahContent() {
+export default async function SejarahContent() {
+  let milestones = defaultMilestones
+
+  try {
+    const payload = await getPayloadClient()
+    const global = await payload.findGlobal({ slug: 'tentang-kami' })
+    const data = global as unknown as { milestones?: Milestone[] }
+    if (data.milestones && data.milestones.length > 0) {
+      milestones = data.milestones
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
   return (
     <article>
       <section className="mb-10">
@@ -59,8 +41,6 @@ export default function SejarahContent() {
           <p>
             Selama lebih dari tiga dekade, STTPU telah meluluskan ribuan alumni yang tersebar di
             berbagai instansi pemerintah, BUMN, dan perusahaan swasta nasional maupun multinasional.
-            Alumni STTPU dikenal sebagai tenaga profesional yang memiliki kompetensi teknis kuat,
-            etos kerja tinggi, dan kemampuan adaptasi yang baik di lapangan.
           </p>
           <p>
             Berlokasi di Jakarta — jantung pengambilan keputusan dan pusat industri konstruksi
@@ -81,11 +61,13 @@ export default function SejarahContent() {
               />
               <div className="mb-1 flex items-center gap-3">
                 <span className="inline-block bg-[#F5A623] text-[#1E3A5F] font-bold text-xs px-2.5 py-0.5 rounded">
-                  {item.year}
+                  {item.tahun}
                 </span>
-                <h3 className="font-semibold text-gray-900 text-sm">{item.title}</h3>
+                <h3 className="font-semibold text-gray-900 text-sm">{item.judul}</h3>
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed">{item.description}</p>
+              {item.deskripsi && (
+                <p className="text-gray-600 text-sm leading-relaxed">{item.deskripsi}</p>
+              )}
             </li>
           ))}
         </ol>

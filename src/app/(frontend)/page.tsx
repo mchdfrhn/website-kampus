@@ -15,6 +15,9 @@ export const metadata = {
     'Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — Pendidikan vokasi teknologi konstruksi, arsitektur, dan teknologi informasi terbaik sejak 1987.',
 };
 
+type TabLink = { icon: string; label: string; href: string; external?: boolean }
+type Tab = { id: string; label: string; links: TabLink[] }
+
 async function fetchBeritaTerbaru(): Promise<Artikel[]> {
   try {
     const payload = await getPayloadClient();
@@ -34,15 +37,30 @@ async function fetchBeritaTerbaru(): Promise<Artikel[]> {
   return artikelStatic.slice(0, 4);
 }
 
+async function fetchQuickLinksTabs(): Promise<Tab[]> {
+  try {
+    const payload = await getPayloadClient()
+    const global = await payload.findGlobal({ slug: 'halaman-utama' })
+    const tabs = (global as unknown as { quickLinksTabs?: Tab[] }).quickLinksTabs
+    if (tabs && tabs.length > 0) return tabs
+  } catch {
+    // DB not available — PersonaQuickLinks uses its own static fallback
+  }
+  return []
+}
+
 export default async function HomePage() {
-  const artikelList = await fetchBeritaTerbaru();
+  const [artikelList, quickLinksTabs] = await Promise.all([
+    fetchBeritaTerbaru(),
+    fetchQuickLinksTabs(),
+  ])
 
   return (
     <>
       <HeroSection />
       <StatsBar />
       <ProgramStudiSection />
-      <PersonaQuickLinks />
+      <PersonaQuickLinks tabs={quickLinksTabs} />
       <BeritaTerakhirSection artikelList={artikelList} />
       <AkreditasiSection />
       <TestimonialSection />

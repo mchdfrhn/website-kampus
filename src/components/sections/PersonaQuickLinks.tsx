@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import { portals } from '@/lib/portals';
 
-type LinkItem = { icon: string; label: string; href: string; external?: boolean };
-type Tab = { id: string; label: string; links: LinkItem[] };
+type LinkItem = { icon: string; label: string; href: string; external?: boolean }
+type Tab = { id: string; label: string; links: LinkItem[] }
 
-const tabs: Tab[] = [
+const staticTabs: Tab[] = [
   {
     id: 'calon',
     label: 'Calon Mahasiswa',
@@ -65,9 +65,16 @@ const tabs: Tab[] = [
   },
 ];
 
-export default function PersonaQuickLinks() {
-  const [activeTab, setActiveTab] = useState('calon');
-  const current = tabs.find((t) => t.id === activeTab)!;
+interface Props {
+  tabs?: Tab[]
+}
+
+export default function PersonaQuickLinks({ tabs }: Props) {
+  const resolvedTabs = (tabs && tabs.length > 0) ? tabs : staticTabs
+  const [activeTab, setActiveTab] = useState(resolvedTabs[0]?.id ?? '')
+  const current = resolvedTabs.find((t) => t.id === activeTab) ?? resolvedTabs[0]
+
+  if (!current) return null
 
   return (
     <section className="bg-[#1E3A5F] py-16">
@@ -81,7 +88,7 @@ export default function PersonaQuickLinks() {
         </div>
 
         <div className="flex flex-wrap gap-2 justify-center mb-8">
-          {tabs.map((tab) => (
+          {resolvedTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}

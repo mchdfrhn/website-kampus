@@ -11,6 +11,17 @@ import { Media } from "./src/collections/Media";
 import { Pesan } from "./src/collections/Pesan";
 import { ProgramStudi } from "./src/collections/ProgramStudi";
 import { Users } from "./src/collections/Users";
+import { Testimonial } from "./src/collections/Testimonial";
+import { Pimpinan } from "./src/collections/Pimpinan";
+import { UKM } from "./src/collections/UKM";
+import { Beasiswa } from "./src/collections/Beasiswa";
+import { AkreditasiLembaga } from "./src/collections/AkreditasiLembaga";
+import { UnitKontak } from "./src/collections/UnitKontak";
+
+import { SiteSettings } from "./src/globals/SiteSettings";
+import { HalamanUtama } from "./src/globals/HalamanUtama";
+import { TentangKami } from "./src/globals/TentangKami";
+import { KalenderAkademik } from "./src/globals/KalenderAkademik";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -25,7 +36,22 @@ export default buildConfig({
       titleSuffix: "— STTPU CMS",
     },
   },
-  collections: [Users, Media, Berita, Dosen, ProgramStudi, Galeri, Pesan],
+  collections: [
+    Users,
+    Media,
+    Berita,
+    Dosen,
+    ProgramStudi,
+    Galeri,
+    Pesan,
+    Testimonial,
+    Pimpinan,
+    UKM,
+    Beasiswa,
+    AkreditasiLembaga,
+    UnitKontak,
+  ],
+  globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || "",
   typescript: {

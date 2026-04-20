@@ -1,4 +1,8 @@
-const lembaga = [
+import { getPayloadClient } from '@/lib/payload';
+
+type LembagaItem = { nama: string; status: string }
+
+const defaults: LembagaItem[] = [
   { nama: 'BAN-PT', status: 'Akreditasi B' },
   { nama: 'Kemendikbudristek', status: 'Terdaftar Resmi' },
   { nama: 'LLDIKTI Wilayah III', status: 'Aktif & Terdaftar' },
@@ -6,7 +10,23 @@ const lembaga = [
   { nama: 'ISO 9001:2015', status: 'Manajemen Mutu' },
 ];
 
-export default function AkreditasiSection() {
+export default async function AkreditasiSection() {
+  let lembaga = defaults
+
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'akreditasi-lembaga',
+      sort: 'urutan',
+      limit: 20,
+    })
+    if (result.docs.length > 0) {
+      lembaga = result.docs as unknown as LembagaItem[]
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
   return (
     <section className="bg-white py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
