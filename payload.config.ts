@@ -63,11 +63,7 @@ export default buildConfig({
     : postgresAdapter({
         pool: {
           connectionString: process.env.DATABASE_URI || "",
-          ssl: process.env.DATABASE_URI?.includes("localhost")
-            ? false
-            : {
-                rejectUnauthorized: false,
-              },
+          ssl: false,
         },
       })) as any,
   upload: {
