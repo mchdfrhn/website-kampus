@@ -6,6 +6,7 @@ import { programStudiList, getProgramStudiBySlug, mapPayloadToProgramStudi } fro
 import type { ProgramStudi } from '@/lib/data/program-studi';
 
 export async function generateStaticParams() {
+  if (process.env.BUILD_SKIP_DB) return [];
   try {
     const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();

@@ -62,6 +62,7 @@ ENV NODE_ENV=production
 # image layer.  Real values come from docker run -e at runtime.
 ENV PAYLOAD_SECRET=__build_placeholder__
 ENV DATABASE_URI=postgresql://placeholder:placeholder@placeholder:5432/placeholder
+ENV BUILD_SKIP_DB=1
 
 RUN npm run build
 

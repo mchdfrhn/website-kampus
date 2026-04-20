@@ -52,6 +52,7 @@ async function fetchArtikelTerkait(slug: string, kategori: string): Promise<Arti
 }
 
 export async function generateStaticParams() {
+  if (process.env.BUILD_SKIP_DB) return [];
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({

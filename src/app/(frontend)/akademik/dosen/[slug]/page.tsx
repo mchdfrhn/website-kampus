@@ -6,6 +6,7 @@ import { dosenList, getDosenBySlug, mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 
 export async function generateStaticParams() {
+  if (process.env.BUILD_SKIP_DB) return [];
   try {
     const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
