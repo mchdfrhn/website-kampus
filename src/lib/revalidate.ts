@@ -1,5 +1,5 @@
 import { revalidatePath } from 'next/cache'
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook } from 'payload'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterChangeHook } from 'payload'
 
 const performRevalidate = (paths: string[], doc: Record<string, unknown>) => {
   paths.forEach((path) => {
@@ -32,6 +32,13 @@ export const revalidateCollection = (paths: string[]): CollectionAfterChangeHook
 }
 
 export const revalidateDelete = (paths: string[]): CollectionAfterDeleteHook => {
+  return ({ doc }) => {
+    performRevalidate(paths, doc)
+    return doc
+  }
+}
+
+export const revalidateGlobal = (paths: string[]): GlobalAfterChangeHook => {
   return ({ doc }) => {
     performRevalidate(paths, doc)
     return doc

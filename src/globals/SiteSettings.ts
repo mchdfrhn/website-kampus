@@ -87,6 +87,20 @@ export const SiteSettings: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'Footer',
+          fields: [
+            {
+              name: 'footerQuickLinks',
+              type: 'array',
+              label: 'Tautan Cepat (Footer)',
+              fields: [
+                { name: 'label', type: 'text', label: 'Label', required: true },
+                { name: 'href', type: 'text', label: 'URL / Path', required: true },
+              ],
+            },
+          ],
+        },
       ],
     },
   ],

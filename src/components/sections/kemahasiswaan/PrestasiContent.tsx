@@ -1,6 +1,18 @@
 import { Trophy, Calendar } from 'lucide-react';
+import { getPayloadClient } from '@/lib/payload';
 
 type Tingkat = 'Nasional' | 'Internasional' | 'Regional';
+
+type PrestasiItem = {
+  judul: string;
+  mahasiswa: { nama: string }[];
+  prodi: string;
+  penyelenggara: string;
+  peringkat: string;
+  tingkat: Tingkat;
+  tahun: number;
+  deskripsi: string;
+}
 
 const tingkatColor: Record<Tingkat, string> = {
   Internasional: 'bg-purple-100 text-purple-800 border-purple-200',
@@ -8,19 +20,10 @@ const tingkatColor: Record<Tingkat, string> = {
   Regional: 'bg-green-100 text-green-800 border-green-200',
 };
 
-const prestasiList: {
-  judul: string;
-  mahasiswa: string[];
-  prodi: string;
-  penyelenggara: string;
-  peringkat: string;
-  tingkat: Tingkat;
-  tahun: number;
-  deskripsi: string;
-}[] = [
+const defaults: PrestasiItem[] = [
   {
     judul: 'Kompetisi Beton Nasional',
-    mahasiswa: ['Arief Budiman', 'Dewi Anggraeni', 'Fajar Nugroho', 'Putri Ramadhani'],
+    mahasiswa: [{ nama: 'Arief Budiman' }, { nama: 'Dewi Anggraeni' }, { nama: 'Fajar Nugroho' }, { nama: 'Putri Ramadhani' }],
     prodi: 'Teknik Sipil',
     penyelenggara: 'ITS Surabaya',
     peringkat: 'Juara II',
@@ -30,7 +33,7 @@ const prestasiList: {
   },
   {
     judul: 'Program Kreativitas Mahasiswa (PKM-RE)',
-    mahasiswa: ['Bima Sakti', 'Laila Nur', 'Reza Firmansyah'],
+    mahasiswa: [{ nama: 'Bima Sakti' }, { nama: 'Laila Nur' }, { nama: 'Reza Firmansyah' }],
     prodi: 'Teknik Lingkungan',
     penyelenggara: 'Kemendikbudristek RI',
     peringkat: 'Lolos Pendanaan DIKTI',
@@ -40,7 +43,7 @@ const prestasiList: {
   },
   {
     judul: 'Kontes Robot Nasional PUPR',
-    mahasiswa: ['Hendra Wijaya', 'Sari Permata', 'Tegar Prasetyo'],
+    mahasiswa: [{ nama: 'Hendra Wijaya' }, { nama: 'Sari Permata' }, { nama: 'Tegar Prasetyo' }],
     prodi: 'Teknik Sipil',
     penyelenggara: 'Kementerian PUPR',
     peringkat: 'Finalis Top 10',
@@ -48,60 +51,26 @@ const prestasiList: {
     tahun: 2025,
     deskripsi: 'Mengembangkan prototipe robot inspeksi jembatan berbasis sensor ultrasonik dan kamera.',
   },
-  {
-    judul: 'Lomba Karya Tulis Ilmiah (LKTI) Teknik Lingkungan',
-    mahasiswa: ['Maya Sari', 'Dito Nugroho'],
-    prodi: 'Teknik Lingkungan',
-    penyelenggara: 'Universitas Indonesia',
-    peringkat: 'Juara I',
-    tingkat: 'Nasional',
-    tahun: 2025,
-    deskripsi: 'Karya tulis mengenai sistem pemantauan kualitas air sungai berbasis IoT untuk kota-kota Indonesia.',
-  },
-  {
-    judul: 'Kompetisi Estimasi Biaya Konstruksi',
-    mahasiswa: ['Fiqri Ramadan', 'Anisa Dewi', 'Yoga Pratama'],
-    prodi: 'Manajemen Konstruksi',
-    penyelenggara: 'Universitas Tarumanagara',
-    peringkat: 'Juara III',
-    tingkat: 'Regional',
-    tahun: 2025,
-    deskripsi: 'Kompetisi estimasi RAB gedung 5 lantai sesuai standar SNI dan Perpres pengadaan.',
-  },
-  {
-    judul: 'Olimpiade Mahasiswa Bidang Sipil',
-    mahasiswa: ['Rini Astuti', 'Bagas Wicaksono'],
-    prodi: 'Teknik Sipil',
-    penyelenggara: 'FTSL ITB',
-    peringkat: 'Juara II',
-    tingkat: 'Nasional',
-    tahun: 2025,
-    deskripsi: 'Olimpiade bidang mekanika rekayasa dan analisis struktur tingkat mahasiswa vokasi.',
-  },
-  {
-    judul: 'International Water Engineering Student Competition',
-    mahasiswa: ['Surya Ardiansyah', 'Nurul Hidayah'],
-    prodi: 'Teknik Pengairan',
-    penyelenggara: 'IHE Delft (Online)',
-    peringkat: 'Top 20 Finalis',
-    tingkat: 'Internasional',
-    tahun: 2025,
-    deskripsi: 'Kompetisi desain sistem irigasi mikro untuk lahan pertanian marginal di negara berkembang.',
-  },
-  {
-    judul: 'Kejuaraan Pencak Silat Mahasiswa DKI Jakarta',
-    mahasiswa: ['Galih Permana', 'Ayu Fitriani'],
-    prodi: 'Teknik Sipil / Manajemen Konstruksi',
-    penyelenggara: 'IPSI DKI Jakarta',
-    peringkat: 'Juara III',
-    tingkat: 'Regional',
-    tahun: 2025,
-    deskripsi: 'Meraih medali perunggu di kategori tanding putra-putri kelas menengah.',
-  },
 ];
 
-export default function PrestasiContent() {
-  const byYear = prestasiList.reduce<Record<number, typeof prestasiList>>(
+export default async function PrestasiContent() {
+  let prestasiList = defaults
+
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'prestasi',
+      sort: '-tahun,urutan',
+      limit: 50,
+    })
+    if (result.docs.length > 0) {
+      prestasiList = result.docs as unknown as PrestasiItem[]
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
+  const byYear = prestasiList.reduce<Record<number, PrestasiItem[]>>(
     (acc, p) => { (acc[p.tahun] ??= []).push(p); return acc; },
     {},
   );
@@ -144,7 +113,7 @@ export default function PrestasiContent() {
                 </div>
                 <p className="text-gray-600 text-xs leading-relaxed mb-3">{p.deskripsi}</p>
                 <div className="flex flex-wrap gap-x-6 gap-y-1.5 text-xs text-gray-500">
-                  <span><span className="font-semibold">Tim:</span> {p.mahasiswa.join(', ')}</span>
+                  <span><span className="font-semibold">Tim:</span> {p.mahasiswa.map(m => m.nama).join(', ')}</span>
                   <span><span className="font-semibold">Prodi:</span> {p.prodi}</span>
                   <span><span className="font-semibold">Penyelenggara:</span> {p.penyelenggara}</span>
                 </div>

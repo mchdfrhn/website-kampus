@@ -1,51 +1,76 @@
 import Link from 'next/link';
+import { getPayloadClient } from '@/lib/payload';
 
-const programs = [
+type Program = {
+  jenjang: string;
+  nama: string;
+  deskripsiSingkat: string;
+  akreditasi: string;
+}
+
+const defaultPrograms: Program[] = [
   {
     jenjang: 'D4',
     nama: 'Teknik Konstruksi Gedung',
-    deskripsi:
+    deskripsiSingkat:
       'Mempelajari perencanaan, pelaksanaan, dan pengawasan konstruksi gedung dengan pendekatan teknologi terkini dan BIM.',
     akreditasi: 'B',
   },
   {
     jenjang: 'D4',
     nama: 'Teknik Arsitektur',
-    deskripsi:
+    deskripsiSingkat:
       'Desain arsitektur kontemporer yang memadukan estetika, fungsi, dan keberlanjutan lingkungan hidup.',
     akreditasi: 'B',
   },
   {
     jenjang: 'D4',
     nama: 'Teknologi Informasi',
-    deskripsi:
+    deskripsiSingkat:
       'Pengembangan sistem informasi, rekayasa perangkat lunak, dan infrastruktur TI untuk sektor publik dan swasta.',
     akreditasi: 'B',
   },
   {
     jenjang: 'D3',
     nama: 'Teknik Mesin',
-    deskripsi:
+    deskripsiSingkat:
       'Perancangan dan perawatan sistem mekanikal untuk industri konstruksi dan manufaktur nasional.',
     akreditasi: 'B',
   },
   {
     jenjang: 'D3',
     nama: 'Teknik Listrik',
-    deskripsi:
+    deskripsiSingkat:
       'Instalasi, pemeliharaan, dan perancangan sistem ketenagalistrikan untuk gedung dan infrastruktur publik.',
     akreditasi: 'B',
   },
   {
     jenjang: 'D4',
     nama: 'Teknik Lingkungan',
-    deskripsi:
+    deskripsiSingkat:
       'Pengelolaan lingkungan, sanitasi, dan teknologi pengolahan air bersih serta limbah untuk pembangunan berkelanjutan.',
     akreditasi: 'B',
   },
 ];
 
-export default function ProgramStudiSection() {
+export default async function ProgramStudiSection() {
+  let programs = defaultPrograms
+
+  try {
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'program-studi',
+      where: { status: { equals: 'aktif' } },
+      limit: 6,
+      sort: 'urutan',
+    })
+    if (result.docs.length > 0) {
+      programs = result.docs as unknown as Program[]
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
   return (
     <section className="bg-white py-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -70,7 +95,7 @@ export default function ProgramStudiSection() {
                   {program.jenjang}
                 </span>
                 <h3 className="font-bold text-[#1E3A5F] text-base mb-2">{program.nama}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{program.deskripsi}</p>
+                <p className="text-gray-500 text-sm leading-relaxed">{program.deskripsiSingkat}</p>
               </div>
               <div className="border-t border-gray-100 px-5 py-3 flex items-center justify-between">
                 <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">

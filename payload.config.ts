@@ -19,6 +19,10 @@ import { AkreditasiLembaga } from "./src/collections/AkreditasiLembaga";
 import { UnitKontak } from "./src/collections/UnitKontak";
 import { UnitPenelitian } from "./src/collections/UnitPenelitian";
 import { Hibah } from "./src/collections/Hibah";
+import { Organisasi } from "./src/collections/Organisasi";
+import { Prestasi } from "./src/collections/Prestasi";
+import { Publikasi } from "./src/collections/Publikasi";
+import { Layanan } from "./src/collections/Layanan";
 
 import { SiteSettings } from "./src/globals/SiteSettings";
 import { HalamanUtama } from "./src/globals/HalamanUtama";
@@ -26,6 +30,7 @@ import { TentangKami } from "./src/globals/TentangKami";
 import { KalenderAkademik } from "./src/globals/KalenderAkademik";
 import { PortalLinks } from "./src/globals/PortalLinks";
 import { MainMenu } from "./src/globals/MainMenu";
+import { PanduanMaba } from "./src/globals/PanduanMaba";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -56,8 +61,12 @@ export default buildConfig({
     UnitKontak,
     UnitPenelitian,
     Hibah,
+    Organisasi,
+    Prestasi,
+    Publikasi,
+    Layanan,
   ],
-  globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik, PortalLinks, MainMenu],
+  globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik, PortalLinks, MainMenu, PanduanMaba],
   editor: lexicalEditor(),
   debug: true,
   secret: process.env.PAYLOAD_SECRET || "",

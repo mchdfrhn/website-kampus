@@ -47,13 +47,37 @@ const defaultContact = {
 export default async function Footer() {
   const currentYear = new Date().getFullYear()
   let contact = defaultContact
+  let prodis: { label: string; href: string }[] = studyPrograms
+  let links = quickLinks
 
   try {
     const payload = await getPayloadClient()
-    const global = await payload.findGlobal({ slug: 'site-settings' })
-    const data = global as unknown as typeof defaultContact
-    if (data.alamat || data.teleponUtama) {
-      contact = { ...defaultContact, ...data }
+    const [settings, prodiDocs] = await Promise.all([
+      payload.findGlobal({ slug: 'site-settings' }),
+      payload.find({
+        collection: 'program-studi',
+        where: { status: { equals: 'aktif' } },
+        limit: 10,
+        sort: 'urutan',
+      }),
+    ])
+
+    if (settings) {
+      contact = { ...defaultContact, ...(settings as unknown as typeof defaultContact) }
+      const dynamicLinks = (settings as { footerQuickLinks?: { label: string; href: string }[] }).footerQuickLinks
+      if (dynamicLinks && dynamicLinks.length > 0) {
+        links = dynamicLinks
+      }
+    }
+
+    if (prodiDocs.docs.length > 0) {
+      prodis = prodiDocs.docs.map((doc) => {
+        const d = doc as { nama: string; slug: string }
+        return {
+          label: d.nama,
+          href: `/akademik/program-studi/${d.slug}`,
+        }
+      })
     }
   } catch {
     // DB unavailable — use defaults
@@ -104,7 +128,7 @@ export default async function Footer() {
           <div>
             <h3 className="font-bold text-sm mb-5 text-[#F5A623] uppercase tracking-wide">Tautan Cepat</h3>
             <ul className="space-y-2.5" role="list">
-              {quickLinks.map((link) => (
+              {links.map((link) => (
                 <li key={link.label}>
                   <Link href={link.href} className="text-white/70 text-sm hover:text-[#F5A623] transition-colors flex items-center gap-2 group">
                     <span className="w-1 h-1 rounded-full bg-[#F5A623]/50 group-hover:bg-[#F5A623] transition-colors flex-shrink-0" aria-hidden="true" />
@@ -118,7 +142,7 @@ export default async function Footer() {
           <div>
             <h3 className="font-bold text-sm mb-5 text-[#F5A623] uppercase tracking-wide">Program Studi</h3>
             <ul className="space-y-2.5" role="list">
-              {studyPrograms.map((program) => (
+              {prodis.map((program) => (
                 <li key={program.label}>
                   <Link href={program.href} className="text-white/70 text-sm hover:text-[#F5A623] transition-colors flex items-center gap-2 group">
                     <span className="w-1 h-1 rounded-full bg-[#F5A623]/50 group-hover:bg-[#F5A623] transition-colors flex-shrink-0" aria-hidden="true" />
