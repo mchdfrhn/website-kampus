@@ -1,62 +1,31 @@
 import Link from 'next/link';
-import { portals } from '@/lib/portals';
+import { getPayloadClient } from '@/lib/payload';
+import * as LucideIcons from 'lucide-react';
 import {
-  GraduationCap,
-  BookOpen,
-  Mail,
-  Library,
-  Calendar,
-  CreditCard,
-  ClipboardList,
-  Users,
-  FileText,
-  Briefcase,
-  MessageSquare,
   ChevronRight,
   ExternalLink,
   Info,
+  Mail,
+  MessageSquare,
+  GraduationCap
 } from 'lucide-react';
 
-const mahasiswaLinks = [
-  { icon: ClipboardList, label: 'SIAKAD — KRS & Nilai', desc: 'Isi KRS, lihat nilai, dan transkrip', href: portals.siakad.mahasiswa, external: true },
-  { icon: BookOpen, label: 'E-Learning (Moodle)', desc: 'Materi kuliah, tugas, dan ujian online', href: portals.lms.mahasiswa, external: true },
-  { icon: Mail, label: 'Email Kampus', desc: 'Email institusi @mhs.sttpu.ac.id', href: 'https://mail.google.com', external: true },
-  { icon: Library, label: 'Perpustakaan Digital', desc: 'Akses jurnal, e-book, dan koleksi digital', href: '#', external: true },
-  { icon: Calendar, label: 'Kalender Akademik', desc: 'Jadwal perkuliahan dan ujian 2025/2026', href: '/akademik/kalender', external: false },
-  { icon: GraduationCap, label: 'Info Beasiswa', desc: 'KIP Kuliah, beasiswa prestasi, dan lainnya', href: '/akademik/beasiswa', external: false },
-  { icon: CreditCard, label: 'Pembayaran UKT', desc: 'Informasi tagihan dan konfirmasi pembayaran', href: '#', external: true },
-  { icon: FileText, label: 'Surat Keterangan', desc: 'Pengajuan surat mahasiswa aktif & lainnya', href: '#', external: true },
-];
-
-const dosenLinks = [
-  { icon: ClipboardList, label: 'SIAKAD — Portal Dosen', desc: 'Input nilai, presensi, dan data akademik', href: portals.siakad.dosen, external: true },
-  { icon: BookOpen, label: 'E-Learning (Moodle)', desc: 'Kelola mata kuliah, materi, dan tugas', href: portals.lms.dosen, external: true },
-  { icon: Mail, label: 'Email Kampus', desc: 'Email institusi @sttpu.ac.id', href: 'https://mail.google.com', external: true },
-  { icon: Users, label: 'SIPEKAD', desc: 'Sistem informasi kepegawaian dan keuangan', href: portals.sipekad, external: true },
-  { icon: Briefcase, label: 'Pengajuan Penelitian', desc: 'Proposal dan laporan penelitian & PKM', href: '#', external: true },
-  { icon: Library, label: 'Perpustakaan Digital', desc: 'Akses jurnal dan database riset', href: '#', external: true },
-  { icon: FileText, label: 'Beban Kerja Dosen (BKD)', desc: 'Input dan laporan BKD semester', href: '#', external: true },
-  { icon: Calendar, label: 'Kalender Akademik', desc: 'Jadwal resmi kegiatan akademik', href: '/akademik/kalender', external: false },
-];
-
-const pengumuman = [
-  { label: 'Jadwal UTS Semester Genap 2025/2026', href: '/berita/pengumuman-jadwal-uts-semester-genap-2025-2026', tanggal: '2 Maret 2026' },
-  { label: 'Pendaftaran KIP Kuliah 2026/2027', href: '/berita/pendaftaran-kip-kuliah-2026-2027', tanggal: '1 Februari 2026' },
-];
-
 function LinkCard({
-  icon: Icon,
+  icon: iconName,
   label,
   desc,
   href,
   external,
 }: {
-  icon: React.ElementType;
+  icon: string;
   label: string;
   desc: string;
   href: string;
   external: boolean;
 }) {
+  // Map string icon name to Lucide component
+  const Icon = (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[iconName] || LucideIcons.HelpCircle;
+
   const cls =
     'flex items-start gap-3.5 p-4 bg-white border border-gray-200 rounded-xl hover:border-[#1E3A5F] hover:shadow-md transition-all group';
 
@@ -101,7 +70,20 @@ function LinkCard({
   return <Link href={href} className={cls}>{inner}</Link>;
 }
 
-export default function PortalContent() {
+export default async function PortalContent() {
+  let portalData: { portals?: { nama: string; url: string; deskripsi?: string; icon?: string }[] } | null = null;
+
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'portal-links' });
+    portalData = global as unknown as { portals?: { nama: string; url: string; deskripsi?: string; icon?: string }[] } | null;
+  } catch (error) {
+    console.error('Error fetching portal links:', error);
+  }
+
+  // Fallback data for safety
+  const portals = portalData?.portals || [];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
@@ -113,30 +95,6 @@ export default function PortalContent() {
         </p>
       </div>
 
-      {pengumuman.length > 0 && (
-        <section>
-          <h2 className="font-bold text-[#1E3A5F] text-base mb-4 flex items-center gap-2">
-            <MessageSquare size={16} className="text-[#F5A623]" aria-hidden="true" />
-            Pengumuman Terbaru
-          </h2>
-          <ul className="space-y-2">
-            {pengumuman.map((p) => (
-              <li key={p.href}>
-                <Link
-                  href={p.href}
-                  className="flex items-center justify-between gap-4 p-3.5 bg-white border border-gray-200 rounded-xl hover:border-[#1E3A5F] hover:bg-[#F0F4F8] transition-all group"
-                >
-                  <p className="text-sm text-gray-800 group-hover:text-[#1E3A5F] transition-colors font-medium line-clamp-1">
-                    {p.label}
-                  </p>
-                  <span className="text-xs text-gray-400 flex-shrink-0">{p.tanggal}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <section>
           <div className="flex items-center gap-3 mb-5">
@@ -144,63 +102,49 @@ export default function PortalContent() {
               <GraduationCap size={20} className="text-[#F5A623]" />
             </div>
             <div>
-              <h2 className="font-bold text-[#1E3A5F] text-lg leading-tight">Portal Mahasiswa</h2>
-              <p className="text-gray-500 text-xs">Akses layanan akademik dan administrasi</p>
+              <h2 className="font-bold text-[#1E3A5F] text-lg leading-tight">Portal & Tautan Sistem</h2>
+              <p className="text-gray-500 text-xs">Akses layanan digital terintegrasi</p>
             </div>
           </div>
-          <ul className="space-y-3" aria-label="Layanan untuk mahasiswa">
-            {mahasiswaLinks.map((link) => (
-              <li key={link.label}>
-                <LinkCard {...link} />
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3" aria-label="Daftar portal">
+            {portals.map((link, idx: number) => (
+              <li key={idx}>
+                <LinkCard 
+                  icon={link.icon || 'ExternalLink'} 
+                  label={link.nama} 
+                  desc={link.deskripsi || ''} 
+                  href={link.url} 
+                  external={link.url.startsWith('http')} 
+                />
               </li>
             ))}
           </ul>
         </section>
 
-        <section>
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-[#F5A623] rounded-xl flex items-center justify-center" aria-hidden="true">
-              <Users size={20} className="text-[#1E3A5F]" />
-            </div>
-            <div>
-              <h2 className="font-bold text-[#1E3A5F] text-lg leading-tight">Portal Dosen &amp; Staf</h2>
-              <p className="text-gray-500 text-xs">Akses layanan akademik dan kepegawaian</p>
-            </div>
+        <section className="bg-[#1E3A5F] rounded-2xl p-6 text-white self-start">
+          <h2 className="font-bold text-base mb-2">Butuh Bantuan Teknis?</h2>
+          <p className="text-white/75 text-sm mb-5 leading-relaxed">
+            Jika mengalami kendala akses atau lupa kata sandi, hubungi UPT Teknologi Informasi STTPU.
+          </p>
+          <div className="flex flex-col gap-3">
+            <a
+              href="mailto:it@sttpu.ac.id"
+              className="inline-flex items-center gap-2 bg-[#F5A623] text-[#1E3A5F] font-bold text-sm px-4 py-2.5 rounded-lg hover:bg-[#e09615] transition-colors"
+            >
+              <Mail size={15} aria-hidden="true" />
+              it@sttpu.ac.id
+            </a>
+            <a
+              href="#"
+              className="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors"
+            >
+              <MessageSquare size={15} aria-hidden="true" />
+              Chat WhatsApp Bantuan
+            </a>
           </div>
-          <ul className="space-y-3" aria-label="Layanan untuk dosen dan staf">
-            {dosenLinks.map((link) => (
-              <li key={link.label}>
-                <LinkCard {...link} />
-              </li>
-            ))}
-          </ul>
         </section>
       </div>
-
-      <section className="bg-[#1E3A5F] rounded-2xl p-6 text-white">
-        <h2 className="font-bold text-base mb-2">Butuh Bantuan Teknis?</h2>
-        <p className="text-white/75 text-sm mb-5 leading-relaxed">
-          Jika mengalami kendala akses atau lupa kata sandi, hubungi UPT Teknologi Informasi STTPU.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <a
-            href="mailto:it@sttpu.ac.id"
-            className="inline-flex items-center gap-2 bg-[#F5A623] text-[#1E3A5F] font-bold text-sm px-4 py-2.5 rounded-lg hover:bg-[#e09615] transition-colors"
-          >
-            <Mail size={15} aria-hidden="true" />
-            it@sttpu.ac.id
-          </a>
-          <a
-            href={portals.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors"
-          >
-            <MessageSquare size={15} aria-hidden="true" />
-            Chat WhatsApp
-          </a>
-        </div>
-      </section>
     </div>
   );
 }
+

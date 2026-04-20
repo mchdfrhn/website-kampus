@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { getPayloadClient } from '../lib/payload';
+import { getPayloadClient } from '../src/lib/payload';
 
 const plainTextToLexical = (text: string) => ({
   root: {
@@ -224,14 +224,102 @@ async function seed() {
     }
   }
 
-  // 9. Seed Globals
+  // 9. Seed Unit Penelitian
+  console.log('Seeding Unit Penelitian...');
+  const unitPenelitianData = [
+    {
+      nama: 'Pusat Penelitian Infrastruktur & Konstruksi',
+      singkatan: 'PPIK',
+      kepala: 'Dr. Ir. Bambang Susilo, M.T.',
+      deskripsi: 'Unit riset utama yang mengkaji permasalahan teknis dan manajerial dalam sektor konstruksi.',
+      fokus: [{ poin: 'Struktur beton dan baja' }, { poin: 'Manajemen konstruksi berkelanjutan' }],
+      lokasi: 'Gedung A, Lantai 3',
+      kontak: 'ppik@sttpu.ac.id',
+      anggota: 12,
+      urutan: 0
+    }
+  ];
+
+  for (const item of unitPenelitianData) {
+    const existing = await payload.find({ collection: 'unit-penelitian', where: { nama: { equals: item.nama } } });
+    if (existing.docs.length === 0) {
+      console.log(`Creating Unit Penelitian: ${item.nama}`);
+      await payload.create({ collection: 'unit-penelitian', data: item });
+    }
+  }
+
+  // 10. Seed Hibah
+  console.log('Seeding Hibah...');
+  const hibahData = [
+    {
+      nama: 'Hibah Penelitian Internal STTPU',
+      penyelenggara: 'LP3M STTPU',
+      deskripsi: 'Pendanaan riset internal untuk dosen dan mahasiswa.',
+      persyaratan: [{ poin: 'Dosen tetap STTPU' }, { poin: 'Melibatkan mahasiswa' }],
+      status: 'buka',
+      deadline: '30 Mei 2026',
+      urutan: 0
+    }
+  ];
+
+  for (const item of hibahData) {
+    const existing = await payload.find({ collection: 'hibah', where: { nama: { equals: item.nama } } });
+    if (existing.docs.length === 0) {
+      console.log(`Creating Hibah: ${item.nama}`);
+      await payload.create({ collection: 'hibah', data: item });
+    }
+  }
+
+  // 11. Seed Globals
   console.log('Seeding Globals...');
+  
+  // Halaman Utama
   await payload.updateGlobal({
     slug: 'halaman-utama',
     data: {
       heroJudul: 'Membangun Masa Depan Infrastruktur Indonesia',
       heroSubjudul: 'Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta mencetak sarjana terapan kompeten.',
       statistik: [{ angka: '1.200+', label: 'Mahasiswa Aktif' }, { angka: '12', label: 'UKM Aktif' }]
+    }
+  });
+
+  // Tentang Kami
+  await payload.updateGlobal({
+    slug: 'tentang-kami',
+    data: {
+      sejarahDeskripsi: plainTextToLexical('Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta didirikan untuk mencetak tenaga ahli konstruksi.'),
+      milestones: [
+        { tahun: '1987', judul: 'Pendirian STTPU', deskripsi: 'Didirikan oleh Kementerian PU.' },
+        { tahun: '2024', judul: 'Akreditasi Unggul', deskripsi: 'Meraih predikat Unggul.' }
+      ],
+      visi: 'Menjadi institusi vokasi terdepan di bidang pekerjaan umum.',
+      misi: [{ poin: 'Menyelenggarakan pendidikan berkualitas' }, { poin: 'Melakukan riset terapan' }]
+    }
+  });
+
+  // Kalender Akademik
+  await payload.updateGlobal({
+    slug: 'kalender-akademik',
+    data: {
+      tahunAkademik: '2025/2026',
+      semesterGanjil: {
+        label: 'Semester Ganjil 2025',
+        kegiatan: [
+          { kegiatan: 'Awal Perkuliahan', tanggal: '1 September 2025' },
+          { kegiatan: 'UTS Ganjil', tanggal: '20 - 30 Oktober 2025' }
+        ]
+      }
+    }
+  });
+
+  // Portal Links
+  await payload.updateGlobal({
+    slug: 'portal-links',
+    data: {
+      portals: [
+        { nama: 'SIAKAD', url: 'https://siakad.sttpu.ac.id', deskripsi: 'Sistem Informasi Akademik', icon: 'graduation-cap' },
+        { nama: 'ELNINO', url: 'https://elnino.sttpu.ac.id', deskripsi: 'E-Learning Platform', icon: 'laptop' }
+      ]
     }
   });
 
