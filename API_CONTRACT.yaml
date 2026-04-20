@@ -1,0 +1,2416 @@
+openapi: 3.1.0
+
+info:
+  title: STTPU Website API
+  description: >
+    REST API untuk Website Resmi Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta.
+    Dibangun di atas Next.js 15 App Router + Payload CMS 3.x sebagai satu monorepo.
+
+
+    Arsitektur:
+    - Endpoint publik (/api/v1/...) adalah Next.js Route Handlers yang memanggil Payload Local API
+      secara langsung (tidak melalui HTTP) — zero network overhead di server side.
+    - Endpoint CMS (/api/v1/cms/...) sebagian besar digantikan oleh Payload REST API built-in
+      di /api/[collection] dan Payload Admin UI di /admin.
+    - Server Components Next.js mengambil data via getPayload() tanpa melalui endpoint ini.
+      Endpoint ini relevan untuk: client-side fetching, integrasi pihak ketiga, dan mobile apps.
+  version: 2.0.0
+  contact:
+    name: Tim IT STTPU
+    email: it@sttpu.ac.id
+  license:
+    name: Internal Use Only
+
+servers:
+  - url: https://sttpu.ac.id/api/v1
+    description: Production
+  - url: https://staging.sttpu.ac.id/api/v1
+    description: Staging
+  - url: http://localhost:3000/api/v1
+    description: Local Development
+
+tags:
+  - name: public
+    description: Endpoint publik, tidak memerlukan autentikasi
+  - name: pmb
+    description: Penerimaan Mahasiswa Baru — pendaftaran, status, biaya
+  - name: academic
+    description: Program studi, kurikulum, kalender akademik, beasiswa
+  - name: news
+    description: Berita, pengumuman, dan artikel
+  - name: research
+    description: Publikasi, unit penelitian, dan hibah
+  - name: student-affairs
+    description: Kemahasiswaan, UKM, prestasi, layanan mahasiswa
+  - name: portal
+    description: Autentikasi dan quick links portal mahasiswa/dosen
+  - name: contact
+    description: Formulir kontak dan direktori unit
+  - name: media
+    description: Galeri foto dan video
+  - name: cms
+    description: Content Management System — endpoint privat untuk pengelolaan konten
+  - name: institution
+    description: Profil institusi, pimpinan, akreditasi, fasilitas
+
+# ─────────────────────────────────────────────
+# SECURITY SCHEMES
+# ─────────────────────────────────────────────
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token yang diperoleh dari endpoint POST /auth/login
+
+  # ─────────────────────────────────────────────
+  # REUSABLE SCHEMAS
+  # ─────────────────────────────────────────────
+  schemas:
+
+    # --- Common ---
+
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+          description: Total seluruh item
+          example: 127
+        per_page:
+          type: integer
+          example: 12
+        current_page:
+          type: integer
+          example: 1
+        last_page:
+          type: integer
+          example: 11
+        from:
+          type: integer
+          example: 1
+        to:
+          type: integer
+          example: 12
+
+    ErrorResponse:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          example: Data yang dikirim tidak valid.
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            email: ["Format email tidak valid."]
+            nama: ["Field nama wajib diisi."]
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Operasi berhasil.
+        data:
+          type: object
+
+    ImageObject:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          example: https://cdn.sttpu.ac.id/images/foto-kampus.webp
+        alt:
+          type: string
+          example: Gedung utama kampus STTPU
+        width:
+          type: integer
+          example: 1200
+        height:
+          type: integer
+          example: 800
+
+    # --- Institution ---
+
+    InstitutionStats:
+      type: object
+      properties:
+        jumlah_mahasiswa_aktif:
+          type: integer
+          example: 1240
+        jumlah_program_studi:
+          type: integer
+          example: 6
+        tahun_berdiri:
+          type: integer
+          example: 1985
+        jumlah_dosen_tetap:
+          type: integer
+          example: 78
+        jumlah_publikasi:
+          type: integer
+          example: 312
+        updated_at:
+          type: string
+          format: date-time
+
+    LeaderProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          example: ketua-sttpu
+        nama:
+          type: string
+          example: Prof. Dr. Ir. Budi Santoso, M.T.
+        jabatan:
+          type: string
+          example: Ketua STTPU
+        foto:
+          $ref: '#/components/schemas/ImageObject'
+        pesan_sambutan:
+          type: string
+          example: Selamat datang di STTPU, kampus unggulan teknologi Pekerjaan Umum Indonesia...
+        riwayat_singkat:
+          type: string
+        nidn:
+          type: string
+          example: "0012345678"
+
+    AccreditationItem:
+      type: object
+      properties:
+        program_studi:
+          type: string
+          example: Teknik Informatika
+        jenjang:
+          type: string
+          enum: [D3, D4, S1, S2]
+        nilai_akreditasi:
+          type: string
+          example: Unggul
+        nomor_sk:
+          type: string
+          example: "1234/SK/BAN-PT/Ak/S1/V/2024"
+        berlaku_hingga:
+          type: string
+          format: date
+          example: "2029-05-31"
+        dokumen_url:
+          type: string
+          format: uri
+          description: URL unduhan SK akreditasi (PDF)
+
+    FacilityItem:
+      type: object
+      properties:
+        id:
+          type: string
+        nama:
+          type: string
+          example: Laboratorium Komputasi
+        deskripsi:
+          type: string
+        kapasitas:
+          type: integer
+          example: 40
+        foto:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageObject'
+
+    # --- Academic ---
+
+    ProgramStudiSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: teknik-informatika
+        slug:
+          type: string
+          example: teknik-informatika
+        nama:
+          type: string
+          example: Teknik Informatika
+        jenjang:
+          type: string
+          enum: [D3, D4, S1, S2]
+        akreditasi:
+          type: string
+          example: Unggul
+        deskripsi_singkat:
+          type: string
+          example: Program studi yang mempersiapkan ahli teknologi informasi untuk sektor infrastruktur.
+        thumbnail:
+          $ref: '#/components/schemas/ImageObject'
+
+    ProgramStudiDetail:
+      allOf:
+        - $ref: '#/components/schemas/ProgramStudiSummary'
+        - type: object
+          properties:
+            visi:
+              type: string
+            misi:
+              type: string
+            kompetensi_lulusan:
+              type: array
+              items:
+                type: string
+            prospek_karir:
+              type: array
+              items:
+                type: string
+            kurikulum:
+              type: array
+              description: Struktur kurikulum per semester
+              items:
+                type: object
+                properties:
+                  semester:
+                    type: integer
+                    example: 1
+                  mata_kuliah:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        nama:
+                          type: string
+                        sks:
+                          type: integer
+                        jenis:
+                          type: string
+                          enum: [wajib, pilihan]
+            dosen:
+              type: array
+              items:
+                $ref: '#/components/schemas/DosenSummary'
+            kurikulum_pdf_url:
+              type: string
+              format: uri
+
+    DosenSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        slug:
+          type: string
+        nama:
+          type: string
+          example: Dr. Rini Handayani, S.T., M.T.
+        nidn:
+          type: string
+          example: "0098765432"
+        gelar_terakhir:
+          type: string
+          example: Doktor
+        keahlian:
+          type: array
+          items:
+            type: string
+          example: ["Machine Learning", "Computer Vision"]
+        foto:
+          $ref: '#/components/schemas/ImageObject'
+        program_studi:
+          type: string
+
+    DosenDetail:
+      allOf:
+        - $ref: '#/components/schemas/DosenSummary'
+        - type: object
+          properties:
+            riwayat_pendidikan:
+              type: array
+              items:
+                type: object
+                properties:
+                  jenjang:
+                    type: string
+                  institusi:
+                    type: string
+                  tahun_lulus:
+                    type: integer
+            publikasi:
+              type: array
+              items:
+                $ref: '#/components/schemas/PublikasiItem'
+            h_index:
+              type: number
+              example: 5
+            google_scholar_url:
+              type: string
+              format: uri
+            sinta_id:
+              type: string
+            email:
+              type: string
+              format: email
+
+    AcademicCalendarEvent:
+      type: object
+      properties:
+        id:
+          type: string
+        judul:
+          type: string
+          example: Ujian Tengah Semester Ganjil 2026/2027
+        jenis:
+          type: string
+          enum: [perkuliahan, uts, uas, libur, wisuda, pmb, lainnya]
+        tanggal_mulai:
+          type: string
+          format: date
+        tanggal_selesai:
+          type: string
+          format: date
+        keterangan:
+          type: string
+        semester:
+          type: string
+          example: Ganjil 2026/2027
+
+    BeasiswaItem:
+      type: object
+      properties:
+        id:
+          type: string
+        nama:
+          type: string
+          example: Beasiswa Bidikmisi
+        penyelenggara:
+          type: string
+          example: Kemendiktiristek
+        jenis:
+          type: string
+          enum: [internal, eksternal]
+        deskripsi:
+          type: string
+        persyaratan:
+          type: array
+          items:
+            type: string
+        nominal:
+          type: string
+          example: Rp 750.000/bulan
+        deadline_pendaftaran:
+          type: string
+          format: date
+          nullable: true
+        link_pendaftaran:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          type: string
+          enum: [buka, tutup, akan_datang]
+
+    # --- PMB ---
+
+    PmbJalur:
+      type: object
+      properties:
+        id:
+          type: string
+          enum: [reguler, prestasi, beasiswa]
+        nama:
+          type: string
+          example: Jalur Reguler
+        deskripsi:
+          type: string
+        kuota:
+          type: integer
+          example: 100
+        persyaratan:
+          type: array
+          items:
+            type: string
+        biaya_pendaftaran:
+          type: integer
+          example: 200000
+          description: Dalam rupiah
+        tanggal_buka:
+          type: string
+          format: date
+        tanggal_tutup:
+          type: string
+          format: date
+
+    PmbBiayaRow:
+      type: object
+      properties:
+        program_studi:
+          type: string
+          example: Teknik Informatika
+        jenjang:
+          type: string
+          enum: [D3, D4, S1, S2]
+        ukt_per_semester:
+          type: integer
+          example: 4500000
+          description: Biaya kuliah per semester dalam rupiah
+        biaya_spp:
+          type: integer
+          example: 1000000
+          description: Biaya pendaftaran ulang tahunan dalam rupiah
+        biaya_lain:
+          type: array
+          items:
+            type: object
+            properties:
+              nama:
+                type: string
+              nominal:
+                type: integer
+        catatan:
+          type: string
+
+    PmbTimeline:
+      type: object
+      properties:
+        tahapan:
+          type: array
+          items:
+            type: object
+            properties:
+              urutan:
+                type: integer
+              label:
+                type: string
+                example: Pembukaan Pendaftaran
+              tanggal_mulai:
+                type: string
+                format: date
+              tanggal_selesai:
+                type: string
+                format: date
+              status:
+                type: string
+                enum: [selesai, aktif, mendatang]
+
+    PmbRegistrationRequest:
+      type: object
+      required:
+        - jalur
+        - nama_lengkap
+        - nik
+        - tempat_lahir
+        - tanggal_lahir
+        - jenis_kelamin
+        - asal_sekolah
+        - tahun_lulus
+        - program_studi_pilihan_1
+        - email
+        - nomor_hp
+        - nama_orang_tua
+        - nomor_hp_orang_tua
+        - dokumen
+      properties:
+        jalur:
+          type: string
+          enum: [reguler, prestasi, beasiswa]
+        nama_lengkap:
+          type: string
+          example: Reza Pratama
+        nik:
+          type: string
+          pattern: '^\d{16}$'
+          example: "3578010101070001"
+        tempat_lahir:
+          type: string
+          example: Surabaya
+        tanggal_lahir:
+          type: string
+          format: date
+          example: "2007-01-01"
+        jenis_kelamin:
+          type: string
+          enum: [L, P]
+        asal_sekolah:
+          type: string
+          example: SMAN 1 Surabaya
+        jurusan_sekolah:
+          type: string
+          example: IPA
+        tahun_lulus:
+          type: integer
+          example: 2025
+        program_studi_pilihan_1:
+          type: string
+          description: Slug program studi pilihan pertama
+          example: teknik-informatika
+        program_studi_pilihan_2:
+          type: string
+          description: Slug program studi pilihan kedua (opsional)
+          example: teknik-sipil
+        email:
+          type: string
+          format: email
+          example: reza@example.com
+        nomor_hp:
+          type: string
+          example: "082123456789"
+        alamat:
+          type: string
+        kota:
+          type: string
+        provinsi:
+          type: string
+        nama_orang_tua:
+          type: string
+          example: Sari Dewi
+        nomor_hp_orang_tua:
+          type: string
+          example: "081234567890"
+        pekerjaan_orang_tua:
+          type: string
+        prestasi:
+          type: string
+          description: Wajib diisi jika jalur = prestasi
+          nullable: true
+        dokumen:
+          type: object
+          description: File upload sudah dikirmkan sebelumnya via POST /pmb/upload-dokumen
+          required:
+            - ijazah_token
+            - foto_token
+          properties:
+            ijazah_token:
+              type: string
+              description: Token file yang didapat dari endpoint upload dokumen
+            transkrip_token:
+              type: string
+            foto_token:
+              type: string
+            sertifikat_prestasi_token:
+              type: string
+              nullable: true
+            surat_beasiswa_token:
+              type: string
+              nullable: true
+
+    PmbRegistrationResponse:
+      type: object
+      properties:
+        nomor_pendaftaran:
+          type: string
+          example: PMB-2026-00123
+        nama:
+          type: string
+        jalur:
+          type: string
+        status:
+          type: string
+          enum: [terkirim, diverifikasi, lolos_seleksi, tidak_lolos, registrasi_ulang]
+        pesan:
+          type: string
+          example: Pendaftaran Anda telah diterima. Konfirmasi dikirim ke email Anda.
+        created_at:
+          type: string
+          format: date-time
+
+    PmbStatusResponse:
+      type: object
+      properties:
+        nomor_pendaftaran:
+          type: string
+        nama:
+          type: string
+        program_studi_pilihan_1:
+          type: string
+        program_studi_pilihan_2:
+          type: string
+          nullable: true
+        jalur:
+          type: string
+        status:
+          type: string
+          enum: [terkirim, diverifikasi, lolos_seleksi, tidak_lolos, registrasi_ulang]
+        catatan_verifikator:
+          type: string
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+        langkah_selanjutnya:
+          type: string
+          nullable: true
+          example: Lakukan registrasi ulang paling lambat 20 Agustus 2026.
+
+    # --- News ---
+
+    ArticleSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        slug:
+          type: string
+          example: mahasiswa-sttpu-raih-juara-1-lomba-pu
+        judul:
+          type: string
+          example: Mahasiswa STTPU Raih Juara 1 Lomba Inovasi Pekerjaan Umum Nasional
+        kategori:
+          type: string
+          enum: [akademik, kemahasiswaan, penelitian, kerjasama, prestasi, pengumuman_resmi]
+        tags:
+          type: array
+          items:
+            type: string
+        thumbnail:
+          $ref: '#/components/schemas/ImageObject'
+        ringkasan:
+          type: string
+          example: Tim mahasiswa Teknik Sipil STTPU berhasil meraih...
+        penulis:
+          type: string
+          example: Tim Humas STTPU
+        published_at:
+          type: string
+          format: date-time
+        reading_time_minutes:
+          type: integer
+          example: 3
+        is_pinned:
+          type: boolean
+          default: false
+
+    ArticleDetail:
+      allOf:
+        - $ref: '#/components/schemas/ArticleSummary'
+        - type: object
+          properties:
+            konten_html:
+              type: string
+              description: Konten artikel dalam format HTML (sanitized)
+            artikel_terkait:
+              type: array
+              items:
+                $ref: '#/components/schemas/ArticleSummary'
+            meta_description:
+              type: string
+            og_image:
+              $ref: '#/components/schemas/ImageObject'
+
+    # --- Research ---
+
+    PublikasiItem:
+      type: object
+      properties:
+        id:
+          type: string
+        judul:
+          type: string
+          example: Analisis Ketahanan Jembatan Beton Bertulang terhadap Beban Dinamis
+        penulis:
+          type: array
+          items:
+            type: string
+          example: ["Dr. Rini Handayani", "Ahmad Fauzi, M.T."]
+        jurnal_atau_prosiding:
+          type: string
+          example: Jurnal Teknik Sipil Indonesia
+        tahun:
+          type: integer
+          example: 2025
+        doi:
+          type: string
+          example: "10.1234/jtsi.2025.0012"
+          nullable: true
+        url:
+          type: string
+          format: uri
+          nullable: true
+        indeks:
+          type: string
+          enum: [Scopus, SINTA1, SINTA2, SINTA3, SINTA4, SINTA5, SINTA6, Tidak_Terindeks]
+          nullable: true
+        abstrak:
+          type: string
+          nullable: true
+        topik:
+          type: array
+          items:
+            type: string
+
+    ResearchUnit:
+      type: object
+      properties:
+        id:
+          type: string
+        nama:
+          type: string
+          example: Pusat Riset Infrastruktur Berkelanjutan
+        deskripsi:
+          type: string
+        kepala_lab:
+          $ref: '#/components/schemas/DosenSummary'
+        keahlian_utama:
+          type: array
+          items:
+            type: string
+        jumlah_peneliti:
+          type: integer
+        kontak_email:
+          type: string
+          format: email
+        foto:
+          $ref: '#/components/schemas/ImageObject'
+
+    HibahItem:
+      type: object
+      properties:
+        id:
+          type: string
+        nama:
+          type: string
+          example: Hibah Penelitian Dasar Kemendikti 2026
+        penyelenggara:
+          type: string
+        deskripsi:
+          type: string
+        nilai_maksimum:
+          type: integer
+          nullable: true
+          description: Dalam rupiah
+        deadline:
+          type: string
+          format: date
+          nullable: true
+        link_resmi:
+          type: string
+          format: uri
+          nullable: true
+        status:
+          type: string
+          enum: [buka, tutup, akan_datang]
+
+    # --- Student Affairs ---
+
+    UkmItem:
+      type: object
+      properties:
+        id:
+          type: string
+        nama:
+          type: string
+          example: UKM Robotika STTPU
+        bidang:
+          type: string
+          enum: [olahraga, seni_budaya, teknologi, sosial, keagamaan, lainnya]
+        deskripsi:
+          type: string
+        cara_bergabung:
+          type: string
+        kontak_ketua:
+          type: string
+          example: "082345678901"
+        foto:
+          $ref: '#/components/schemas/ImageObject'
+        aktif:
+          type: boolean
+
+    PrestasItem:
+      type: object
+      properties:
+        id:
+          type: string
+        judul:
+          type: string
+          example: Juara 1 Lomba Desain Jembatan Nasional 2025
+        deskripsi:
+          type: string
+        pencapai:
+          type: string
+          example: Tim Mahasiswa Teknik Sipil
+        jenis:
+          type: string
+          enum: [mahasiswa, dosen, institusi]
+        tingkat:
+          type: string
+          enum: [kampus, regional, nasional, internasional]
+        tahun:
+          type: integer
+        foto:
+          $ref: '#/components/schemas/ImageObject'
+          nullable: true
+
+    # --- Portal / Auth ---
+
+    AuthLoginRequest:
+      type: object
+      required: [username, password, role]
+      properties:
+        username:
+          type: string
+          description: NIM untuk mahasiswa, NIDN/NIP untuk dosen/staf
+          example: "20210001"
+        password:
+          type: string
+          format: password
+        role:
+          type: string
+          enum: [mahasiswa, dosen, staf]
+
+    AuthLoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT untuk otorisasi request berikutnya
+        token_type:
+          type: string
+          example: bearer
+        expires_in:
+          type: integer
+          description: Durasi token dalam detik
+          example: 28800
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+            nama:
+              type: string
+            role:
+              type: string
+              enum: [mahasiswa, dosen, staf]
+            nim_nidn:
+              type: string
+            program_studi:
+              type: string
+              nullable: true
+            avatar_url:
+              type: string
+              format: uri
+              nullable: true
+
+    PortalQuickLink:
+      type: object
+      properties:
+        label:
+          type: string
+          example: SIAKAD — KRS & Nilai
+        ikon:
+          type: string
+          example: academic-cap
+        url:
+          type: string
+          format: uri
+        deskripsi:
+          type: string
+          nullable: true
+        buka_tab_baru:
+          type: boolean
+          default: true
+
+    # --- Contact ---
+
+    ContactFormRequest:
+      type: object
+      required: [nama, email, subjek, pesan, unit_tujuan]
+      properties:
+        nama:
+          type: string
+          example: Budi Santoso
+        email:
+          type: string
+          format: email
+          example: budi@example.com
+        nomor_hp:
+          type: string
+          example: "081234567890"
+          nullable: true
+        subjek:
+          type: string
+          example: Pertanyaan mengenai program S1 Teknik Sipil
+        pesan:
+          type: string
+          minLength: 20
+          example: Saya ingin mengetahui lebih lanjut tentang program studi...
+        unit_tujuan:
+          type: string
+          enum: [akademik, pmb, kemahasiswaan, keuangan, it, perpustakaan, umum]
+        captcha_token:
+          type: string
+          description: Token reCAPTCHA v3 atau Turnstile dari client
+
+    ContactUnitDirectory:
+      type: object
+      properties:
+        unit:
+          type: string
+          example: Bagian Akademik
+        penanggung_jawab:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+        nomor_telepon:
+          type: string
+          nullable: true
+        whatsapp:
+          type: string
+          nullable: true
+        jam_layanan:
+          type: string
+          example: "Senin–Jumat, 08.00–16.00 WIB"
+
+    # --- Media ---
+
+    PhotoAlbum:
+      type: object
+      properties:
+        id:
+          type: string
+        judul:
+          type: string
+          example: Wisuda Periode I 2025/2026
+        kategori:
+          type: string
+          enum: [kegiatan_kampus, fasilitas, wisuda, prestasi, lainnya]
+        thumbnail:
+          $ref: '#/components/schemas/ImageObject'
+        jumlah_foto:
+          type: integer
+        tanggal_event:
+          type: string
+          format: date
+        foto:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageObject'
+
+    VideoItem:
+      type: object
+      properties:
+        id:
+          type: string
+        judul:
+          type: string
+        youtube_id:
+          type: string
+          example: dQw4w9WgXcQ
+        thumbnail_url:
+          type: string
+          format: uri
+        deskripsi:
+          type: string
+          nullable: true
+        tanggal_publish:
+          type: string
+          format: date
+
+    # --- PMB Active Period ---
+    PmbActivePeriod:
+      type: object
+      properties:
+        is_active:
+          type: boolean
+          description: Apakah periode PMB sedang berlangsung
+        tahun_akademik:
+          type: string
+          example: "2026/2027"
+        deadline_pendaftaran:
+          type: string
+          format: date-time
+          nullable: true
+        sisa_hari:
+          type: integer
+          nullable: true
+          description: Sisa hari hingga penutupan pendaftaran
+
+  # ─────────────────────────────────────────────
+  # REUSABLE PARAMETERS
+  # ─────────────────────────────────────────────
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPageParam:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        default: 12
+        minimum: 1
+        maximum: 100
+    SlugParam:
+      name: slug
+      in: path
+      required: true
+      schema:
+        type: string
+      example: teknik-informatika
+    SearchParam:
+      name: q
+      in: query
+      description: Kata kunci pencarian
+      schema:
+        type: string
+
+  # ─────────────────────────────────────────────
+  # REUSABLE RESPONSES
+  # ─────────────────────────────────────────────
+  responses:
+    NotFound:
+      description: Resource tidak ditemukan
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: NOT_FOUND
+            message: Data yang diminta tidak ditemukan.
+    ValidationError:
+      description: Validasi data gagal
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Token tidak valid atau tidak diberikan
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: UNAUTHORIZED
+            message: Token autentikasi tidak valid atau sudah kadaluarsa.
+    TooManyRequests:
+      description: Rate limit tercapai
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: RATE_LIMIT_EXCEEDED
+            message: Terlalu banyak permintaan. Silakan coba lagi dalam beberapa detik.
+
+# ==============================================
+# PATHS
+# ==============================================
+paths:
+
+  # ─── INSTITUTION ──────────────────────────
+
+  /institution/stats:
+    get:
+      tags: [public, institution]
+      summary: Statistik institusi
+      description: Mengembalikan angka-angka kunci STTPU untuk ditampilkan di homepage (jumlah mahasiswa, prodi, dosen, dll.).
+      operationId: getInstitutionStats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstitutionStats'
+
+  /institution/leaders:
+    get:
+      tags: [public, institution]
+      summary: Daftar pimpinan institusi
+      operationId: getLeaders
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LeaderProfile'
+
+  /institution/accreditations:
+    get:
+      tags: [public, institution]
+      summary: Status akreditasi semua program studi
+      operationId: getAccreditations
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccreditationItem'
+
+  /institution/facilities:
+    get:
+      tags: [public, institution]
+      summary: Daftar fasilitas kampus
+      operationId: getFacilities
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FacilityItem'
+
+  /institution/partners:
+    get:
+      tags: [public, institution]
+      summary: Daftar mitra dan kerjasama MoU
+      operationId: getPartners
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        nama:
+                          type: string
+                        jenis:
+                          type: string
+                          enum: [industri, pendidikan, pemerintah]
+                        logo_url:
+                          type: string
+                          format: uri
+                          nullable: true
+                        tahun_mou:
+                          type: integer
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  # ─── ACADEMIC ──────────────────────────────
+
+  /academic/programs:
+    get:
+      tags: [public, academic]
+      summary: Daftar semua program studi
+      operationId: getPrograms
+      parameters:
+        - name: jenjang
+          in: query
+          description: Filter berdasarkan jenjang pendidikan
+          schema:
+            type: string
+            enum: [D3, D4, S1, S2]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProgramStudiSummary'
+
+  /academic/programs/{slug}:
+    get:
+      tags: [public, academic]
+      summary: Detail satu program studi
+      operationId: getProgramDetail
+      parameters:
+        - $ref: '#/components/parameters/SlugParam'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramStudiDetail'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /academic/lecturers:
+    get:
+      tags: [public, academic]
+      summary: Direktori dosen
+      operationId: getLecturers
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - name: program_studi
+          in: query
+          schema:
+            type: string
+          description: Filter berdasarkan slug program studi
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DosenSummary'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /academic/lecturers/{slug}:
+    get:
+      tags: [public, academic]
+      summary: Profil lengkap satu dosen
+      operationId: getLecturerDetail
+      parameters:
+        - $ref: '#/components/parameters/SlugParam'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DosenDetail'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /academic/calendar:
+    get:
+      tags: [public, academic]
+      summary: Kalender akademik semester aktif
+      operationId: getAcademicCalendar
+      parameters:
+        - name: semester
+          in: query
+          description: Filter berdasarkan semester (contoh "Ganjil 2026/2027"). Default semester aktif.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  semester:
+                    type: string
+                    example: Ganjil 2026/2027
+                  pdf_url:
+                    type: string
+                    format: uri
+                    nullable: true
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AcademicCalendarEvent'
+
+  /academic/scholarships:
+    get:
+      tags: [public, academic]
+      summary: Daftar beasiswa
+      operationId: getScholarships
+      parameters:
+        - name: jenis
+          in: query
+          schema:
+            type: string
+            enum: [internal, eksternal]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [buka, tutup, akan_datang]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BeasiswaItem'
+
+  # ─── PMB ──────────────────────────────────
+
+  /pmb/active-period:
+    get:
+      tags: [public, pmb]
+      summary: Status periode PMB aktif
+      description: Digunakan homepage untuk menampilkan atau menyembunyikan banner PMB dan countdown timer.
+      operationId: getPmbActivePeriod
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PmbActivePeriod'
+
+  /pmb/jalur:
+    get:
+      tags: [public, pmb]
+      summary: Daftar jalur pendaftaran PMB
+      operationId: getPmbJalur
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PmbJalur'
+
+  /pmb/biaya:
+    get:
+      tags: [public, pmb]
+      summary: Tabel biaya kuliah per program studi
+      operationId: getPmbBiaya
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PmbBiayaRow'
+
+  /pmb/timeline:
+    get:
+      tags: [public, pmb]
+      summary: Timeline tahapan PMB
+      operationId: getPmbTimeline
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PmbTimeline'
+
+  /pmb/upload-dokumen:
+    post:
+      tags: [pmb]
+      summary: Upload dokumen pendaftaran
+      description: >
+        Endpoint untuk upload file dokumen (ijazah, foto, transkrip, dll.) sebelum
+        submit formulir pendaftaran. Mengembalikan token unik untuk setiap file.
+        File dihapus otomatis jika tidak dikaitkan ke pendaftaran dalam 24 jam.
+      operationId: uploadPmbDokumen
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, jenis_dokumen]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File PDF atau JPG/PNG, maksimum 2 MB
+                jenis_dokumen:
+                  type: string
+                  enum: [ijazah, transkrip, foto, sertifikat_prestasi, surat_beasiswa]
+      responses:
+        "200":
+          description: File berhasil diupload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Token untuk merefer file ini saat submit formulir
+                  nama_file:
+                    type: string
+                  ukuran_bytes:
+                    type: integer
+                  expires_at:
+                    type: string
+                    format: date-time
+        "400":
+          $ref: '#/components/responses/ValidationError'
+        "413":
+          description: Ukuran file melebihi batas 2 MB
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+
+  /pmb/register:
+    post:
+      tags: [pmb]
+      summary: Submit formulir pendaftaran PMB
+      description: >
+        Endpoint utama untuk mendaftarkan calon mahasiswa baru. Setelah sukses,
+        sistem mengirimkan email konfirmasi otomatis ke alamat email pendaftar.
+      operationId: submitPmbRegistration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PmbRegistrationRequest'
+      responses:
+        "201":
+          description: Pendaftaran berhasil diterima
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PmbRegistrationResponse'
+        "400":
+          $ref: '#/components/responses/ValidationError'
+        "409":
+          description: NIK atau email sudah terdaftar pada siklus PMB ini
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: DUPLICATE_REGISTRATION
+                message: NIK ini sudah terdaftar pada siklus PMB 2026/2027.
+        "422":
+          description: Periode PMB tidak aktif
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: PMB_CLOSED
+                message: Periode pendaftaran PMB saat ini sedang tidak aktif.
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+
+  /pmb/status/{nomor_pendaftaran}:
+    get:
+      tags: [public, pmb]
+      summary: Cek status pendaftaran
+      operationId: getPmbStatus
+      parameters:
+        - name: nomor_pendaftaran
+          in: path
+          required: true
+          schema:
+            type: string
+          example: PMB-2026-00123
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PmbStatusResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /pmb/faq:
+    get:
+      tags: [public, pmb]
+      summary: FAQ PMB
+      operationId: getPmbFaq
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    pertanyaan:
+                      type: string
+                    jawaban:
+                      type: string
+                    urutan:
+                      type: integer
+
+  # ─── NEWS ─────────────────────────────────
+
+  /news:
+    get:
+      tags: [public, news]
+      summary: Daftar berita dan pengumuman
+      operationId: getNews
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - name: kategori
+          in: query
+          schema:
+            type: string
+            enum: [akademik, kemahasiswaan, penelitian, kerjasama, prestasi, pengumuman_resmi]
+        - name: tag
+          in: query
+          schema:
+            type: string
+        - name: pinned_first
+          in: query
+          description: Jika true, artikel yang di-pin muncul di atas
+          schema:
+            type: boolean
+            default: true
+        - name: from_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: to_date
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleSummary'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /news/{slug}:
+    get:
+      tags: [public, news]
+      summary: Detail artikel berita
+      operationId: getNewsDetail
+      parameters:
+        - $ref: '#/components/parameters/SlugParam'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleDetail'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /news/categories:
+    get:
+      tags: [public, news]
+      summary: Daftar kategori berita beserta jumlah artikel
+      operationId: getNewsCategories
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    slug:
+                      type: string
+                    nama:
+                      type: string
+                    jumlah_artikel:
+                      type: integer
+
+  /news/tags:
+    get:
+      tags: [public, news]
+      summary: Daftar tag (tag cloud)
+      operationId: getNewsTags
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    slug:
+                      type: string
+                    nama:
+                      type: string
+                    jumlah_artikel:
+                      type: integer
+
+  /news/subscribe:
+    post:
+      tags: [news]
+      summary: Subscribe newsletter
+      operationId: subscribeNewsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                nama:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Email konfirmasi (double opt-in) telah dikirimkan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          $ref: '#/components/responses/ValidationError'
+
+  /news/unsubscribe:
+    post:
+      tags: [news]
+      summary: Unsubscribe newsletter
+      operationId: unsubscribeNewsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+                  description: Token unsubscribe yang dikirim dalam setiap email newsletter
+      responses:
+        "200":
+          description: Berhasil unsubscribe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  # ─── RESEARCH ─────────────────────────────
+
+  /research/publications:
+    get:
+      tags: [public, research]
+      summary: Database publikasi dosen
+      operationId: getPublications
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - name: tahun
+          in: query
+          schema:
+            type: integer
+        - name: penulis
+          in: query
+          description: Slug dosen
+          schema:
+            type: string
+        - name: indeks
+          in: query
+          schema:
+            type: string
+            enum: [Scopus, SINTA1, SINTA2, SINTA3, SINTA4, SINTA5, SINTA6]
+        - name: topik
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublikasiItem'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /research/units:
+    get:
+      tags: [public, research]
+      summary: Daftar unit penelitian dan laboratorium
+      operationId: getResearchUnits
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResearchUnit'
+
+  /research/grants:
+    get:
+      tags: [public, research]
+      summary: Informasi hibah penelitian
+      operationId: getGrants
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [buka, tutup, akan_datang]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HibahItem'
+
+  # ─── STUDENT AFFAIRS ──────────────────────
+
+  /student-affairs/ukm:
+    get:
+      tags: [public, student-affairs]
+      summary: Direktori UKM
+      operationId: getUkm
+      parameters:
+        - name: bidang
+          in: query
+          schema:
+            type: string
+            enum: [olahraga, seni_budaya, teknologi, sosial, keagamaan, lainnya]
+        - name: aktif
+          in: query
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UkmItem'
+
+  /student-affairs/achievements:
+    get:
+      tags: [public, student-affairs]
+      summary: Showcase prestasi mahasiswa, dosen, dan institusi
+      operationId: getAchievements
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - name: jenis
+          in: query
+          schema:
+            type: string
+            enum: [mahasiswa, dosen, institusi]
+        - name: tingkat
+          in: query
+          schema:
+            type: string
+            enum: [kampus, regional, nasional, internasional]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PrestasItem'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /student-affairs/services:
+    get:
+      tags: [public, student-affairs]
+      summary: Layanan kemahasiswaan (konseling, kesehatan, dll.)
+      operationId: getStudentServices
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    nama:
+                      type: string
+                      example: Bimbingan Konseling
+                    deskripsi:
+                      type: string
+                    kontak:
+                      type: string
+                    jam_operasional:
+                      type: string
+                    lokasi:
+                      type: string
+
+  # ─── PORTAL / AUTH ─────────────────────────
+
+  /auth/login:
+    post:
+      tags: [portal]
+      summary: Login portal mahasiswa atau dosen/staf
+      operationId: authLogin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthLoginRequest'
+      responses:
+        "200":
+          description: Login berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthLoginResponse'
+        "401":
+          description: Kredensial tidak valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INVALID_CREDENTIALS
+                message: Username atau password tidak sesuai.
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+
+  /auth/logout:
+    post:
+      tags: [portal]
+      summary: Logout dan invalidasi token
+      operationId: authLogout
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Logout berhasil
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      tags: [portal]
+      summary: Refresh JWT token
+      operationId: authRefresh
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Token baru berhasil dikeluarkan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_in:
+                    type: integer
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /portal/quicklinks:
+    get:
+      tags: [portal]
+      summary: Quick links portal sesuai role pengguna
+      description: Mengembalikan daftar link (SIAKAD, LMS, email, dll.) yang relevan dengan role pengguna yang sedang login.
+      operationId: getPortalQuicklinks
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortalQuickLink'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /portal/announcements:
+    get:
+      tags: [portal]
+      summary: Pengumuman khusus portal (bukan pengumuman publik)
+      operationId: getPortalAnnouncements
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ArticleSummary'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  # ─── CONTACT ──────────────────────────────
+
+  /contact/submit:
+    post:
+      tags: [contact]
+      summary: Kirim formulir kontak
+      operationId: submitContact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactFormRequest'
+      responses:
+        "200":
+          description: Pesan berhasil dikirim, konfirmasi email dikirim ke pengirim
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          $ref: '#/components/responses/ValidationError'
+        "429":
+          $ref: '#/components/responses/TooManyRequests'
+
+  /contact/directory:
+    get:
+      tags: [public, contact]
+      summary: Direktori kontak per unit
+      operationId: getContactDirectory
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ContactUnitDirectory'
+
+  # ─── MEDIA ────────────────────────────────
+
+  /media/albums:
+    get:
+      tags: [public, media]
+      summary: Daftar album foto
+      operationId: getPhotoAlbums
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - name: kategori
+          in: query
+          schema:
+            type: string
+            enum: [kegiatan_kampus, fasilitas, wisuda, prestasi, lainnya]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      description: Album summary tanpa array foto lengkap
+                      properties:
+                        id:
+                          type: string
+                        judul:
+                          type: string
+                        kategori:
+                          type: string
+                        thumbnail:
+                          $ref: '#/components/schemas/ImageObject'
+                        jumlah_foto:
+                          type: integer
+                        tanggal_event:
+                          type: string
+                          format: date
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  /media/albums/{id}:
+    get:
+      tags: [public, media]
+      summary: Detail album foto beserta semua foto di dalamnya
+      operationId: getPhotoAlbumDetail
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhotoAlbum'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /media/videos:
+    get:
+      tags: [public, media]
+      summary: Daftar video (embed YouTube)
+      operationId: getVideos
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VideoItem'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+  # ─── CMS (Private) ────────────────────────
+  # CATATAN: Dengan Payload CMS 3.x, manajemen konten (berita, dosen, prodi, media)
+  # ditangani via Payload Admin UI (/admin) dan Payload REST API built-in (/api/[collection]).
+  # Endpoint /cms/... di bawah ini tetap dipertahankan untuk operasi bisnis custom
+  # yang membutuhkan logika tambahan (validasi PMB, notifikasi email, update stats).
+
+  /cms/news:
+    post:
+      tags: [cms]
+      summary: Buat artikel baru (CMS)
+      operationId: cmsCreateArticle
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [judul, konten_html, kategori]
+              properties:
+                judul:
+                  type: string
+                konten_html:
+                  type: string
+                kategori:
+                  type: string
+                  enum: [akademik, kemahasiswaan, penelitian, kerjasama, prestasi, pengumuman_resmi]
+                tags:
+                  type: array
+                  items:
+                    type: string
+                thumbnail_url:
+                  type: string
+                  format: uri
+                  nullable: true
+                meta_description:
+                  type: string
+                  maxLength: 160
+                status:
+                  type: string
+                  enum: [draft, pending_review, published]
+                  default: draft
+                is_pinned:
+                  type: boolean
+                  default: false
+                published_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  description: Scheduled publish. Null = publish segera.
+      responses:
+        "201":
+          description: Artikel berhasil dibuat
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleDetail'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "400":
+          $ref: '#/components/responses/ValidationError'
+
+  /cms/news/{id}:
+    put:
+      tags: [cms]
+      summary: Update artikel (CMS)
+      operationId: cmsUpdateArticle
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                judul:
+                  type: string
+                konten_html:
+                  type: string
+                kategori:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                meta_description:
+                  type: string
+                status:
+                  type: string
+                  enum: [draft, pending_review, published, archived]
+                is_pinned:
+                  type: boolean
+      responses:
+        "200":
+          description: Artikel berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleDetail'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags: [cms]
+      summary: Hapus artikel (CMS)
+      operationId: cmsDeleteArticle
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Artikel berhasil dihapus
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /cms/pmb/registrations:
+    get:
+      tags: [cms]
+      summary: Daftar pendaftar PMB (Admin)
+      operationId: cmsGetPmbRegistrations
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SearchParam'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [terkirim, diverifikasi, lolos_seleksi, tidak_lolos, registrasi_ulang]
+        - name: jalur
+          in: query
+          schema:
+            type: string
+            enum: [reguler, prestasi, beasiswa]
+        - name: program_studi
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PmbRegistrationResponse'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /cms/pmb/registrations/{nomor_pendaftaran}/status:
+    patch:
+      tags: [cms]
+      summary: Update status pendaftar PMB (Admin)
+      operationId: cmsUpdatePmbStatus
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: nomor_pendaftaran
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [diverifikasi, lolos_seleksi, tidak_lolos, registrasi_ulang]
+                catatan:
+                  type: string
+                  nullable: true
+                  description: Catatan internal verifikator, tidak ditampilkan ke pendaftar
+      responses:
+        "200":
+          description: Status berhasil diperbarui, notifikasi email dikirim ke pendaftar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "404":
+          $ref: '#/components/responses/NotFound'
+
+  /cms/institution/stats:
+    put:
+      tags: [cms]
+      summary: Update statistik institusi (Admin)
+      operationId: cmsUpdateStats
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InstitutionStats'
+      responses:
+        "200":
+          description: Statistik berhasil diperbarui
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InstitutionStats'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /cms/media/upload:
+    post:
+      tags: [cms]
+      summary: Upload gambar ke CDN (CMS)
+      operationId: cmsUploadMedia
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: File gambar (WebP/JPEG/PNG), maksimum 5 MB
+                alt_text:
+                  type: string
+                album_id:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Gambar berhasil diupload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageObject'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "413":
+          description: Ukuran file melebihi batas 5 MB

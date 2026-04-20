@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 04 Tentang Kampus | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+    --success: #4CAF50;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  .annotation { font-style: italic; color: var(--annotation); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+  .img-placeholder { background: var(--wire-gray); display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-style: italic; border: 1px dashed var(--border); text-align: center; }
+  .section-label { background: var(--annotation); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; display: inline-block; border-radius: 2px; margin-bottom: 8px; }
+
+  .preview-controls { position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; border: 2px solid var(--annotation); border-radius: 8px; padding: 8px 12px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); flex-wrap: wrap; max-width: 260px; }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview { font-size: 11px; padding: 4px 10px; border: 1px solid var(--annotation); border-radius: 4px; cursor: pointer; background: white; color: var(--annotation); font-weight: 600; }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  .navbar { background: var(--primary); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; padding: 12px 0; margin-right: 20px; text-decoration: none; flex-shrink: 0; }
+  .nav-logo-box { width: 40px; height: 40px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 12px; }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-menu { display: flex; flex: 1; gap: 0; overflow-x: auto; }
+  .nav-item { color: rgba(255,255,255,0.85); text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; transition: background 0.2s; border-bottom: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-cta { background: var(--accent); color: var(--primary); font-weight: 700; padding: 10px 18px; border-radius: 4px; text-decoration: none; font-size: 13px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+  .breadcrumb { background: white; padding: 10px 40px; font-size: 12px; border-bottom: 1px solid var(--border); }
+  .breadcrumb a { color: var(--primary); text-decoration: none; }
+  .breadcrumb span { color: #888; margin: 0 6px; }
+
+  .page-header { background: var(--primary); color: white; padding: 40px 40px; }
+  .page-header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+  .page-header p { font-size: 14px; opacity: 0.85; max-width: 550px; line-height: 1.6; }
+
+  /* Content with Sidebar Layout */
+  .content-layout { display: grid; grid-template-columns: 240px 1fr; gap: 0; min-height: 70vh; }
+
+  /* Sidebar */
+  .sidebar { background: white; border-right: 1px solid var(--border); padding: 24px 0; position: sticky; top: 64px; align-self: start; }
+  .sidebar-nav-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #888; padding: 0 20px; margin-bottom: 8px; }
+  .sidebar-nav-item { display: block; padding: 10px 20px; font-size: 13px; color: var(--text-light); text-decoration: none; transition: all 0.2s; border-left: 3px solid transparent; cursor: pointer; }
+  .sidebar-nav-item:hover { background: #F0F4F8; color: var(--primary); }
+  .sidebar-nav-item.active { background: #E8F0FE; color: var(--primary); font-weight: 700; border-left-color: var(--primary); }
+  .sidebar-divider { height: 1px; background: var(--wire-gray); margin: 12px 20px; }
+
+  /* Main content area */
+  .content-area { padding: 32px 40px; }
+  .content-section { display: none; }
+  .content-section.active { display: block; }
+  .content-section h2 { font-size: 1.4rem; color: var(--primary); font-weight: 800; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid var(--accent); }
+  .content-section p { font-size: 14px; line-height: 1.8; color: var(--text); margin-bottom: 16px; }
+
+  /* Timeline Sejarah */
+  .history-timeline { position: relative; padding-left: 32px; }
+  .history-timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--wire-gray); }
+  .history-item { position: relative; margin-bottom: 28px; }
+  .history-dot { width: 18px; height: 18px; border-radius: 50%; background: var(--primary); border: 3px solid white; box-shadow: 0 0 0 2px var(--primary); position: absolute; left: -28px; top: 2px; }
+  .history-dot.accent { background: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+  .history-year { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .history-title { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+  .history-desc { font-size: 13px; line-height: 1.6; color: var(--text-light); }
+
+  /* Visi Misi */
+  .vm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .vm-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+  .vm-card.visi { border-top: 4px solid var(--primary); }
+  .vm-card.misi { border-top: 4px solid var(--accent); }
+  .vm-card h3 { font-size: 14px; font-weight: 800; color: var(--primary); margin-bottom: 12px; text-transform: uppercase; }
+  .vm-card p { font-size: 13px; line-height: 1.7; color: var(--text); }
+  .vm-card ul { list-style: none; }
+  .vm-card li { font-size: 13px; line-height: 1.6; color: var(--text); padding: 5px 0; padding-left: 16px; position: relative; }
+  .vm-card li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+
+  /* Pimpinan */
+  .pimpinan-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .pimpinan-card { text-align: center; }
+  .pimpinan-photo { width: 100%; height: 160px; border-radius: 8px; margin-bottom: 12px; }
+  .pimpinan-name { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .pimpinan-title { font-size: 11px; color: var(--text-light); line-height: 1.4; }
+  .pimpinan-nip { font-size: 10px; color: #999; margin-top: 2px; }
+
+  /* Struktur Org */
+  .org-chart { text-align: center; padding: 20px 0; }
+  .org-level { display: flex; justify-content: center; gap: 16px; margin-bottom: 8px; flex-wrap: wrap; }
+  .org-box { background: var(--primary); color: white; border-radius: 6px; padding: 10px 16px; font-size: 12px; font-weight: 600; min-width: 160px; text-align: center; }
+  .org-box.secondary { background: var(--primary-light); }
+  .org-box.tertiary { background: #5C85B8; }
+  .org-connector { height: 20px; display: flex; justify-content: center; }
+  .org-connector::after { content: ''; width: 2px; height: 100%; background: var(--border); }
+
+  /* Akreditasi */
+  .akred-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .akred-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; gap: 16px; align-items: flex-start; }
+  .akred-logo { width: 60px; height: 50px; flex-shrink: 0; border-radius: 4px; }
+  .akred-info h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+  .akred-info p { font-size: 12px; color: var(--text-light); line-height: 1.5; margin-bottom: 8px; }
+  .btn-pdf { font-size: 11px; color: var(--primary); border: 1px solid var(--primary); padding: 3px 10px; border-radius: 3px; text-decoration: none; display: inline-block; }
+  .btn-pdf:hover { background: var(--primary); color: white; }
+
+  /* Fasilitas */
+  .fasilitas-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .fasilitas-item { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .fasilitas-img { height: 140px; }
+  .fasilitas-caption { padding: 12px; font-size: 13px; font-weight: 600; color: var(--primary); }
+  .fasilitas-desc { padding: 0 12px 12px; font-size: 12px; color: var(--text-light); line-height: 1.5; }
+
+  /* Footer */
+  .footer { background: #1A2D3F; color: rgba(255,255,255,0.8); padding: 40px 40px 20px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 24px; }
+  .footer h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 6px; }
+  .footer a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; }
+  .footer a:hover { color: var(--accent); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); flex-wrap: wrap; gap: 8px; }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .footer-logo-box { width: 36px; height: 36px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 10px; }
+  .footer-brand-name { color: white; font-size: 14px; font-weight: 700; }
+  .footer-desc { font-size: 12px; line-height: 1.7; }
+
+  .whatsapp-float { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 200; transition: transform 0.2s; text-decoration: none; }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  @media (max-width: 1024px) {
+    .content-layout { grid-template-columns: 200px 1fr; }
+    .pimpinan-grid { grid-template-columns: repeat(3, 1fr); }
+    .akred-grid { grid-template-columns: repeat(2, 1fr); }
+    .fasilitas-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .content-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; border-right: none; border-bottom: 1px solid var(--border); padding: 12px 0; display: flex; overflow-x: auto; gap: 0; }
+    .sidebar-nav-item { white-space: nowrap; border-left: none; border-bottom: 3px solid transparent; }
+    .sidebar-nav-item.active { border-bottom-color: var(--primary); border-left: none; background: none; }
+    .sidebar-divider { display: none; }
+    .sidebar-nav-title { display: none; }
+    .content-area { padding: 20px; }
+    .vm-grid { grid-template-columns: 1fr; }
+    .pimpinan-grid { grid-template-columns: repeat(2, 1fr); }
+    .akred-grid, .fasilitas-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .breadcrumb, .page-header { padding-left: 20px; padding-right: 20px; }
+    .footer { padding: 32px 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <nav class="navbar">
+    <a class="nav-logo" href="01-beranda.html">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item active" href="#">Tentang</a>
+      <a class="nav-item" href="03-program-studi.html">Akademik</a>
+      <a class="nav-item" href="02-pmb.html">PMB</a>
+      <a class="nav-item" href="#">Penelitian</a>
+      <a class="nav-item" href="#">Kemahasiswaan</a>
+      <a class="nav-item" href="06-berita.html">Berita</a>
+      <a class="nav-item" href="05-portal.html">Portal</a>
+      <a class="nav-item" href="07-kontak.html">Kontak</a>
+    </div>
+    <a class="nav-cta" href="02-pmb.html">Daftar Sekarang</a>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="01-beranda.html">Beranda</a>
+    <span>›</span>
+    Tentang STTPU
+  </div>
+
+  <div class="page-header">
+    <h1>Tentang STTPU</h1>
+    <p>Mengenal lebih dekat Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — sejarah, visi-misi, pimpinan, dan komitmen kami terhadap pendidikan teknologi Indonesia.</p>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:#FFFDE7;">Anotasi: Halaman Tentang dengan sidebar navigasi konten — pola umum untuk halaman institusional yang memiliki banyak sub-konten. Sidebar sticky agar tetap terlihat saat scroll.</span>
+
+  <div class="content-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-nav-title">Tentang Kami</div>
+      <a class="sidebar-nav-item active" onclick="showSection('sejarah')">📜 Sejarah</a>
+      <a class="sidebar-nav-item" onclick="showSection('visimisi')">🎯 Visi & Misi</a>
+      <a class="sidebar-nav-item" onclick="showSection('pimpinan')">👔 Pimpinan</a>
+      <a class="sidebar-nav-item" onclick="showSection('struktur')">🏢 Struktur Organisasi</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-nav-title">Legalitas</div>
+      <a class="sidebar-nav-item" onclick="showSection('akreditasi')">🏅 Akreditasi</a>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-nav-title">Kampus</div>
+      <a class="sidebar-nav-item" onclick="showSection('fasilitas')">🏗️ Fasilitas</a>
+    </aside>
+    <span class="annotation" style="display:none;">Sidebar navigasi konten — sticky navigation untuk halaman panjang dengan banyak sub-section.</span>
+
+    <!-- CONTENT AREA -->
+    <div class="content-area">
+
+      <!-- SEJARAH -->
+      <div class="content-section active" id="sec-sejarah">
+        <span class="section-label">Sejarah</span>
+        <h2>Sejarah STTPU Jakarta</h2>
+        <p>Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta berdiri di atas semangat mencerdaskan bangsa dan mengisi kebutuhan tenaga ahli teknologi konstruksi Indonesia. Didirikan pada tahun 1987 atas inisiasi Kementerian Pekerjaan Umum Republik Indonesia, STTPU hadir sebagai jawaban atas tingginya kebutuhan tenaga teknis berkualitas untuk mendukung agenda pembangunan nasional.</p>
+        <div class="history-timeline">
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <div class="history-year">1987</div>
+            <div class="history-title">Pendirian STTPU</div>
+            <div class="history-desc">STTPU Jakarta resmi berdiri berdasarkan SK Mendikbud No. 0123/O/1987. Awalnya bernama Akademi Teknik Pekerjaan Umum (ATPU) dengan 2 program studi: Teknik Sipil dan Teknik Arsitektur, dengan total 120 mahasiswa angkatan pertama.</div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <div class="history-year">1995</div>
+            <div class="history-title">Peningkatan Status & Perluasan</div>
+            <div class="history-desc">ATPU meningkat status menjadi Sekolah Tinggi dan berganti nama menjadi STTPU. Dua program studi baru ditambahkan: Teknik Mesin dan Teknik Listrik. Kampus diperluas dengan gedung baru dan laboratorium modern.</div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <div class="history-year">2005</div>
+            <div class="history-title">Akreditasi BAN-PT Pertama</div>
+            <div class="history-desc">Seluruh program studi STTPU berhasil meraih akreditasi BAN-PT untuk pertama kalinya. Ini menandai pengakuan formal kualitas akademik STTPU di tingkat nasional dan mendorong kepercayaan publik.</div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot"></div>
+            <div class="history-year">2012</div>
+            <div class="history-title">Pengembangan Program D4</div>
+            <div class="history-desc">STTPU mengkonversi program D3 menjadi D4 (Sarjana Terapan) sesuai kebijakan nasional. Ini meningkatkan daya saing lulusan di pasar kerja dan membuka jalur untuk melanjutkan studi ke jenjang S2.</div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot accent"></div>
+            <div class="history-year">2020</div>
+            <div class="history-title">Transformasi Digital & Gedung Baru</div>
+            <div class="history-desc">STTPU meresmikan Gedung Teknologi Terpadu 8 lantai yang dilengkapi laboratorium BIM, pusat riset terapan, dan studio digital. Program Studi Teknologi Informasi resmi dibuka, menjadikan STTPU semakin relevan di era Industri 4.0.</div>
+          </div>
+          <div class="history-item">
+            <div class="history-dot accent"></div>
+            <div class="history-year">2026</div>
+            <div class="history-title">Menuju Akreditasi A & Internasionalisasi</div>
+            <div class="history-desc">STTPU tengah mempersiapkan diri untuk reakreditasi dengan target Akreditasi A. Kerjasama internasional dengan universitas di Jepang, Korea Selatan, dan Belanda mulai dijalin untuk program pertukaran mahasiswa dan riset bersama.</div>
+          </div>
+        </div>
+        <span class="annotation">Anotasi: Timeline vertikal dengan titik indikator berwarna (default = primary, highlight = aksen untuk kejadian besar). Setiap entry: tahun (oranye), judul event, deskripsi naratif. Panjang timeline ~600px untuk konten sejarah yang kaya.</span>
+      </div>
+
+      <!-- VISI MISI -->
+      <div class="content-section" id="sec-visimisi">
+        <span class="section-label">Visi & Misi</span>
+        <h2>Visi & Misi STTPU</h2>
+        <div class="vm-grid">
+          <div class="vm-card visi">
+            <h3>Visi</h3>
+            <p>Menjadi Sekolah Tinggi Teknologi unggulan di Indonesia yang menghasilkan lulusan profesional, inovatif, dan berintegritas, berkontribusi aktif pada pembangunan infrastruktur nasional yang berkelanjutan pada tahun 2035.</p>
+          </div>
+          <div class="vm-card misi">
+            <h3>Misi</h3>
+            <ul>
+              <li>Menyelenggarakan pendidikan tinggi teknologi terapan yang berkualitas, relevan, dan adaptif terhadap kebutuhan industri</li>
+              <li>Melaksanakan penelitian terapan yang menghasilkan inovasi teknologi untuk memecahkan permasalahan nyata infrastruktur Indonesia</li>
+              <li>Menyelenggarakan pengabdian kepada masyarakat yang berdampak nyata pada peningkatan kualitas infrastruktur dan lingkungan</li>
+              <li>Membangun kemitraan strategis dengan industri, pemerintah, dan institusi pendidikan di tingkat nasional dan internasional</li>
+              <li>Menciptakan tata kelola institusi yang transparan, akuntabel, dan berorientasi pada mutu berkelanjutan</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:24px; background:#F0F4F8; border-radius:8px; padding:20px;">
+          <h3 style="font-size:14px; color:var(--primary); margin-bottom:12px; font-weight:700;">Nilai-Nilai Institusi (Core Values)</h3>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <span style="background:var(--primary); color:white; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;">Integritas</span>
+            <span style="background:var(--primary); color:white; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;">Profesionalisme</span>
+            <span style="background:var(--primary); color:white; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;">Inovasi</span>
+            <span style="background:var(--primary); color:white; padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;">Kolaborasi</span>
+            <span style="background:var(--accent); color:var(--primary); padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;">Keunggulan</span>
+            <span style="background:var(--accent); color:var(--primary); padding:6px 16px; border-radius:20px; font-size:12px; font-weight:600;">Keberlanjutan</span>
+          </div>
+        </div>
+        <span class="annotation">Anotasi: Visi-Misi dalam 2 kartu sejajar dengan border-top color coding (biru=visi, oranye=misi). Core values sebagai tag pills berwarna di bawahnya. Konten ini krusial untuk Bu Sari persona yang menilai kredibilitas institusi.</span>
+      </div>
+
+      <!-- PIMPINAN -->
+      <div class="content-section" id="sec-pimpinan">
+        <span class="section-label">Pimpinan</span>
+        <h2>Pimpinan STTPU Jakarta</h2>
+        <p>Dipimpin oleh para akademisi dan praktisi berpengalaman yang berdedikasi pada kemajuan pendidikan teknologi Indonesia.</p>
+        <div class="pimpinan-grid">
+          <div class="pimpinan-card">
+            <div class="pimpinan-photo img-placeholder">Foto Ketua STTPU (200×160px)</div>
+            <div class="pimpinan-name">Prof. Dr. Ir. Bambang Priyatno, M.T.</div>
+            <div class="pimpinan-title">Ketua STTPU</div>
+            <div class="pimpinan-nip">NIP. 196501011990031001</div>
+          </div>
+          <div class="pimpinan-card">
+            <div class="pimpinan-photo img-placeholder">Foto Wakil Ketua I (200×160px)</div>
+            <div class="pimpinan-name">Dr. Sri Wahyuni, M.Pd.</div>
+            <div class="pimpinan-title">Wakil Ketua I<br>Bidang Akademik</div>
+            <div class="pimpinan-nip">NIP. 197002141996032002</div>
+          </div>
+          <div class="pimpinan-card">
+            <div class="pimpinan-photo img-placeholder">Foto Wakil Ketua II (200×160px)</div>
+            <div class="pimpinan-name">Drs. Haris Pranoto, M.M.</div>
+            <div class="pimpinan-title">Wakil Ketua II<br>Bidang Administrasi & Keuangan</div>
+            <div class="pimpinan-nip">NIP. 196803201995031004</div>
+          </div>
+          <div class="pimpinan-card">
+            <div class="pimpinan-photo img-placeholder">Foto Wakil Ketua III (200×160px)</div>
+            <div class="pimpinan-name">Dr. Ratna Sari, S.T., M.T.</div>
+            <div class="pimpinan-title">Wakil Ketua III<br>Bidang Kemahasiswaan</div>
+            <div class="pimpinan-nip">NIP. 197509122001122003</div>
+          </div>
+        </div>
+        <span class="annotation">Anotasi: Grid pimpinan 4 kolom dengan foto placeholder, nama lengkap dan gelar, jabatan, dan NIP. Di mobile: 2 kolom. Foto harus profesional dan konsisten (background sama, pencahayaan sama) — ini mempengaruhi persepsi kredibilitas institusi.</span>
+      </div>
+
+      <!-- STRUKTUR ORG -->
+      <div class="content-section" id="sec-struktur">
+        <span class="section-label">Organisasi</span>
+        <h2>Struktur Organisasi</h2>
+        <p>Tata kelola STTPU dijalankan oleh struktur organisasi yang jelas dengan pembagian tugas dan tanggung jawab yang terstandar.</p>
+        <div class="org-chart">
+          <div class="org-level">
+            <div class="org-box">Yayasan / Pengurus</div>
+          </div>
+          <div class="org-connector"></div>
+          <div class="org-level">
+            <div class="org-box">Senat STTPU</div>
+            <div class="org-box">Ketua STTPU</div>
+            <div class="org-box">Satuan Pengawas Internal</div>
+          </div>
+          <div class="org-connector"></div>
+          <div class="org-level">
+            <div class="org-box secondary">Wakil Ketua I<br>Akademik</div>
+            <div class="org-box secondary">Wakil Ketua II<br>Adm & Keuangan</div>
+            <div class="org-box secondary">Wakil Ketua III<br>Kemahasiswaan</div>
+          </div>
+          <div class="org-connector"></div>
+          <div class="org-level">
+            <div class="org-box tertiary" style="font-size:11px;">Prodi TKG</div>
+            <div class="org-box tertiary" style="font-size:11px;">Prodi Arsitektur</div>
+            <div class="org-box tertiary" style="font-size:11px;">Prodi TI</div>
+            <div class="org-box tertiary" style="font-size:11px;">Bag. Keuangan</div>
+            <div class="org-box tertiary" style="font-size:11px;">Bag. Kemahasiswaan</div>
+            <div class="org-box tertiary" style="font-size:11px;">LPPM</div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+          <a href="#" style="font-size:12px; color:var(--primary); text-decoration:none; border:1px solid var(--primary); padding:8px 16px; border-radius:4px; display:inline-block;">📄 Unduh Struktur Organisasi Lengkap (PDF)</a>
+        </div>
+        <span class="annotation">Anotasi: Org chart CSS murni tanpa library. Hierarki ditampilkan dengan connector line vertikal. Warna bertingkat: primary (puncak), primary-light (level 2), biru lebih terang (level 3). Link unduh PDF untuk versi lengkap.</span>
+      </div>
+
+      <!-- AKREDITASI -->
+      <div class="content-section" id="sec-akreditasi">
+        <span class="section-label">Legalitas</span>
+        <h2>Akreditasi & Legalitas</h2>
+        <p>STTPU beroperasi secara sah dan telah memperoleh pengakuan dari berbagai lembaga akreditasi dan otoritas pendidikan tinggi Indonesia.</p>
+        <div class="akred-grid">
+          <div class="akred-card">
+            <div class="akred-logo img-placeholder">Logo BAN-PT</div>
+            <div class="akred-info">
+              <h4>Akreditasi BAN-PT</h4>
+              <p>Akreditasi Institusi: <strong style="color:var(--success);">B</strong><br>Berlaku: 2024–2029<br>SK No. 345/SK/BAN-PT/Akred/PT/V/2024</p>
+              <a class="btn-pdf" href="#">📥 Unduh Sertifikat</a>
+            </div>
+          </div>
+          <div class="akred-card">
+            <div class="akred-logo img-placeholder">Logo DIKTI</div>
+            <div class="akred-info">
+              <h4>Izin Penyelenggaraan</h4>
+              <p>SK Mendikbud No. 456/E/O/2020<br>Status: <strong style="color:var(--success);">Aktif</strong><br>Jenis: Sekolah Tinggi Swasta</p>
+              <a class="btn-pdf" href="#">📥 Unduh SK</a>
+            </div>
+          </div>
+          <div class="akred-card">
+            <div class="akred-logo img-placeholder">Logo LLDIKTI</div>
+            <div class="akred-info">
+              <h4>LLDIKTI Wilayah III</h4>
+              <p>Terdaftar di LLDIKTI Wilayah III DKI Jakarta & Jawa Barat<br>Status: <strong style="color:var(--success);">Aktif</strong></p>
+              <a class="btn-pdf" href="#">📥 Unduh Dokumen</a>
+            </div>
+          </div>
+          <div class="akred-card">
+            <div class="akred-logo img-placeholder">Logo PDDikti</div>
+            <div class="akred-info">
+              <h4>Data PDDikti</h4>
+              <p>Data institusi dan mahasiswa terverifikasi di sistem PDDikti Kemendikbudristek.<br>NPSN: 69123456</p>
+              <a class="btn-pdf" href="#">🔗 Lihat di PDDikti</a>
+            </div>
+          </div>
+          <div class="akred-card">
+            <div class="akred-logo img-placeholder">Sertifikat ISO</div>
+            <div class="akred-info">
+              <h4>ISO 9001:2015</h4>
+              <p>Sistem Manajemen Mutu tersertifikasi ISO 9001:2015<br>Berlaku: 2023–2026</p>
+              <a class="btn-pdf" href="#">📥 Unduh Sertifikat ISO</a>
+            </div>
+          </div>
+          <div class="akred-card">
+            <div class="akred-logo img-placeholder">Laporan Keuangan</div>
+            <div class="akred-info">
+              <h4>Transparansi Keuangan</h4>
+              <p>Laporan keuangan tahunan tersedia sebagai bentuk komitmen transparansi dan akuntabilitas publik.</p>
+              <a class="btn-pdf" href="#">📥 Laporan Keuangan 2025</a>
+            </div>
+          </div>
+        </div>
+        <span class="annotation">Anotasi: Grid akreditasi 3 kolom — setiap kartu: logo lembaga, nama, detail (nomor SK, masa berlaku, status), dan tombol unduh PDF. Transparansi dokumen legal adalah faktor kepercayaan kritis untuk Bu Sari (orang tua) dan calon mahasiswa.</span>
+      </div>
+
+      <!-- FASILITAS -->
+      <div class="content-section" id="sec-fasilitas">
+        <span class="section-label">Fasilitas</span>
+        <h2>Fasilitas Kampus</h2>
+        <p>STTPU menyediakan fasilitas modern yang mendukung proses pembelajaran praktis dan pengembangan kompetensi mahasiswa.</p>
+        <div class="fasilitas-grid">
+          <div class="fasilitas-item">
+            <div class="fasilitas-img img-placeholder">Foto Laboratorium BIM (400×140px)</div>
+            <div class="fasilitas-caption">Laboratorium BIM & Studio Digital</div>
+            <div class="fasilitas-desc">32 workstation bertenaga tinggi, software BIM (Revit, Navisworks), display wall 4K untuk presentasi proyek. Digunakan 5 hari/minggu.</div>
+          </div>
+          <div class="fasilitas-item">
+            <div class="fasilitas-img img-placeholder">Foto Laboratorium Konstruksi (400×140px)</div>
+            <div class="fasilitas-caption">Laboratorium Konstruksi & Material</div>
+            <div class="fasilitas-desc">Pengujian kuat tekan beton, analisis tanah, uji kelayakan material bangunan. Lengkap dengan alat uji standar SNI dan ASTM.</div>
+          </div>
+          <div class="fasilitas-item">
+            <div class="fasilitas-img img-placeholder">Foto Studio Arsitektur (400×140px)</div>
+            <div class="fasilitas-caption">Studio Arsitektur & Desain</div>
+            <div class="fasilitas-desc">Studio ber-AC dengan meja gambar, ploter A0, dan perangkat lunak desain terkini. Kapasitas 60 mahasiswa per sesi studio.</div>
+          </div>
+          <div class="fasilitas-item">
+            <div class="fasilitas-img img-placeholder">Foto Laboratorium Komputer (400×140px)</div>
+            <div class="fasilitas-caption">Laboratorium Komputer</div>
+            <div class="fasilitas-desc">60 unit komputer, koneksi internet fiber 100 Mbps, server lokal, dan akses cloud computing untuk mata kuliah Teknologi Informasi.</div>
+          </div>
+          <div class="fasilitas-item">
+            <div class="fasilitas-img img-placeholder">Foto Perpustakaan (400×140px)</div>
+            <div class="fasilitas-caption">Perpustakaan & Pusat Sumber Belajar</div>
+            <div class="fasilitas-desc">Koleksi 15.000 judul buku, akses database jurnal internasional (IEEE, ScienceDirect), dan area baca ber-AC kapasitas 120 orang.</div>
+          </div>
+          <div class="fasilitas-item">
+            <div class="fasilitas-img img-placeholder">Foto Asrama (400×140px)</div>
+            <div class="fasilitas-caption">Asrama Mahasiswa</div>
+            <div class="fasilitas-desc">Kapasitas 200 mahasiswa, kamar 2 orang, fasilitas Wi-Fi, laundry, dan kantin. Tersedia untuk mahasiswa luar kota dengan biaya terjangkau.</div>
+          </div>
+        </div>
+        <span class="annotation">Anotasi: Grid fasilitas 3 kolom dengan foto + judul + deskripsi singkat. Data spesifik (jumlah unit, kapasitas) meningkatkan kredibilitas. Di mobile: 1 kolom. Fasilitas yang baik menjawab kebutuhan Reza (calon mahasiswa) yang ingin tahu pengalaman belajar.</span>
+      </div>
+
+    </div><!-- end content-area -->
+  </div><!-- end content-layout -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo-box">STTPU</div>
+          <div class="footer-brand-name">STTPU Jakarta</div>
+        </div>
+        <p class="footer-desc">Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — mendidik tenaga ahli teknologi Indonesia.</p>
+      </div>
+      <div><h4>Tentang</h4><ul>
+        <li><a href="#" onclick="showSection('sejarah')">Sejarah</a></li>
+        <li><a href="#" onclick="showSection('visimisi')">Visi & Misi</a></li>
+        <li><a href="#" onclick="showSection('pimpinan')">Pimpinan</a></li>
+        <li><a href="#" onclick="showSection('akreditasi')">Akreditasi</a></li>
+        <li><a href="#" onclick="showSection('fasilitas')">Fasilitas</a></li>
+      </ul></div>
+      <div><h4>Akademik</h4><ul>
+        <li><a href="03-program-studi.html">Program Studi</a></li>
+        <li><a href="#">Dosen & Staf</a></li>
+        <li><a href="#">Penelitian</a></li>
+      </ul></div>
+      <div><h4>Kontak</h4><ul>
+        <li><a href="#">📞 (021) 555-1234</a></li>
+        <li><a href="#">📧 info@sttpu.ac.id</a></li>
+        <li><a href="07-kontak.html">Peta & Arah</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STTPU Jakarta. Hak Cipta Dilindungi.</span>
+      <span>Kebijakan Privasi · Syarat Penggunaan</span>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float" title="Chat WhatsApp">💬</a>
+
+</div>
+
+<script>
+function setPreview(mode) {
+  document.getElementById('pageWrapper').className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function showSection(id) {
+  document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(id)) {
+      item.classList.add('active');
+    }
+  });
+  if (event) event.preventDefault();
+}
+</script>
+
+</body>
+</html>

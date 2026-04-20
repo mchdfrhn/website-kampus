@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 03 Program Studi | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+    --success: #4CAF50;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  .annotation { font-style: italic; color: var(--annotation); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+  .img-placeholder { background: var(--wire-gray); display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-style: italic; border: 1px dashed var(--border); text-align: center; }
+  .section-label { background: var(--annotation); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; display: inline-block; border-radius: 2px; margin-bottom: 8px; }
+
+  .preview-controls { position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; border: 2px solid var(--annotation); border-radius: 8px; padding: 8px 12px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); flex-wrap: wrap; max-width: 260px; }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview { font-size: 11px; padding: 4px 10px; border: 1px solid var(--annotation); border-radius: 4px; cursor: pointer; background: white; color: var(--annotation); font-weight: 600; }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  .navbar { background: var(--primary); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; padding: 12px 0; margin-right: 20px; text-decoration: none; flex-shrink: 0; }
+  .nav-logo-box { width: 40px; height: 40px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 12px; }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-menu { display: flex; flex: 1; gap: 0; overflow-x: auto; }
+  .nav-item { color: rgba(255,255,255,0.85); text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; transition: background 0.2s; border-bottom: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-cta { background: var(--accent); color: var(--primary); font-weight: 700; padding: 10px 18px; border-radius: 4px; text-decoration: none; font-size: 13px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+  .breadcrumb { background: white; padding: 10px 40px; font-size: 12px; border-bottom: 1px solid var(--border); }
+  .breadcrumb a { color: var(--primary); text-decoration: none; }
+  .breadcrumb span { color: #888; margin: 0 6px; }
+
+  .page-header { background: var(--primary); color: white; padding: 40px 40px; }
+  .page-header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+  .page-header p { font-size: 14px; opacity: 0.85; max-width: 550px; line-height: 1.6; }
+
+  /* Filter Bar */
+  .filter-bar { background: white; padding: 16px 40px; border-bottom: 1px solid var(--border); display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .filter-label { font-size: 12px; font-weight: 700; color: var(--text-light); flex-shrink: 0; }
+  .filter-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .filter-select { border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; font-size: 13px; font-family: inherit; color: var(--text); cursor: pointer; background: white; }
+  .filter-select:focus { outline: none; border-color: var(--primary); }
+  .filter-toggle { padding: 8px 16px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; background: white; color: var(--text-light); transition: all 0.2s; }
+  .filter-toggle.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .filter-toggle:hover:not(.active) { border-color: var(--primary); color: var(--primary); }
+  .search-input { border: 1px solid var(--border); border-radius: 4px; padding: 8px 14px; font-size: 13px; width: 220px; font-family: inherit; }
+  .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,95,0.1); }
+  .filter-count { font-size: 12px; color: #888; margin-left: auto; }
+
+  /* Main Layout */
+  .main-layout { display: grid; grid-template-columns: 1fr; padding: 32px 40px; gap: 24px; }
+
+  /* Prodi Grid */
+  .prodi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .prodi-card { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; }
+  .prodi-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
+  .prodi-card.expanded { grid-column: 1 / -1; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary); }
+  .prodi-card-img { height: 140px; }
+  .prodi-card-body { padding: 16px; }
+  .prodi-badges { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+  .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+  .badge-jenjang { background: #E8F0FE; color: var(--primary); }
+  .badge-akred { background: #E8F5E9; color: #2E7D32; }
+  .badge-new { background: #FFF3E0; color: #E65100; }
+  .prodi-card h3 { font-size: 15px; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
+  .prodi-card p { font-size: 12px; color: var(--text-light); line-height: 1.5; margin-bottom: 14px; }
+  .prodi-meta { display: flex; gap: 16px; font-size: 11px; color: #888; margin-bottom: 12px; }
+  .btn-lihat { color: var(--primary); font-size: 12px; font-weight: 600; text-decoration: none; border: 1px solid var(--primary); padding: 6px 14px; border-radius: 4px; transition: all 0.2s; display: inline-block; cursor: pointer; background: white; }
+  .btn-lihat:hover, .btn-lihat.active { background: var(--primary); color: white; }
+  .btn-daftar-sm { color: white; font-size: 12px; font-weight: 600; text-decoration: none; border: none; background: var(--accent); padding: 6px 14px; border-radius: 4px; display: inline-block; margin-left: 8px; }
+  .prodi-card-footer { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; border-top: 1px solid var(--wire-gray); font-size: 12px; }
+
+  /* Expanded Detail */
+  .prodi-detail { display: none; background: #F8FAFE; border-top: 2px solid var(--primary); padding: 28px; }
+  .prodi-detail.open { display: block; }
+  .detail-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; }
+  .detail-left h4 { font-size: 14px; color: var(--primary); font-weight: 700; margin-bottom: 12px; border-left: 3px solid var(--accent); padding-left: 10px; }
+  .detail-left p { font-size: 13px; line-height: 1.7; color: var(--text); margin-bottom: 16px; }
+  .kurikulum-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 20px; }
+  .kurikulum-table th { background: var(--primary); color: white; padding: 8px 12px; text-align: left; }
+  .kurikulum-table td { padding: 8px 12px; border-bottom: 1px solid var(--wire-gray); }
+  .kurikulum-table tr:nth-child(even) td { background: white; }
+  .detail-right { }
+  .info-box { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 16px; }
+  .info-box h4 { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .info-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--wire-gray); font-size: 12px; }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .val { font-weight: 600; color: var(--primary); }
+  .dosen-list { list-style: none; }
+  .dosen-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--wire-gray); }
+  .dosen-item:last-child { border-bottom: none; }
+  .dosen-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--wire-gray); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; }
+  .dosen-info { font-size: 12px; }
+  .dosen-name { font-weight: 600; color: var(--text); }
+  .dosen-jabatan { color: var(--text-light); font-size: 11px; }
+  .career-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .career-tag { background: #E8F0FE; color: var(--primary); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+  .close-detail { font-size: 12px; color: var(--annotation); cursor: pointer; border: 1px solid var(--annotation); background: white; padding: 4px 12px; border-radius: 4px; margin-bottom: 16px; }
+
+  /* Footer */
+  .footer { background: #1A2D3F; color: rgba(255,255,255,0.8); padding: 40px 40px 20px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 24px; }
+  .footer h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 6px; }
+  .footer a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; }
+  .footer a:hover { color: var(--accent); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); flex-wrap: wrap; gap: 8px; }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .footer-logo-box { width: 36px; height: 36px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 10px; }
+  .footer-brand-name { color: white; font-size: 14px; font-weight: 700; }
+  .footer-desc { font-size: 12px; line-height: 1.7; }
+
+  .whatsapp-float { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 200; transition: transform 0.2s; text-decoration: none; }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  @media (max-width: 1024px) {
+    .prodi-grid { grid-template-columns: repeat(2, 1fr); }
+    .detail-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .prodi-grid { grid-template-columns: 1fr; }
+    .prodi-card.expanded { grid-column: 1; }
+    .filter-bar { padding: 12px 20px; }
+    .main-layout { padding: 20px; }
+    .page-header { padding: 28px 20px; }
+    .breadcrumb { padding: 10px 20px; }
+    .footer { padding: 32px 20px 16px; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <nav class="navbar">
+    <a class="nav-logo" href="01-beranda.html">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item" href="04-tentang.html">Tentang</a>
+      <a class="nav-item active" href="#">Akademik</a>
+      <a class="nav-item" href="02-pmb.html">PMB</a>
+      <a class="nav-item" href="#">Penelitian</a>
+      <a class="nav-item" href="#">Kemahasiswaan</a>
+      <a class="nav-item" href="06-berita.html">Berita</a>
+      <a class="nav-item" href="05-portal.html">Portal</a>
+      <a class="nav-item" href="07-kontak.html">Kontak</a>
+    </div>
+    <a class="nav-cta" href="02-pmb.html">Daftar Sekarang</a>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="01-beranda.html">Beranda</a>
+    <span>›</span>
+    <a href="#">Akademik</a>
+    <span>›</span>
+    Program Studi
+  </div>
+
+  <div class="page-header">
+    <h1>Program Studi</h1>
+    <p>Temukan program studi yang sesuai dengan minat dan rencana karirmu. STTPU menawarkan 6 program studi teknologi dengan kurikulum berbasis industri dan tenaga pengajar berpengalaman.</p>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:#FFFDE7;">Anotasi: Page header konsisten dengan warna primary. Breadcrumb untuk navigasi kontekstual. Deskripsi singkat untuk SEO dan konteks halaman.</span>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <span class="filter-label">Filter:</span>
+    <div class="filter-group">
+      <select class="filter-select" onchange="filterProdi()">
+        <option value="all">Semua Jenjang</option>
+        <option value="d3">D3 — Diploma</option>
+        <option value="d4">D4 — Sarjana Terapan</option>
+        <option value="s1">S1 — Sarjana</option>
+        <option value="s2">S2 — Magister</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <button class="filter-toggle active" onclick="filterToggle(this, 'all')">Semua</button>
+      <button class="filter-toggle" onclick="filterToggle(this, 'teknik')">Teknik Sipil</button>
+      <button class="filter-toggle" onclick="filterToggle(this, 'ti')">Teknologi</button>
+      <button class="filter-toggle" onclick="filterToggle(this, 'lingkungan')">Lingkungan</button>
+    </div>
+    <input class="search-input" type="text" placeholder="🔍  Cari program studi..." oninput="searchProdi(this.value)">
+    <span class="filter-count">Menampilkan <strong>6</strong> program studi</span>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:white; border-bottom:1px solid var(--border);">Anotasi: Filter bar persisten — dropdown jenjang + toggle kategori + search. Hitungan hasil update realtime. Di mobile: filter collapsible (toggle "Filter" button menampilkan panel filter).</span>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-layout">
+    <div>
+      <div class="prodi-grid" id="prodiGrid">
+
+        <!-- Card 1: Teknik Konstruksi -->
+        <div class="prodi-card" id="card-1">
+          <div class="prodi-card-img img-placeholder">Foto lab/kegiatan Teknik Konstruksi (400×140px)</div>
+          <div class="prodi-card-body">
+            <div class="prodi-badges">
+              <span class="badge badge-jenjang">D4</span>
+              <span class="badge badge-akred">Akreditasi B</span>
+            </div>
+            <h3>Teknik Konstruksi Gedung</h3>
+            <p>Mempelajari perencanaan, pelaksanaan, dan pengawasan konstruksi gedung modern menggunakan teknologi BIM dan standar konstruksi internasional.</p>
+            <div class="prodi-meta">
+              <span>⏱ 4 Tahun (8 Semester)</span>
+              <span>📚 144 SKS</span>
+              <span>👥 240 Mahasiswa</span>
+            </div>
+          </div>
+          <div class="prodi-card-footer">
+            <div>
+              <button class="btn-lihat" onclick="toggleDetail(1)">Lihat Detail ▼</button>
+              <a class="btn-daftar-sm" href="02-pmb.html">Daftar</a>
+            </div>
+          </div>
+          <div class="prodi-detail" id="detail-1">
+            <button class="close-detail" onclick="toggleDetail(1)">✕ Tutup Detail</button>
+            <div class="detail-grid">
+              <div class="detail-left">
+                <h4>Deskripsi Program Studi</h4>
+                <p>Program Studi Teknik Konstruksi Gedung jenjang D4 di STTPU dirancang untuk menghasilkan sarjana terapan yang mampu merencanakan, melaksanakan, mengawasi, dan mengelola pekerjaan konstruksi gedung bertingkat. Kurikulum mengintegrasikan teori rekayasa struktur, manajemen konstruksi, Building Information Modeling (BIM), dan praktik lapangan intensif bersama mitra industri.</p>
+                <h4 style="margin-top:16px;">Kurikulum Ringkas per Semester</h4>
+                <table class="kurikulum-table">
+                  <thead>
+                    <tr><th>Semester</th><th>Mata Kuliah Utama</th><th>SKS</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>Matematika Teknik, Fisika Bangunan, Menggambar Teknik</td><td>20</td></tr>
+                    <tr><td>2</td><td>Mekanika Teknik, Material Bangunan, AutoCAD</td><td>20</td></tr>
+                    <tr><td>3</td><td>Analisis Struktur, Estimasi Biaya, Teknologi Beton</td><td>20</td></tr>
+                    <tr><td>4</td><td>Desain Struktur Baja, Manajemen Proyek, BIM Dasar</td><td>20</td></tr>
+                    <tr><td>5</td><td>Konstruksi Gedung Tinggi, Geoteknik, BIM Lanjutan</td><td>18</td></tr>
+                    <tr><td>6</td><td>Manajemen K3, Kontrak & Hukum Konstruksi, PKL</td><td>18</td></tr>
+                    <tr><td>7</td><td>Kewirausahaan, Metodologi Penelitian Terapan</td><td>16</td></tr>
+                    <tr><td>8</td><td>Tugas Akhir (Skripsi/Proyek Akhir)</td><td>12</td></tr>
+                  </tbody>
+                </table>
+                <h4>Prospek Karir Lulusan</h4>
+                <div class="career-tags">
+                  <span class="career-tag">Project Manager Konstruksi</span>
+                  <span class="career-tag">Site Engineer</span>
+                  <span class="career-tag">Quantity Surveyor</span>
+                  <span class="career-tag">Pengawas Lapangan BUMN</span>
+                  <span class="career-tag">BIM Specialist</span>
+                  <span class="career-tag">Konsultan Konstruksi</span>
+                  <span class="career-tag">Pegawai PU / Dinas</span>
+                  <span class="career-tag">Wirausaha Kontraktor</span>
+                </div>
+              </div>
+              <div class="detail-right">
+                <div class="info-box">
+                  <h4>Info Program</h4>
+                  <div class="info-row"><span>Jenjang</span><span class="val">D4 / Sarjana Terapan</span></div>
+                  <div class="info-row"><span>Gelar</span><span class="val">S.Tr.T</span></div>
+                  <div class="info-row"><span>Durasi</span><span class="val">4 Tahun (8 Sem.)</span></div>
+                  <div class="info-row"><span>Total SKS</span><span class="val">144 SKS</span></div>
+                  <div class="info-row"><span>Akreditasi</span><span class="val" style="color:var(--success);">B (BAN-PT)</span></div>
+                  <div class="info-row"><span>SPP/Semester</span><span class="val">Rp 4.500.000</span></div>
+                  <div class="info-row"><span>Kuota/Tahun</span><span class="val">60 Mahasiswa</span></div>
+                </div>
+                <div class="info-box">
+                  <h4>Dosen Pengampu</h4>
+                  <ul class="dosen-list">
+                    <li class="dosen-item">
+                      <div class="dosen-avatar img-placeholder">Foto</div>
+                      <div class="dosen-info"><div class="dosen-name">Dr. Ir. Budi Santoso, M.T.</div><div class="dosen-jabatan">Ketua Prodi · Ahli Struktur</div></div>
+                    </li>
+                    <li class="dosen-item">
+                      <div class="dosen-avatar img-placeholder">Foto</div>
+                      <div class="dosen-info"><div class="dosen-name">Ir. Siti Nuraini, M.Eng.</div><div class="dosen-jabatan">Dosen Tetap · BIM Expert</div></div>
+                    </li>
+                    <li class="dosen-item">
+                      <div class="dosen-avatar img-placeholder">Foto</div>
+                      <div class="dosen-info"><div class="dosen-name">Agus Wibowo, S.T., M.T.</div><div class="dosen-jabatan">Dosen Tetap · Manajemen Proyek</div></div>
+                    </li>
+                    <li class="dosen-item">
+                      <div class="dosen-avatar img-placeholder">Foto</div>
+                      <div class="dosen-info"><div class="dosen-name">Drs. Hendra Kusuma</div><div class="dosen-jabatan">Dosen Industri · PT Waskita Karya</div></div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="prodi-card" id="card-2">
+          <div class="prodi-card-img img-placeholder">Foto studio desain Arsitektur (400×140px)</div>
+          <div class="prodi-card-body">
+            <div class="prodi-badges">
+              <span class="badge badge-jenjang">D4</span>
+              <span class="badge badge-akred">Akreditasi B</span>
+            </div>
+            <h3>Teknik Arsitektur</h3>
+            <p>Desain arsitektur kontemporer yang menggabungkan estetika, fungsi, keselamatan, dan keberlanjutan lingkungan dalam setiap karya rancang bangun.</p>
+            <div class="prodi-meta">
+              <span>⏱ 4 Tahun</span><span>📚 144 SKS</span><span>👥 200 Mahasiswa</span>
+            </div>
+          </div>
+          <div class="prodi-card-footer">
+            <div><button class="btn-lihat" onclick="toggleDetail(2)">Lihat Detail ▼</button><a class="btn-daftar-sm" href="02-pmb.html">Daftar</a></div>
+          </div>
+          <div class="prodi-detail" id="detail-2">
+            <button class="close-detail" onclick="toggleDetail(2)">✕ Tutup Detail</button>
+            <div class="detail-grid">
+              <div class="detail-left">
+                <h4>Deskripsi Program Studi</h4>
+                <p>Program Studi Teknik Arsitektur STTPU mempersiapkan sarjana terapan yang kompeten merancang bangunan yang memadukan nilai estetika, fungsi, kenyamanan, dan keberlanjutan. Studio desain intensif dengan studio ber-AC dan perangkat lunak seperti AutoCAD, SketchUp, Revit, dan Lumion mendukung proses pembelajaran kreatif.</p>
+                <h4 style="margin-top:16px;">Kurikulum Ringkas per Semester</h4>
+                <table class="kurikulum-table">
+                  <thead><tr><th>Semester</th><th>Mata Kuliah Utama</th><th>SKS</th></tr></thead>
+                  <tbody>
+                    <tr><td>1-2</td><td>Dasar Arsitektur, Gambar Teknik, Sejarah Arsitektur</td><td>40</td></tr>
+                    <tr><td>3-4</td><td>Studio Perancangan I & II, Struktur Arsitektur, Utilitas</td><td>40</td></tr>
+                    <tr><td>5-6</td><td>Arsitektur Tropis, Sustainable Design, PKL</td><td>36</td></tr>
+                    <tr><td>7-8</td><td>Perancangan Urban, Metodologi, Tugas Akhir</td><td>28</td></tr>
+                  </tbody>
+                </table>
+                <h4>Prospek Karir</h4>
+                <div class="career-tags">
+                  <span class="career-tag">Arsitek</span><span class="career-tag">Desainer Interior</span>
+                  <span class="career-tag">Urban Planner</span><span class="career-tag">Konsultan Perencana</span>
+                  <span class="career-tag">Dinas Tata Ruang</span><span class="career-tag">Developer Properti</span>
+                </div>
+              </div>
+              <div class="detail-right">
+                <div class="info-box">
+                  <h4>Info Program</h4>
+                  <div class="info-row"><span>Jenjang</span><span class="val">D4</span></div>
+                  <div class="info-row"><span>Gelar</span><span class="val">S.Tr.Ars</span></div>
+                  <div class="info-row"><span>Durasi</span><span class="val">4 Tahun</span></div>
+                  <div class="info-row"><span>Akreditasi</span><span class="val" style="color:var(--success);">B</span></div>
+                  <div class="info-row"><span>SPP</span><span class="val">Rp 4.500.000/Sem</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="prodi-card" id="card-3">
+          <div class="prodi-card-img img-placeholder">Foto lab komputer Teknologi Informasi (400×140px)</div>
+          <div class="prodi-card-body">
+            <div class="prodi-badges">
+              <span class="badge badge-jenjang">D4</span>
+              <span class="badge badge-akred">Akreditasi B</span>
+              <span class="badge badge-new">Baru 2025</span>
+            </div>
+            <h3>Teknologi Informasi</h3>
+            <p>Rekayasa perangkat lunak, sistem informasi, dan infrastruktur TI untuk mendukung transformasi digital sektor publik dan swasta di Indonesia.</p>
+            <div class="prodi-meta">
+              <span>⏱ 4 Tahun</span><span>📚 144 SKS</span><span>👥 180 Mahasiswa</span>
+            </div>
+          </div>
+          <div class="prodi-card-footer">
+            <div><button class="btn-lihat" onclick="toggleDetail(3)">Lihat Detail ▼</button><a class="btn-daftar-sm" href="02-pmb.html">Daftar</a></div>
+          </div>
+          <div class="prodi-detail" id="detail-3">
+            <button class="close-detail" onclick="toggleDetail(3)">✕ Tutup Detail</button>
+            <div class="detail-grid">
+              <div class="detail-left">
+                <h4>Deskripsi Program Studi</h4>
+                <p>Program Studi Teknologi Informasi STTPU hadir menjawab kebutuhan industri digital nasional. Mahasiswa belajar pengembangan aplikasi, basis data, keamanan siber, cloud computing, dan manajemen proyek TI dengan pendekatan project-based learning bersama mitra perusahaan teknologi.</p>
+                <h4 style="margin-top:16px;">Kurikulum Ringkas</h4>
+                <table class="kurikulum-table">
+                  <thead><tr><th>Semester</th><th>Mata Kuliah Utama</th><th>SKS</th></tr></thead>
+                  <tbody>
+                    <tr><td>1-2</td><td>Algoritma & Pemrograman, Basis Data, Matematika Diskrit</td><td>40</td></tr>
+                    <tr><td>3-4</td><td>Rekayasa Perangkat Lunak, Web Development, Jaringan Komputer</td><td>40</td></tr>
+                    <tr><td>5-6</td><td>Mobile App, Cloud Computing, Keamanan Siber, PKL</td><td>36</td></tr>
+                    <tr><td>7-8</td><td>Manajemen Proyek TI, Big Data, Tugas Akhir</td><td>28</td></tr>
+                  </tbody>
+                </table>
+                <h4>Prospek Karir</h4>
+                <div class="career-tags">
+                  <span class="career-tag">Software Developer</span><span class="career-tag">Data Analyst</span>
+                  <span class="career-tag">System Administrator</span><span class="career-tag">IT Project Manager</span>
+                  <span class="career-tag">Cybersecurity Analyst</span><span class="career-tag">Cloud Architect</span>
+                </div>
+              </div>
+              <div class="detail-right">
+                <div class="info-box">
+                  <h4>Info Program</h4>
+                  <div class="info-row"><span>Jenjang</span><span class="val">D4</span></div>
+                  <div class="info-row"><span>Gelar</span><span class="val">S.Tr.Kom</span></div>
+                  <div class="info-row"><span>Akreditasi</span><span class="val" style="color:var(--success);">B</span></div>
+                  <div class="info-row"><span>SPP</span><span class="val">Rp 5.000.000/Sem</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="prodi-card" id="card-4">
+          <div class="prodi-card-img img-placeholder">Foto lab mesin (400×140px)</div>
+          <div class="prodi-card-body">
+            <div class="prodi-badges"><span class="badge badge-jenjang">D3</span><span class="badge badge-akred">Akreditasi B</span></div>
+            <h3>Teknik Mesin</h3>
+            <p>Perancangan, pembuatan, dan perawatan sistem mekanikal untuk industri konstruksi, manufaktur, dan infrastruktur nasional.</p>
+            <div class="prodi-meta"><span>⏱ 3 Tahun</span><span>📚 110 SKS</span><span>👥 160 Mahasiswa</span></div>
+          </div>
+          <div class="prodi-card-footer">
+            <div><button class="btn-lihat" onclick="toggleDetail(4)">Lihat Detail ▼</button><a class="btn-daftar-sm" href="02-pmb.html">Daftar</a></div>
+          </div>
+          <div class="prodi-detail" id="detail-4">
+            <button class="close-detail" onclick="toggleDetail(4)">✕ Tutup Detail</button>
+            <div class="detail-grid">
+              <div class="detail-left">
+                <h4>Deskripsi Program Studi</h4>
+                <p>Teknik Mesin D3 STTPU mempersiapkan teknisi ahli yang kompeten dalam merancang, mengoperasikan, dan merawat mesin dan peralatan mekanikal. Laboratorium terequipment lengkap termasuk CNC, mesin bubut, las, dan peralatan hydraulic modern.</p>
+                <h4 style="margin-top:16px;">Prospek Karir</h4>
+                <div class="career-tags">
+                  <span class="career-tag">Teknisi Industri</span><span class="career-tag">Maintenance Engineer</span>
+                  <span class="career-tag">Operator Alat Berat</span><span class="career-tag">Quality Control</span>
+                </div>
+              </div>
+              <div class="detail-right">
+                <div class="info-box">
+                  <h4>Info Program</h4>
+                  <div class="info-row"><span>Jenjang</span><span class="val">D3 / Diploma</span></div>
+                  <div class="info-row"><span>Gelar</span><span class="val">A.Md.T</span></div>
+                  <div class="info-row"><span>Durasi</span><span class="val">3 Tahun</span></div>
+                  <div class="info-row"><span>SPP</span><span class="val">Rp 4.000.000/Sem</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="prodi-card" id="card-5">
+          <div class="prodi-card-img img-placeholder">Foto lab kelistrikan (400×140px)</div>
+          <div class="prodi-card-body">
+            <div class="prodi-badges"><span class="badge badge-jenjang">D3</span><span class="badge badge-akred">Akreditasi B</span></div>
+            <h3>Teknik Listrik</h3>
+            <p>Instalasi, pemeliharaan, dan perancangan sistem ketenagalistrikan untuk gedung bertingkat, kawasan industri, dan infrastruktur publik.</p>
+            <div class="prodi-meta"><span>⏱ 3 Tahun</span><span>📚 110 SKS</span><span>👥 140 Mahasiswa</span></div>
+          </div>
+          <div class="prodi-card-footer">
+            <div><button class="btn-lihat" onclick="toggleDetail(5)">Lihat Detail ▼</button><a class="btn-daftar-sm" href="02-pmb.html">Daftar</a></div>
+          </div>
+          <div class="prodi-detail" id="detail-5">
+            <button class="close-detail" onclick="toggleDetail(5)">✕ Tutup Detail</button>
+            <div class="detail-grid">
+              <div class="detail-left">
+                <h4>Deskripsi Program Studi</h4>
+                <p>Teknik Listrik D3 STTPU menghasilkan teknisi kelistrikan yang mampu merancang, memasang, dan merawat instalasi listrik bangunan dan industri sesuai standar PUIL dan IEC. Mahasiswa berlatih di laboratorium kelistrikan dengan panel dan simulasi sistem listrik skala industri.</p>
+                <h4 style="margin-top:16px;">Prospek Karir</h4>
+                <div class="career-tags">
+                  <span class="career-tag">Teknisi Listrik</span><span class="career-tag">Electrical Contractor</span>
+                  <span class="career-tag">PLN Staff</span><span class="career-tag">Panel Listrik Engineer</span>
+                </div>
+              </div>
+              <div class="detail-right">
+                <div class="info-box">
+                  <h4>Info Program</h4>
+                  <div class="info-row"><span>Jenjang</span><span class="val">D3</span></div>
+                  <div class="info-row"><span>Gelar</span><span class="val">A.Md.T</span></div>
+                  <div class="info-row"><span>SPP</span><span class="val">Rp 4.000.000/Sem</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="prodi-card" id="card-6">
+          <div class="prodi-card-img img-placeholder">Foto lab lingkungan/sampling air (400×140px)</div>
+          <div class="prodi-card-body">
+            <div class="prodi-badges"><span class="badge badge-jenjang">D4</span><span class="badge badge-akred">Akreditasi B</span></div>
+            <h3>Teknik Lingkungan</h3>
+            <p>Pengelolaan lingkungan, sanitasi, dan teknologi pengolahan air bersih serta limbah untuk mendukung pembangunan infrastruktur yang berkelanjutan.</p>
+            <div class="prodi-meta"><span>⏱ 4 Tahun</span><span>📚 144 SKS</span><span>👥 120 Mahasiswa</span></div>
+          </div>
+          <div class="prodi-card-footer">
+            <div><button class="btn-lihat" onclick="toggleDetail(6)">Lihat Detail ▼</button><a class="btn-daftar-sm" href="02-pmb.html">Daftar</a></div>
+          </div>
+          <div class="prodi-detail" id="detail-6">
+            <button class="close-detail" onclick="toggleDetail(6)">✕ Tutup Detail</button>
+            <div class="detail-grid">
+              <div class="detail-left">
+                <h4>Deskripsi Program Studi</h4>
+                <p>Teknik Lingkungan D4 STTPU mempersiapkan sarjana terapan yang ahli dalam rekayasa lingkungan, pengelolaan sumber daya air, sanitasi, dan mitigasi dampak lingkungan dari kegiatan konstruksi dan industri. Sangat relevan dengan target pembangunan berkelanjutan Indonesia 2045.</p>
+                <h4 style="margin-top:16px;">Prospek Karir</h4>
+                <div class="career-tags">
+                  <span class="career-tag">Environmental Engineer</span><span class="career-tag">AMDAL Specialist</span>
+                  <span class="career-tag">Konsultan Lingkungan</span><span class="career-tag">BPLHD/KLHK Staff</span>
+                </div>
+              </div>
+              <div class="detail-right">
+                <div class="info-box">
+                  <h4>Info Program</h4>
+                  <div class="info-row"><span>Jenjang</span><span class="val">D4</span></div>
+                  <div class="info-row"><span>Gelar</span><span class="val">S.Tr.T</span></div>
+                  <div class="info-row"><span>SPP</span><span class="val">Rp 4.500.000/Sem</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end prodi-grid -->
+      <span class="annotation">Anotasi: Kartu prodi dengan expand-in-place detail. Klik "Lihat Detail" memperluas panel di bawah kartu (bukan halaman baru) — mengurangi navigasi. Detail menampilkan: deskripsi lengkap, tabel kurikulum 8 semester, daftar dosen dengan foto, dan prospek karir sebagai tag pills.</span>
+    </div>
+  </div><!-- end main-layout -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo-box">STTPU</div>
+          <div class="footer-brand-name">STTPU Jakarta</div>
+        </div>
+        <p class="footer-desc">Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — mendidik tenaga ahli teknologi Indonesia.</p>
+      </div>
+      <div><h4>Program Studi</h4><ul>
+        <li><a href="#">Teknik Konstruksi Gedung</a></li>
+        <li><a href="#">Teknik Arsitektur</a></li>
+        <li><a href="#">Teknologi Informasi</a></li>
+        <li><a href="#">Teknik Mesin</a></li>
+        <li><a href="#">Teknik Listrik</a></li>
+        <li><a href="#">Teknik Lingkungan</a></li>
+      </ul></div>
+      <div><h4>Akademik</h4><ul>
+        <li><a href="#">Kalender Akademik</a></li>
+        <li><a href="#">Kurikulum</a></li>
+        <li><a href="#">Dosen & Staf</a></li>
+        <li><a href="#">Penelitian</a></li>
+        <li><a href="#">Perpustakaan</a></li>
+      </ul></div>
+      <div><h4>Kontak</h4><ul>
+        <li><a href="#">📞 (021) 555-1234</a></li>
+        <li><a href="#">📧 akademik@sttpu.ac.id</a></li>
+        <li><a href="02-pmb.html">Daftar Sekarang</a></li>
+        <li><a href="07-kontak.html">Hubungi Kami</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STTPU Jakarta. Hak Cipta Dilindungi.</span>
+      <span>Kebijakan Privasi · Syarat Penggunaan</span>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float" title="Chat WhatsApp">💬</a>
+
+</div>
+
+<script>
+function setPreview(mode) {
+  document.getElementById('pageWrapper').className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function toggleDetail(id) {
+  const detail = document.getElementById('detail-' + id);
+  const card = document.getElementById('card-' + id);
+  const btn = card.querySelector('.btn-lihat');
+  const isOpen = detail.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.prodi-detail').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.btn-lihat').forEach(b => { b.classList.remove('active'); b.textContent = 'Lihat Detail ▼'; });
+  document.querySelectorAll('.prodi-card').forEach(c => c.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    btn.classList.add('active');
+    btn.textContent = 'Tutup Detail ▲';
+    card.classList.add('expanded');
+  }
+}
+
+function filterToggle(btn, cat) {
+  document.querySelectorAll('.filter-toggle').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>

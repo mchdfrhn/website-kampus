@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 05 Portal Login | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --portal-student: #1565C0;
+    --portal-staff: #2E7D32;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  .annotation { font-style: italic; color: var(--annotation); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+  .img-placeholder { background: var(--wire-gray); display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-style: italic; border: 1px dashed var(--border); text-align: center; }
+  .section-label { background: var(--annotation); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; display: inline-block; border-radius: 2px; margin-bottom: 8px; }
+
+  .preview-controls { position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; border: 2px solid var(--annotation); border-radius: 8px; padding: 8px 12px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); flex-wrap: wrap; max-width: 260px; }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview { font-size: 11px; padding: 4px 10px; border: 1px solid var(--annotation); border-radius: 4px; cursor: pointer; background: white; color: var(--annotation); font-weight: 600; }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  /* Simplified Navbar for Portal */
+  .navbar { background: var(--primary); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; padding: 14px 0; text-decoration: none; }
+  .nav-logo-box { width: 40px; height: 40px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 12px; }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-back { color: rgba(255,255,255,0.75); text-decoration: none; font-size: 13px; margin-left: auto; padding: 10px 14px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; }
+  .nav-back:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-portal-title { color: white; margin-left: 24px; font-size: 14px; font-weight: 600; opacity: 0.85; }
+
+  /* Portal Header */
+  .portal-header { background: linear-gradient(135deg, var(--primary) 0%, #2C4E7A 100%); color: white; padding: 40px 40px 60px; text-align: center; }
+  .portal-header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+  .portal-header p { font-size: 14px; opacity: 0.85; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+  /* Portal Cards Container */
+  .portal-cards-wrapper { padding: 0 40px; margin-top: -36px; margin-bottom: 40px; }
+  .portal-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  /* Portal Card */
+  .portal-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.12); }
+  .portal-card-header { padding: 28px 24px; color: white; }
+  .portal-card-header.student { background: linear-gradient(135deg, var(--portal-student), #1976D2); }
+  .portal-card-header.staff { background: linear-gradient(135deg, var(--portal-staff), #388E3C); }
+  .portal-card-icon { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+  .portal-card-header h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 4px; }
+  .portal-card-header p { font-size: 12px; opacity: 0.85; }
+  .portal-card-body { padding: 24px; }
+
+  /* Quick Links in Portal */
+  .portal-quicklinks { margin-bottom: 20px; }
+  .portal-quicklinks h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 10px; }
+  .portal-links-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .portal-link-item { display: flex; flex-direction: column; align-items: center; padding: 10px 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text); transition: all 0.2s; text-align: center; gap: 4px; }
+  .portal-link-item:hover { border-color: var(--portal-student); background: #E8F0FE; }
+  .portal-card:nth-child(2) .portal-link-item:hover { border-color: var(--portal-staff); background: #E8F5E9; }
+  .portal-link-icon { font-size: 1.25rem; }
+  .portal-link-label { font-size: 10px; font-weight: 600; color: var(--text-light); line-height: 1.3; }
+
+  /* Login Form */
+  .login-form { border: 1px solid var(--border); border-radius: 8px; padding: 20px; background: var(--bg); }
+  .login-form h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 16px; }
+  .form-group { margin-bottom: 14px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+  .form-group input { width: 100%; border: 1px solid var(--border); border-radius: 4px; padding: 10px 12px; font-size: 13px; font-family: inherit; }
+  .form-group input:focus { outline: none; border-color: var(--portal-student); box-shadow: 0 0 0 3px rgba(21,101,192,0.1); }
+  .portal-card:nth-child(2) .form-group input:focus { border-color: var(--portal-staff); box-shadow: 0 0 0 3px rgba(46,125,50,0.1); }
+  .btn-login-student { width: 100%; padding: 12px; background: var(--portal-student); color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .btn-login-student:hover { background: #1565C0; }
+  .btn-login-staff { width: 100%; padding: 12px; background: var(--portal-staff); color: white; border: none; border-radius: 4px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .btn-login-staff:hover { background: #1B5E20; }
+  .login-links { display: flex; justify-content: space-between; margin-top: 10px; }
+  .login-links a { font-size: 12px; color: var(--annotation); text-decoration: none; }
+  .login-links a:hover { text-decoration: underline; }
+
+  /* Status indicator */
+  .status-badge { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 16px; }
+  .status-online { background: #E8F5E9; color: #2E7D32; }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4CAF50; }
+
+  /* Section */
+  .section { padding: 40px 40px; }
+  .section-alt { background: white; }
+  .section-header { margin-bottom: 24px; }
+  .section-header h2 { font-size: 1.3rem; color: var(--primary); font-weight: 800; margin-bottom: 8px; }
+  .section-header p { color: var(--text-light); font-size: 13px; }
+
+  /* Announcements */
+  .announce-list { display: flex; flex-direction: column; gap: 12px; }
+  .announce-item { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; display: flex; gap: 14px; align-items: flex-start; transition: box-shadow 0.2s; }
+  .announce-item:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+  .announce-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; text-transform: uppercase; }
+  .badge-akademik { background: #E8F0FE; color: var(--portal-student); }
+  .badge-keuangan { background: #FFF3E0; color: #E65100; }
+  .badge-umum { background: #F3E5F5; color: #6A1B9A; }
+  .badge-kemahasiswaan { background: #E0F7FA; color: #00695C; }
+  .announce-content h4 { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 4px; }
+  .announce-content p { font-size: 12px; color: var(--text-light); line-height: 1.5; }
+  .announce-meta { font-size: 11px; color: #999; margin-top: 4px; }
+
+  /* System Status */
+  .system-status-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .system-item { background: white; border: 1px solid var(--border); border-radius: 6px; padding: 14px; text-align: center; }
+  .system-name { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .system-status { font-size: 11px; font-weight: 600; }
+  .s-online { color: var(--portal-staff); }
+  .s-maintenance { color: var(--accent); }
+  .s-offline { color: #E53935; }
+  .system-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .dot-green { background: #4CAF50; }
+  .dot-yellow { background: var(--accent); }
+  .dot-red { background: #E53935; }
+
+  /* Help Section */
+  .help-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .help-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 20px; text-align: center; }
+  .help-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+  .help-card h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+  .help-card p { font-size: 12px; color: var(--text-light); line-height: 1.5; margin-bottom: 12px; }
+  .btn-help { font-size: 12px; color: var(--primary); border: 1px solid var(--primary); padding: 6px 14px; border-radius: 4px; text-decoration: none; display: inline-block; }
+  .btn-help:hover { background: var(--primary); color: white; }
+
+  /* Footer */
+  .footer { background: #1A2D3F; color: rgba(255,255,255,0.8); padding: 32px 40px 20px; }
+  .footer-simple { display: flex; justify-content: space-between; align-items: center; font-size: 12px; flex-wrap: wrap; gap: 12px; }
+  .footer-simple a { color: rgba(255,255,255,0.6); text-decoration: none; }
+  .footer-simple a:hover { color: var(--accent); }
+  .footer-links { display: flex; gap: 16px; }
+
+  .whatsapp-float { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 200; transition: transform 0.2s; text-decoration: none; }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  @media (max-width: 1024px) {
+    .system-status-grid { grid-template-columns: repeat(2, 1fr); }
+    .help-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .portal-cards-wrapper { padding: 0 16px; }
+    .portal-cards-grid { grid-template-columns: 1fr; }
+    .portal-header { padding: 28px 20px 50px; }
+    .portal-links-grid { grid-template-columns: repeat(2, 1fr); }
+    .section { padding: 32px 20px; }
+    .system-status-grid { grid-template-columns: repeat(2, 1fr); }
+    .help-grid { grid-template-columns: 1fr; }
+    .footer { padding: 24px 20px 16px; }
+    .footer-simple { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <!-- SIMPLIFIED NAVBAR -->
+  <nav class="navbar">
+    <a class="nav-logo" href="01-beranda.html">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <span class="nav-portal-title">Portal Layanan Akademik</span>
+    <a class="nav-back" href="01-beranda.html">← Kembali ke Website</a>
+  </nav>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:white; border-bottom:1px solid var(--border);">Anotasi: Navbar portal disederhanakan (tidak ada menu utama). Hanya logo, judul portal, dan tombol "Kembali ke Website". Mengurangi distraksi dan memfokuskan pengguna pada tugas login.</span>
+
+  <!-- PORTAL HEADER -->
+  <div class="portal-header">
+    <h1>Portal Layanan STTPU</h1>
+    <p>Akses semua layanan akademik, administratif, dan informasi kampus dalam satu platform terpadu.</p>
+  </div>
+
+  <!-- PORTAL CARDS -->
+  <div class="portal-cards-wrapper">
+    <div class="portal-cards-grid">
+
+      <!-- MAHASISWA PORTAL -->
+      <div class="portal-card">
+        <div class="portal-card-header student">
+          <span class="portal-card-icon">👩‍💻</span>
+          <h2>Portal Mahasiswa</h2>
+          <p>Akses SIAKAD, e-Learning, jadwal kuliah, dan semua layanan kemahasiswaan.</p>
+        </div>
+        <div class="portal-card-body">
+          <span class="status-badge status-online"><span class="status-dot"></span> Sistem Online</span>
+
+          <div class="portal-quicklinks">
+            <h4>Akses Cepat</h4>
+            <div class="portal-links-grid">
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📊</span><span class="portal-link-label">SIAKAD</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📚</span><span class="portal-link-label">e-Learning (LMS)</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📅</span><span class="portal-link-label">Jadwal Kuliah</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">💳</span><span class="portal-link-label">Pembayaran SPP</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📜</span><span class="portal-link-label">Surat Aktif</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📧</span><span class="portal-link-label">Email Kampus</span></a>
+            </div>
+          </div>
+
+          <div class="login-form">
+            <h4>Masuk ke Portal Mahasiswa</h4>
+            <div class="form-group">
+              <label>NIM (Nomor Induk Mahasiswa)</label>
+              <input type="text" placeholder="Contoh: 20210001">
+            </div>
+            <div class="form-group">
+              <label>Kata Sandi</label>
+              <input type="password" placeholder="Kata sandi Anda">
+            </div>
+            <button class="btn-login-student">Masuk Portal Mahasiswa</button>
+            <div class="login-links">
+              <a href="#">Lupa Kata Sandi?</a>
+              <a href="#">Panduan Penggunaan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DOSEN & STAF PORTAL -->
+      <div class="portal-card">
+        <div class="portal-card-header staff">
+          <span class="portal-card-icon">👨‍🏫</span>
+          <h2>Portal Dosen & Staf</h2>
+          <p>Akses LMS pengajar, SIAKAD dosen, sistem presensi, dan repositori penelitian.</p>
+        </div>
+        <div class="portal-card-body">
+          <span class="status-badge status-online"><span class="status-dot"></span> Sistem Online</span>
+
+          <div class="portal-quicklinks">
+            <h4>Akses Cepat</h4>
+            <div class="portal-links-grid">
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📋</span><span class="portal-link-label">SIAKAD Dosen</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">🖥️</span><span class="portal-link-label">LMS Pengajar</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📝</span><span class="portal-link-label">Input Nilai</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">🔬</span><span class="portal-link-label">Repositori Riset</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📧</span><span class="portal-link-label">Email Kampus</span></a>
+              <a class="portal-link-item" href="#"><span class="portal-link-icon">📑</span><span class="portal-link-label">Administrasi</span></a>
+            </div>
+          </div>
+
+          <div class="login-form">
+            <h4>Masuk ke Portal Dosen & Staf</h4>
+            <div class="form-group">
+              <label>NIP / NIDN / Username</label>
+              <input type="text" placeholder="NIP atau username Anda">
+            </div>
+            <div class="form-group">
+              <label>Kata Sandi</label>
+              <input type="password" placeholder="Kata sandi Anda">
+            </div>
+            <button class="btn-login-staff">Masuk Portal Dosen</button>
+            <div class="login-links">
+              <a href="#">Lupa Kata Sandi?</a>
+              <a href="#">Panduan Penggunaan</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:#FFFDE7; margin-bottom: 4px;">Anotasi: Dua portal besar side-by-side — color coding biru (mahasiswa) dan hijau (dosen/staf). Setiap portal: icon besar, quick links 6 item, form login. Status online badge menunjukkan sistem berfungsi normal. Di mobile: ditumpuk vertikal.</span>
+
+  <!-- PENGUMUMAN -->
+  <section class="section section-alt">
+    <div class="section-label">Info</div>
+    <div class="section-header">
+      <h2>Pengumuman Terkini</h2>
+      <p>Informasi penting untuk seluruh civitas akademika STTPU</p>
+    </div>
+    <div class="announce-list">
+      <div class="announce-item">
+        <span class="announce-badge badge-akademik">Akademik</span>
+        <div class="announce-content">
+          <h4>Pengisian KRS Semester Ganjil 2026/2027 Dibuka 1–15 Agustus 2026</h4>
+          <p>Mahasiswa wajib mengisi Kartu Rencana Studi melalui portal SIAKAD. Pastikan tidak ada tunggakan SPP sebelum pengisian KRS.</p>
+          <span class="announce-meta">Diposting: 18 April 2026 · Bagian Akademik</span>
+        </div>
+      </div>
+      <div class="announce-item">
+        <span class="announce-badge badge-keuangan">Keuangan</span>
+        <div class="announce-content">
+          <h4>Batas Akhir Pembayaran SPP Semester Genap 2025/2026 — 30 April 2026</h4>
+          <p>Mahasiswa yang belum melunasi SPP akan mendapatkan notifikasi penonaktifan akses SIAKAD sementara. Hubungi bagian keuangan untuk pengajuan cicilan.</p>
+          <span class="announce-meta">Diposting: 15 April 2026 · Bagian Keuangan</span>
+        </div>
+      </div>
+      <div class="announce-item">
+        <span class="announce-badge badge-kemahasiswaan">Kemahasiswaan</span>
+        <div class="announce-content">
+          <h4>Pendaftaran Program Magang BUMN dan Swasta Batch 3 Dibuka</h4>
+          <p>Mahasiswa semester 5 ke atas dapat mendaftar program magang melalui sistem bursa kerja STTPU. Tersedia 45 posisi di 12 perusahaan mitra.</p>
+          <span class="announce-meta">Diposting: 10 April 2026 · Bagian Kemahasiswaan</span>
+        </div>
+      </div>
+      <div class="announce-item">
+        <span class="announce-badge badge-umum">Umum</span>
+        <div class="announce-content">
+          <h4>Pemeliharaan Sistem SIAKAD — Sabtu 26 April 2026 Pukul 00.00–04.00 WIB</h4>
+          <p>Sistem SIAKAD akan dalam mode maintenance untuk pembaruan fitur. Akses akan pulih otomatis setelah proses selesai.</p>
+          <span class="announce-meta">Diposting: 8 April 2026 · Tim IT STTPU</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+      <a href="06-berita.html" style="font-size:13px; color:var(--primary); text-decoration:none; border:1px solid var(--primary); padding:8px 20px; border-radius:4px; display:inline-block;">Lihat Semua Pengumuman →</a>
+    </div>
+    <span class="annotation">Anotasi: Daftar pengumuman dengan badge kategori berwarna berbeda (Akademik=biru, Keuangan=oranye, Kemahasiswaan=teal, Umum=ungu). Dinda (persona mahasiswa aktif) dapat langsung melihat pengumuman penting tanpa harus login dulu.</span>
+  </section>
+
+  <!-- SYSTEM STATUS -->
+  <section class="section">
+    <div class="section-label">Status Sistem</div>
+    <div class="section-header">
+      <h2>Status Sistem Layanan</h2>
+      <p>Pembaruan status sistem secara real-time</p>
+    </div>
+    <div class="system-status-grid">
+      <div class="system-item">
+        <div class="system-name">SIAKAD</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">e-Learning (LMS)</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">Email Kampus</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">Sistem Pembayaran</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">Perpustakaan Digital</div>
+        <div class="system-status s-maintenance"><span class="system-dot dot-yellow"></span>Maintenance</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">Bursa Kerja</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">Repositori Riset</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+      <div class="system-item">
+        <div class="system-name">Surat Menyurat</div>
+        <div class="system-status s-online"><span class="system-dot dot-green"></span>Online</div>
+      </div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#888; text-align:right;">Terakhir diperbarui: 18 April 2026 pukul 08.00 WIB</div>
+    <span class="annotation">Anotasi: Status dashboard layanan — mengurangi tiket helpdesk dengan menunjukkan status sistem secara transparan. Dot berwarna: hijau=online, kuning=maintenance, merah=offline. Sangat berguna untuk Dinda (mahasiswa aktif) sebelum berusaha login.</span>
+  </section>
+
+  <!-- BANTUAN -->
+  <section class="section section-alt">
+    <div class="section-label">Bantuan</div>
+    <div class="section-header">
+      <h2>Butuh Bantuan?</h2>
+      <p>Tim IT siap membantu kendala teknis portal dan sistem akademik</p>
+    </div>
+    <div class="help-grid">
+      <div class="help-card">
+        <span class="help-icon">📖</span>
+        <h4>Panduan Penggunaan</h4>
+        <p>Panduan lengkap menggunakan SIAKAD, LMS, dan sistem lainnya tersedia dalam format PDF dan video tutorial.</p>
+        <a class="btn-help" href="#">Lihat Panduan</a>
+      </div>
+      <div class="help-card">
+        <span class="help-icon">🆘</span>
+        <h4>IT Helpdesk</h4>
+        <p>Laporkan masalah teknis melalui sistem tiket helpdesk kami. Respon dalam 1 hari kerja.</p>
+        <a class="btn-help" href="#">Buat Tiket Bantuan</a>
+      </div>
+      <div class="help-card">
+        <span class="help-icon">💬</span>
+        <h4>WhatsApp IT Support</h4>
+        <p>Chat langsung dengan tim IT Support STTPU melalui WhatsApp. Tersedia Senin–Jumat 08.00–16.00.</p>
+        <a class="btn-help" href="#">Chat WhatsApp</a>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Seksi bantuan 3 kartu — Panduan (swadaya), Helpdesk (formal), WhatsApp (cepat). Mengurangi frustasi Dinda (mahasiswa) dan Pak Andi (dosen) saat menghadapi masalah teknis. Jam layanan ditampilkan untuk manage ekspektasi.</span>
+  </section>
+
+  <!-- FOOTER SIMPLIFIED -->
+  <footer class="footer">
+    <div class="footer-simple">
+      <span>© 2026 STTPU Jakarta — Portal Layanan Akademik</span>
+      <div class="footer-links">
+        <a href="01-beranda.html">Website Utama</a>
+        <a href="07-kontak.html">Kontak</a>
+        <a href="#">Kebijakan Privasi</a>
+        <a href="#">Syarat Penggunaan</a>
+      </div>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float" title="IT Support WhatsApp">💬</a>
+
+</div>
+
+<script>
+function setPreview(mode) {
+  document.getElementById('pageWrapper').className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>

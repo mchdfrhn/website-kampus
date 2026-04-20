@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 01 Beranda | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --wire-dark: #BDBDBD;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+    --success: #4CAF50;
+    --danger: #E53935;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  /* === WIREFRAME UTILITY === */
+  .annotation {
+    font-style: italic;
+    color: var(--annotation);
+    font-size: 11px;
+    display: block;
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+  .img-placeholder {
+    background: var(--wire-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 12px;
+    font-style: italic;
+    border: 1px dashed var(--border);
+    text-align: center;
+  }
+  .wire-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .section-label {
+    background: var(--annotation);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    display: inline-block;
+    border-radius: 2px;
+    margin-bottom: 8px;
+  }
+
+  /* === PREVIEW TOGGLE === */
+  .preview-controls {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 9999;
+    background: white;
+    border: 2px solid var(--annotation);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+    max-width: 260px;
+  }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview {
+    font-size: 11px; padding: 4px 10px;
+    border: 1px solid var(--annotation);
+    border-radius: 4px;
+    cursor: pointer;
+    background: white;
+    color: var(--annotation);
+    font-weight: 600;
+  }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  /* === TOP BAR === */
+  .top-bar {
+    background: #F0F4F8;
+    border-bottom: 1px solid var(--border);
+    padding: 6px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .top-bar-left, .top-bar-right { display: flex; gap: 10px; align-items: center; }
+  .top-bar button {
+    background: var(--wire-gray);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 3px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--text);
+  }
+  .top-bar button:hover { background: var(--wire-dark); }
+  .lang-toggle { display: flex; gap: 3px; }
+  .lang-btn {
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    background: white;
+  }
+  .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* === NAVBAR === */
+  .navbar {
+    background: var(--primary);
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    margin-right: 20px;
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-logo-box {
+    width: 40px; height: 40px;
+    background: var(--accent);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; color: var(--primary); font-size: 12px;
+  }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-menu { display: flex; flex: 1; gap: 0; overflow-x: auto; }
+  .nav-item {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    padding: 16px 14px;
+    font-size: 13px;
+    white-space: nowrap;
+    transition: background 0.2s;
+    border-bottom: 3px solid transparent;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--primary);
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+    white-space: nowrap;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .nav-cta:hover { background: #E09520; }
+
+  /* === HERO === */
+  .hero {
+    position: relative;
+    min-height: 520px;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: var(--wire-gray);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; color: #999; font-style: italic;
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(30,58,95,0.92) 55%, rgba(30,58,95,0.4) 100%);
+  }
+  .hero-content {
+    position: relative;
+    padding: 60px 40px;
+    max-width: 600px;
+    color: white;
+  }
+  .hero-eyebrow {
+    background: var(--accent);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 { font-size: 2.25rem; line-height: 1.2; margin-bottom: 16px; font-weight: 800; }
+  .hero p { font-size: 1rem; line-height: 1.6; opacity: 0.9; margin-bottom: 28px; max-width: 460px; }
+  .hero-cta-group { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: var(--primary);
+    font-weight: 700; padding: 13px 24px;
+    border-radius: 4px; text-decoration: none;
+    font-size: 14px; border: none; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #E09520; }
+  .btn-outline-white {
+    background: transparent; color: white;
+    font-weight: 600; padding: 13px 24px;
+    border-radius: 4px; text-decoration: none;
+    font-size: 14px; border: 2px solid rgba(255,255,255,0.7);
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-outline-white:hover { background: rgba(255,255,255,0.15); border-color: white; }
+
+  /* === STATS BAR === */
+  .stats-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .stat-item {
+    padding: 20px 16px;
+    border-right: 1px solid var(--wire-gray);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--primary); line-height: 1; }
+  .stat-label { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* === PMB BANNER === */
+  .pmb-banner {
+    background: linear-gradient(135deg, var(--accent) 0%, #E09520 100%);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .pmb-banner-left { display: flex; align-items: center; gap: 16px; }
+  .pmb-badge {
+    background: var(--primary);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    animation: pulse-annotation 2s infinite;
+  }
+  @keyframes pulse-annotation { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+  .pmb-title { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+  .pmb-subtitle { font-size: 12px; color: var(--primary); opacity: 0.8; }
+  .countdown { display: flex; gap: 8px; align-items: center; }
+  .countdown-unit {
+    background: var(--primary);
+    color: white;
+    border-radius: 4px;
+    padding: 6px 10px;
+    text-align: center;
+    min-width: 48px;
+  }
+  .countdown-num { font-size: 1.25rem; font-weight: 800; display: block; line-height: 1; }
+  .countdown-label { font-size: 9px; text-transform: uppercase; opacity: 0.8; display: block; margin-top: 2px; }
+  .countdown-sep { font-size: 1.25rem; font-weight: 800; color: var(--primary); align-self: flex-start; padding-top: 4px; }
+  .btn-daftar {
+    background: var(--primary);
+    color: white;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .btn-daftar:hover { background: var(--primary-light); }
+
+  /* === SECTIONS === */
+  .section { padding: 60px 40px; }
+  .section-alt { background: var(--white); }
+  .section-header { text-align: center; margin-bottom: 40px; }
+  .section-header h2 { font-size: 1.75rem; color: var(--primary); font-weight: 800; margin-bottom: 10px; }
+  .section-header p { color: var(--text-light); font-size: 14px; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+  .section-header .subtitle-line {
+    width: 48px; height: 3px;
+    background: var(--accent);
+    margin: 12px auto 0;
+    border-radius: 2px;
+  }
+
+  /* === PROGRAM STUDI CARDS === */
+  .prodi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .prodi-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .prodi-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.12); transform: translateY(-2px); }
+  .prodi-card-img { height: 120px; }
+  .prodi-card-body { padding: 16px; }
+  .prodi-badge {
+    background: #E8F0FE;
+    color: var(--primary);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .prodi-card h3 { font-size: 15px; color: var(--primary); font-weight: 700; margin-bottom: 6px; }
+  .prodi-card p { font-size: 12px; color: var(--text-light); line-height: 1.5; margin-bottom: 12px; }
+  .prodi-card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 16px;
+    border-top: 1px solid var(--wire-gray);
+    font-size: 12px;
+  }
+  .akred-badge {
+    background: #E8F5E9; color: #2E7D32;
+    font-weight: 700; padding: 2px 8px;
+    border-radius: 3px; font-size: 11px;
+  }
+  .btn-lihat {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid var(--primary);
+    padding: 4px 10px;
+    border-radius: 3px;
+    transition: all 0.2s;
+  }
+  .btn-lihat:hover { background: var(--primary); color: white; }
+
+  /* === QUICK LINKS PERSONA === */
+  .quick-links-section { background: var(--primary); color: white; }
+  .quick-links-section .section-header h2 { color: white; }
+  .quick-links-section .section-header p { color: rgba(255,255,255,0.75); }
+  .persona-tabs { display: flex; gap: 0; margin-bottom: 28px; justify-content: center; flex-wrap: wrap; }
+  .persona-tab {
+    padding: 10px 22px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    border: 1px solid rgba(255,255,255,0.2);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .persona-tab:first-child { border-radius: 4px 0 0 4px; }
+  .persona-tab:last-child { border-radius: 0 4px 4px 0; }
+  .persona-tab.active { background: var(--accent); color: var(--primary); border-color: var(--accent); }
+  .persona-tab:hover:not(.active) { background: rgba(255,255,255,0.2); }
+  .persona-links-panel {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 28px;
+    display: none;
+  }
+  .persona-links-panel.active { display: block; }
+  .persona-links-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .quick-link-item {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 6px;
+    padding: 14px 12px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    transition: background 0.2s;
+  }
+  .quick-link-item:hover { background: rgba(255,255,255,0.2); }
+  .quick-link-icon { font-size: 1.5rem; margin-bottom: 8px; display: block; }
+  .quick-link-label { font-size: 12px; font-weight: 600; }
+
+  /* === BERITA === */
+  .berita-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .berita-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .berita-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+  .berita-img { height: 160px; }
+  .berita-body { padding: 16px; }
+  .berita-cat {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    color: var(--accent); margin-bottom: 6px; display: block;
+  }
+  .berita-body h3 { font-size: 14px; font-weight: 700; color: var(--primary); line-height: 1.4; margin-bottom: 8px; }
+  .berita-body p { font-size: 12px; color: var(--text-light); line-height: 1.5; margin-bottom: 10px; }
+  .berita-meta { font-size: 11px; color: #999; }
+
+  /* === AKREDITASI === */
+  .akred-grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; align-items: center; }
+  .akred-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .akred-logo { width: 80px; height: 60px; margin: 0 auto 10px; }
+  .akred-name { font-size: 12px; font-weight: 700; color: var(--primary); }
+  .akred-status { font-size: 11px; color: var(--success); font-weight: 600; }
+
+  /* === TESTIMONIALS === */
+  .testimonial-slider { position: relative; }
+  .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .testimonial-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+  }
+  .testimonial-card::before {
+    content: '\201C';
+    font-size: 4rem;
+    color: var(--wire-gray);
+    position: absolute;
+    top: 8px; left: 16px;
+    line-height: 1;
+  }
+  .testimonial-text { font-size: 13px; color: var(--text); line-height: 1.7; margin-bottom: 20px; padding-top: 28px; font-style: italic; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .testimonial-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; }
+  .testimonial-name { font-size: 13px; font-weight: 700; color: var(--primary); }
+  .testimonial-prodi { font-size: 11px; color: var(--text-light); }
+  .slider-dots { text-align: center; margin-top: 24px; display: flex; gap: 6px; justify-content: center; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--wire-gray); cursor: pointer; }
+  .dot.active { background: var(--primary); }
+
+  /* === FOOTER === */
+  .footer {
+    background: #1A2D3F;
+    color: rgba(255,255,255,0.8);
+    padding: 48px 40px 24px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 32px;
+  }
+  .footer h4 { color: white; font-size: 13px; font-weight: 700; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .footer-logo-area { }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .footer-logo-box { width: 36px; height: 36px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 10px; }
+  .footer-brand-name { color: white; font-size: 14px; font-weight: 700; }
+  .footer-desc { font-size: 12px; line-height: 1.7; margin-bottom: 16px; }
+  .social-links { display: flex; gap: 8px; }
+  .social-btn { width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; transition: background 0.2s; text-decoration: none; }
+  .social-btn:hover { background: var(--accent); }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 8px; }
+  .footer a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; transition: color 0.2s; }
+  .footer a:hover { color: var(--accent); }
+  .footer-contact p { font-size: 12px; margin-bottom: 8px; line-height: 1.5; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* === WHATSAPP FLOAT === */
+  .whatsapp-float {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 56px; height: 56px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    cursor: pointer;
+    z-index: 200;
+    transition: transform 0.2s;
+    text-decoration: none;
+  }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 1024px) {
+    .prodi-grid { grid-template-columns: repeat(2, 1fr); }
+    .berita-grid { grid-template-columns: repeat(2, 1fr); }
+    .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .persona-links-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 768px) {
+    .top-bar { flex-direction: column; align-items: flex-start; gap: 8px; }
+    .nav-menu { display: none; }
+    .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    .prodi-grid, .berita-grid, .testimonial-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero { min-height: 400px; }
+    .hero h1 { font-size: 1.6rem; }
+    .hero-content { padding: 40px 20px; }
+    .section { padding: 40px 20px; }
+    .pmb-banner { flex-direction: column; padding: 16px 20px; align-items: flex-start; }
+    .persona-links-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer { padding: 40px 20px 20px; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Preview Controls -->
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span style="font-size:11px; color:#666;">Aksesibilitas:</span>
+      <button onclick="this.textContent = this.textContent==='A+' ? 'A' : 'A+'">A+</button>
+      <button>Kontras Tinggi</button>
+      <button>Baca Mudah</button>
+    </div>
+    <div class="top-bar-right">
+      <div class="lang-toggle">
+        <button class="lang-btn active">ID</button>
+        <button class="lang-btn">EN</button>
+      </div>
+      <span style="font-size:11px; color:#666;">📞 (021) 555-1234</span>
+    </div>
+    <span class="annotation">Anotasi: Top bar aksesibilitas — mengikuti pola UGM. Toggle kontras & ukuran font penting untuk pengguna disabilitas. Language switch untuk konten bilingual.</span>
+  </div>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a class="nav-logo" href="#">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item active" href="#">Tentang</a>
+      <a class="nav-item" href="#">Akademik</a>
+      <a class="nav-item" href="02-pmb.html">PMB</a>
+      <a class="nav-item" href="#">Penelitian</a>
+      <a class="nav-item" href="#">Kemahasiswaan</a>
+      <a class="nav-item" href="06-berita.html">Berita</a>
+      <a class="nav-item" href="05-portal.html">Portal</a>
+      <a class="nav-item" href="07-kontak.html">Kontak</a>
+    </div>
+    <a class="nav-cta" href="02-pmb.html">Daftar Sekarang</a>
+    <span class="annotation" style="display:none;">Navbar sticky, warna primary. CTA "Daftar Sekarang" dengan warna aksen untuk menonjol.</span>
+  </nav>
+  <span class="annotation" style="padding: 4px 20px; display:block; background:white; border-bottom:1px solid var(--border);">Anotasi: Navbar sticky (position: sticky top: 0) — menu item aktif ditandai garis bawah aksen. "Daftar Sekarang" selalu tampak karena margin-left: auto.</span>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg">Placeholder: Foto kampus / aktivitas mahasiswa STTPU (1920×520px) — foto berkualitas tinggi, suasana positif, beragam mahasiswa</div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <span class="hero-eyebrow">Sekolah Tinggi Teknologi</span>
+      <h1>Teknologi untuk Indonesia yang Lebih Baik</h1>
+      <p>Bergabunglah dengan ribuan alumni STTPU yang berkontribusi membangun infrastruktur dan teknologi terbaik untuk Indonesia. Bersama kami, wujudkan potensimu.</p>
+      <div class="hero-cta-group">
+        <a class="btn-primary" href="02-pmb.html">Daftar Sekarang</a>
+        <a class="btn-outline-white" href="03-program-studi.html">Pelajari Program Studi</a>
+      </div>
+    </div>
+  </section>
+  <span class="annotation" style="padding: 4px 20px; display:block; background:#FFFDE7; border-bottom:1px solid #FFF9C4;">Anotasi: Hero — min-height 520px. Overlay gradien memastikan teks terbaca di atas foto apapun. 2 CTA: primary (daftar) & secondary (eksplorasi). Copy headline menunjukkan relevansi nasional = daya tarik emosional.</span>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="stat-num">2.400+</div>
+      <div class="stat-label">Mahasiswa Aktif</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">6</div>
+      <div class="stat-label">Program Studi</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">1987</div>
+      <div class="stat-label">Tahun Berdiri</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">B</div>
+      <div class="stat-label">Akreditasi BAN-PT</div>
+    </div>
+  </div>
+  <span class="annotation" style="padding: 4px 20px; display:block; background:white;">Anotasi: Stats bar — 4 angka kunci untuk membangun kepercayaan (social proof). Tampil tepat di bawah hero agar langsung terbaca. Di mobile: grid 2x2.</span>
+
+  <!-- PMB ACTIVE BANNER -->
+  <div class="pmb-banner">
+    <div class="pmb-banner-left">
+      <span class="pmb-badge">🔴 AKTIF</span>
+      <div>
+        <div class="pmb-title">Pendaftaran Mahasiswa Baru 2026/2027 Dibuka!</div>
+        <div class="pmb-subtitle">Daftar sekarang, kuota terbatas — Gelombang II ditutup 30 Mei 2026</div>
+      </div>
+    </div>
+    <div class="countdown">
+      <div class="countdown-unit"><span class="countdown-num" id="cd-days">42</span><span class="countdown-label">Hari</span></div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-hours">08</span><span class="countdown-label">Jam</span></div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-mins">34</span><span class="countdown-label">Menit</span></div>
+      <span class="countdown-sep">:</span>
+      <div class="countdown-unit"><span class="countdown-num" id="cd-secs">17</span><span class="countdown-label">Detik</span></div>
+    </div>
+    <a class="btn-daftar" href="02-pmb.html">Daftar PMB &rarr;</a>
+  </div>
+  <span class="annotation" style="padding: 4px 20px; display:block; background:#FFF8E1; border-bottom: 1px solid #FFE082;">Anotasi: PMB Banner — hanya tampil saat periode PMB aktif. Countdown timer real-time menciptakan urgensi. Warna aksen (oranye) memisahkan dari navbar biru. Komponen ini dikontrol CMS on/off.</span>
+
+  <!-- PROGRAM STUDI -->
+  <section class="section section-alt">
+    <div class="section-label">Bagian</div>
+    <div class="section-header">
+      <h2>Program Studi Unggulan</h2>
+      <p>Pilih jalur karir teknologi terbaik bersama program studi kami yang terakreditasi nasional</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="prodi-grid">
+
+      <div class="prodi-card">
+        <div class="prodi-card-img img-placeholder">Foto kegiatan lab/studio Teknik Sipil (400×160px)</div>
+        <div class="prodi-card-body">
+          <span class="prodi-badge">D4 — Sarjana Terapan</span>
+          <h3>Teknik Konstruksi Gedung</h3>
+          <p>Mempelajari perencanaan, pelaksanaan, dan pengawasan konstruksi gedung dengan pendekatan teknologi terkini dan BIM.</p>
+        </div>
+        <div class="prodi-card-footer">
+          <span class="akred-badge">Akreditasi B</span>
+          <a class="btn-lihat" href="03-program-studi.html">Lihat Detail</a>
+        </div>
+      </div>
+
+      <div class="prodi-card">
+        <div class="prodi-card-img img-placeholder">Foto studio desain / maket Teknik Arsitektur (400×160px)</div>
+        <div class="prodi-card-body">
+          <span class="prodi-badge">D4 — Sarjana Terapan</span>
+          <h3>Teknik Arsitektur</h3>
+          <p>Desain arsitektur kontemporer yang memadukan estetika, fungsi, dan keberlanjutan lingkungan hidup.</p>
+        </div>
+        <div class="prodi-card-footer">
+          <span class="akred-badge">Akreditasi B</span>
+          <a class="btn-lihat" href="03-program-studi.html">Lihat Detail</a>
+        </div>
+      </div>
+
+      <div class="prodi-card">
+        <div class="prodi-card-img img-placeholder">Foto ruang komputer / lab teknologi informasi (400×160px)</div>
+        <div class="prodi-card-body">
+          <span class="prodi-badge">D4 — Sarjana Terapan</span>
+          <h3>Teknologi Informasi</h3>
+          <p>Pengembangan sistem informasi, rekayasa perangkat lunak, dan infrastruktur TI untuk sektor publik dan swasta.</p>
+        </div>
+        <div class="prodi-card-footer">
+          <span class="akred-badge">Akreditasi B</span>
+          <a class="btn-lihat" href="03-program-studi.html">Lihat Detail</a>
+        </div>
+      </div>
+
+      <div class="prodi-card">
+        <div class="prodi-card-img img-placeholder">Foto lab mekanikal / mesin (400×160px)</div>
+        <div class="prodi-card-body">
+          <span class="prodi-badge">D3 — Diploma</span>
+          <h3>Teknik Mesin</h3>
+          <p>Perancangan dan perawatan sistem mekanikal untuk industri konstruksi dan manufaktur nasional.</p>
+        </div>
+        <div class="prodi-card-footer">
+          <span class="akred-badge">Akreditasi B</span>
+          <a class="btn-lihat" href="03-program-studi.html">Lihat Detail</a>
+        </div>
+      </div>
+
+      <div class="prodi-card">
+        <div class="prodi-card-img img-placeholder">Foto lab kelistrikan / panel (400×160px)</div>
+        <div class="prodi-card-body">
+          <span class="prodi-badge">D3 — Diploma</span>
+          <h3>Teknik Listrik</h3>
+          <p>Instalasi, pemeliharaan, dan perancangan sistem ketenagalistrikan untuk gedung dan infrastruktur publik.</p>
+        </div>
+        <div class="prodi-card-footer">
+          <span class="akred-badge">Akreditasi B</span>
+          <a class="btn-lihat" href="03-program-studi.html">Lihat Detail</a>
+        </div>
+      </div>
+
+      <div class="prodi-card">
+        <div class="prodi-card-img img-placeholder">Foto lab lingkungan / sampling air (400×160px)</div>
+        <div class="prodi-card-body">
+          <span class="prodi-badge">D4 — Sarjana Terapan</span>
+          <h3>Teknik Lingkungan</h3>
+          <p>Pengelolaan lingkungan, sanitasi, dan teknologi pengolahan air bersih serta limbah untuk pembangunan berkelanjutan.</p>
+        </div>
+        <div class="prodi-card-footer">
+          <span class="akred-badge">Akreditasi B</span>
+          <a class="btn-lihat" href="03-program-studi.html">Lihat Detail</a>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align:center; margin-top:32px;">
+      <a class="btn-primary" href="03-program-studi.html" style="display:inline-block; text-decoration:none;">Lihat Semua Program Studi</a>
+    </div>
+    <span class="annotation">Anotasi: 6 prodi dalam grid 3 kolom (desktop) / 2 (tablet) / 1 (mobile). Setiap kartu: foto, badge jenjang, nama, deskripsi singkat, akreditasi, tombol detail. Grid menggunakan CSS Grid dengan auto-sizing.</span>
+  </section>
+
+  <!-- QUICK LINKS PERSONA -->
+  <section class="section quick-links-section">
+    <div class="section-label" style="background:var(--accent); color:var(--primary);">Segmentasi</div>
+    <div class="section-header">
+      <h2>Saya adalah...</h2>
+      <p>Temukan informasi yang paling relevan untuk kebutuhan Anda</p>
+      <div class="subtitle-line"></div>
+    </div>
+
+    <div class="persona-tabs">
+      <button class="persona-tab active" onclick="switchTab('calon')">👨‍🎓 Calon Mahasiswa</button>
+      <button class="persona-tab" onclick="switchTab('aktif')">👩‍💻 Mahasiswa Aktif</button>
+      <button class="persona-tab" onclick="switchTab('dosen')">👨‍🏫 Dosen & Staf</button>
+      <button class="persona-tab" onclick="switchTab('mitra')">🤝 Mitra Industri</button>
+    </div>
+
+    <div id="panel-calon" class="persona-links-panel active">
+      <div class="persona-links-grid">
+        <a class="quick-link-item" href="02-pmb.html"><span class="quick-link-icon">📝</span><span class="quick-link-label">Cara Mendaftar</span></a>
+        <a class="quick-link-item" href="03-program-studi.html"><span class="quick-link-icon">🎓</span><span class="quick-link-label">Program Studi</span></a>
+        <a class="quick-link-item" href="02-pmb.html#biaya"><span class="quick-link-icon">💰</span><span class="quick-link-label">Biaya Kuliah</span></a>
+        <a class="quick-link-item" href="02-pmb.html#beasiswa"><span class="quick-link-icon">🏆</span><span class="quick-link-label">Beasiswa</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🏕️</span><span class="quick-link-label">Fasilitas Kampus</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🗓️</span><span class="quick-link-label">Jadwal PMB</span></a>
+        <a class="quick-link-item" href="02-pmb.html#status"><span class="quick-link-icon">🔍</span><span class="quick-link-label">Cek Status Daftar</span></a>
+        <a class="quick-link-item" href="07-kontak.html"><span class="quick-link-icon">💬</span><span class="quick-link-label">Tanya via WhatsApp</span></a>
+      </div>
+    </div>
+
+    <div id="panel-aktif" class="persona-links-panel">
+      <div class="persona-links-grid">
+        <a class="quick-link-item" href="05-portal.html"><span class="quick-link-icon">📊</span><span class="quick-link-label">SIAKAD</span></a>
+        <a class="quick-link-item" href="05-portal.html"><span class="quick-link-icon">📚</span><span class="quick-link-label">e-Learning (LMS)</span></a>
+        <a class="quick-link-item" href="05-portal.html"><span class="quick-link-icon">📅</span><span class="quick-link-label">Jadwal Kuliah</span></a>
+        <a class="quick-link-item" href="06-berita.html"><span class="quick-link-icon">📢</span><span class="quick-link-label">Pengumuman</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">📜</span><span class="quick-link-label">Surat Keterangan</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">💳</span><span class="quick-link-label">Pembayaran SPP</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🔬</span><span class="quick-link-label">Info Penelitian</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🎯</span><span class="quick-link-label">Bursa Kerja</span></a>
+      </div>
+    </div>
+
+    <div id="panel-dosen" class="persona-links-panel">
+      <div class="persona-links-grid">
+        <a class="quick-link-item" href="05-portal.html"><span class="quick-link-icon">👨‍💻</span><span class="quick-link-label">Portal Dosen</span></a>
+        <a class="quick-link-item" href="05-portal.html"><span class="quick-link-icon">📚</span><span class="quick-link-label">LMS Pengajar</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🔬</span><span class="quick-link-label">Repositori Riset</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">📝</span><span class="quick-link-label">Unggah Publikasi</span></a>
+        <a class="quick-link-item" href="05-portal.html"><span class="quick-link-icon">📧</span><span class="quick-link-label">Email Kampus</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">📋</span><span class="quick-link-label">Absensi & Nilai</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">📑</span><span class="quick-link-label">Administrasi</span></a>
+        <a class="quick-link-item" href="07-kontak.html"><span class="quick-link-icon">🆘</span><span class="quick-link-label">IT Helpdesk</span></a>
+      </div>
+    </div>
+
+    <div id="panel-mitra" class="persona-links-panel">
+      <div class="persona-links-grid">
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🤝</span><span class="quick-link-label">Kerjasama MoU</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🎯</span><span class="quick-link-label">Rekrutmen Alumni</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🏭</span><span class="quick-link-label">Magang Industri</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🔬</span><span class="quick-link-label">Riset Bersama</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🏆</span><span class="quick-link-label">CSR & Beasiswa</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">📊</span><span class="quick-link-label">Data Lulusan</span></a>
+        <a class="quick-link-item" href="07-kontak.html"><span class="quick-link-icon">📞</span><span class="quick-link-label">Hubungi Kami</span></a>
+        <a class="quick-link-item" href="#"><span class="quick-link-icon">🗂️</span><span class="quick-link-label">Profil Institusi</span></a>
+      </div>
+    </div>
+
+    <span class="annotation">Anotasi: "Saya adalah..." — tab segmentasi persona mengikuti pola UNAIR. Setiap tab menampilkan 8 quick link relevan. JS ringan untuk toggle panel. Di mobile: grid 2 kolom, tab bisa scroll horizontal.</span>
+  </section>
+
+  <!-- BERITA TERBARU -->
+  <section class="section">
+    <div class="section-label">Konten</div>
+    <div class="section-header">
+      <h2>Berita Terbaru</h2>
+      <p>Ikuti perkembangan terbaru kegiatan akademik, penelitian, dan kemahasiswaan STTPU</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="berita-grid">
+      <div class="berita-card">
+        <div class="berita-img img-placeholder">Foto berita 1 (600×200px)</div>
+        <div class="berita-body">
+          <span class="berita-cat">Prestasi</span>
+          <h3>Mahasiswa STTPU Raih Juara 1 Kompetisi Konstruksi Nasional di Jakarta</h3>
+          <p>Tim dari Program Studi Teknik Konstruksi Gedung berhasil membawa pulang trofi bergengsi dalam ajang kompetisi tingkat nasional yang diikuti 45 perguruan tinggi.</p>
+          <span class="berita-meta">15 April 2026 · 3 menit baca</span>
+        </div>
+      </div>
+      <div class="berita-card">
+        <div class="berita-img img-placeholder">Foto berita 2 (600×200px)</div>
+        <div class="berita-body">
+          <span class="berita-cat">Akademik</span>
+          <h3>STTPU Resmi Tanda Tangani MoU dengan PT Waskita Karya untuk Program Magang</h3>
+          <p>Penandatanganan nota kesepahaman membuka peluang magang dan rekrutmen langsung bagi 50 mahasiswa semester akhir setiap tahunnya.</p>
+          <span class="berita-meta">10 April 2026 · 2 menit baca</span>
+        </div>
+      </div>
+      <div class="berita-card">
+        <div class="berita-img img-placeholder">Foto berita 3 (600×200px)</div>
+        <div class="berita-body">
+          <span class="berita-cat">Pengumuman</span>
+          <h3>Pendaftaran Program Studi Baru Teknologi Informasi Dibuka Mulai Juni 2026</h3>
+          <p>STTPU membuka program studi baru yang menjawab kebutuhan industri digital nasional dengan kurikulum yang dirancang bersama praktisi teknologi.</p>
+          <span class="berita-meta">5 April 2026 · 2 menit baca</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:28px;">
+      <a href="06-berita.html" style="color:var(--primary); font-weight:600; font-size:14px; text-decoration:none; border:1px solid var(--primary); padding:10px 24px; border-radius:4px; display:inline-block;">Lihat Semua Berita &rarr;</a>
+    </div>
+    <span class="annotation">Anotasi: 3 kartu berita terbaru — grid 3 kolom (desktop). Setiap kartu: foto thumbnail, badge kategori berwarna, judul, excerpt singkat, metadata tanggal. Link ke halaman berita lengkap.</span>
+  </section>
+
+  <!-- AKREDITASI & LEGALITAS -->
+  <section class="section section-alt">
+    <div class="section-label">Kepercayaan</div>
+    <div class="section-header">
+      <h2>Akreditasi & Legalitas</h2>
+      <p>STTPU beroperasi di bawah pengawasan dan telah mendapat pengakuan dari lembaga-lembaga terpercaya nasional</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="akred-grid">
+      <div class="akred-item">
+        <div class="akred-logo img-placeholder">Logo BAN-PT (80×60px)</div>
+        <div class="akred-name">BAN-PT</div>
+        <div class="akred-status">Akreditasi B</div>
+      </div>
+      <div class="akred-item">
+        <div class="akred-logo img-placeholder">Logo DIKTI (80×60px)</div>
+        <div class="akred-name">Kemendikbudristek</div>
+        <div class="akred-status">Terdaftar Resmi</div>
+      </div>
+      <div class="akred-item">
+        <div class="akred-logo img-placeholder">Logo LLDIKTI (80×60px)</div>
+        <div class="akred-name">LLDIKTI Wilayah III</div>
+        <div class="akred-status">Aktif & Terdaftar</div>
+      </div>
+      <div class="akred-item">
+        <div class="akred-logo img-placeholder">Logo PDDikti (80×60px)</div>
+        <div class="akred-name">PDDikti</div>
+        <div class="akred-status">Data Terverifikasi</div>
+      </div>
+      <div class="akred-item">
+        <div class="akred-logo img-placeholder">Sertifikat ISO (80×60px)</div>
+        <div class="akred-name">ISO 9001:2015</div>
+        <div class="akred-status">Manajemen Mutu</div>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Bagian akreditasi sangat krusial untuk Bu Sari (orang tua). Menampilkan logo-logo lembaga resmi. Link ke dokumen PDF sertifikat. Di PRD ini adalah faktor kepercayaan (trust builder) utama.</span>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="section-label">Sosial</div>
+    <div class="section-header">
+      <h2>Kata Mereka tentang STTPU</h2>
+      <p>Dengarkan pengalaman nyata dari mahasiswa dan alumni yang telah merasakan manfaat pendidikan di STTPU</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <p class="testimonial-text">"Kuliah di STTPU mengubah cara saya memandang dunia konstruksi. Dosen-dosennya adalah praktisi berpengalaman yang selalu berbagi kasus nyata di lapangan. Sekarang saya sudah bekerja di proyek infrastruktur tol trans-Jawa."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar img-placeholder" style="min-width:44px;">Foto</div>
+          <div>
+            <div class="testimonial-name">Ahmad Rifai</div>
+            <div class="testimonial-prodi">Alumni Teknik Konstruksi Gedung, 2023</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">"Fasilitas laboratorium di STTPU sangat lengkap dan modern. Saya bisa berlatih langsung dengan peralatan yang sama dengan yang digunakan industri. Ini yang membuat lulusan STTPU siap kerja dari hari pertama."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar img-placeholder" style="min-width:44px;">Foto</div>
+          <div>
+            <div class="testimonial-name">Dewi Rahayu</div>
+            <div class="testimonial-prodi">Mahasiswi Teknik Arsitektur, Semester 6</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <p class="testimonial-text">"Sebagai orang tua, saya sangat terbantu dengan transparansi informasi di website STTPU. Semua biaya tertera jelas, jadwal pendaftaran transparan, dan tim PMB sangat responsif menjawab pertanyaan saya."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar img-placeholder" style="min-width:44px;">Foto</div>
+          <div>
+            <div class="testimonial-name">Bapak Hendra Susanto</div>
+            <div class="testimonial-prodi">Orang Tua Mahasiswa Angkatan 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slider-dots">
+      <span class="dot active"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+    <span class="annotation">Anotasi: Testimonial slider — 3 kartu dengan kutipan (quote mark dekoratif). Foto avatar, nama, dan program studi. Dot navigation untuk slider. Termasuk satu testimonial dari orang tua untuk Bu Sari persona. Konten ini adalah social proof yang sangat impactful.</span>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-logo-area">
+        <div class="footer-brand">
+          <div class="footer-logo-box">STTPU</div>
+          <div class="footer-brand-name">STTPU Jakarta</div>
+        </div>
+        <p class="footer-desc">Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — mendidik tenaga ahli teknologi Indonesia yang kompeten, berintegritas, dan siap berkontribusi pada pembangunan nasional.</p>
+        <div class="social-links">
+          <a class="social-btn" href="#" title="Instagram">📸</a>
+          <a class="social-btn" href="#" title="YouTube">▶️</a>
+          <a class="social-btn" href="#" title="Facebook">📘</a>
+          <a class="social-btn" href="#" title="LinkedIn">💼</a>
+          <a class="social-btn" href="#" title="Twitter/X">🐦</a>
+          <a class="social-btn" href="#" title="TikTok">🎵</a>
+        </div>
+      </div>
+      <div>
+        <h4>Akademik</h4>
+        <ul>
+          <li><a href="03-program-studi.html">Program Studi</a></li>
+          <li><a href="#">Kurikulum</a></li>
+          <li><a href="#">Kalender Akademik</a></li>
+          <li><a href="#">Dosen & Staf</a></li>
+          <li><a href="#">Penelitian</a></li>
+          <li><a href="#">Jurnal STTPU</a></li>
+          <li><a href="#">Perpustakaan Digital</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Layanan</h4>
+        <ul>
+          <li><a href="02-pmb.html">Pendaftaran (PMB)</a></li>
+          <li><a href="05-portal.html">Portal Mahasiswa</a></li>
+          <li><a href="05-portal.html">Portal Dosen</a></li>
+          <li><a href="#">Kemahasiswaan</a></li>
+          <li><a href="#">Bursa Kerja</a></li>
+          <li><a href="#">Beasiswa</a></li>
+          <li><a href="#">Alumni</a></li>
+        </ul>
+      </div>
+      <div class="footer-contact">
+        <h4>Kontak & Info</h4>
+        <p>📍 Jl. Pelajar Pejuang 45 No. 1, Bandung, Jawa Barat 40264</p>
+        <p>📞 (021) 555-1234</p>
+        <p>📧 info@sttpu.ac.id</p>
+        <p>🕐 Senin–Jumat: 08.00–16.00 WIB</p>
+        <br>
+        <h4>Tautan Cepat</h4>
+        <ul>
+          <li><a href="04-tentang.html">Tentang STTPU</a></li>
+          <li><a href="06-berita.html">Berita & Pengumuman</a></li>
+          <li><a href="07-kontak.html">Hubungi Kami</a></li>
+          <li><a href="#">Zona Integritas</a></li>
+          <li><a href="#">Laporan Keuangan</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STTPU Jakarta. Hak Cipta Dilindungi.</span>
+      <span>Kebijakan Privasi · Syarat Penggunaan · Peta Situs · Barometer</span>
+    </div>
+    <span class="annotation" style="color:rgba(41,121,255,0.7); margin-top:12px; font-size:11px; display:block;">Anotasi: Footer 4 kolom — Kolom 1: branding + media sosial. Kolom 2: Akademik. Kolom 3: Layanan. Kolom 4: Kontak + Quick links. Di mobile: ditumpuk vertikal 1 kolom. Menampung semua link penting agar tidak terlewat.</span>
+  </footer>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/6221555XXXX" class="whatsapp-float" title="Chat WhatsApp PMB STTPU">💬</a>
+  <span class="annotation" style="position:fixed; bottom:90px; right:28px; font-size:10px; background:white; border:1px solid var(--annotation); padding:4px 8px; border-radius:4px; max-width:150px; text-align:right; z-index:201;">Floating WA Button — fixed position, always visible, z-index tinggi</span>
+
+</div><!-- end page-wrapper -->
+
+<script>
+// Preview mode toggle
+function setPreview(mode) {
+  const wrapper = document.getElementById('pageWrapper');
+  wrapper.className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+// Persona tab switcher
+function switchTab(tab) {
+  document.querySelectorAll('.persona-links-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.persona-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Countdown timer
+function updateCountdown() {
+  const target = new Date('2026-05-30T23:59:59');
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) return;
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const secs = Math.floor((diff % (1000*60)) / 1000);
+  document.getElementById('cd-days').textContent = String(days).padStart(2,'0');
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd-mins').textContent = String(mins).padStart(2,'0');
+  document.getElementById('cd-secs').textContent = String(secs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

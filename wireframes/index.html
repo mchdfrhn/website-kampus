@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STTPU Wireframe Hub</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F8F9FA;
+    --text: #333;
+    --border: #CCCCCC;
+    --card-bg: #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--primary);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+  }
+  header h1 { font-size: 1.75rem; margin-bottom: 0.5rem; }
+  header p { opacity: 0.8; font-size: 0.95rem; }
+  header .meta {
+    display: flex; gap: 1.5rem; justify-content: center;
+    margin-top: 1rem; flex-wrap: wrap;
+  }
+  header .meta span {
+    background: rgba(255,255,255,0.15);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.12); transform: translateY(-2px); }
+  .card-thumb {
+    height: 100px;
+    background: var(--wire-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-body { padding: 1rem; flex: 1; }
+  .card-num {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--annotation);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+  }
+  .card-title { font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 0.35rem; }
+  .card-url { font-size: 0.75rem; color: #888; font-family: monospace; margin-bottom: 0.5rem; }
+  .card-desc { font-size: 0.82rem; color: #555; line-height: 1.5; }
+  .card-footer {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--wire-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .badge-done { background: #E8F5E9; color: #2E7D32; }
+  .badge-priority { background: #FFF3E0; color: #E65100; }
+  .priority-label { font-size: 0.72rem; color: #888; }
+  .personas-section {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .personas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .persona-card {
+    background: var(--bg);
+    border: 1px solid var(--wire-gray);
+    border-radius: 6px;
+    padding: 0.85rem;
+  }
+  .persona-avatar {
+    width: 44px; height: 44px;
+    background: var(--wire-gray);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .persona-name { font-weight: 700; font-size: 0.9rem; color: var(--primary); }
+  .persona-role { font-size: 0.75rem; color: #666; margin-bottom: 0.35rem; }
+  .persona-note { font-size: 0.75rem; color: #888; line-height: 1.4; }
+  .tech-notes {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--annotation);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .tech-notes h3 { color: var(--annotation); font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .tech-notes ul { list-style: none; }
+  .tech-notes li { font-size: 0.82rem; color: #555; padding: 0.25rem 0; padding-left: 1rem; position: relative; }
+  .tech-notes li::before { content: "→"; position: absolute; left: 0; color: var(--annotation); }
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+    color: #888;
+    border-top: 1px solid var(--wire-gray);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>STTPU Website — Wireframe Hub</h1>
+  <p>Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta</p>
+  <div class="meta">
+    <span>Versi 1.0</span>
+    <span>8 Halaman Wireframe</span>
+    <span>Mobile-First</span>
+    <span>Bahasa Indonesia</span>
+    <span>18 April 2026</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div style="margin-top: 2rem; margin-bottom: 0.75rem;">
+    <span class="section-title">Daftar Halaman Wireframe</span>
+  </div>
+
+  <div class="grid">
+
+    <a class="card" href="01-beranda.html">
+      <div class="card-thumb">🏠</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 01</div>
+        <div class="card-title">Beranda / Homepage</div>
+        <div class="card-url">/ (root)</div>
+        <div class="card-desc">Hero section, stats bar, PMB banner dengan countdown, grid program studi, quick links persona, berita terbaru, akreditasi, testimonial, footer lengkap.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label">Prioritas: Tinggi</span>
+      </div>
+    </a>
+
+    <a class="card" href="02-pmb.html">
+      <div class="card-thumb">📋</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 02</div>
+        <div class="card-title">PMB / Penerimaan Mahasiswa Baru</div>
+        <div class="card-url">/pmb</div>
+        <div class="card-desc">Jalur pendaftaran, timeline visual, tabel biaya kuliah transparan, form multi-step, pengecekan status, FAQ, kontak PMB. Halaman dengan dampak bisnis tertinggi.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label badge badge-priority">Prioritas: Kritis</span>
+      </div>
+    </a>
+
+    <a class="card" href="03-program-studi.html">
+      <div class="card-thumb">🎓</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 03</div>
+        <div class="card-title">Program Studi / Akademik</div>
+        <div class="card-url">/akademik/program-studi</div>
+        <div class="card-desc">Filter by jenjang (D3/D4/S1/S2), grid kartu program studi, detail card dengan kurikulum, daftar dosen, prospek karir.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label">Prioritas: Tinggi</span>
+      </div>
+    </a>
+
+    <a class="card" href="04-tentang.html">
+      <div class="card-thumb">🏛️</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 04</div>
+        <div class="card-title">Tentang Kampus</div>
+        <div class="card-url">/tentang</div>
+        <div class="card-desc">Sidebar navigasi konten, sejarah dengan timeline, visi-misi, pimpinan, struktur organisasi, akreditasi, fasilitas kampus.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label">Prioritas: Menengah</span>
+      </div>
+    </a>
+
+    <a class="card" href="05-portal.html">
+      <div class="card-thumb">🔐</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 05</div>
+        <div class="card-title">Portal Login</div>
+        <div class="card-url">/portal</div>
+        <div class="card-desc">Dua kartu portal: Mahasiswa dan Dosen/Staf. Form login, quick links SIAKAD/LMS/Email, pengumuman, panduan penggunaan.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label">Prioritas: Menengah</span>
+      </div>
+    </a>
+
+    <a class="card" href="06-berita.html">
+      <div class="card-thumb">📰</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 06</div>
+        <div class="card-title">Berita & Pengumuman</div>
+        <div class="card-url">/berita</div>
+        <div class="card-desc">Banner pengumuman pinned, filter kategori, search, grid 9 artikel, pagination, sidebar pengumuman dan tag cloud.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label">Prioritas: Menengah</span>
+      </div>
+    </a>
+
+    <a class="card" href="07-kontak.html">
+      <div class="card-thumb">📍</div>
+      <div class="card-body">
+        <div class="card-num">Halaman 07</div>
+        <div class="card-title">Kontak</div>
+        <div class="card-url">/kontak</div>
+        <div class="card-desc">Placeholder Google Maps, info kontak lengkap, direktori unit, form kontak, media sosial, panduan arah berdasarkan landmark.</div>
+      </div>
+      <div class="card-footer">
+        <span class="badge badge-done">Selesai</span>
+        <span class="priority-label">Prioritas: Menengah</span>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- Personas Reference -->
+  <div class="personas-section">
+    <span class="section-title">Referensi Persona Pengguna</span>
+    <div class="personas-grid">
+      <div class="persona-card">
+        <div class="persona-avatar">👨‍🎓</div>
+        <div class="persona-name">Reza</div>
+        <div class="persona-role">Calon Mahasiswa — Prioritas Utama</div>
+        <div class="persona-note">17-18 th, mobile-first, mencari prodi teknologi, dipengaruhi ortu & teman. Butuh info prodi, biaya, dan pendaftaran.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar">👩</div>
+        <div class="persona-name">Bu Sari</div>
+        <div class="persona-role">Orang Tua Calon Mahasiswa</div>
+        <div class="persona-note">45 th, keputusan berdasarkan akreditasi & biaya. Butuh transparansi biaya, info beasiswa, dan kepercayaan institusi.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar">👩‍💻</div>
+        <div class="persona-name">Dinda</div>
+        <div class="persona-role">Mahasiswa Aktif</div>
+        <div class="persona-note">Akses cepat ke SIAKAD, jadwal, pengumuman akademik. Butuh portal yang efisien dan informatif.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-avatar">👨‍🏫</div>
+        <div class="persona-name">Pak Andi</div>
+        <div class="persona-role">Dosen & Peneliti</div>
+        <div class="persona-note">Butuh visibilitas profil penelitian, upload publikasi, akses LMS, dan info kegiatan kemahasiswaan.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technical Notes -->
+  <div class="tech-notes">
+    <h3>Catatan Teknis Wireframe</h3>
+    <ul>
+      <li>Semua file berdiri sendiri (standalone) — tidak ada dependensi eksternal kecuali ikon Unicode</li>
+      <li>CSS custom properties: --primary #1E3A5F, --accent #F5A623, --annotation #2979FF</li>
+      <li>Tombol toggle Desktop/Mobile di setiap halaman untuk preview responsif</li>
+      <li>Anotasi berwarna biru miring menjelaskan komponen dan keputusan UX</li>
+      <li>Placeholder gambar menggunakan div dengan background #E0E0E0 dan teks dimensi</li>
+      <li>Konten bahasa Indonesia realistis, bukan Lorem Ipsum</li>
+      <li>Semua halaman mencakup: navbar sticky, floating WhatsApp button, dan footer 4 kolom</li>
+      <li>Breakpoints: mobile &lt;768px, tablet 768-1024px, desktop &gt;1024px</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <p>STTPU Website Wireframes &mdash; Dibuat untuk keperluan desain dan review internal &mdash; Versi 1.0 &mdash; April 2026</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 06 Berita & Pengumuman | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+    --success: #4CAF50;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  .annotation { font-style: italic; color: var(--annotation); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+  .img-placeholder { background: var(--wire-gray); display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-style: italic; border: 1px dashed var(--border); text-align: center; }
+  .section-label { background: var(--annotation); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; display: inline-block; border-radius: 2px; margin-bottom: 8px; }
+
+  .preview-controls { position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; border: 2px solid var(--annotation); border-radius: 8px; padding: 8px 12px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); flex-wrap: wrap; max-width: 260px; }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview { font-size: 11px; padding: 4px 10px; border: 1px solid var(--annotation); border-radius: 4px; cursor: pointer; background: white; color: var(--annotation); font-weight: 600; }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  .navbar { background: var(--primary); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; padding: 12px 0; margin-right: 20px; text-decoration: none; flex-shrink: 0; }
+  .nav-logo-box { width: 40px; height: 40px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 12px; }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-menu { display: flex; flex: 1; gap: 0; overflow-x: auto; }
+  .nav-item { color: rgba(255,255,255,0.85); text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; transition: background 0.2s; border-bottom: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-cta { background: var(--accent); color: var(--primary); font-weight: 700; padding: 10px 18px; border-radius: 4px; text-decoration: none; font-size: 13px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+  .breadcrumb { background: white; padding: 10px 40px; font-size: 12px; border-bottom: 1px solid var(--border); }
+  .breadcrumb a { color: var(--primary); text-decoration: none; }
+  .breadcrumb span { color: #888; margin: 0 6px; }
+
+  .page-header { background: var(--primary); color: white; padding: 36px 40px; }
+  .page-header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+  .page-header p { font-size: 14px; opacity: 0.85; max-width: 550px; line-height: 1.6; }
+
+  /* Featured Announcement Banner */
+  .featured-banner { background: linear-gradient(90deg, #1565C0, #283593); color: white; padding: 16px 40px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .featured-label { background: #FFC107; color: #1A1A1A; font-size: 10px; font-weight: 800; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+  .featured-text { flex: 1; font-size: 13px; font-weight: 600; }
+  .featured-text span { opacity: 0.75; font-weight: 400; font-size: 12px; margin-left: 8px; }
+  .featured-cta { font-size: 12px; color: #FFC107; text-decoration: none; font-weight: 700; white-space: nowrap; border: 1px solid #FFC107; padding: 5px 12px; border-radius: 3px; }
+  .featured-cta:hover { background: #FFC107; color: #1A1A1A; }
+
+  /* Category Filter Tabs */
+  .cat-filter { background: white; border-bottom: 1px solid var(--border); padding: 0 40px; display: flex; gap: 0; overflow-x: auto; }
+  .cat-tab { padding: 14px 16px; font-size: 13px; color: var(--text-light); cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; transition: all 0.2s; text-decoration: none; display: block; }
+  .cat-tab:hover { color: var(--primary); background: #F0F4F8; }
+  .cat-tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 700; }
+
+  /* Search Bar */
+  .search-bar { background: var(--bg); padding: 16px 40px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .search-input-wrap { position: relative; flex: 1; min-width: 200px; }
+  .search-input { width: 100%; border: 1px solid var(--border); border-radius: 4px; padding: 10px 16px 10px 36px; font-size: 13px; font-family: inherit; background: white; }
+  .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,95,0.1); }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; }
+  .sort-select { border: 1px solid var(--border); border-radius: 4px; padding: 10px 12px; font-size: 13px; font-family: inherit; background: white; cursor: pointer; }
+  .results-count { font-size: 12px; color: #888; }
+
+  /* Main Layout */
+  .main-layout { display: grid; grid-template-columns: 1fr 280px; gap: 28px; padding: 32px 40px; }
+  .main-content { }
+  .sidebar { }
+
+  /* News Grid */
+  .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 28px; }
+  .news-card { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; cursor: pointer; }
+  .news-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.1); transform: translateY(-2px); }
+  .news-img { height: 160px; position: relative; }
+  .news-cat-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .cat-akademik { background: #E8F0FE; color: #1565C0; }
+  .cat-prestasi { background: #FFF3E0; color: #E65100; }
+  .cat-pengumuman { background: #FCE4EC; color: #AD1457; }
+  .cat-penelitian { background: #E8F5E9; color: #2E7D32; }
+  .cat-kerjasama { background: #F3E5F5; color: #6A1B9A; }
+  .cat-kemahasiswaan { background: #E0F7FA; color: #00695C; }
+  .news-card-body { padding: 14px; }
+  .news-card-body h3 { font-size: 14px; font-weight: 700; color: var(--primary); line-height: 1.4; margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .news-card-body p { font-size: 12px; color: var(--text-light); line-height: 1.5; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .news-card-meta { font-size: 11px; color: #999; display: flex; justify-content: space-between; }
+
+  /* Pagination */
+  .pagination { display: flex; gap: 6px; justify-content: center; align-items: center; margin-top: 8px; }
+  .page-btn { padding: 8px 12px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; cursor: pointer; background: white; color: var(--text); transition: all 0.2s; }
+  .page-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .page-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .page-btn.disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* Sidebar */
+  .sidebar-box { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+  .sidebar-box h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+  .sidebar-announce-item { padding: 10px 0; border-bottom: 1px solid var(--wire-gray); }
+  .sidebar-announce-item:last-child { border-bottom: none; }
+  .sidebar-announce-item h5 { font-size: 12px; font-weight: 600; color: var(--primary); line-height: 1.4; margin-bottom: 4px; }
+  .sidebar-announce-item span { font-size: 11px; color: #999; }
+  .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--text-light); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+  .tag:hover { background: var(--primary); color: white; border-color: var(--primary); }
+  .tag.active { background: var(--primary); color: white; border-color: var(--primary); }
+  .sidebar-stat { display: flex; gap: 12px; }
+  .sidebar-stat-item { flex: 1; text-align: center; padding: 12px 8px; background: var(--bg); border-radius: 6px; }
+  .sidebar-stat-num { font-size: 1.25rem; font-weight: 800; color: var(--primary); }
+  .sidebar-stat-label { font-size: 11px; color: #888; }
+
+  /* Footer */
+  .footer { background: #1A2D3F; color: rgba(255,255,255,0.8); padding: 40px 40px 20px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 24px; }
+  .footer h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 6px; }
+  .footer a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; }
+  .footer a:hover { color: var(--accent); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); flex-wrap: wrap; gap: 8px; }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .footer-logo-box { width: 36px; height: 36px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 10px; }
+  .footer-brand-name { color: white; font-size: 14px; font-weight: 700; }
+  .footer-desc { font-size: 12px; line-height: 1.7; }
+
+  .whatsapp-float { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 200; transition: transform 0.2s; text-decoration: none; }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  @media (max-width: 1024px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .news-grid { grid-template-columns: repeat(2, 1fr); }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .news-grid { grid-template-columns: 1fr; }
+    .cat-filter { padding: 0 16px; }
+    .search-bar { padding: 12px 16px; }
+    .main-layout { padding: 20px; }
+    .featured-banner { padding: 12px 20px; }
+    .page-header { padding: 28px 20px; }
+    .breadcrumb { padding: 10px 20px; }
+    .footer { padding: 32px 20px 16px; }
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <nav class="navbar">
+    <a class="nav-logo" href="01-beranda.html">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item" href="04-tentang.html">Tentang</a>
+      <a class="nav-item" href="03-program-studi.html">Akademik</a>
+      <a class="nav-item" href="02-pmb.html">PMB</a>
+      <a class="nav-item" href="#">Penelitian</a>
+      <a class="nav-item" href="#">Kemahasiswaan</a>
+      <a class="nav-item active" href="#">Berita</a>
+      <a class="nav-item" href="05-portal.html">Portal</a>
+      <a class="nav-item" href="07-kontak.html">Kontak</a>
+    </div>
+    <a class="nav-cta" href="02-pmb.html">Daftar Sekarang</a>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="01-beranda.html">Beranda</a>
+    <span>›</span>
+    Berita & Pengumuman
+  </div>
+
+  <div class="page-header">
+    <h1>Berita & Pengumuman</h1>
+    <p>Informasi terkini tentang kegiatan akademik, kemahasiswaan, penelitian, kerjasama, dan pengumuman resmi STTPU.</p>
+  </div>
+
+  <!-- FEATURED ANNOUNCEMENT BANNER -->
+  <div class="featured-banner">
+    <span class="featured-label">📌 Pinned</span>
+    <span class="featured-text">
+      Pendaftaran PMB 2026/2027 Gelombang II Dibuka — Daftarkan diri sekarang sebelum 30 Mei 2026
+      <span>· 18 April 2026</span>
+    </span>
+    <a class="featured-cta" href="02-pmb.html">Daftar PMB →</a>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:#FFFDE7; border-bottom:1px solid #FFE082;">Anotasi: Banner pengumuman pinned — selalu tampil di atas konten berita untuk pengumuman paling penting (biasanya PMB). Warna biru gelap kontras dengan halaman. CTA kuning mengarah langsung ke PMB.</span>
+
+  <!-- CATEGORY FILTER TABS -->
+  <div class="cat-filter">
+    <a class="cat-tab active" href="#" onclick="filterCat(this, 'semua')">Semua</a>
+    <a class="cat-tab" href="#" onclick="filterCat(this, 'akademik')">Akademik</a>
+    <a class="cat-tab" href="#" onclick="filterCat(this, 'kemahasiswaan')">Kemahasiswaan</a>
+    <a class="cat-tab" href="#" onclick="filterCat(this, 'penelitian')">Penelitian</a>
+    <a class="cat-tab" href="#" onclick="filterCat(this, 'kerjasama')">Kerjasama</a>
+    <a class="cat-tab" href="#" onclick="filterCat(this, 'prestasi')">Prestasi</a>
+    <a class="cat-tab" href="#" onclick="filterCat(this, 'pengumuman')">Pengumuman Resmi</a>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:white;">Anotasi: Tab filter kategori tanpa halaman reload — JavaScript toggle visibility kartu berita per kategori. Tab aktif dengan border-bottom primary dan teks bold. Overflow-x auto untuk mobile.</span>
+
+  <!-- SEARCH BAR -->
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" placeholder="Cari berita atau pengumuman...">
+    </div>
+    <select class="sort-select">
+      <option>Terbaru</option>
+      <option>Terlama</option>
+      <option>Paling Banyak Dibaca</option>
+    </select>
+    <span class="results-count">Menampilkan <strong>9</strong> dari 47 berita</span>
+  </div>
+
+  <!-- MAIN LAYOUT: Grid + Sidebar -->
+  <div class="main-layout">
+    <div class="main-content">
+      <span class="section-label">Konten</span>
+      <div class="news-grid" id="newsGrid">
+
+        <!-- Card 1 -->
+        <div class="news-card" data-cat="prestasi">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 1 (400×160px)
+            <span class="news-cat-badge cat-prestasi" style="position:absolute; top:10px; left:10px;">Prestasi</span>
+          </div>
+          <div class="news-card-body">
+            <h3>Mahasiswa STTPU Raih Juara 1 Kompetisi Konstruksi Nasional 2026</h3>
+            <p>Tim dari Program Studi Teknik Konstruksi Gedung berhasil membawa pulang trofi bergengsi dalam ajang kompetisi nasional yang diikuti 45 perguruan tinggi dari seluruh Indonesia.</p>
+            <div class="news-card-meta"><span>15 April 2026</span><span>3 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="news-card" data-cat="kerjasama">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 2 (400×160px)
+            <span class="news-cat-badge cat-kerjasama" style="position:absolute; top:10px; left:10px;">Kerjasama</span>
+          </div>
+          <div class="news-card-body">
+            <h3>STTPU Tanda Tangani MoU dengan PT Waskita Karya untuk Program Magang</h3>
+            <p>Penandatanganan nota kesepahaman membuka peluang magang dan rekrutmen langsung bagi mahasiswa semester akhir STTPU di salah satu BUMN konstruksi terbesar Indonesia.</p>
+            <div class="news-card-meta"><span>10 April 2026</span><span>2 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="news-card" data-cat="pengumuman">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 3 (400×160px)
+            <span class="news-cat-badge cat-pengumuman" style="position:absolute; top:10px; left:10px;">Pengumuman</span>
+          </div>
+          <div class="news-card-body">
+            <h3>Pendaftaran Program Studi Teknologi Informasi Angkatan Baru Dibuka Juni 2026</h3>
+            <p>STTPU secara resmi membuka penerimaan mahasiswa baru untuk Program Studi Teknologi Informasi D4 yang diluncurkan pada 2025 dengan kurikulum mutakhir berbasis industri digital.</p>
+            <div class="news-card-meta"><span>5 April 2026</span><span>2 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="news-card" data-cat="penelitian">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 4 (400×160px)
+            <span class="news-cat-badge cat-penelitian" style="position:absolute; top:10px; left:10px;">Penelitian</span>
+          </div>
+          <div class="news-card-body">
+            <h3>Dosen STTPU Publikasikan Riset Beton Daur Ulang di Jurnal Internasional Scopus Q2</h3>
+            <p>Tim penelitian Teknik Konstruksi Gedung berhasil mempublikasikan hasil penelitian material konstruksi ramah lingkungan di jurnal bereputasi internasional.</p>
+            <div class="news-card-meta"><span>2 April 2026</span><span>4 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="news-card" data-cat="kemahasiswaan">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 5 (400×160px)
+            <span class="news-cat-badge cat-kemahasiswaan" style="position:absolute; top:10px; left:10px;">Kemahasiswaan</span>
+          </div>
+          <div class="news-card-body">
+            <h3>Himpunan Mahasiswa STTPU Gelar Festival Teknologi Tahunan "TechFest 2026"</h3>
+            <p>Ribuan peserta dari berbagai perguruan tinggi berpartisipasi dalam kompetisi robotika, desain arsitektur, hackathon, dan pameran inovasi teknologi yang digelar di kampus STTPU.</p>
+            <div class="news-card-meta"><span>28 Maret 2026</span><span>3 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="news-card" data-cat="akademik">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 6 (400×160px)
+            <span class="news-cat-badge cat-akademik" style="position:absolute; top:10px; left:10px;">Akademik</span>
+          </div>
+          <div class="news-card-body">
+            <h3>STTPU Launching Kurikulum Berbasis Industri 4.0 untuk Semua Program Studi</h3>
+            <p>Pembaruan kurikulum besar-besaran dilakukan bekerja sama dengan 15 perusahaan mitra industri untuk memastikan kompetensi lulusan sesuai kebutuhan pasar kerja terkini.</p>
+            <div class="news-card-meta"><span>20 Maret 2026</span><span>5 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="news-card" data-cat="prestasi">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 7 (400×160px)
+            <span class="news-cat-badge cat-prestasi" style="position:absolute; top:10px; left:10px;">Prestasi</span>
+          </div>
+          <div class="news-card-body">
+            <h3>Alumni STTPU Angkatan 2020 Pimpin Proyek Tol Jakarta–Bandung Senilai Rp 4,2 Triliun</h3>
+            <p>Keberhasilan alumni dalam memimpin proyek infrastruktur strategis nasional menjadi bukti nyata kualitas pendidikan terapan STTPU yang berorientasi industri.</p>
+            <div class="news-card-meta"><span>15 Maret 2026</span><span>4 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="news-card" data-cat="kerjasama">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 8 (400×160px)
+            <span class="news-cat-badge cat-kerjasama" style="position:absolute; top:10px; left:10px;">Kerjasama</span>
+          </div>
+          <div class="news-card-body">
+            <h3>STTPU Jalin Kerjasama Pertukaran Mahasiswa dengan Universitas Kyoto Jepang</h3>
+            <p>Program pertukaran mahasiswa selama satu semester ini akan memungkinkan 10 mahasiswa terbaik STTPU mengikuti kuliah dan magang di salah satu universitas teknik terkemuka Jepang.</p>
+            <div class="news-card-meta"><span>8 Maret 2026</span><span>3 mnt baca</span></div>
+          </div>
+        </div>
+
+        <!-- Card 9 -->
+        <div class="news-card" data-cat="akademik">
+          <div class="news-img img-placeholder" style="position:relative;">
+            Foto berita 9 (400×160px)
+            <span class="news-cat-badge cat-akademik" style="position:absolute; top:10px; left:10px;">Akademik</span>
+          </div>
+          <div class="news-card-body">
+            <h3>Wisuda Semester Genap 2025/2026 — STTPU Meluluskan 312 Sarjana Terapan</h3>
+            <p>Sebanyak 312 mahasiswa resmi diwisuda dalam upacara khidmat yang dihadiri oleh keluarga, mitra industri, dan pejabat pemerintah. IPK rata-rata lulusan mencapai 3,42.</p>
+            <div class="news-card-meta"><span>1 Maret 2026</span><span>3 mnt baca</span></div>
+          </div>
+        </div>
+
+      </div><!-- end news-grid -->
+
+      <!-- PAGINATION -->
+      <div class="pagination">
+        <button class="page-btn disabled">← Sebelumnya</button>
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">4</button>
+        <button class="page-btn">5</button>
+        <button class="page-btn">Selanjutnya →</button>
+      </div>
+
+      <span class="annotation">Anotasi: 9 kartu berita dalam grid 3 kolom (desktop) / 2 (tablet) / 1 (mobile). Setiap kartu: foto thumbnail, badge kategori berwarna (absolute positioned), judul 2 baris, excerpt 3 baris, metadata tanggal + waktu baca. Pagination bawah untuk navigasi halaman.</span>
+    </div><!-- end main-content -->
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-box">
+        <h4>Pengumuman Terbaru</h4>
+        <div class="sidebar-announce-item">
+          <h5>Pengisian KRS Sem. Ganjil 2026/2027 Dibuka 1–15 Agustus</h5>
+          <span>18 April 2026</span>
+        </div>
+        <div class="sidebar-announce-item">
+          <h5>Batas Akhir Pembayaran SPP — 30 April 2026</h5>
+          <span>15 April 2026</span>
+        </div>
+        <div class="sidebar-announce-item">
+          <h5>Pemeliharaan SIAKAD 26 April 2026 pukul 00.00–04.00</h5>
+          <span>8 April 2026</span>
+        </div>
+        <div class="sidebar-announce-item">
+          <h5>Pendaftaran Magang BUMN Batch 3 Dibuka</h5>
+          <span>10 April 2026</span>
+        </div>
+        <div class="sidebar-announce-item">
+          <h5>Sidang Tugas Akhir Semester Genap: 20–30 Juni 2026</h5>
+          <span>5 April 2026</span>
+        </div>
+      </div>
+
+      <div class="sidebar-box">
+        <h4>Statistik Konten</h4>
+        <div class="sidebar-stat">
+          <div class="sidebar-stat-item"><div class="sidebar-stat-num">47</div><div class="sidebar-stat-label">Total Berita</div></div>
+          <div class="sidebar-stat-item"><div class="sidebar-stat-num">12</div><div class="sidebar-stat-label">Bulan Ini</div></div>
+        </div>
+      </div>
+
+      <div class="sidebar-box">
+        <h4>Tag Cloud</h4>
+        <div class="tag-cloud">
+          <a class="tag active" href="#">pmb</a>
+          <a class="tag" href="#">wisuda</a>
+          <a class="tag" href="#">beasiswa</a>
+          <a class="tag" href="#">magang</a>
+          <a class="tag" href="#">riset</a>
+          <a class="tag" href="#">konstruksi</a>
+          <a class="tag" href="#">arsitektur</a>
+          <a class="tag" href="#">teknologi</a>
+          <a class="tag" href="#">alumni</a>
+          <a class="tag" href="#">kurikulum</a>
+          <a class="tag" href="#">kerjasama</a>
+          <a class="tag" href="#">bumn</a>
+          <a class="tag" href="#">lomba</a>
+          <a class="tag" href="#">internasional</a>
+        </div>
+      </div>
+
+      <div class="sidebar-box">
+        <h4>Arsip Berita</h4>
+        <ul style="list-style:none;">
+          <li style="padding:5px 0; border-bottom:1px solid var(--wire-gray);"><a href="#" style="text-decoration:none; color:var(--primary); font-size:12px;">April 2026 <span style="color:#888;">(12)</span></a></li>
+          <li style="padding:5px 0; border-bottom:1px solid var(--wire-gray);"><a href="#" style="text-decoration:none; color:var(--primary); font-size:12px;">Maret 2026 <span style="color:#888;">(9)</span></a></li>
+          <li style="padding:5px 0; border-bottom:1px solid var(--wire-gray);"><a href="#" style="text-decoration:none; color:var(--primary); font-size:12px;">Februari 2026 <span style="color:#888;">(8)</span></a></li>
+          <li style="padding:5px 0; border-bottom:1px solid var(--wire-gray);"><a href="#" style="text-decoration:none; color:var(--primary); font-size:12px;">Januari 2026 <span style="color:#888;">(7)</span></a></li>
+          <li style="padding:5px 0;"><a href="#" style="text-decoration:none; color:var(--text-light); font-size:12px;">Lihat arsip lebih lama →</a></li>
+        </ul>
+      </div>
+      <span class="annotation">Anotasi: Sidebar berisi: pengumuman terkini (paling berguna untuk mahasiswa aktif Dinda), statistik konten, tag cloud interaktif untuk filter cepat, dan arsip per bulan. Sticky sidebar pada desktop.</span>
+    </aside>
+
+  </div><!-- end main-layout -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo-box">STTPU</div>
+          <div class="footer-brand-name">STTPU Jakarta</div>
+        </div>
+        <p class="footer-desc">Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — mendidik tenaga ahli teknologi Indonesia.</p>
+      </div>
+      <div><h4>Kategori Berita</h4><ul>
+        <li><a href="#">Akademik</a></li>
+        <li><a href="#">Kemahasiswaan</a></li>
+        <li><a href="#">Penelitian</a></li>
+        <li><a href="#">Kerjasama</a></li>
+        <li><a href="#">Prestasi</a></li>
+        <li><a href="#">Pengumuman Resmi</a></li>
+      </ul></div>
+      <div><h4>Halaman</h4><ul>
+        <li><a href="01-beranda.html">Beranda</a></li>
+        <li><a href="02-pmb.html">PMB</a></li>
+        <li><a href="03-program-studi.html">Program Studi</a></li>
+        <li><a href="05-portal.html">Portal</a></li>
+        <li><a href="07-kontak.html">Kontak</a></li>
+      </ul></div>
+      <div><h4>Media Sosial</h4><ul>
+        <li><a href="#">📸 Instagram @sttpu_official</a></li>
+        <li><a href="#">📘 Facebook STTPU Jakarta</a></li>
+        <li><a href="#">▶️ YouTube STTPU Channel</a></li>
+        <li><a href="#">💼 LinkedIn STTPU</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STTPU Jakarta. Hak Cipta Dilindungi.</span>
+      <span>Kebijakan Privasi · Syarat Penggunaan · Peta Situs</span>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float" title="Chat WhatsApp">💬</a>
+
+</div>
+
+<script>
+function setPreview(mode) {
+  document.getElementById('pageWrapper').className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function filterCat(tab, cat) {
+  document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  const cards = document.querySelectorAll('.news-card');
+  cards.forEach(card => {
+    if (cat === 'semua' || card.dataset.cat === cat) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  event.preventDefault();
+}
+</script>
+
+</body>
+</html>

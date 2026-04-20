@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 02 PMB | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+    --success: #4CAF50;
+    --warning: #FF9800;
+    --danger: #E53935;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  .annotation { font-style: italic; color: var(--annotation); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+  .img-placeholder { background: var(--wire-gray); display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-style: italic; border: 1px dashed var(--border); text-align: center; }
+  .section-label { background: var(--annotation); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; display: inline-block; border-radius: 2px; margin-bottom: 8px; }
+
+  /* Preview Controls */
+  .preview-controls { position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; border: 2px solid var(--annotation); border-radius: 8px; padding: 8px 12px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); flex-wrap: wrap; max-width: 260px; }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview { font-size: 11px; padding: 4px 10px; border: 1px solid var(--annotation); border-radius: 4px; cursor: pointer; background: white; color: var(--annotation); font-weight: 600; }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  /* Navbar */
+  .navbar { background: var(--primary); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; padding: 12px 0; margin-right: 20px; text-decoration: none; flex-shrink: 0; }
+  .nav-logo-box { width: 40px; height: 40px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 12px; }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-menu { display: flex; flex: 1; gap: 0; overflow-x: auto; }
+  .nav-item { color: rgba(255,255,255,0.85); text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; transition: background 0.2s; border-bottom: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-cta { background: var(--accent); color: var(--primary); font-weight: 700; padding: 10px 18px; border-radius: 4px; text-decoration: none; font-size: 13px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+  /* Breadcrumb */
+  .breadcrumb { background: white; padding: 10px 40px; font-size: 12px; border-bottom: 1px solid var(--border); }
+  .breadcrumb a { color: var(--primary); text-decoration: none; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb span { color: #888; margin: 0 6px; }
+
+  /* Hero PMB */
+  .pmb-hero { background: var(--primary); color: white; padding: 60px 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+  .pmb-hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 16px; line-height: 1.2; }
+  .pmb-hero p { font-size: 14px; line-height: 1.7; opacity: 0.9; margin-bottom: 24px; }
+  .pmb-hero-cta { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-accent { background: var(--accent); color: var(--primary); font-weight: 700; padding: 13px 24px; border-radius: 4px; text-decoration: none; font-size: 14px; border: none; cursor: pointer; display: inline-block; }
+  .btn-accent:hover { background: #E09520; }
+  .btn-white-outline { background: transparent; color: white; font-weight: 600; padding: 13px 24px; border-radius: 4px; text-decoration: none; font-size: 14px; border: 2px solid rgba(255,255,255,0.6); cursor: pointer; display: inline-block; }
+  .countdown-box { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 24px; text-align: center; }
+  .countdown-box h3 { font-size: 13px; font-weight: 600; opacity: 0.8; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .countdown-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 16px; }
+  .cd-unit { background: white; color: var(--primary); border-radius: 6px; padding: 12px 16px; text-align: center; min-width: 64px; }
+  .cd-num { font-size: 2rem; font-weight: 800; line-height: 1; display: block; }
+  .cd-label { font-size: 10px; text-transform: uppercase; color: #666; display: block; margin-top: 4px; }
+  .cd-sep { font-size: 2rem; font-weight: 800; color: white; align-self: center; opacity: 0.6; }
+  .deadline-badge { background: var(--accent); color: var(--primary); font-size: 12px; font-weight: 700; padding: 6px 16px; border-radius: 20px; display: inline-block; }
+
+  /* Section */
+  .section { padding: 60px 40px; }
+  .section-alt { background: var(--white); }
+  .section-header { text-align: center; margin-bottom: 40px; }
+  .section-header h2 { font-size: 1.6rem; color: var(--primary); font-weight: 800; margin-bottom: 10px; }
+  .section-header p { color: var(--text-light); font-size: 14px; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+  .subtitle-line { width: 48px; height: 3px; background: var(--accent); margin: 12px auto 0; border-radius: 2px; }
+
+  /* Jalur Cards */
+  .jalur-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .jalur-card { background: white; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .jalur-card-header { padding: 20px; display: flex; align-items: center; gap: 12px; }
+  .jalur-icon { width: 48px; height: 48px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; }
+  .jalur-regular .jalur-icon { background: #E8F0FE; }
+  .jalur-prestasi .jalur-icon { background: #FFF3E0; }
+  .jalur-beasiswa .jalur-icon { background: #E8F5E9; }
+  .jalur-card h3 { font-size: 15px; color: var(--primary); font-weight: 700; margin-bottom: 4px; }
+  .jalur-card .jalur-subtitle { font-size: 11px; color: var(--text-light); }
+  .jalur-card-body { padding: 0 20px 20px; }
+  .jalur-info-row { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .jalur-info-item { flex: 1; min-width: 80px; }
+  .jalur-info-label { font-size: 10px; color: #888; text-transform: uppercase; font-weight: 600; margin-bottom: 2px; }
+  .jalur-info-val { font-size: 13px; font-weight: 700; color: var(--primary); }
+  .jalur-syarat h4 { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .jalur-syarat ul { list-style: none; }
+  .jalur-syarat li { font-size: 12px; color: var(--text-light); padding: 3px 0; padding-left: 16px; position: relative; }
+  .jalur-syarat li::before { content: "✓"; position: absolute; left: 0; color: var(--success); font-weight: 700; }
+  .jalur-card-footer { padding: 14px 20px; border-top: 1px solid var(--wire-gray); }
+  .btn-primary-full { display: block; width: 100%; text-align: center; background: var(--primary); color: white; font-weight: 700; padding: 11px; border-radius: 4px; text-decoration: none; font-size: 13px; border: none; cursor: pointer; transition: background 0.2s; }
+  .btn-primary-full:hover { background: var(--primary-light); }
+
+  /* Timeline */
+  .timeline-section { background: var(--primary); color: white; }
+  .timeline-steps { display: flex; justify-content: space-between; position: relative; margin-top: 12px; }
+  .timeline-steps::before { content: ''; position: absolute; top: 24px; left: 60px; right: 60px; height: 2px; background: rgba(255,255,255,0.3); }
+  .timeline-step { text-align: center; position: relative; flex: 1; }
+  .timeline-dot { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 1.1rem; border: 3px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); position: relative; z-index: 1; }
+  .timeline-dot.done { background: var(--success); border-color: var(--success); }
+  .timeline-dot.current { background: var(--accent); border-color: var(--accent); }
+  .timeline-step h4 { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+  .timeline-step p { font-size: 11px; opacity: 0.7; line-height: 1.4; }
+
+  /* Biaya Kuliah */
+  .biaya-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .biaya-table th { background: var(--primary); color: white; padding: 12px 14px; text-align: left; font-size: 12px; font-weight: 600; }
+  .biaya-table td { padding: 12px 14px; border-bottom: 1px solid var(--wire-gray); }
+  .biaya-table tr:nth-child(even) td { background: #F8F9FA; }
+  .biaya-table tr:hover td { background: #E8F0FE; }
+  .biaya-note { background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 6px; padding: 14px; margin-top: 16px; font-size: 12px; color: #2E7D32; }
+  .biaya-highlight { color: var(--primary); font-weight: 700; }
+
+  /* Persyaratan Accordion */
+  .accordion { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .accordion-item { border-bottom: 1px solid var(--border); }
+  .accordion-item:last-child { border-bottom: none; }
+  .accordion-header { padding: 14px 18px; background: white; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 600; color: var(--primary); transition: background 0.2s; }
+  .accordion-header:hover { background: #F0F4F8; }
+  .accordion-header.open { background: var(--primary); color: white; }
+  .accordion-header .arrow { transition: transform 0.2s; font-size: 12px; }
+  .accordion-header.open .arrow { transform: rotate(180deg); }
+  .accordion-body { padding: 16px 18px; background: #F8F9FA; display: none; }
+  .accordion-body.open { display: block; }
+  .checklist { list-style: none; }
+  .checklist li { padding: 6px 0; font-size: 13px; color: var(--text); padding-left: 24px; position: relative; }
+  .checklist li::before { content: "☐"; position: absolute; left: 0; color: var(--primary); font-size: 14px; }
+
+  /* Form Multi-Step */
+  .form-steps { display: flex; margin-bottom: 32px; position: relative; }
+  .form-steps::before { content: ''; position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: var(--wire-gray); }
+  .form-step { flex: 1; text-align: center; position: relative; }
+  .step-circle { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 13px; font-weight: 700; border: 2px solid var(--wire-gray); background: white; position: relative; z-index: 1; }
+  .form-step.done .step-circle { background: var(--success); color: white; border-color: var(--success); }
+  .form-step.active .step-circle { background: var(--primary); color: white; border-color: var(--primary); }
+  .step-label { font-size: 11px; color: var(--text-light); font-weight: 600; }
+  .form-step.active .step-label { color: var(--primary); font-weight: 700; }
+  .form-panel { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 28px; }
+  .form-panel h3 { font-size: 16px; color: var(--primary); font-weight: 700; margin-bottom: 20px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 12px; font-weight: 600; color: var(--text); }
+  .form-group input, .form-group select, .form-group textarea {
+    border: 1px solid var(--border); border-radius: 4px; padding: 10px 12px;
+    font-size: 13px; font-family: inherit; transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,0.1);
+  }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-actions { display: flex; justify-content: space-between; margin-top: 24px; gap: 12px; }
+  .btn-secondary { background: white; color: var(--primary); font-weight: 600; padding: 11px 24px; border-radius: 4px; border: 1px solid var(--primary); cursor: pointer; font-size: 13px; }
+  .btn-next { background: var(--primary); color: white; font-weight: 700; padding: 11px 28px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; }
+  .btn-next:hover { background: var(--primary-light); }
+
+  /* Status Check */
+  .status-check { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 28px; max-width: 500px; margin: 0 auto; }
+  .status-input-row { display: flex; gap: 12px; margin-top: 16px; }
+  .status-input { flex: 1; border: 1px solid var(--border); border-radius: 4px; padding: 11px 14px; font-size: 14px; font-family: inherit; }
+  .status-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,95,0.1); }
+  .btn-cek { background: var(--primary); color: white; font-weight: 700; padding: 11px 20px; border-radius: 4px; border: none; cursor: pointer; font-size: 14px; white-space: nowrap; }
+
+  /* FAQ */
+  .faq-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Contact PMB Card */
+  .pmb-contact-card { background: var(--primary); color: white; border-radius: 8px; padding: 28px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+  .contact-channel { text-align: center; }
+  .contact-icon { font-size: 2rem; margin-bottom: 12px; display: block; }
+  .contact-channel h4 { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+  .contact-channel p { font-size: 12px; opacity: 0.8; margin-bottom: 12px; line-height: 1.5; }
+  .btn-contact { display: inline-block; padding: 8px 18px; border-radius: 4px; font-size: 12px; font-weight: 700; text-decoration: none; }
+  .btn-wa { background: #25D366; color: white; }
+  .btn-email { background: var(--accent); color: var(--primary); }
+  .btn-telp { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4); }
+
+  /* Footer */
+  .footer { background: #1A2D3F; color: rgba(255,255,255,0.8); padding: 40px 40px 20px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 24px; }
+  .footer h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 6px; }
+  .footer a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; }
+  .footer a:hover { color: var(--accent); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); flex-wrap: wrap; gap: 8px; }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .footer-logo-box { width: 36px; height: 36px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 10px; }
+  .footer-brand-name { color: white; font-size: 14px; font-weight: 700; }
+  .footer-desc { font-size: 12px; line-height: 1.7; }
+
+  /* WA Float */
+  .whatsapp-float { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 200; transition: transform 0.2s; text-decoration: none; }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .jalur-grid { grid-template-columns: 1fr 1fr; }
+    .timeline-steps { flex-direction: column; gap: 20px; }
+    .timeline-steps::before { display: none; }
+    .timeline-step { display: flex; gap: 16px; text-align: left; align-items: flex-start; }
+    .timeline-dot { margin: 0; flex-shrink: 0; }
+    .faq-cols { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .pmb-hero { grid-template-columns: 1fr; padding: 40px 20px; gap: 24px; }
+    .jalur-grid, .faq-cols { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: 1; }
+    .pmb-contact-card { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .section { padding: 40px 20px; }
+    .breadcrumb { padding: 10px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a class="nav-logo" href="01-beranda.html">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item" href="04-tentang.html">Tentang</a>
+      <a class="nav-item" href="03-program-studi.html">Akademik</a>
+      <a class="nav-item active" href="#">PMB</a>
+      <a class="nav-item" href="#">Penelitian</a>
+      <a class="nav-item" href="#">Kemahasiswaan</a>
+      <a class="nav-item" href="06-berita.html">Berita</a>
+      <a class="nav-item" href="05-portal.html">Portal</a>
+      <a class="nav-item" href="07-kontak.html">Kontak</a>
+    </div>
+    <a class="nav-cta" href="#">Daftar Sekarang</a>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="01-beranda.html">Beranda</a>
+    <span>›</span>
+    <a href="#">Penerimaan Mahasiswa Baru</a>
+  </div>
+
+  <!-- PMB HERO -->
+  <section class="pmb-hero">
+    <div>
+      <span style="background:var(--accent); color:var(--primary); font-size:11px; font-weight:700; padding:4px 12px; border-radius:20px; display:inline-block; margin-bottom:16px; text-transform:uppercase;">PMB 2026/2027 — Gelombang II</span>
+      <h1>Bergabunglah dengan STTPU dan Wujudkan Karir Teknologi Impianmu</h1>
+      <p>Daftarkan diri sekarang dan jadilah bagian dari ribuan alumni STTPU yang sukses berkontribusi dalam pembangunan infrastruktur Indonesia. Proses pendaftaran mudah, transparan, dan sepenuhnya online.</p>
+      <div class="pmb-hero-cta">
+        <a class="btn-accent" href="#form-daftar">Mulai Pendaftaran</a>
+        <a class="btn-white-outline" href="#jalur">Lihat Jalur Masuk</a>
+      </div>
+    </div>
+    <div>
+      <div class="countdown-box">
+        <h3>Penutupan Pendaftaran Gelombang II</h3>
+        <div class="countdown-row">
+          <div class="cd-unit"><span class="cd-num" id="cd2-days">42</span><span class="cd-label">Hari</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cd2-hours">08</span><span class="cd-label">Jam</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cd2-mins">34</span><span class="cd-label">Menit</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cd2-secs">17</span><span class="cd-label">Detik</span></div>
+        </div>
+        <span class="deadline-badge">Ditutup: 30 Mei 2026</span>
+        <div style="margin-top:14px; font-size:12px; opacity:0.7;">Kuota tersisa: <strong>124 kursi dari 200</strong></div>
+      </div>
+    </div>
+  </section>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:#FFFDE7;">Anotasi: PMB Hero — layout 2 kolom. Kiri: headline emosional + CTA. Kanan: countdown timer nyata dengan batas waktu + info sisa kuota (scarcity cue). Di mobile: ditumpuk vertikal, countdown di atas CTA.</span>
+
+  <!-- JALUR PENDAFTARAN -->
+  <section class="section section-alt" id="jalur">
+    <div class="section-label">Jalur Masuk</div>
+    <div class="section-header">
+      <h2>3 Jalur Pendaftaran</h2>
+      <p>Pilih jalur yang paling sesuai dengan profil dan prestasi Anda</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="jalur-grid">
+
+      <!-- Reguler -->
+      <div class="jalur-card jalur-regular">
+        <div class="jalur-card-header">
+          <div class="jalur-icon">📝</div>
+          <div>
+            <h3>Jalur Reguler</h3>
+            <div class="jalur-subtitle">Seleksi berbasis nilai rapor & tes</div>
+          </div>
+        </div>
+        <div class="jalur-card-body">
+          <div class="jalur-info-row">
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Kuota</div>
+              <div class="jalur-info-val">120 Kursi</div>
+            </div>
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Deadline</div>
+              <div class="jalur-info-val">30 Mei 2026</div>
+            </div>
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Biaya Daftar</div>
+              <div class="jalur-info-val">Rp 200.000</div>
+            </div>
+          </div>
+          <div class="jalur-syarat">
+            <h4>Persyaratan Utama:</h4>
+            <ul>
+              <li>Ijazah/Surat Keterangan Lulus SMA/SMK/MA</li>
+              <li>Nilai rapor rata-rata minimum 70</li>
+              <li>Fotokopi KTP atau Kartu Pelajar</li>
+              <li>Pas foto terbaru 3×4 cm (2 lembar)</li>
+              <li>Surat Keterangan Sehat dari dokter</li>
+            </ul>
+          </div>
+        </div>
+        <div class="jalur-card-footer">
+          <a class="btn-primary-full" href="#form-daftar">Daftar Jalur Reguler</a>
+        </div>
+      </div>
+
+      <!-- Prestasi -->
+      <div class="jalur-card jalur-prestasi">
+        <div class="jalur-card-header">
+          <div class="jalur-icon" style="background:#FFF3E0;">🏆</div>
+          <div>
+            <h3>Jalur Prestasi</h3>
+            <div class="jalur-subtitle">Khusus pemenang olimpiade & kompetisi</div>
+          </div>
+        </div>
+        <div class="jalur-card-body">
+          <div class="jalur-info-row">
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Kuota</div>
+              <div class="jalur-info-val">40 Kursi</div>
+            </div>
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Deadline</div>
+              <div class="jalur-info-val">15 Mei 2026</div>
+            </div>
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Biaya Daftar</div>
+              <div class="jalur-info-val">Gratis</div>
+            </div>
+          </div>
+          <div class="jalur-syarat">
+            <h4>Persyaratan Utama:</h4>
+            <ul>
+              <li>Juara 1-3 olimpiade sains/teknologi tingkat kab/kota min.</li>
+              <li>Sertifikat penghargaan yang relevan</li>
+              <li>Surat rekomendasi dari kepala sekolah</li>
+              <li>Portfolio prestasi (jika ada)</li>
+              <li>Wawancara motivasi (online)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="jalur-card-footer">
+          <a class="btn-primary-full" href="#form-daftar">Daftar Jalur Prestasi</a>
+        </div>
+      </div>
+
+      <!-- Beasiswa -->
+      <div class="jalur-card jalur-beasiswa">
+        <div class="jalur-card-header">
+          <div class="jalur-icon" style="background:#E8F5E9;">🎓</div>
+          <div>
+            <h3>Jalur Beasiswa</h3>
+            <div class="jalur-subtitle">Untuk keluarga kurang mampu berprestasi</div>
+          </div>
+        </div>
+        <div class="jalur-card-body">
+          <div class="jalur-info-row">
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Kuota</div>
+              <div class="jalur-info-val">40 Kursi</div>
+            </div>
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Deadline</div>
+              <div class="jalur-info-val">15 Mei 2026</div>
+            </div>
+            <div class="jalur-info-item">
+              <div class="jalur-info-label">Biaya Daftar</div>
+              <div class="jalur-info-val">Gratis</div>
+            </div>
+          </div>
+          <div class="jalur-syarat">
+            <h4>Persyaratan Utama:</h4>
+            <ul>
+              <li>Nilai rapor rata-rata minimum 75</li>
+              <li>Surat Keterangan Tidak Mampu (SKTM) dari kelurahan</li>
+              <li>KIP Kuliah atau Surat Keterangan Penghasilan Orang Tua</li>
+              <li>Esai motivasi (500 kata)</li>
+              <li>Foto rumah/kondisi ekonomi keluarga</li>
+            </ul>
+          </div>
+        </div>
+        <div class="jalur-card-footer">
+          <a class="btn-primary-full" href="#form-daftar">Daftar Jalur Beasiswa</a>
+        </div>
+      </div>
+
+    </div>
+    <span class="annotation">Anotasi: 3 jalur pendaftaran dalam kartu sejajar. Setiap kartu menunjukkan kuota, deadline, biaya daftar, dan persyaratan ringkas. Color coding: biru (reguler), oranye (prestasi), hijau (beasiswa). CTA per jalur langsung mengarah ke form.</span>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="section timeline-section">
+    <div class="section-label" style="background:var(--accent); color:var(--primary);">Proses</div>
+    <div class="section-header">
+      <h2>Alur & Jadwal Pendaftaran</h2>
+      <p style="color:rgba(255,255,255,0.75);">Ikuti tahapan ini untuk menyelesaikan proses pendaftaranmu</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="timeline-steps">
+      <div class="timeline-step">
+        <div class="timeline-dot done">✓</div>
+        <h4>Pendaftaran Dibuka</h4>
+        <p>1 Maret 2026<br>Gelombang I</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-dot done">✓</div>
+        <h4>Gelombang II</h4>
+        <p>1–30 Mei 2026<br>Buka sekarang</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-dot current">★</div>
+        <h4>Seleksi Dokumen</h4>
+        <p>1–7 Juni 2026<br>Review berkas</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-dot">◉</div>
+        <h4>Tes & Wawancara</h4>
+        <p>10–12 Juni 2026<br>Online / Kampus</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-dot">◉</div>
+        <h4>Pengumuman</h4>
+        <p>20 Juni 2026<br>Via email & portal</p>
+      </div>
+      <div class="timeline-step">
+        <div class="timeline-dot">◉</div>
+        <h4>Registrasi Ulang</h4>
+        <p>1–15 Juli 2026<br>Bayar & lengkapi</p>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Timeline horizontal dengan ikon status (done/current/upcoming). Warna hijau = selesai, aksen = sedang berjalan, abu-abu = mendatang. Di mobile: berubah menjadi timeline vertikal.</span>
+  </section>
+
+  <!-- BIAYA KULIAH -->
+  <section class="section section-alt" id="biaya">
+    <div class="section-label">Transparansi Biaya</div>
+    <div class="section-header">
+      <h2>Biaya Kuliah per Program Studi</h2>
+      <p>Kami berkomitmen pada transparansi penuh. Tidak ada biaya tersembunyi.</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="biaya-table">
+        <thead>
+          <tr>
+            <th>Program Studi</th>
+            <th>Jenjang</th>
+            <th>Biaya Pendaftaran</th>
+            <th>Uang Pangkal (1x)</th>
+            <th>SPP per Semester</th>
+            <th>Biaya SKS</th>
+            <th>Total Est. per Tahun</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Teknik Konstruksi Gedung</strong></td>
+            <td>D4</td>
+            <td>Rp 200.000</td>
+            <td>Rp 3.500.000</td>
+            <td class="biaya-highlight">Rp 4.500.000</td>
+            <td>Rp 150.000/SKS</td>
+            <td>Rp 12.750.000</td>
+          </tr>
+          <tr>
+            <td><strong>Teknik Arsitektur</strong></td>
+            <td>D4</td>
+            <td>Rp 200.000</td>
+            <td>Rp 3.500.000</td>
+            <td class="biaya-highlight">Rp 4.500.000</td>
+            <td>Rp 150.000/SKS</td>
+            <td>Rp 12.750.000</td>
+          </tr>
+          <tr>
+            <td><strong>Teknologi Informasi</strong></td>
+            <td>D4</td>
+            <td>Rp 200.000</td>
+            <td>Rp 4.000.000</td>
+            <td class="biaya-highlight">Rp 5.000.000</td>
+            <td>Rp 175.000/SKS</td>
+            <td>Rp 14.150.000</td>
+          </tr>
+          <tr>
+            <td><strong>Teknik Mesin</strong></td>
+            <td>D3</td>
+            <td>Rp 200.000</td>
+            <td>Rp 3.000.000</td>
+            <td class="biaya-highlight">Rp 4.000.000</td>
+            <td>Rp 130.000/SKS</td>
+            <td>Rp 11.100.000</td>
+          </tr>
+          <tr>
+            <td><strong>Teknik Listrik</strong></td>
+            <td>D3</td>
+            <td>Rp 200.000</td>
+            <td>Rp 3.000.000</td>
+            <td class="biaya-highlight">Rp 4.000.000</td>
+            <td>Rp 130.000/SKS</td>
+            <td>Rp 11.100.000</td>
+          </tr>
+          <tr>
+            <td><strong>Teknik Lingkungan</strong></td>
+            <td>D4</td>
+            <td>Rp 200.000</td>
+            <td>Rp 3.500.000</td>
+            <td class="biaya-highlight">Rp 4.500.000</td>
+            <td>Rp 150.000/SKS</td>
+            <td>Rp 12.750.000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="biaya-note">
+      ✅ <strong>Catatan penting:</strong> Biaya di atas adalah estimasi tahun akademik 2026/2027. SPP dapat dicicil per bulan. Tersedia cicilan 0% untuk mahasiswa beasiswa. Tidak ada biaya wisuda atau biaya tersembunyi lainnya. Informasi resmi dapat berubah — konfirmasi ke bagian keuangan.
+    </div>
+    <span class="annotation">Anotasi: Tabel biaya transparan — ini adalah diferensiasi utama vs kompetitor yang menyembunyikan biaya. SPP per semester dalam bold dan warna primer. Catatan penting di bawah menjawab kekhawatiran Bu Sari (orang tua).</span>
+  </section>
+
+  <!-- PERSYARATAN ACCORDION -->
+  <section class="section">
+    <div class="section-label">Dokumen</div>
+    <div class="section-header">
+      <h2>Persyaratan Pendaftaran</h2>
+      <p>Siapkan semua dokumen berikut sebelum memulai proses pendaftaran online</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="accordion" style="max-width:800px; margin:0 auto;">
+      <div class="accordion-item">
+        <div class="accordion-header open" onclick="toggleAccordion(this)">
+          📋 Dokumen Akademik <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body open">
+          <ul class="checklist">
+            <li>Ijazah SMA/SMK/MA asli dan fotokopi legalisir (atau Surat Keterangan Lulus)</li>
+            <li>Rapor SMA/SMK/MA semester 1-6 fotokopi legalisir</li>
+            <li>Sertifikat prestasi akademik (jika ada)</li>
+            <li>SKHUN (Surat Keterangan Hasil Ujian Nasional) jika tersedia</li>
+          </ul>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          🪪 Dokumen Identitas <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <ul class="checklist">
+            <li>KTP calon mahasiswa (scan warna)</li>
+            <li>Kartu Keluarga (KK) fotokopi</li>
+            <li>Akte kelahiran fotokopi</li>
+            <li>Pas foto terbaru ukuran 3×4 cm background merah (2 lembar + file digital JPG min. 200KB)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          🏥 Dokumen Kesehatan <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <ul class="checklist">
+            <li>Surat Keterangan Sehat dari dokter/puskesmas/rumah sakit (asli)</li>
+            <li>Surat Keterangan Bebas Narkoba (untuk program studi tertentu)</li>
+          </ul>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+          💰 Dokumen Keuangan (Jalur Beasiswa) <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+          <ul class="checklist">
+            <li>Surat Keterangan Tidak Mampu (SKTM) dari kelurahan setempat</li>
+            <li>Slip gaji/Surat Keterangan Penghasilan Orang Tua (terakhir)</li>
+            <li>Kartu Indonesia Pintar (KIP) jika memiliki</li>
+            <li>Fotokopi rekening listrik atau PBB 3 bulan terakhir</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Accordion checklist — memudahkan calon mahasiswa mencentang dokumen yang sudah siap. Default open untuk dokumen akademik (paling umum). JavaScript ringan untuk toggle.</span>
+  </section>
+
+  <!-- FORM MULTI-STEP -->
+  <section class="section section-alt" id="form-daftar">
+    <div class="section-label">Formulir</div>
+    <div class="section-header">
+      <h2>Formulir Pendaftaran Online</h2>
+      <p>Isi formulir lengkap dalam 4 langkah mudah — simpan di setiap tahap</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div style="max-width:700px; margin:0 auto;">
+      <div class="form-steps">
+        <div class="form-step done">
+          <div class="step-circle">✓</div>
+          <div class="step-label">Step 1<br>Data Pribadi</div>
+        </div>
+        <div class="form-step active">
+          <div class="step-circle">2</div>
+          <div class="step-label">Step 2<br>Pilihan Prodi</div>
+        </div>
+        <div class="form-step">
+          <div class="step-circle">3</div>
+          <div class="step-label">Step 3<br>Upload Dokumen</div>
+        </div>
+        <div class="form-step">
+          <div class="step-circle">4</div>
+          <div class="step-label">Step 4<br>Konfirmasi</div>
+        </div>
+      </div>
+      <div class="form-panel">
+        <h3>Step 2: Pilihan Program Studi & Jalur Masuk</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Pilihan Program Studi 1 *</label>
+            <select>
+              <option value="">— Pilih Program Studi —</option>
+              <option>Teknik Konstruksi Gedung (D4)</option>
+              <option>Teknik Arsitektur (D4)</option>
+              <option>Teknologi Informasi (D4)</option>
+              <option>Teknik Mesin (D3)</option>
+              <option>Teknik Listrik (D3)</option>
+              <option>Teknik Lingkungan (D4)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Pilihan Program Studi 2 (Opsional)</label>
+            <select>
+              <option value="">— Pilih Program Studi —</option>
+              <option>Teknik Konstruksi Gedung (D4)</option>
+              <option>Teknik Arsitektur (D4)</option>
+              <option>Teknologi Informasi (D4)</option>
+              <option>Teknik Mesin (D3)</option>
+              <option>Teknik Listrik (D3)</option>
+              <option>Teknik Lingkungan (D4)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Jalur Pendaftaran *</label>
+            <select>
+              <option>Jalur Reguler</option>
+              <option>Jalur Prestasi</option>
+              <option>Jalur Beasiswa KIP-K</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Asal Sekolah *</label>
+            <input type="text" placeholder="Nama SMA/SMK/MA">
+          </div>
+          <div class="form-group full">
+            <label>Motivasi Memilih STTPU (min. 100 kata) *</label>
+            <textarea rows="4" placeholder="Ceritakan alasan Anda memilih STTPU dan program studi tersebut..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-secondary">← Kembali</button>
+          <button class="btn-next">Lanjut: Upload Dokumen →</button>
+        </div>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Form multi-step dengan stepper visual. Step yang selesai = hijau. Step aktif = primary blue. Validasi inline di setiap field. "Simpan & Lanjut" mencegah kehilangan data jika browser ditutup. Di mobile: stepper label disingkat.</span>
+  </section>
+
+  <!-- STATUS CHECK -->
+  <section class="section" id="status">
+    <div class="section-label">Cek Status</div>
+    <div class="section-header">
+      <h2>Cek Status Pendaftaran</h2>
+      <p>Masukkan nomor pendaftaran untuk melihat status dan perkembangan proses seleksi Anda</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="status-check">
+      <p style="font-size:13px; color:var(--text-light); margin-bottom:4px;">Nomor pendaftaran dikirim ke email saat pertama kali mendaftar.</p>
+      <div class="status-input-row">
+        <input class="status-input" type="text" placeholder="Contoh: STTPU-2026-000123">
+        <button class="btn-cek">Cek Status</button>
+      </div>
+      <div style="margin-top:12px; background:#F0F4F8; border-radius:4px; padding:12px; font-size:12px; color:#666; border:1px dashed var(--border);">
+        [Placeholder: Area hasil status pendaftaran — akan menampilkan nama, prodi pilihan, status (Lengkap/Kurang Dokumen/Diterima/Ditolak), dan instruksi tindak lanjut]
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Pengecekan status mandiri mengurangi pertanyaan masuk ke staf PMB (self-service). Input nomor pendaftaran, tampil hasil real-time via API. Di bawah hasil ada tautan "Hubungi PMB" untuk kasus edge.</span>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section section-alt">
+    <div class="section-label">FAQ</div>
+    <div class="section-header">
+      <h2>Pertanyaan yang Sering Ditanyakan</h2>
+      <p>Tidak menemukan jawaban? Hubungi kami langsung via WhatsApp</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="faq-cols">
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header open" onclick="toggleAccordion(this)">
+            Apakah ada tes masuk untuk jalur reguler? <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body open">
+            <p style="font-size:13px; line-height:1.6;">Untuk jalur reguler, seleksi dilakukan berdasarkan nilai rapor dan wawancara singkat. Tidak ada tes tulis akademik terpisah. Hasil rapor semester 4-6 menjadi komponen utama penilaian.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            Apakah bisa mendaftar dua program studi sekaligus? <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <p style="font-size:13px; line-height:1.6;">Ya, Anda bisa memilih dua pilihan program studi dalam satu formulir. Jika tidak diterima di pilihan pertama, sistem akan mempertimbangkan pilihan kedua secara otomatis tanpa biaya tambahan.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            Kapan pengumuman hasil seleksi diumumkan? <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <p style="font-size:13px; line-height:1.6;">Pengumuman hasil seleksi Gelombang II akan disampaikan pada 20 Juni 2026 melalui email terdaftar dan portal pendaftaran. Pastikan Anda rutin memeriksa email dan portal.</p>
+          </div>
+        </div>
+      </div>
+      <div class="accordion">
+        <div class="accordion-item">
+          <div class="accordion-header open" onclick="toggleAccordion(this)">
+            Bagaimana cara membayar biaya pendaftaran? <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body open">
+            <p style="font-size:13px; line-height:1.6;">Pembayaran biaya pendaftaran dapat dilakukan melalui transfer bank (BNI, BRI, Mandiri, BCA), virtual account, atau minimarket (Alfamart/Indomaret). Kode pembayaran dikirim otomatis ke email setelah mengisi formulir.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            Apakah mahasiswa luar Jakarta bisa mendaftar? <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <p style="font-size:13px; line-height:1.6;">Tentu! Kami menerima mahasiswa dari seluruh Indonesia. Proses pendaftaran sepenuhnya online. Wawancara juga tersedia dalam format video call. Tersedia asrama kampus dengan kapasitas 200 mahasiswa.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header" onclick="toggleAccordion(this)">
+            Bisakah SPP dicicil atau ditangguhkan? <span class="arrow">▼</span>
+          </div>
+          <div class="accordion-body">
+            <p style="font-size:13px; line-height:1.6;">Ya. SPP dapat dicicil maksimal 3 kali dalam satu semester. Pengajuan cicilan dilakukan ke bagian keuangan sebelum tanggal jatuh tempo. Mahasiswa beasiswa KIP-K tidak perlu membayar SPP.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: FAQ 2 kolom accordion — menjawab pertanyaan paling umum yang masuk ke staf PMB. Mengurangi beban kerja staf dan meningkatkan kepercayaan calon mahasiswa. Satu accordion default open di tiap kolom.</span>
+  </section>
+
+  <!-- CONTACT PMB -->
+  <section class="section">
+    <div class="section-label">Kontak</div>
+    <div class="section-header">
+      <h2>Hubungi Tim PMB</h2>
+      <p>Tim kami siap membantu menjawab semua pertanyaan Anda tentang pendaftaran</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="pmb-contact-card">
+      <div class="contact-channel">
+        <span class="contact-icon">💬</span>
+        <h4>WhatsApp PMB</h4>
+        <p>Balas dalam &lt;2 jam pada hari kerja. Tersedia untuk konsultasi program studi dan proses daftar.</p>
+        <a class="btn-contact btn-wa" href="#">Chat WhatsApp</a>
+      </div>
+      <div class="contact-channel">
+        <span class="contact-icon">📧</span>
+        <h4>Email PMB</h4>
+        <p>pmb@sttpu.ac.id — Untuk pertanyaan formal dan pengiriman dokumen yang tidak bisa diunggah di sistem.</p>
+        <a class="btn-contact btn-email" href="#">Kirim Email</a>
+      </div>
+      <div class="contact-channel">
+        <span class="contact-icon">📞</span>
+        <h4>Telepon</h4>
+        <p>(021) 555-1234 ext. 101<br>Senin–Jumat 08.00–16.00 WIB<br>Sabtu 08.00–12.00 WIB</p>
+        <a class="btn-contact btn-telp" href="#">Hubungi Sekarang</a>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Kartu kontak PMB dedicated — 3 channel: WhatsApp (paling cepat), Email (formal), Telepon. CTA color-coded per channel. Menampilkan jam operasional untuk manage ekspektasi respons.</span>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo-box">STTPU</div>
+          <div class="footer-brand-name">STTPU Jakarta</div>
+        </div>
+        <p class="footer-desc">Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — mendidik tenaga ahli teknologi Indonesia yang kompeten dan berintegritas.</p>
+      </div>
+      <div>
+        <h4>PMB</h4>
+        <ul>
+          <li><a href="#">Jalur Pendaftaran</a></li>
+          <li><a href="#">Jadwal & Timeline</a></li>
+          <li><a href="#">Biaya Kuliah</a></li>
+          <li><a href="#">Beasiswa</a></li>
+          <li><a href="#">FAQ PMB</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Akademik</h4>
+        <ul>
+          <li><a href="03-program-studi.html">Program Studi</a></li>
+          <li><a href="#">Kurikulum</a></li>
+          <li><a href="#">Dosen</a></li>
+          <li><a href="#">Penelitian</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Kontak PMB</h4>
+        <ul>
+          <li><a href="#">📞 (021) 555-1234 ext. 101</a></li>
+          <li><a href="#">📧 pmb@sttpu.ac.id</a></li>
+          <li><a href="#">💬 WhatsApp PMB</a></li>
+          <li><a href="#">🕐 Senin–Jumat 08.00–16.00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STTPU Jakarta. Hak Cipta Dilindungi.</span>
+      <span>Kebijakan Privasi · Syarat Penggunaan · Peta Situs</span>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float" title="Chat WhatsApp PMB">💬</a>
+
+</div>
+
+<script>
+function setPreview(mode) {
+  document.getElementById('pageWrapper').className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+
+function toggleAccordion(header) {
+  const body = header.nextElementSibling;
+  const isOpen = header.classList.contains('open');
+  header.classList.toggle('open', !isOpen);
+  body.classList.toggle('open', !isOpen);
+}
+
+function updateCountdown() {
+  const target = new Date('2026-05-30T23:59:59');
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) return;
+  const days = Math.floor(diff / (1000*60*60*24));
+  const hours = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const secs = Math.floor((diff % (1000*60)) / 1000);
+  document.getElementById('cd2-days').textContent = String(days).padStart(2,'0');
+  document.getElementById('cd2-hours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cd2-mins').textContent = String(mins).padStart(2,'0');
+  document.getElementById('cd2-secs').textContent = String(secs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe — 07 Kontak | STTPU</title>
+<style>
+  :root {
+    --primary: #1E3A5F;
+    --primary-light: #2A5298;
+    --accent: #F5A623;
+    --wire-gray: #E0E0E0;
+    --annotation: #2979FF;
+    --bg: #F5F5F5;
+    --white: #FFFFFF;
+    --text: #333333;
+    --text-light: #666666;
+    --border: #CCCCCC;
+    --success: #4CAF50;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+
+  .annotation { font-style: italic; color: var(--annotation); font-size: 11px; display: block; margin-top: 4px; line-height: 1.4; }
+  .img-placeholder { background: var(--wire-gray); display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-style: italic; border: 1px dashed var(--border); text-align: center; }
+  .section-label { background: var(--annotation); color: white; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; display: inline-block; border-radius: 2px; margin-bottom: 8px; }
+
+  .preview-controls { position: fixed; top: 10px; right: 10px; z-index: 9999; background: white; border: 2px solid var(--annotation); border-radius: 8px; padding: 8px 12px; display: flex; gap: 6px; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.15); flex-wrap: wrap; max-width: 260px; }
+  .preview-controls label { font-size: 11px; font-weight: 700; color: var(--annotation); width: 100%; }
+  .btn-preview { font-size: 11px; padding: 4px 10px; border: 1px solid var(--annotation); border-radius: 4px; cursor: pointer; background: white; color: var(--annotation); font-weight: 600; }
+  .btn-preview.active { background: var(--annotation); color: white; }
+  .page-wrapper { margin: 0 auto; transition: max-width 0.3s; }
+  .page-wrapper.desktop { max-width: 1280px; }
+  .page-wrapper.tablet { max-width: 768px; }
+  .page-wrapper.mobile { max-width: 390px; }
+
+  .navbar { background: var(--primary); padding: 0 20px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+  .nav-logo { display: flex; align-items: center; gap: 10px; padding: 12px 0; margin-right: 20px; text-decoration: none; flex-shrink: 0; }
+  .nav-logo-box { width: 40px; height: 40px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 12px; }
+  .nav-logo-text { color: white; font-size: 14px; font-weight: 700; line-height: 1.2; }
+  .nav-logo-text small { font-weight: 400; font-size: 10px; display: block; opacity: 0.8; }
+  .nav-menu { display: flex; flex: 1; gap: 0; overflow-x: auto; }
+  .nav-item { color: rgba(255,255,255,0.85); text-decoration: none; padding: 16px 14px; font-size: 13px; white-space: nowrap; transition: background 0.2s; border-bottom: 3px solid transparent; }
+  .nav-item:hover { background: rgba(255,255,255,0.1); color: white; }
+  .nav-item.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .nav-cta { background: var(--accent); color: var(--primary); font-weight: 700; padding: 10px 18px; border-radius: 4px; text-decoration: none; font-size: 13px; white-space: nowrap; margin-left: auto; flex-shrink: 0; }
+
+  .breadcrumb { background: white; padding: 10px 40px; font-size: 12px; border-bottom: 1px solid var(--border); }
+  .breadcrumb a { color: var(--primary); text-decoration: none; }
+  .breadcrumb span { color: #888; margin: 0 6px; }
+
+  .page-header { background: var(--primary); color: white; padding: 36px 40px; }
+  .page-header h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 8px; }
+  .page-header p { font-size: 14px; opacity: 0.85; max-width: 550px; line-height: 1.6; }
+
+  /* Map Section */
+  .map-section { display: grid; grid-template-columns: 2fr 1fr; gap: 0; }
+  .map-embed { height: 400px; background: var(--wire-gray); border-right: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; color: #888; font-size: 13px; font-style: italic; }
+  .map-embed-icon { font-size: 3rem; }
+  .map-info { padding: 32px 28px; background: white; }
+  .map-info h3 { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 20px; }
+  .contact-detail-item { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+  .contact-detail-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .contact-detail-content h4 { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 2px; }
+  .contact-detail-content p { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .contact-detail-content a { color: var(--primary); text-decoration: none; font-size: 13px; }
+  .contact-detail-content a:hover { text-decoration: underline; }
+  .hours-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; font-size: 12px; }
+  .hours-grid .day { color: var(--text-light); }
+  .hours-grid .time { font-weight: 600; color: var(--text); }
+
+  /* Section */
+  .section { padding: 48px 40px; }
+  .section-alt { background: white; }
+  .section-header { margin-bottom: 28px; }
+  .section-header h2 { font-size: 1.4rem; color: var(--primary); font-weight: 800; margin-bottom: 8px; }
+  .section-header p { color: var(--text-light); font-size: 13px; }
+  .subtitle-line { width: 48px; height: 3px; background: var(--accent); margin: 10px 0 0; border-radius: 2px; }
+
+  /* Directory Table */
+  .directory-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .directory-table thead tr { background: var(--primary); color: white; }
+  .directory-table th { padding: 12px 14px; text-align: left; font-size: 12px; font-weight: 600; }
+  .directory-table td { padding: 12px 14px; border-bottom: 1px solid var(--wire-gray); vertical-align: top; }
+  .directory-table tr:nth-child(even) td { background: #F8F9FA; }
+  .directory-table tr:hover td { background: #E8F0FE; }
+  .unit-name { font-weight: 700; color: var(--primary); }
+  .unit-head { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .contact-phone { color: var(--primary); text-decoration: none; font-size: 13px; }
+  .contact-email { color: var(--annotation); text-decoration: none; font-size: 12px; }
+  .wa-badge { display: inline-flex; align-items: center; gap: 4px; background: #E8F5E9; color: #2E7D32; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-decoration: none; margin-top: 4px; }
+
+  /* Contact Form */
+  .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+  .form-group label .req { color: #E53935; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; border: 1px solid var(--border); border-radius: 4px;
+    padding: 10px 12px; font-size: 13px; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none; border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(30,58,95,0.1);
+  }
+  .form-group textarea { resize: vertical; min-height: 120px; }
+  .btn-submit { background: var(--primary); color: white; font-weight: 700; padding: 13px 28px; border-radius: 4px; border: none; font-size: 14px; cursor: pointer; transition: background 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-submit:hover { background: var(--primary-light); }
+  .form-note { font-size: 11px; color: #888; margin-top: 8px; line-height: 1.5; }
+
+  /* Contact Side Info */
+  .contact-side-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .contact-side-box h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 14px; }
+  .channel-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--wire-gray); }
+  .channel-item:last-child { border-bottom: none; }
+  .channel-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
+  .ch-wa { background: #E8F5E9; }
+  .ch-email { background: #E8F0FE; }
+  .ch-phone { background: #FFF3E0; }
+  .ch-visit { background: #F3E5F5; }
+  .channel-info h5 { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .channel-info p { font-size: 11px; color: var(--text-light); line-height: 1.4; }
+
+  /* Social Media */
+  .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .social-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; text-decoration: none; color: var(--text); transition: all 0.2s; }
+  .social-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  .social-icon { font-size: 2rem; margin-bottom: 8px; display: block; }
+  .social-platform { font-size: 12px; font-weight: 700; color: var(--primary); }
+  .social-handle { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+  .social-followers { font-size: 10px; color: #999; margin-top: 4px; }
+
+  /* Directions */
+  .directions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .direction-card { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 18px; }
+  .direction-card h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .direction-card ol { list-style: decimal; padding-left: 16px; }
+  .direction-card li { font-size: 12px; color: var(--text-light); padding: 4px 0; line-height: 1.5; }
+  .direction-card .landmark { font-weight: 600; color: var(--text); }
+
+  /* Footer */
+  .footer { background: #1A2D3F; color: rgba(255,255,255,0.8); padding: 40px 40px 20px; }
+  .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px; margin-bottom: 24px; }
+  .footer h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 6px; }
+  .footer a { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 12px; }
+  .footer a:hover { color: var(--accent); }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.5); flex-wrap: wrap; gap: 8px; }
+  .footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .footer-logo-box { width: 36px; height: 36px; background: var(--accent); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: 900; color: var(--primary); font-size: 10px; }
+  .footer-brand-name { color: white; font-size: 14px; font-weight: 700; }
+  .footer-desc { font-size: 12px; line-height: 1.7; }
+
+  .whatsapp-float { position: fixed; bottom: 28px; right: 28px; width: 56px; height: 56px; background: #25D366; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 4px 16px rgba(0,0,0,0.25); cursor: pointer; z-index: 200; transition: transform 0.2s; text-decoration: none; }
+  .whatsapp-float:hover { transform: scale(1.08); }
+
+  @media (max-width: 1024px) {
+    .map-section { grid-template-columns: 1fr; }
+    .map-info { border-right: none; border-top: 1px solid var(--border); }
+    .contact-layout { grid-template-columns: 1fr; }
+    .social-grid { grid-template-columns: repeat(2, 1fr); }
+    .directions-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .map-embed { height: 280px; }
+    .section { padding: 32px 20px; }
+    .social-grid { grid-template-columns: repeat(2, 1fr); }
+    .directions-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .breadcrumb, .page-header { padding-left: 20px; padding-right: 20px; }
+    .footer { padding: 32px 20px 16px; }
+    .directory-table { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="preview-controls">
+  <label>Preview Mode:</label>
+  <button class="btn-preview active" onclick="setPreview('desktop')">Desktop</button>
+  <button class="btn-preview" onclick="setPreview('tablet')">Tablet</button>
+  <button class="btn-preview" onclick="setPreview('mobile')">Mobile</button>
+</div>
+
+<div class="page-wrapper desktop" id="pageWrapper">
+
+  <nav class="navbar">
+    <a class="nav-logo" href="01-beranda.html">
+      <div class="nav-logo-box">STTPU</div>
+      <div class="nav-logo-text">STTPU<small>Jakarta</small></div>
+    </a>
+    <div class="nav-menu">
+      <a class="nav-item" href="04-tentang.html">Tentang</a>
+      <a class="nav-item" href="03-program-studi.html">Akademik</a>
+      <a class="nav-item" href="02-pmb.html">PMB</a>
+      <a class="nav-item" href="#">Penelitian</a>
+      <a class="nav-item" href="#">Kemahasiswaan</a>
+      <a class="nav-item" href="06-berita.html">Berita</a>
+      <a class="nav-item" href="05-portal.html">Portal</a>
+      <a class="nav-item active" href="#">Kontak</a>
+    </div>
+    <a class="nav-cta" href="02-pmb.html">Daftar Sekarang</a>
+  </nav>
+
+  <div class="breadcrumb">
+    <a href="01-beranda.html">Beranda</a>
+    <span>›</span>
+    Kontak
+  </div>
+
+  <div class="page-header">
+    <h1>Hubungi Kami</h1>
+    <p>Kami senang mendengar dari Anda. Temukan cara terbaik untuk menghubungi tim STTPU sesuai kebutuhan Anda.</p>
+  </div>
+
+  <!-- MAP + CONTACT INFO -->
+  <div class="map-section">
+    <div class="map-embed">
+      <span class="map-embed-icon">🗺️</span>
+      <strong>Google Maps Embed</strong>
+      <span>Peta interaktif lokasi STTPU Jakarta</span>
+      <span style="font-size:11px; padding: 4px 12px; border: 1px dashed #ccc; border-radius:3px;">&lt;iframe src="https://maps.google.com/..." ...&gt;&lt;/iframe&gt;</span>
+      <span style="font-size:11px; color:#bbb;">Dimensi: 100% x 400px</span>
+    </div>
+    <div class="map-info">
+      <h3>Informasi Kontak</h3>
+
+      <div class="contact-detail-item">
+        <span class="contact-detail-icon">📍</span>
+        <div class="contact-detail-content">
+          <h4>Alamat</h4>
+          <p>Jl. Pelajar Pejuang 45 No. 1<br>Kelurahan Babakan Ciparay<br>Kota Bandung, Jawa Barat 40264</p>
+        </div>
+      </div>
+
+      <div class="contact-detail-item">
+        <span class="contact-detail-icon">📞</span>
+        <div class="contact-detail-content">
+          <h4>Telepon</h4>
+          <p><a class="contact-phone" href="tel:+62215551234">(021) 555-1234</a> (Kantor Pusat)<br>
+          <a class="contact-phone" href="tel:+62215551235">(021) 555-1235</a> (PMB)<br>
+          <a class="contact-phone" href="tel:+62215551236">(021) 555-1236</a> (Akademik)</p>
+        </div>
+      </div>
+
+      <div class="contact-detail-item">
+        <span class="contact-detail-icon">📧</span>
+        <div class="contact-detail-content">
+          <h4>Email</h4>
+          <p><a class="contact-email" href="mailto:info@sttpu.ac.id">info@sttpu.ac.id</a> (Umum)<br>
+          <a class="contact-email" href="mailto:pmb@sttpu.ac.id">pmb@sttpu.ac.id</a> (Pendaftaran)<br>
+          <a class="contact-email" href="mailto:akademik@sttpu.ac.id">akademik@sttpu.ac.id</a></p>
+        </div>
+      </div>
+
+      <div class="contact-detail-item">
+        <span class="contact-detail-icon">🕐</span>
+        <div class="contact-detail-content">
+          <h4>Jam Operasional</h4>
+          <div class="hours-grid">
+            <span class="day">Senin – Jumat</span><span class="time">08.00 – 16.00 WIB</span>
+            <span class="day">Sabtu</span><span class="time">08.00 – 12.00 WIB</span>
+            <span class="day">Minggu & Libur</span><span class="time">Tutup</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-detail-item">
+        <span class="contact-detail-icon">💬</span>
+        <div class="contact-detail-content">
+          <h4>WhatsApp</h4>
+          <p><a href="#" style="color:#25D366; font-weight:600; text-decoration:none;">+62 812-3456-7890</a> (Responsif Mon–Fri)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <span class="annotation" style="padding: 4px 40px; display:block; background:#FFFDE7; border-bottom:1px solid #FFE082;">Anotasi: Peta Google Maps embed (iframe) di kiri 2/3, info kontak di kanan 1/3. Informasi kontak mencakup: alamat lengkap, semua nomor telepon, email per unit, jam operasional tabel, WhatsApp. Di mobile: peta di atas, info di bawah.</span>
+
+  <!-- DIRECTORY TABLE -->
+  <section class="section section-alt">
+    <div class="section-label">Direktori</div>
+    <div class="section-header">
+      <h2>Direktori Unit & Kontak</h2>
+      <p>Temukan kontak unit yang tepat untuk keperluan Anda</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="directory-table">
+        <thead>
+          <tr>
+            <th>Unit / Bagian</th>
+            <th>Kepala Unit</th>
+            <th>Telepon</th>
+            <th>Email</th>
+            <th>Tugas Pokok</th>
+            <th>WhatsApp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="unit-name">Bagian Akademik</div></td>
+            <td><div>Dra. Sri Mulyani, M.Pd.</div><div class="unit-head">Kepala Bagian</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1236</a></td>
+            <td><a class="contact-email" href="#">akademik@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">KRS, jadwal kuliah, nilai, kalender akademik, surat keterangan aktif</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+          <tr>
+            <td><div class="unit-name">Bagian Keuangan</div></td>
+            <td><div>Ir. Hadi Santoso, M.M.</div><div class="unit-head">Kepala Bagian</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1237</a></td>
+            <td><a class="contact-email" href="#">keuangan@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">Pembayaran SPP, tagihan, cicilan, konfirmasi pembayaran</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+          <tr>
+            <td><div class="unit-name">PMB (Penerimaan MHB)</div></td>
+            <td><div>Dr. Anisa Putri, M.T.</div><div class="unit-head">Koordinator PMB</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1235</a></td>
+            <td><a class="contact-email" href="#">pmb@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">Pendaftaran baru, jalur masuk, persyaratan, biaya, jadwal seleksi</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+          <tr>
+            <td><div class="unit-name">Bagian Kemahasiswaan</div></td>
+            <td><div>Bapak Ridwan Arifin, S.Sos.</div><div class="unit-head">Kepala Bagian</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1238</a></td>
+            <td><a class="contact-email" href="#">kemahasiswaan@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">Beasiswa, organisasi mahasiswa, kegiatan ekstrakurikuler, magang</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+          <tr>
+            <td><div class="unit-name">Unit Teknologi Informasi</div></td>
+            <td><div>Edi Purnomo, S.Kom., M.T.</div><div class="unit-head">Kepala Unit IT</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1239</a></td>
+            <td><a class="contact-email" href="#">it@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">Akun SIAKAD/LMS, reset password, gangguan sistem, jaringan internet</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+          <tr>
+            <td><div class="unit-name">LPPM (Penelitian & PKM)</div></td>
+            <td><div>Prof. Dr. Bambang Wibowo</div><div class="unit-head">Kepala LPPM</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1240</a></td>
+            <td><a class="contact-email" href="#">lppm@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">Proposal riset, hibah penelitian, PKM, kerjasama industri, jurnal</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+          <tr>
+            <td><div class="unit-name">Humas & Marketing</div></td>
+            <td><div>Ibu Dewi Kartika, S.Sos., M.M.</div><div class="unit-head">Kepala Humas</div></td>
+            <td><a class="contact-phone" href="#">(021) 555-1241</a></td>
+            <td><a class="contact-email" href="#">humas@sttpu.ac.id</a></td>
+            <td style="font-size:12px; color:var(--text-light);">Media, publikasi, kerjasama media, event, dokumentasi kegiatan</td>
+            <td><a class="wa-badge" href="#">💬 Chat</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <span class="annotation">Anotasi: Tabel direktori — self-service untuk pengunjung yang mencari unit spesifik. Kolom: Unit, Kepala, Telepon, Email, Tugas Pokok (deskripsi singkat), WhatsApp. Hover row untuk keterbacaan. Overflow-x scroll di mobile.</span>
+  </section>
+
+  <!-- CONTACT FORM -->
+  <section class="section">
+    <div class="section-label">Formulir</div>
+    <div class="section-header">
+      <h2>Kirim Pesan</h2>
+      <p>Tidak menemukan info yang Anda cari? Kirim pertanyaan langsung ke tim kami</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="contact-layout">
+      <div>
+        <div class="form-group">
+          <label>Nama Lengkap <span class="req">*</span></label>
+          <input type="text" placeholder="Nama lengkap Anda">
+        </div>
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" placeholder="email@contoh.com">
+        </div>
+        <div class="form-group">
+          <label>Nomor WhatsApp / HP</label>
+          <input type="tel" placeholder="08XX-XXXX-XXXX">
+        </div>
+        <div class="form-group">
+          <label>Unit Tujuan <span class="req">*</span></label>
+          <select>
+            <option value="">— Pilih Unit —</option>
+            <option>PMB — Penerimaan Mahasiswa Baru</option>
+            <option>Bagian Akademik</option>
+            <option>Bagian Keuangan</option>
+            <option>Bagian Kemahasiswaan</option>
+            <option>Unit IT / Helpdesk</option>
+            <option>LPPM — Penelitian & Pengabdian</option>
+            <option>Humas & Marketing</option>
+            <option>Lainnya / Umum</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Subjek <span class="req">*</span></label>
+          <input type="text" placeholder="Topik atau pertanyaan singkat Anda">
+        </div>
+        <div class="form-group">
+          <label>Pesan <span class="req">*</span></label>
+          <textarea placeholder="Tulis pesan lengkap Anda di sini. Sertakan informasi spesifik seperti nomor mahasiswa, program studi, atau detail kendala yang dialami agar kami dapat merespons lebih cepat."></textarea>
+        </div>
+        <div class="form-group">
+          <label style="display:flex; align-items:flex-start; gap:8px; cursor:pointer;">
+            <input type="checkbox" style="width:auto; margin-top:2px;">
+            <span style="font-size:12px; color:var(--text-light);">Saya menyetujui bahwa data yang saya masukkan akan diproses oleh STTPU sesuai <a href="#" style="color:var(--annotation);">Kebijakan Privasi</a> untuk keperluan respons atas pertanyaan ini.</span>
+          </label>
+        </div>
+        <button class="btn-submit" type="submit">Kirim Pesan ✉</button>
+        <p class="form-note">Kami akan merespons dalam 1–2 hari kerja. Untuk keperluan mendesak, gunakan WhatsApp atau telepon langsung ke unit yang bersangkutan.</p>
+      </div>
+
+      <!-- Contact Side Info -->
+      <div>
+        <div class="contact-side-box">
+          <h4>Pilihan Kontak Lainnya</h4>
+          <div class="channel-item">
+            <div class="channel-icon ch-wa">💬</div>
+            <div class="channel-info">
+              <h5>WhatsApp — Respons Paling Cepat</h5>
+              <p>+62 812-3456-7890 · Balas dalam &lt;2 jam<br>Senin–Jumat 08.00–16.00 WIB</p>
+            </div>
+          </div>
+          <div class="channel-item">
+            <div class="channel-icon ch-email">📧</div>
+            <div class="channel-info">
+              <h5>Email Umum</h5>
+              <p>info@sttpu.ac.id · Respons 1–2 hari kerja</p>
+            </div>
+          </div>
+          <div class="channel-item">
+            <div class="channel-icon ch-phone">📞</div>
+            <div class="channel-info">
+              <h5>Telepon</h5>
+              <p>(021) 555-1234 · Senin–Jumat 08.00–16.00</p>
+            </div>
+          </div>
+          <div class="channel-item">
+            <div class="channel-icon ch-visit">🏛️</div>
+            <div class="channel-info">
+              <h5>Kunjungi Kampus</h5>
+              <p>Jl. Pelajar Pejuang 45 No. 1, Jakarta<br>Parkir tersedia, gratis</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-side-box">
+          <h4>FAQ Cepat</h4>
+          <ul style="list-style:none;">
+            <li style="padding:8px 0; border-bottom:1px solid var(--wire-gray); font-size:12px;"><a href="02-pmb.html" style="color:var(--primary); text-decoration:none;">→ Cara mendaftar di STTPU?</a></li>
+            <li style="padding:8px 0; border-bottom:1px solid var(--wire-gray); font-size:12px;"><a href="02-pmb.html#biaya" style="color:var(--primary); text-decoration:none;">→ Berapa biaya kuliah per semester?</a></li>
+            <li style="padding:8px 0; border-bottom:1px solid var(--wire-gray); font-size:12px;"><a href="05-portal.html" style="color:var(--primary); text-decoration:none;">→ Lupa password SIAKAD?</a></li>
+            <li style="padding:8px 0; border-bottom:1px solid var(--wire-gray); font-size:12px;"><a href="03-program-studi.html" style="color:var(--primary); text-decoration:none;">→ Ada program studi apa saja?</a></li>
+            <li style="padding:8px 0; font-size:12px;"><a href="02-pmb.html#beasiswa" style="color:var(--primary); text-decoration:none;">→ Beasiswa apa yang tersedia?</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: Form kontak 2 kolom — kiri: form lengkap dengan dropdown "Unit Tujuan" untuk routing otomatis ke tim yang tepat. Kanan: opsi kontak alternatif (WhatsApp, Email, Telepon, Kunjungi) + FAQ cepat untuk self-service. Checkbox privasi penting untuk GDPR/UU PDP Indonesia.</span>
+  </section>
+
+  <!-- SOCIAL MEDIA -->
+  <section class="section section-alt">
+    <div class="section-label">Media Sosial</div>
+    <div class="section-header">
+      <h2>Ikuti Kami di Media Sosial</h2>
+      <p>Dapatkan update terbaru kegiatan kampus, pengumuman PMB, dan inspirasi dari alumni</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="social-grid">
+      <a class="social-card" href="#">
+        <span class="social-icon">📸</span>
+        <div class="social-platform">Instagram</div>
+        <div class="social-handle">@sttpu_official</div>
+        <div class="social-followers">12.4K pengikut</div>
+      </a>
+      <a class="social-card" href="#">
+        <span class="social-icon">▶️</span>
+        <div class="social-platform">YouTube</div>
+        <div class="social-handle">STTPU Jakarta Channel</div>
+        <div class="social-followers">8.2K subscriber</div>
+      </a>
+      <a class="social-card" href="#">
+        <span class="social-icon">📘</span>
+        <div class="social-platform">Facebook</div>
+        <div class="social-handle">STTPU Jakarta Official</div>
+        <div class="social-followers">15.7K pengikut</div>
+      </a>
+      <a class="social-card" href="#">
+        <span class="social-icon">💼</span>
+        <div class="social-platform">LinkedIn</div>
+        <div class="social-handle">STTPU Jakarta</div>
+        <div class="social-followers">4.1K koneksi</div>
+      </a>
+    </div>
+    <span class="annotation">Anotasi: 4 kartu media sosial dengan platform, handle, dan jumlah pengikut. Hover effect dengan shadow dan transform. Relevan untuk Reza (calon mahasiswa Gen-Z) yang memutuskan berdasarkan presence sosial media kampus.</span>
+  </section>
+
+  <!-- DIRECTIONS -->
+  <section class="section">
+    <div class="section-label">Panduan Arah</div>
+    <div class="section-header">
+      <h2>Cara Menuju STTPU</h2>
+      <p>Panduan arah berdasarkan titik landmark populer di Jakarta</p>
+      <div class="subtitle-line"></div>
+    </div>
+    <div class="directions-grid">
+      <div class="direction-card">
+        <h4>🚌 Dari Stasiun Gambir</h4>
+        <ol>
+          <li>Dari <span class="landmark">Stasiun Gambir</span>, naik TransJakarta Koridor 1</li>
+          <li>Turun di <span class="landmark">Halte Monas</span>, transit Koridor 5</li>
+          <li>Turun di <span class="landmark">Halte Kampung Melayu</span></li>
+          <li>Naik ojek online 5 menit menuju kampus STTPU</li>
+          <li>Total waktu: ±40 menit dari Gambir</li>
+        </ol>
+      </div>
+      <div class="direction-card">
+        <h4>🚇 Dari Stasiun MRT Bundaran HI</h4>
+        <ol>
+          <li>Dari <span class="landmark">Stasiun MRT Bundaran HI</span>, ambil MRT ke Selatan</li>
+          <li>Turun di <span class="landmark">Stasiun MRT Dukuh Atas</span></li>
+          <li>Transit ke KRL arah Bogor</li>
+          <li>Turun di <span class="landmark">Stasiun Cawang</span></li>
+          <li>Naik ojek online 7 menit ke kampus</li>
+        </ol>
+      </div>
+      <div class="direction-card">
+        <h4>🚗 Dari Tol Dalam Kota</h4>
+        <ol>
+          <li>Keluar di <span class="landmark">Pintu Tol Cawang</span></li>
+          <li>Lurus ke arah <span class="landmark">Jl. MT Haryono</span></li>
+          <li>Belok kiri di persimpangan <span class="landmark">Jl. Pelajar</span></li>
+          <li>STTPU ada di kiri jalan No. 1 (<span class="landmark">sebelum Pom Bensin Shell</span>)</li>
+          <li>Parkir tersedia di dalam kampus</li>
+        </ol>
+      </div>
+    </div>
+    <span class="annotation">Anotasi: 3 panduan arah berbasis landmark (bukan koordinat GPS) — lebih mudah dipahami. Mode transportasi berbeda: TransJakarta, MRT, kendaraan pribadi. Langkah bernomor yang jelas, landmark di-bold untuk keterbacaan. Sangat membantu pengunjung pertama kali.</span>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo-box">STTPU</div>
+          <div class="footer-brand-name">STTPU Jakarta</div>
+        </div>
+        <p class="footer-desc">Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — mendidik tenaga ahli teknologi Indonesia.</p>
+      </div>
+      <div><h4>Kontak</h4><ul>
+        <li><a href="#">📞 (021) 555-1234</a></li>
+        <li><a href="#">📧 info@sttpu.ac.id</a></li>
+        <li><a href="#">💬 WhatsApp</a></li>
+        <li><a href="#">📍 Lihat di Maps</a></li>
+      </ul></div>
+      <div><h4>Halaman</h4><ul>
+        <li><a href="01-beranda.html">Beranda</a></li>
+        <li><a href="02-pmb.html">PMB</a></li>
+        <li><a href="03-program-studi.html">Program Studi</a></li>
+        <li><a href="04-tentang.html">Tentang</a></li>
+        <li><a href="05-portal.html">Portal</a></li>
+      </ul></div>
+      <div><h4>Unit</h4><ul>
+        <li><a href="#">PMB</a></li>
+        <li><a href="#">Akademik</a></li>
+        <li><a href="#">Keuangan</a></li>
+        <li><a href="#">Kemahasiswaan</a></li>
+        <li><a href="#">IT Support</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 STTPU Jakarta. Hak Cipta Dilindungi.</span>
+      <span>Kebijakan Privasi · Syarat Penggunaan · Peta Situs</span>
+    </div>
+  </footer>
+
+  <a href="#" class="whatsapp-float" title="Chat WhatsApp STTPU">💬</a>
+
+</div>
+
+<script>
+function setPreview(mode) {
+  document.getElementById('pageWrapper').className = 'page-wrapper ' + mode;
+  document.querySelectorAll('.btn-preview').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
