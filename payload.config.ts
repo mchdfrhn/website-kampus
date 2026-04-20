@@ -92,14 +92,14 @@ export default buildConfig({
       collections: {
         media: true,
       },
-      bucket: process.env.S3_BUCKET || "",
+      bucket: (process.env.S3_BUCKET || "").split('#')[0].trim(),
       config: {
         credentials: {
-          accessKeyId: process.env.S3_ACCESS_KEY_ID || "",
-          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY || "",
+          accessKeyId: (process.env.S3_ACCESS_KEY_ID || "").split('#')[0].trim(),
+          secretAccessKey: (process.env.S3_SECRET_ACCESS_KEY || "").split('#')[0].trim(),
         },
-        region: process.env.S3_REGION || "us-east-1",
-        endpoint: process.env.S3_ENDPOINT || undefined,
+        region: (process.env.S3_REGION || "us-east-1").split('#')[0].trim(),
+        endpoint: process.env.S3_ENDPOINT ? process.env.S3_ENDPOINT.split('#')[0].trim() : undefined,
         forcePathStyle: true,
       },
     }),
