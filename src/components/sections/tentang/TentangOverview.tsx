@@ -109,30 +109,30 @@ export default async function TentangOverview() {
   return (
     <>
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumbs />
         </div>
       </div>
 
-      <div className="bg-brand-navy text-white px-6 py-20 relative overflow-hidden">
+      <div className="bg-brand-navy text-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 relative overflow-hidden">
         <BlueAbstractBackground />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-black text-4xl lg:text-5xl mb-6 tracking-tight leading-tight uppercase">{content.title}</h1>
-            <div className="w-16 h-1 bg-brand-gold rounded-full mb-8" />
-            <p className="text-white/70 text-lg font-medium leading-relaxed">
+            <h1 className="font-black text-3xl sm:text-4xl lg:text-5xl mb-5 sm:mb-6 tracking-tight leading-[1.15] uppercase">{content.title}</h1>
+            <div className="w-14 sm:w-16 h-1 bg-brand-gold rounded-full mb-6 sm:mb-8" />
+            <p className="text-white/75 text-sm sm:text-base lg:text-lg font-medium leading-relaxed">
               {content.description}
             </p>
           </div>
         </div>
       </div>
 
-      <section className="bg-white border-b border-gray-50 py-12 px-6">
+      <section className="bg-white border-b border-gray-50 px-4 py-10 sm:px-6 sm:py-12">
         <div className="max-w-7xl mx-auto">
-          <ul className="grid grid-cols-2 md:grid-cols-4 gap-8" aria-label="Statistik STTPU">
+          <ul className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4" aria-label="Statistik STTPU">
             {stats.map((stat) => (
               <li key={stat.label} className="text-center group">
-                <p className="font-black text-3xl text-brand-navy group-hover:text-brand-gold transition-colors">{stat.value}</p>
+                <p className="font-black text-2xl sm:text-3xl text-brand-navy group-hover:text-brand-gold transition-colors break-words">{stat.value}</p>
                 <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">{stat.label}</p>
               </li>
             ))}
@@ -140,34 +140,34 @@ export default async function TentangOverview() {
         </div>
       </section>
 
-      <section className="px-6 py-24 relative overflow-hidden">
+      <section className="px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="max-w-4xl mb-20">
-             <h2 className="text-2xl font-black text-brand-navy mb-6 tracking-tight uppercase">{content.commitmentTitle}</h2>
+          <div className="max-w-4xl mb-12 sm:mb-16 lg:mb-20">
+             <h2 className="text-2xl sm:text-3xl font-black text-brand-navy mb-5 sm:mb-6 tracking-tight uppercase">{content.commitmentTitle}</h2>
              <div className="w-12 h-1 bg-brand-gold rounded-full mb-8" />
-             <p className="text-gray-600 text-lg leading-relaxed font-medium">
+             <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-medium">
               {content.commitmentText}
              </p>
           </div>
 
-          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" aria-label="Navigasi halaman tentang">
+          <ul className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3" aria-label="Navigasi halaman tentang">
             {sections.map((item) => {
               const Icon = iconMap[item.href] || History;
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group flex flex-col h-full p-10 bg-gray-50 border border-gray-100 rounded-[2.5rem] hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
+                    className="group flex h-full flex-col rounded-[2rem] border border-gray-100 bg-gray-50 p-6 sm:rounded-[2.25rem] sm:p-8 lg:rounded-[2.5rem] lg:p-10 hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
                   >
                     <div
-                      className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-brand-gold transition-colors"
+                      className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm transition-colors group-hover:bg-brand-gold sm:mb-8"
                       aria-hidden="true"
                     >
                       <Icon size={20} className="text-brand-navy group-hover:text-brand-navy" />
                     </div>
-                    <h3 className="font-black text-brand-navy text-lg mb-4 group-hover:text-brand-gold transition-colors uppercase tracking-tight">{item.title}</h3>
+                    <h3 className="mb-4 text-lg font-black uppercase tracking-tight text-brand-navy transition-colors group-hover:text-brand-gold">{item.title}</h3>
                     <p className="text-gray-500 text-sm leading-relaxed flex-1 group-hover:text-white/60 transition-colors font-medium">{item.desc}</p>
-                    <div className="flex items-center gap-2 text-brand-navy text-[10px] font-black uppercase tracking-widest mt-8 group-hover:text-white transition-all">
+                    <div className="mt-6 sm:mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-navy transition-all group-hover:text-white">
                       Eksplorasi
                       <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" aria-hidden="true" />
                     </div>

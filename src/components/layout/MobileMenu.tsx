@@ -33,7 +33,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
   };
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       <button
         onClick={toggleMenu}
         aria-label={isOpen ? 'Tutup menu' : 'Buka menu'}
@@ -169,7 +169,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
             onClick={toggleMenu}
             className="group relative flex items-center justify-center w-full py-4 bg-brand-gold text-brand-navy font-bold text-sm rounded-xl shadow-xl shadow-brand-gold/10 hover:shadow-brand-gold/30 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
           >
-            <span className="relative z-10">Portal Mahasiswa</span>
+            <span className="relative z-10">Portal</span>
             <div className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
           </Link>
         </div>

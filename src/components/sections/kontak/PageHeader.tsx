@@ -11,19 +11,19 @@ export default function PageHeader({
   return (
     <>
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumbs />
         </div>
       </div>
 
-      <div className="bg-brand-navy text-white px-6 py-16 relative overflow-hidden">
+      <div className="bg-brand-navy text-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 relative overflow-hidden">
         <BlueAbstractBackground />
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl mb-6 tracking-tight leading-tight">{title}</h1>
-            <div className="w-16 h-1 bg-brand-gold rounded-full mb-8" />
-            <p className="text-white/70 text-base md:text-lg font-medium leading-relaxed">
+            <h1 className="font-bold text-3xl sm:text-4xl lg:text-5xl mb-5 sm:mb-6 tracking-tight leading-[1.15]">{title}</h1>
+            <div className="w-14 sm:w-16 h-1 bg-brand-gold rounded-full mb-6 sm:mb-8" />
+            <p className="text-white/75 text-sm sm:text-base lg:text-lg font-medium leading-relaxed">
               {description}
             </p>
           </div>

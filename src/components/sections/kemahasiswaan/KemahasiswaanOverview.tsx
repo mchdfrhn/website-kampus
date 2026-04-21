@@ -74,7 +74,7 @@ export default async function KemahasiswaanOverview() {
   return (
     <>
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumbs 
             customItems={[
               { label: 'Kemahasiswaan', href: '/kemahasiswaan' }
@@ -83,23 +83,23 @@ export default async function KemahasiswaanOverview() {
         </div>
       </div>
 
-      <div className="bg-brand-navy text-white px-6 py-16 relative overflow-hidden">
+      <div className="bg-brand-navy text-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 relative overflow-hidden">
         <BlueAbstractBackground />
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="font-bold text-3xl md:text-4xl mb-4 tracking-tight">{content.heroTitle}</h1>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
+          <h1 className="font-bold text-3xl sm:text-4xl mb-4 tracking-tight">{content.heroTitle}</h1>
+          <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-white/75 font-medium">
             {content.heroDescription}
           </p>
         </div>
       </div>
 
-      <section className="bg-white border-b border-gray-100 py-10 px-6">
+      <section className="bg-white border-b border-gray-100 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
             {stats.map((s) => (
               <li key={s.label} className="text-center">
-                <p className="font-bold text-3xl text-brand-navy tracking-tight">{s.value}</p>
+                <p className="font-bold text-2xl sm:text-3xl text-brand-navy tracking-tight break-words">{s.value}</p>
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{s.label}</p>
               </li>
             ))}
@@ -107,18 +107,18 @@ export default async function KemahasiswaanOverview() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-2xl mb-12 font-medium">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-2xl mb-10 sm:mb-12 font-medium">
           {content.introText}
         </p>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
           {sections.map((item) => {
             const Icon = iconMap[item.href] || Flag;
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="group flex flex-col h-full p-8 bg-white border border-gray-100 rounded-2xl hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-300"
+                  className="group flex flex-col h-full rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-300"
                 >
                   <div className="w-12 h-12 bg-gray-50 group-hover:bg-brand-navy rounded-xl flex items-center justify-center mb-6 transition-all duration-300" aria-hidden="true">
                     <Icon size={20} className="text-brand-navy group-hover:text-brand-gold transition-colors" />

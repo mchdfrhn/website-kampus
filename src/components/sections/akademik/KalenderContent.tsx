@@ -70,7 +70,7 @@ export default async function KalenderContent() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-8 sm:space-y-10">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h2 className="font-bold text-brand-navy text-lg mb-1">{tahunAkademik}</h2>
@@ -89,7 +89,7 @@ export default async function KalenderContent() {
         )}
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-start gap-3">
+      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 sm:p-5 flex items-start gap-3">
         <AlertCircle size={16} className="text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
         <p className="text-amber-800 text-sm leading-relaxed">
           Jadwal dapat berubah sewaktu-waktu sesuai kebijakan institusi dan hari libur nasional.
@@ -104,7 +104,7 @@ export default async function KalenderContent() {
             {sem.label}
           </h3>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
-            <table className="w-full text-sm">
+            <table className="min-w-[640px] w-full text-sm">
               <thead>
                 <tr className="bg-brand-navy text-white">
                   <th className="text-left px-4 py-3 font-semibold w-8 rounded-tl-xl">No</th>

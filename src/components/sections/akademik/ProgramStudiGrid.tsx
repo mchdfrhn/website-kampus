@@ -28,14 +28,14 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
           Data program studi belum tersedia.
         </div>
       ) : (
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10" aria-label="Daftar program studi STTPU">
+      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-10" aria-label="Daftar program studi STTPU">
         {list.map((prodi) => (
           <li key={prodi.slug}>
             <Link
               href={`/akademik/program-studi/${prodi.slug}`}
-              className="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
+              className="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-5 sm:p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
             >
-              <div className="flex flex-wrap gap-3 mb-8">
+              <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8">
                 <span className="bg-brand-navy/5 text-brand-navy text-[10px] font-bold px-3 py-1.5 rounded-lg border border-brand-navy/10 uppercase tracking-wider">
                   {prodi.jenjang}
                 </span>
@@ -51,16 +51,16 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
               <h3 className="font-bold text-xl md:text-2xl text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
                 {prodi.nama}
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-10 font-medium">
+              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-8 sm:mb-10 font-medium">
                 {prodi.deskripsiSingkat}
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 sm:mb-10">
-                <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-100">
                   <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
                   <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
                 </div>
-                <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-100">
                   <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Beban SKS</p>
                   <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.jumlahSKS} SKS</p>
                 </div>
@@ -76,16 +76,16 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
       </ul>
       )}
 
-      <div className="mt-20 bg-brand-navy rounded-3xl p-10 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
+      <div className="mt-14 sm:mt-20 bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
         <BlueAbstractBackground />
-        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+        <div className="relative z-10 flex flex-col items-start gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="max-w-2xl text-center lg:text-left">
             <h3 className="font-bold text-2xl md:text-3xl mb-4 tracking-tight">Konsultasi Akademik</h3>
             <p className="text-white/60 text-base md:text-lg font-medium leading-relaxed">
               Tim akademik kami siap membantu Anda memilih program studi yang paling sesuai dengan visi karir Anda.
             </p>
           </div>
-          <div className="flex w-full sm:w-auto flex-col sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
+          <div className="flex w-full flex-col sm:w-auto sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
             <Link
               href="/kontak"
               className="w-full sm:w-auto text-center bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"

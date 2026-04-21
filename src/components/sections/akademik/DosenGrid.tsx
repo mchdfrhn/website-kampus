@@ -19,7 +19,7 @@ const jabatanColor: Record<string, string> = {
 export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
   const list = dosenList ?? [];
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
       <p className="text-gray-600 text-sm leading-relaxed max-w-2xl mb-8">
         STTPU Jakarta didukung oleh tenaga pengajar berpengalaman dan berkualifikasi tinggi —
         doktor dan master dari universitas terkemuka dalam dan luar negeri — yang aktif dalam
@@ -31,12 +31,12 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
           Data dosen belum tersedia.
         </div>
       ) : (
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" aria-label="Daftar dosen STTPU">
+      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3" aria-label="Daftar dosen STTPU">
         {list.map((dosen) => (
           <li key={dosen.slug}>
             <Link
               href={`/akademik/dosen/${dosen.slug}`}
-              className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-md transition-all"
+              className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl p-4 sm:p-5 hover:border-brand-navy hover:shadow-md transition-all"
             >
               <div className="flex items-start gap-4 mb-4">
                 <div
@@ -72,12 +72,12 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
                 )}
               </div>
 
-              <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
-                <span className="flex items-center gap-1.5">
+              <div className="mt-auto flex flex-col gap-2 border-t border-gray-100 pt-3 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
+                <span className="flex items-center gap-1.5 min-w-0">
                   <BookOpen size={12} aria-hidden="true" />
                   {dosen.publikasi.length} publikasi
                 </span>
-                <span className="flex items-center gap-1.5">
+                <span className="flex items-center gap-1.5 min-w-0">
                   <Mail size={12} aria-hidden="true" />
                   <span className="truncate max-w-32">{dosen.email}</span>
                 </span>

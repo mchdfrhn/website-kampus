@@ -27,9 +27,9 @@ export default function Breadcrumbs({ customItems, className }: BreadcrumbProps)
     });
 
   return (
-    <nav aria-label="Breadcrumb" className={cn("py-4", className)}>
-      <ol className="flex items-center flex-wrap gap-2 text-[11px] font-semibold">
-        <li className="flex items-center">
+    <nav aria-label="Breadcrumb" className={cn("py-3 sm:py-4", className)}>
+      <ol className="flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1 text-[11px] font-semibold sm:text-xs">
+        <li className="flex items-center flex-shrink-0">
           <Link
             href="/"
             className="flex items-center gap-1.5 text-brand-navy/40 hover:text-brand-gold transition-colors"
@@ -41,16 +41,16 @@ export default function Breadcrumbs({ customItems, className }: BreadcrumbProps)
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
-            <li key={`${item.label}-${item.href ?? index}`} className="flex items-center gap-2">
+            <li key={`${item.label}-${item.href ?? index}`} className="flex items-center gap-2 flex-shrink-0">
               <ChevronRight size={10} className="text-brand-navy/20" />
               {isLast || !item.href ? (
-                <span className="text-brand-navy/60" aria-current="page">
+                <span className="max-w-[12rem] truncate text-brand-navy/60 sm:max-w-none" aria-current="page">
                   {item.label}
                 </span>
               ) : (
                 <Link
                   href={item.href}
-                  className="text-brand-navy/40 hover:text-brand-gold transition-colors"
+                  className="max-w-[12rem] truncate text-brand-navy/40 transition-colors hover:text-brand-gold sm:max-w-none"
                 >
                   {item.label}
                 </Link>

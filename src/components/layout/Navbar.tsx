@@ -97,15 +97,15 @@ export default async function Navbar() {
   return (
     <header className="h-20">
       <div className="fixed inset-x-0 top-0 z-50 bg-brand-navy border-b border-white/10 shadow-[0_14px_40px_rgba(0,44,102,0.28)]">
-        <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
-          <div className="flex items-center h-20">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
+          <div className="flex items-center h-20 gap-3">
             <HomeNavLink
               href="/"
-              className="flex items-center gap-3 mr-8 flex-shrink-0 group"
+              className="group flex min-w-0 flex-1 items-center gap-3 xl:mr-8 xl:flex-none xl:min-w-max"
               ariaLabel={`STTPU — Beranda`}
             >
               {settings.logoUrl ? (
-                <div className="relative w-11 h-11 shadow-lg shadow-black/20 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-xl shadow-lg shadow-black/20 transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11">
                   <Image
                     src={settings.logoUrl}
                     alt={settings.namaInstitusi}
@@ -115,15 +115,15 @@ export default async function Navbar() {
                 </div>
               ) : (
                 <div
-                  className="w-11 h-11 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-[12px] leading-tight text-center shadow-lg shadow-brand-gold/20 group-hover:scale-105 transition-transform duration-500"
+                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-gold text-center text-[10px] font-bold leading-tight text-brand-navy shadow-lg shadow-brand-gold/20 transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:text-[12px]"
                   aria-hidden="true"
                 >
                   STTPU
                 </div>
               )}
-              <div className="text-white">
-                <div className="font-bold text-lg leading-tight tracking-tight uppercase">STTPU</div>
-                <div className="text-white/40 text-[10px] leading-tight font-bold uppercase tracking-wider mt-0.5">
+              <div className="min-w-0 text-white">
+                <div className="truncate text-base font-bold leading-tight tracking-tight uppercase sm:text-lg">STTPU</div>
+                <div className="mt-0.5 hidden truncate text-[10px] font-bold leading-tight tracking-wider text-white/40 uppercase sm:block">
                   {settings.namaInstitusi}
                 </div>
               </div>
@@ -131,7 +131,7 @@ export default async function Navbar() {
 
             <NavDesktopItems navItems={navItems} />
 
-            <div className="hidden lg:block ml-auto flex-shrink-0">
+            <div className="ml-auto hidden flex-shrink-0 xl:block">
               <Link
                 href="/portal"
                 className="inline-flex items-center px-6 py-2.5 bg-brand-gold text-brand-navy font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-white hover:text-brand-navy hover:shadow-2xl hover:shadow-brand-gold/20 transition-all duration-500 shadow-xl shadow-brand-gold/10"
@@ -140,7 +140,7 @@ export default async function Navbar() {
               </Link>
             </div>
 
-            <div className="ml-auto xl:hidden">
+            <div className="ml-auto flex-shrink-0 xl:hidden">
               <MobileMenu navItems={navItems} />
             </div>
           </div>

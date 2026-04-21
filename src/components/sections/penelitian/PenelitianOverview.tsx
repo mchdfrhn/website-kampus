@@ -84,7 +84,7 @@ export default async function PenelitianOverview() {
   return (
     <>
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Breadcrumbs 
             customItems={[
               { label: 'Penelitian & Pengabdian', href: '/penelitian' }
@@ -92,35 +92,35 @@ export default async function PenelitianOverview() {
           />
         </div>
       </div>
-      <div className="bg-brand-navy text-white px-6 py-16 relative overflow-hidden">
+      <div className="bg-brand-navy text-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 relative overflow-hidden">
         <BlueAbstractBackground />
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="font-bold text-3xl md:text-4xl mb-4 tracking-tight">{content.heroTitle}</h1>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
+          <h1 className="font-bold text-3xl sm:text-4xl mb-4 tracking-tight">{content.heroTitle}</h1>
+          <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-white/75 font-medium">
             {content.heroDescription}
           </p>
         </div>
       </div>
 
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 gap-6 px-4 py-8 text-center sm:gap-8 sm:px-6 sm:py-10 lg:grid-cols-4 lg:px-8">
           {stats.map((s) => (
             <div key={s.label}>
-              <p className="text-3xl font-bold text-brand-navy tracking-tight">{s.value}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-brand-navy tracking-tight break-words">{s.value}</p>
               <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{s.label}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid sm:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
           {sections.map((sec) => (
             <Link
               key={sec.href}
               href={sec.href}
-              className="group bg-white border border-gray-100 rounded-2xl p-8 hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300 flex flex-col"
+              className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300"
             >
               <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center mb-6 group-hover:bg-brand-navy transition-all duration-300">
                 {(() => {
