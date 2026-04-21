@@ -9,6 +9,9 @@ import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
 import { getPayloadClient } from '@/lib/payload';
 import { artikelList as artikelStatic, mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata = {
   title: 'Beranda | STTPU Jakarta',
   description:

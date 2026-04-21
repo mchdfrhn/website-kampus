@@ -8,20 +8,16 @@ const performRevalidate = (paths: string[], doc: Record<string, unknown>) => {
       ? path.replace('[slug]', doc.slug) 
       : path
     
+    // Next.js 15: Revalidate the specific path and also the layout to be safe
     try {
-      revalidatePath(finalPath)
-      console.log(`[Revalidate] Success for path: ${finalPath}`)
-    } catch {
-      // Silence errors when running from standalone scripts (seed)
+      revalidatePath(finalPath, 'page')
+      // Also revalidate the main layout to ensure globals like Navbar/Footer are updated
+      revalidatePath('/', 'layout')
+      console.log(`[Revalidate] Success for path: ${finalPath} and layout /`)
+    } catch (error) {
+      console.warn(`[Revalidate] Failed for path: ${finalPath}`, error)
     }
   })
-  
-  // Selalu revalidate homepage karena biasanya ada konten global/terbaru di sana
-  try {
-    revalidatePath('/')
-  } catch {
-    // Ignore
-  }
 }
 
 export const revalidateCollection = (paths: string[]): CollectionAfterChangeHook => {
