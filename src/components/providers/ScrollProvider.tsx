@@ -28,7 +28,7 @@ function ScrollSync() {
       if (lenis) {
         lenis.scrollTo(target, {
           offset: -NAVBAR_OFFSET,
-          duration: immediate ? 0 : 1,
+          duration: immediate ? 0 : 0.7,
         });
         return;
       }
@@ -92,7 +92,7 @@ export default function ScrollProvider({ children }: { children: ReactNode }) {
       root 
       options={{ 
         lerp: 0.1, 
-        duration: 1.2, 
+        duration: 0.75, 
         smoothWheel: true,
         wheelMultiplier: 1,
         touchMultiplier: 2,

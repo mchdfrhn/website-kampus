@@ -30,7 +30,7 @@ export default function HomeNavLink({
     event.preventDefault();
 
     if (lenis) {
-      lenis.scrollTo(0, { duration: 1 });
+      lenis.scrollTo(0, { duration: 0.65 });
       return;
     }
 

@@ -4,10 +4,14 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
-const MIN_LOADING_DURATION = 720;
-const REDUCED_MOTION_MIN_LOADING_DURATION = 260;
-const HIDE_DELAY = 160;
-const REDUCED_MOTION_HIDE_DELAY = 70;
+const SHOW_DELAY = 120;
+const REDUCED_MOTION_SHOW_DELAY = 0;
+const MIN_VISIBLE_DURATION = 260;
+const REDUCED_MOTION_MIN_VISIBLE_DURATION = 140;
+const PROGRESS_DURATION = 520;
+const REDUCED_MOTION_PROGRESS_DURATION = 240;
+const HIDE_DELAY = 80;
+const REDUCED_MOTION_HIDE_DELAY = 40;
 
 function RouteProgressLogic() {
   const pathname = usePathname();
@@ -15,13 +19,19 @@ function RouteProgressLogic() {
   const shouldReduceMotion = useReducedMotion();
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const showTimeoutRef = useRef<number | null>(null);
   const intervalRef = useRef<number | null>(null);
   const finishTimeoutRef = useRef<number | null>(null);
   const resetTimeoutRef = useRef<number | null>(null);
   const loadingStartedAtRef = useRef<number | null>(null);
+  const progressVisibleAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     const clearTimers = () => {
+      if (showTimeoutRef.current) {
+        window.clearTimeout(showTimeoutRef.current);
+        showTimeoutRef.current = null;
+      }
       if (intervalRef.current) {
         window.clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -37,27 +47,36 @@ function RouteProgressLogic() {
     };
 
     const startLoading = () => {
-      const startedAt = performance.now();
-      const minDuration = shouldReduceMotion
-        ? REDUCED_MOTION_MIN_LOADING_DURATION
-        : MIN_LOADING_DURATION;
-      const targetBeforeFinish = shouldReduceMotion ? 94 : 96;
-
       clearTimers();
-      loadingStartedAtRef.current = startedAt;
-      setIsLoading(true);
-      setProgress(shouldReduceMotion ? 20 : 8);
+      loadingStartedAtRef.current = performance.now();
+      progressVisibleAtRef.current = null;
+      setIsLoading(false);
+      setProgress(0);
 
-      intervalRef.current = window.setInterval(() => {
-        const elapsed = performance.now() - startedAt;
-        const ratio = Math.min(elapsed / minDuration, 1);
-        const nextProgress = Math.min(
-          targetBeforeFinish,
-          8 + ratio * (targetBeforeFinish - 8)
-        );
+      const showDelay = shouldReduceMotion ? REDUCED_MOTION_SHOW_DELAY : SHOW_DELAY;
 
-        setProgress((current) => (current >= nextProgress ? current : nextProgress));
-      }, shouldReduceMotion ? 40 : 16);
+      showTimeoutRef.current = window.setTimeout(() => {
+        const visibleAt = performance.now();
+        const progressDuration = shouldReduceMotion
+          ? REDUCED_MOTION_PROGRESS_DURATION
+          : PROGRESS_DURATION;
+        const targetBeforeFinish = shouldReduceMotion ? 94 : 96;
+
+        progressVisibleAtRef.current = visibleAt;
+        setIsLoading(true);
+        setProgress(shouldReduceMotion ? 28 : 12);
+
+        intervalRef.current = window.setInterval(() => {
+          const elapsed = performance.now() - visibleAt;
+          const ratio = Math.min(elapsed / progressDuration, 1);
+          const nextProgress = Math.min(
+            targetBeforeFinish,
+            12 + ratio * (targetBeforeFinish - 12)
+          );
+
+          setProgress((current) => (current >= nextProgress ? current : nextProgress));
+        }, shouldReduceMotion ? 32 : 16);
+      }, showDelay);
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -107,7 +126,7 @@ function RouteProgressLogic() {
   }, [shouldReduceMotion]);
 
   useEffect(() => {
-    if (!isLoading) return;
+    if (!loadingStartedAtRef.current) return;
 
     if (finishTimeoutRef.current) {
       window.clearTimeout(finishTimeoutRef.current);
@@ -118,13 +137,23 @@ function RouteProgressLogic() {
       resetTimeoutRef.current = null;
     }
 
-    const minDuration = shouldReduceMotion
-      ? REDUCED_MOTION_MIN_LOADING_DURATION
-      : MIN_LOADING_DURATION;
-    const elapsed = loadingStartedAtRef.current
-      ? performance.now() - loadingStartedAtRef.current
-      : minDuration;
-    const remaining = Math.max(0, minDuration - elapsed);
+    if (!progressVisibleAtRef.current) {
+      if (showTimeoutRef.current) {
+        window.clearTimeout(showTimeoutRef.current);
+        showTimeoutRef.current = null;
+      }
+      loadingStartedAtRef.current = null;
+      setIsLoading(false);
+      setProgress(0);
+      return;
+    }
+
+    const minVisibleDuration = shouldReduceMotion
+      ? REDUCED_MOTION_MIN_VISIBLE_DURATION
+      : MIN_VISIBLE_DURATION;
+    const elapsedVisible = performance.now() - progressVisibleAtRef.current;
+    const remaining = Math.max(0, minVisibleDuration - elapsedVisible);
+
     finishTimeoutRef.current = window.setTimeout(() => {
       if (intervalRef.current) {
         window.clearInterval(intervalRef.current);
@@ -135,9 +164,10 @@ function RouteProgressLogic() {
         setIsLoading(false);
         setProgress(0);
         loadingStartedAtRef.current = null;
+        progressVisibleAtRef.current = null;
       }, shouldReduceMotion ? REDUCED_MOTION_HIDE_DELAY : HIDE_DELAY);
     }, remaining);
-  }, [pathname, searchParams, isLoading, shouldReduceMotion]);
+  }, [pathname, searchParams, shouldReduceMotion]);
 
   return (
     <AnimatePresence>
