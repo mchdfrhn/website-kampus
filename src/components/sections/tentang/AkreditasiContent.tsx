@@ -45,15 +45,15 @@ export default async function AkreditasiContent() {
 
   return (
     <article className="space-y-10">
-      <section className="bg-[#F0F4F8] rounded-xl p-5 border border-gray-200">
+      <section className="bg-brand-mist rounded-xl p-5 border border-gray-200">
         <div className="flex items-start gap-3">
-          <ShieldCheck size={20} className="text-[#1E3A5F] flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <ShieldCheck size={20} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
           <p className="text-gray-700 text-sm leading-relaxed">{intro || 'Informasi akreditasi dan legalitas belum tersedia.'}</p>
         </div>
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Akreditasi Program Studi</h2>
+        <h2 className="text-xl font-bold text-brand-navy mb-5">Akreditasi Program Studi</h2>
         {akreditasiProdi.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
             Data akreditasi program studi belum tersedia.
@@ -62,7 +62,7 @@ export default async function AkreditasiContent() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse" aria-label="Akreditasi program studi STTPU">
             <thead>
-              <tr className="bg-[#1E3A5F] text-white">
+              <tr className="bg-brand-navy text-white">
                 <th className="text-left px-4 py-3 font-semibold rounded-tl-lg">Program Studi</th>
                 <th className="text-left px-4 py-3 font-semibold">Jenjang</th>
                 <th className="text-left px-4 py-3 font-semibold">Akreditasi</th>
@@ -74,7 +74,7 @@ export default async function AkreditasiContent() {
               {akreditasiProdi.map((item, idx) => (
                 <tr
                   key={idx}
-                  className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-[#F0F4F8]/50'}`}
+                  className={`border-b border-gray-200 ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/50'}`}
                 >
                   <td className="px-4 py-3 font-medium text-gray-900">{item.prodi}</td>
                   <td className="px-4 py-3 text-gray-600">{item.jenjang}</td>
@@ -99,7 +99,7 @@ export default async function AkreditasiContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Legalitas Institusi</h2>
+        <h2 className="text-xl font-bold text-brand-navy mb-5">Legalitas Institusi</h2>
         {legalitas.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
             Dokumen legalitas belum tersedia.
@@ -108,12 +108,12 @@ export default async function AkreditasiContent() {
         <ul className="space-y-4" aria-label="Dokumen legalitas STTPU">
           {legalitas.map((item, idx) => (
             <li key={idx} className="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-xl">
-              <div className="w-10 h-10 bg-[#1E3A5F]/10 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                <FileText size={18} className="text-[#1E3A5F]" />
+              <div className="w-10 h-10 bg-brand-navy/10 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <FileText size={18} className="text-brand-navy" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-semibold text-gray-900 text-sm">{item.dokumen}</p>
-                {item.nomor && <p className="text-[#1E3A5F] font-medium text-xs mt-0.5">{item.nomor}</p>}
+                {item.nomor && <p className="text-brand-navy font-medium text-xs mt-0.5">{item.nomor}</p>}
                 {item.tanggal && item.tanggal !== '-' && (
                   <p className="text-gray-500 text-xs mt-0.5">Ditetapkan: {item.tanggal}</p>
                 )}

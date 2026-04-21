@@ -36,17 +36,17 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
           <li key={dosen.slug}>
             <Link
               href={`/akademik/dosen/${dosen.slug}`}
-              className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl p-5 hover:border-[#1E3A5F] hover:shadow-md transition-all"
+              className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-md transition-all"
             >
               <div className="flex items-start gap-4 mb-4">
                 <div
-                  className="w-14 h-14 bg-[#F0F4F8] border border-gray-200 rounded-xl flex items-center justify-center flex-shrink-0 text-lg font-bold text-[#1E3A5F]/30"
+                  className="w-14 h-14 bg-brand-mist border border-gray-200 rounded-xl flex items-center justify-center flex-shrink-0 text-lg font-bold text-brand-navy/30"
                   aria-hidden="true"
                 >
                   {dosen.nama.charAt(dosen.nama.indexOf('.') + 2)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-gray-900 text-sm leading-snug group-hover:text-[#1E3A5F] transition-colors line-clamp-2">
+                  <p className="font-bold text-gray-900 text-sm leading-snug group-hover:text-brand-navy transition-colors line-clamp-2">
                     {dosen.nama}
                   </p>
                   <p className="text-gray-500 text-xs mt-0.5">NIDN {dosen.nidn}</p>
@@ -61,7 +61,7 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
 
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {dosen.bidangKeahlian.slice(0, 2).map((k) => (
-                  <span key={k} className="inline-block bg-[#F0F4F8] text-[#1E3A5F] text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200">
+                  <span key={k} className="inline-block bg-brand-mist text-brand-navy text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200">
                     {k}
                   </span>
                 ))}

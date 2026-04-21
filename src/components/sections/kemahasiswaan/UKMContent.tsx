@@ -47,14 +47,14 @@ export default async function UKMContent() {
 
       {bidangList.map((bidang) => (
         <section key={bidang}>
-          <h2 className="font-bold text-[#1E3A5F] text-base mb-4 flex items-center gap-2">
+          <h2 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
             <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${bidangColor[bidang] ?? 'bg-gray-100 text-gray-800 border-gray-200'}`}>
               {bidang}
             </span>
           </h2>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ukm.filter((u) => u.bidang === bidang).map((u, idx) => (
-              <li key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+              <li key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-navy hover:shadow-sm transition-all">
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <h3 className="font-bold text-gray-900 text-sm leading-snug">{u.nama}</h3>
                   {u.anggota !== undefined && (
@@ -63,13 +63,13 @@ export default async function UKMContent() {
                 </div>
                 <p className="text-gray-600 text-xs leading-relaxed mb-3">{u.deskripsi}</p>
                 {u.prestasi && (
-                  <p className="text-xs text-[#1E3A5F] font-medium bg-[#F0F4F8] px-2.5 py-1.5 rounded-lg mb-3 flex items-start gap-1.5">
-                    <span className="text-[#F5A623] flex-shrink-0">★</span>
+                  <p className="text-xs text-brand-navy font-medium bg-brand-mist px-2.5 py-1.5 rounded-lg mb-3 flex items-start gap-1.5">
+                    <span className="text-brand-gold flex-shrink-0">★</span>
                     {u.prestasi}
                   </p>
                 )}
                 {u.kontak && (
-                  <a href={`mailto:${u.kontak}`} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#1E3A5F] transition-colors">
+                  <a href={`mailto:${u.kontak}`} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-navy transition-colors">
                     <Mail size={11} aria-hidden="true" /> {u.kontak}
                   </a>
                 )}

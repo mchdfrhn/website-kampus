@@ -52,13 +52,13 @@ export default async function FasilitasContent() {
             key={idx}
             className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
           >
-            <div className="h-36 bg-[#F0F4F8] flex items-center justify-center border-b border-gray-200">
+            <div className="h-36 bg-brand-mist flex items-center justify-center border-b border-gray-200">
               <p className="text-gray-400 text-xs italic">Foto fasilitas</p>
             </div>
             <div className="p-4">
               <div className="flex items-start gap-3 mb-3">
                 <div
-                  className="w-9 h-9 bg-[#1E3A5F] rounded-lg flex items-center justify-center flex-shrink-0 text-[#F5A623] font-black text-sm"
+                  className="w-9 h-9 bg-brand-navy rounded-lg flex items-center justify-center flex-shrink-0 text-brand-gold font-black text-sm"
                   aria-hidden="true"
                 >
                   {idx + 1}
@@ -78,7 +78,7 @@ export default async function FasilitasContent() {
                   {item.items.map((f, i) => (
                     <li
                       key={i}
-                      className="inline-block bg-[#F0F4F8] text-[#1E3A5F] text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200"
+                      className="inline-block bg-brand-mist text-brand-navy text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200"
                     >
                       {f.nama}
                     </li>
@@ -92,13 +92,13 @@ export default async function FasilitasContent() {
       )}
 
       {ctaTitle || ctaDescription || ctaButtonLabel ? (
-        <div className="bg-[#1E3A5F] rounded-xl p-5 text-white text-center">
+        <div className="bg-brand-navy rounded-xl p-5 text-white text-center">
           {ctaTitle ? <p className="font-semibold text-sm mb-1">{ctaTitle}</p> : null}
           {ctaDescription ? <p className="text-white/80 text-xs mb-3">{ctaDescription}</p> : null}
           {ctaButtonLabel ? (
             <a
               href={ctaButtonHref}
-              className="inline-block bg-[#F5A623] text-[#1E3A5F] font-bold text-sm px-5 py-2 rounded-lg hover:bg-[#e09615] transition-colors"
+              className="inline-block bg-brand-gold text-brand-navy font-bold text-sm px-5 py-2 rounded-lg hover:bg-brand-gold-dark transition-colors"
             >
               {ctaButtonLabel}
             </a>

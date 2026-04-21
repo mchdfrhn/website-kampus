@@ -22,8 +22,8 @@ const defaults: OrgItem[] = [
     program: [{ nama: 'Olimpiade Mahasiswa STTPU' }, { nama: 'Bakti Sosial Infrastruktur Desa' }, { nama: 'Forum Dialog Mahasiswa-Pimpinan' }, { nama: 'Pelatihan Kepemimpinan Mahasiswa' }, { nama: 'Expo Karya Mahasiswa' }],
     kontak: 'bem@mhs.sttpu.ac.id',
     instagram: '@bem.sttpu',
-    warna: 'border-[#1E3A5F]',
-    badge: 'bg-[#1E3A5F] text-white',
+    warna: 'border-brand-navy',
+    badge: 'bg-brand-navy text-white',
   },
   {
     nama: 'Senat Mahasiswa',
@@ -33,8 +33,8 @@ const defaults: OrgItem[] = [
     program: [{ nama: 'Pemira (Pemilihan Raya) Mahasiswa' }, { nama: 'Sidang Pleno Kemahasiswaan' }, { nama: 'Pengawasan Program BEM' }, { nama: 'Dengar Pendapat Mahasiswa' }],
     kontak: 'sema@mhs.sttpu.ac.id',
     instagram: '@sema.sttpu',
-    warna: 'border-[#F5A623]',
-    badge: 'bg-[#F5A623] text-[#1E3A5F]',
+    warna: 'border-brand-gold',
+    badge: 'bg-brand-gold text-brand-navy',
   },
   {
     nama: 'Himpunan Mahasiswa Teknik Sipil',
@@ -97,7 +97,7 @@ export default async function OrganisasiContent() {
               </div>
               <div className="flex flex-col items-end gap-1 text-xs text-gray-500">
                 {org.kontak && (
-                  <a href={`mailto:${org.kontak}`} className="flex items-center gap-1.5 hover:text-[#1E3A5F] transition-colors">
+                  <a href={`mailto:${org.kontak}`} className="flex items-center gap-1.5 hover:text-brand-navy transition-colors">
                     <Mail size={12} aria-hidden="true" /> {org.kontak}
                   </a>
                 )}
@@ -124,7 +124,7 @@ export default async function OrganisasiContent() {
                   <ul className="space-y-1.5">
                     {org.program.map((p, i) => (
                       <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#F5A623] flex-shrink-0" aria-hidden="true" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0" aria-hidden="true" />
                         {p.nama}
                       </li>
                     ))}

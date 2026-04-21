@@ -49,7 +49,7 @@ export default async function HibahContent() {
 
   return (
     <article className="space-y-8">
-      <div className="bg-[#F0F4F8] rounded-xl p-5">
+      <div className="bg-brand-mist rounded-xl p-5">
         <p className="text-sm text-gray-700 leading-relaxed">
           Berikut adalah skema hibah penelitian yang dapat diakses oleh dosen dan mahasiswa STTPU.
           Untuk bimbingan proposal, hubungi <strong>LP3M STTPU</strong> (lp3m@sttpu.ac.id).
@@ -58,7 +58,7 @@ export default async function HibahContent() {
 
       <div className="space-y-5">
         {hibahList.map((hibah) => (
-          <div key={hibah.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+          <div key={hibah.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-brand-navy hover:shadow-sm transition-all">
             <div className="px-5 py-4 border-b border-gray-100">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
@@ -95,7 +95,7 @@ export default async function HibahContent() {
                 {hibah.url && (
                   <Link
                     href={hibah.url}
-                    className="inline-flex items-center gap-1 text-xs text-[#1E3A5F] font-semibold hover:text-[#F5A623] transition-colors"
+                    className="inline-flex items-center gap-1 text-xs text-brand-navy font-semibold hover:text-brand-gold transition-colors"
                     {...(hibah.url.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   >
                     Info lengkap <ArrowRight size={11} aria-hidden="true" />
@@ -115,7 +115,7 @@ export default async function HibahContent() {
             LP3M STTPU menyelenggarakan workshop penulisan proposal hibah setiap semester.
             Dosen baru dan yang pertama kali mengajukan hibah eksternal diprioritaskan.
           </p>
-          <Link href="/kontak" className="inline-flex items-center gap-1 text-xs text-amber-900 font-semibold mt-2 underline hover:text-[#1E3A5F] transition-colors">
+          <Link href="/kontak" className="inline-flex items-center gap-1 text-xs text-amber-900 font-semibold mt-2 underline hover:text-brand-navy transition-colors">
             Hubungi LP3M <ArrowRight size={11} />
           </Link>
         </div>

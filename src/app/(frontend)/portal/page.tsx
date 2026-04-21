@@ -13,7 +13,7 @@ export default function PortalPage() {
     <>
       <div className="bg-white border-b border-gray-200 px-6 py-2.5 text-sm">
         <div className="max-w-7xl mx-auto text-gray-500">
-          <Link href="/" className="hover:text-[#1E3A5F] transition-colors">
+          <Link href="/" className="hover:text-brand-navy transition-colors">
             Beranda
           </Link>
           <span className="mx-2 text-gray-400">›</span>
@@ -21,7 +21,7 @@ export default function PortalPage() {
         </div>
       </div>
 
-      <div className="bg-[#1E3A5F] text-white px-6 py-10">
+      <div className="bg-brand-navy text-white px-6 py-10">
         <div className="max-w-7xl mx-auto">
           <h1 className="font-extrabold text-3xl mb-2">Portal STTPU</h1>
           <p className="text-white/85 text-sm leading-relaxed max-w-xl">

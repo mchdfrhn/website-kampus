@@ -71,10 +71,10 @@ export default async function LayananContent() {
         {layanan.map((l, idx) => {
           const Icon = iconMap[l.icon] || HeartHandshake;
           return (
-            <li key={idx} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+            <li key={idx} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-brand-navy hover:shadow-sm transition-all">
               <div className="flex items-start gap-4 p-5">
-                <div className="w-11 h-11 bg-[#1E3A5F] rounded-xl flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                  <Icon size={20} className="text-[#F5A623]" />
+                <div className="w-11 h-11 bg-brand-navy rounded-xl flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                  <Icon size={20} className="text-brand-gold" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h2 className="font-bold text-gray-900 text-sm mb-1">{l.nama}</h2>
@@ -87,7 +87,7 @@ export default async function LayananContent() {
                         <ul className="space-y-1">
                           {l.layananDetail.map((d, i) => (
                             <li key={i} className="flex items-center gap-1.5 text-xs text-gray-700">
-                              <span className="w-1 h-1 rounded-full bg-[#F5A623] flex-shrink-0" aria-hidden="true" />
+                              <span className="w-1 h-1 rounded-full bg-brand-gold flex-shrink-0" aria-hidden="true" />
                               {d.poin}
                             </li>
                           ))}
@@ -97,26 +97,26 @@ export default async function LayananContent() {
                     <div className="space-y-2">
                       {l.jam && (
                         <div className="flex items-start gap-2 text-xs text-gray-500">
-                          <Clock size={12} className="flex-shrink-0 mt-0.5 text-[#1E3A5F]" aria-hidden="true" />
+                          <Clock size={12} className="flex-shrink-0 mt-0.5 text-brand-navy" aria-hidden="true" />
                           {l.jam}
                         </div>
                       )}
                       {l.lokasi && (
                         <div className="flex items-start gap-2 text-xs text-gray-500">
-                          <MapPin size={12} className="flex-shrink-0 mt-0.5 text-[#1E3A5F]" aria-hidden="true" />
+                          <MapPin size={12} className="flex-shrink-0 mt-0.5 text-brand-navy" aria-hidden="true" />
                           {l.lokasi}
                         </div>
                       )}
                       {l.kontak?.map((k, i) => (
                         <div key={i} className="flex items-center gap-2 text-xs text-gray-500">
                           {k.type === 'tel' ? (
-                            <><Phone size={12} className="flex-shrink-0 text-[#1E3A5F]" aria-hidden="true" />
-                            <a href={`tel:${k.value.replace(/\D/g, '')}`} className="hover:text-[#1E3A5F] transition-colors">{k.value}</a></>
+                            <><Phone size={12} className="flex-shrink-0 text-brand-navy" aria-hidden="true" />
+                            <a href={`tel:${k.value.replace(/\D/g, '')}`} className="hover:text-brand-navy transition-colors">{k.value}</a></>
                           ) : k.type === 'email' ? (
-                            <><Mail size={12} className="flex-shrink-0 text-[#1E3A5F]" aria-hidden="true" />
-                            <a href={`mailto:${k.value}`} className="hover:text-[#1E3A5F] transition-colors">{k.value}</a></>
+                            <><Mail size={12} className="flex-shrink-0 text-brand-navy" aria-hidden="true" />
+                            <a href={`mailto:${k.value}`} className="hover:text-brand-navy transition-colors">{k.value}</a></>
                           ) : (
-                            <><MessageSquare size={12} className="flex-shrink-0 text-[#1E3A5F]" aria-hidden="true" />
+                            <><MessageSquare size={12} className="flex-shrink-0 text-brand-navy" aria-hidden="true" />
                             <span>WhatsApp: {k.value}</span></>
                           )}
                         </div>

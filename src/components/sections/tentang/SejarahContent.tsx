@@ -20,7 +20,7 @@ export default async function SejarahContent() {
   return (
     <article>
       <section className="mb-10">
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-4">Tentang Kami</h2>
+        <h2 className="text-xl font-bold text-brand-navy mb-4">Tentang Kami</h2>
         {sejarahHtml ? (
           <div className="prose prose-gray max-w-none text-gray-700 text-sm" dangerouslySetInnerHTML={{ __html: sejarahHtml }} />
         ) : (
@@ -29,16 +29,16 @@ export default async function SejarahContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-6">Perjalanan Kami</h2>
-        <ol className="relative border-l-2 border-[#1E3A5F]/20 space-y-0" aria-label="Tonggak sejarah STTPU">
+        <h2 className="text-xl font-bold text-brand-navy mb-6">Perjalanan Kami</h2>
+        <ol className="relative border-l-2 border-brand-navy/20 space-y-0" aria-label="Tonggak sejarah STTPU">
           {milestones.map((item, idx) => (
             <li key={idx} className="ml-6 pb-8 last:pb-0">
               <span
-                className="absolute -left-[11px] flex items-center justify-center w-5 h-5 rounded-full bg-[#1E3A5F] border-2 border-white"
+                className="absolute -left-[11px] flex items-center justify-center w-5 h-5 rounded-full bg-brand-navy border-2 border-white"
                 aria-hidden="true"
               />
               <div className="mb-1 flex items-center gap-3">
-                <span className="inline-block bg-[#F5A623] text-[#1E3A5F] font-bold text-xs px-2.5 py-0.5 rounded">
+                <span className="inline-block bg-brand-gold text-brand-navy font-bold text-xs px-2.5 py-0.5 rounded">
                   {item.tahun}
                 </span>
                 <h3 className="font-semibold text-gray-900 text-sm">{item.judul}</h3>

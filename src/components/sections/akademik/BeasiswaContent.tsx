@@ -55,12 +55,12 @@ export default async function BeasiswaContent() {
   const renderList = (list: BeasiswaItem[]) =>
     list.map((b, idx) => (
       <li key={idx} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 bg-[#F0F4F8]/50">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 bg-brand-mist/50">
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-bold text-gray-900 text-sm">{b.nama}</h3>
               {b.url && b.url !== '#' && (
-                <a href={b.url} target="_blank" rel="noopener noreferrer" aria-label={`Website ${b.nama}`} className="text-[#1E3A5F] hover:text-[#F5A623] transition-colors">
+                <a href={b.url} target="_blank" rel="noopener noreferrer" aria-label={`Website ${b.nama}`} className="text-brand-navy hover:text-brand-gold transition-colors">
                   <ExternalLink size={13} />
                 </a>
               )}
@@ -74,7 +74,7 @@ export default async function BeasiswaContent() {
               </span>
             )}
             {b.jenis && (
-              <span className="bg-[#1E3A5F]/10 text-[#1E3A5F] text-xs font-semibold px-2.5 py-0.5 rounded-full">{b.jenis}</span>
+              <span className="bg-brand-navy/10 text-brand-navy text-xs font-semibold px-2.5 py-0.5 rounded-full">{b.jenis}</span>
             )}
           </div>
         </div>
@@ -83,7 +83,7 @@ export default async function BeasiswaContent() {
             {b.nilai && (
               <div>
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nilai Beasiswa</p>
-                <p className="text-[#1E3A5F] font-bold text-sm">{b.nilai}</p>
+                <p className="text-brand-navy font-bold text-sm">{b.nilai}</p>
               </div>
             )}
             {b.deadline && (
@@ -116,8 +116,8 @@ export default async function BeasiswaContent() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
-      <div className="bg-[#F0F4F8] rounded-xl p-5 border border-gray-200 flex items-start gap-3">
-        <AlertCircle size={16} className="text-[#1E3A5F] flex-shrink-0 mt-0.5" aria-hidden="true" />
+      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200 flex items-start gap-3">
+        <AlertCircle size={16} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
         <p className="text-gray-700 text-sm leading-relaxed">
           Informasi beasiswa diperbarui secara berkala. Untuk informasi terkini, hubungi Bagian Kemahasiswaan STTPU Jakarta.
         </p>
@@ -131,7 +131,7 @@ export default async function BeasiswaContent() {
 
       {internal.length > 0 && (
         <div>
-          <h2 className="font-bold text-[#1E3A5F] text-lg mb-1">Beasiswa Internal STTPU</h2>
+          <h2 className="font-bold text-brand-navy text-lg mb-1">Beasiswa Internal STTPU</h2>
           <p className="text-gray-500 text-sm mb-6">Program beasiswa yang diselenggarakan langsung oleh STTPU Jakarta.</p>
           <ul className="space-y-5">{renderList(internal)}</ul>
         </div>
@@ -139,7 +139,7 @@ export default async function BeasiswaContent() {
 
       {eksternal.length > 0 && (
         <div>
-          <h2 className="font-bold text-[#1E3A5F] text-lg mb-1">Beasiswa Eksternal</h2>
+          <h2 className="font-bold text-brand-navy text-lg mb-1">Beasiswa Eksternal</h2>
           <p className="text-gray-500 text-sm mb-6">Beasiswa dari pemerintah dan lembaga eksternal yang dapat diakses mahasiswa STTPU.</p>
           <ul className="space-y-5">{renderList(eksternal)}</ul>
         </div>

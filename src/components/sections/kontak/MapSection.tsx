@@ -63,10 +63,10 @@ export default async function MapSection() {
       )}
 
       <div className="bg-white p-7 border-l border-gray-200">
-        <h2 className="font-bold text-[#1E3A5F] text-base mb-5">Informasi Kontak</h2>
+        <h2 className="font-bold text-brand-navy text-base mb-5">Informasi Kontak</h2>
 
         <div className="flex gap-3 items-start mb-4">
-          <MapPin size={16} className="text-[#F5A623] flex-shrink-0 mt-0.5" />
+          <MapPin size={16} className="text-brand-gold flex-shrink-0 mt-0.5" />
           <div>
             <p className="uppercase text-gray-400 text-xs font-bold tracking-wide mb-0.5">Alamat</p>
             <p className="text-gray-700 text-sm leading-relaxed">{s.alamat}</p>
@@ -74,12 +74,12 @@ export default async function MapSection() {
         </div>
 
         <div className="flex gap-3 items-start mb-4">
-          <Phone size={16} className="text-[#F5A623] flex-shrink-0 mt-0.5" />
+          <Phone size={16} className="text-brand-gold flex-shrink-0 mt-0.5" />
           <div>
             <p className="uppercase text-gray-400 text-xs font-bold tracking-wide mb-0.5">Telepon</p>
             <div className="flex flex-col gap-0.5">
               {s.teleponUtamaHref ? (
-                <a href={`tel:${s.teleponUtamaHref}`} className="text-gray-700 text-sm hover:text-[#1E3A5F] transition-colors">
+                <a href={`tel:${s.teleponUtamaHref}`} className="text-gray-700 text-sm hover:text-brand-navy transition-colors">
                   {s.teleponUtama} — Kantor Pusat
                 </a>
               ) : (
@@ -87,7 +87,7 @@ export default async function MapSection() {
               )}
               {s.teleponLainnya?.map((t, i) => (
                 t.href ? (
-                  <a key={i} href={`tel:${t.href}`} className="text-gray-700 text-sm hover:text-[#1E3A5F] transition-colors">
+                  <a key={i} href={`tel:${t.href}`} className="text-gray-700 text-sm hover:text-brand-navy transition-colors">
                     {t.nomor}{t.label ? ` — ${t.label}` : ''}
                   </a>
                 ) : (
@@ -99,17 +99,17 @@ export default async function MapSection() {
         </div>
 
         <div className="flex gap-3 items-start mb-4">
-          <Mail size={16} className="text-[#F5A623] flex-shrink-0 mt-0.5" />
+          <Mail size={16} className="text-brand-gold flex-shrink-0 mt-0.5" />
           <div>
             <p className="uppercase text-gray-400 text-xs font-bold tracking-wide mb-0.5">Email</p>
             <div className="flex flex-col gap-0.5">
               {s.emailUtama && (
-                <a href={`mailto:${s.emailUtama}`} className="text-gray-700 text-sm hover:text-[#1E3A5F] transition-colors">
+                <a href={`mailto:${s.emailUtama}`} className="text-gray-700 text-sm hover:text-brand-navy transition-colors">
                   {s.emailUtama} — Umum
                 </a>
               )}
               {s.emailLainnya?.map((e, i) => (
-                <a key={i} href={`mailto:${e.email}`} className="text-gray-700 text-sm hover:text-[#1E3A5F] transition-colors">
+                <a key={i} href={`mailto:${e.email}`} className="text-gray-700 text-sm hover:text-brand-navy transition-colors">
                   {e.email}{e.label ? ` — ${e.label}` : ''}
                 </a>
               ))}
@@ -119,7 +119,7 @@ export default async function MapSection() {
 
         {s.jamOperasional && s.jamOperasional.length > 0 && (
           <div className="flex gap-3 items-start mb-4">
-            <Clock size={16} className="text-[#F5A623] flex-shrink-0 mt-0.5" />
+            <Clock size={16} className="text-brand-gold flex-shrink-0 mt-0.5" />
             <div>
               <p className="uppercase text-gray-400 text-xs font-bold tracking-wide mb-0.5">Jam Operasional</p>
               <table className="text-sm text-gray-700">
@@ -145,7 +145,7 @@ export default async function MapSection() {
                 href={`https://wa.me/${s.whatsapp}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-700 text-sm hover:text-[#1E3A5F] transition-colors"
+                className="text-gray-700 text-sm hover:text-brand-navy transition-colors"
               >
                 {s.whatsappTampil || `+${s.whatsapp}`}
               </a>

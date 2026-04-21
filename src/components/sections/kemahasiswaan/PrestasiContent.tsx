@@ -80,8 +80,8 @@ export default async function PrestasiContent() {
     <article className="space-y-10">
       <div className="grid grid-cols-3 gap-4">
         {(['Nasional', 'Internasional', 'Regional'] as Tingkat[]).map((t) => (
-          <div key={t} className="text-center bg-[#F0F4F8] rounded-xl p-4 border border-gray-200">
-            <p className="font-extrabold text-2xl text-[#1E3A5F]">
+          <div key={t} className="text-center bg-brand-mist rounded-xl p-4 border border-gray-200">
+            <p className="font-extrabold text-2xl text-brand-navy">
               {prestasiList.filter((p) => p.tingkat === t).length}
             </p>
             <p className="text-gray-500 text-xs mt-1">Prestasi {t}</p>
@@ -91,22 +91,22 @@ export default async function PrestasiContent() {
 
       {years.map((year) => (
         <section key={year}>
-          <h2 className="font-bold text-[#1E3A5F] text-base mb-4 flex items-center gap-2">
-            <Calendar size={16} className="text-[#F5A623]" aria-hidden="true" /> Tahun {year}
+          <h2 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
+            <Calendar size={16} className="text-brand-gold" aria-hidden="true" /> Tahun {year}
           </h2>
           <ul className="space-y-4">
             {byYear[year].map((p, idx) => (
-              <li key={idx} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+              <li key={idx} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
                 <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Trophy size={16} className="text-[#F5A623] flex-shrink-0" aria-hidden="true" />
+                    <Trophy size={16} className="text-brand-gold flex-shrink-0" aria-hidden="true" />
                     <h3 className="font-bold text-gray-900 text-sm">{p.judul}</h3>
                   </div>
                   <div className="flex gap-2 flex-wrap">
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tingkatColor[p.tingkat]}`}>
                       {p.tingkat}
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F5A623]/20 text-[#1E3A5F] border border-[#F5A623]/30">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-gold/20 text-brand-navy border border-brand-gold/30">
                       {p.peringkat}
                     </span>
                   </div>

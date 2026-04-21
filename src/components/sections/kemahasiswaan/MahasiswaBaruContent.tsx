@@ -61,18 +61,18 @@ export default async function MahasiswaBaruContent() {
 
   return (
     <article className="space-y-10">
-      <div className="bg-[#1E3A5F] rounded-xl p-6 text-white">
+      <div className="bg-brand-navy rounded-xl p-6 text-white">
         <h2 className="font-bold text-base mb-2">{judul}</h2>
         <p className="text-white/85 text-sm leading-relaxed">{deskripsi}</p>
       </div>
 
       <section>
-        <h2 className="font-bold text-[#1E3A5F] text-lg mb-6">Langkah-Langkah Awal</h2>
+        <h2 className="font-bold text-brand-navy text-lg mb-6">Langkah-Langkah Awal</h2>
         <ol className="space-y-4" aria-label="Langkah awal mahasiswa baru">
           {langkah.map((l, idx) => (
-            <li key={idx} className="flex items-start gap-4 bg-white border border-gray-200 rounded-xl p-5 hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+            <li key={idx} className="flex items-start gap-4 bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
               <span
-                className="flex-shrink-0 w-8 h-8 rounded-full bg-[#1E3A5F] text-white font-bold text-sm flex items-center justify-center"
+                className="flex-shrink-0 w-8 h-8 rounded-full bg-brand-navy text-white font-bold text-sm flex items-center justify-center"
                 aria-hidden="true"
               >
                 {idx + 1}
@@ -89,7 +89,7 @@ export default async function MahasiswaBaruContent() {
                 {l.link && (
                   <Link
                     href={l.link}
-                    className="inline-flex items-center gap-1 text-xs text-[#1E3A5F] font-semibold mt-2 hover:text-[#F5A623] transition-colors"
+                    className="inline-flex items-center gap-1 text-xs text-brand-navy font-semibold mt-2 hover:text-brand-gold transition-colors"
                   >
                     Lihat informasi <ArrowRight size={11} aria-hidden="true" />
                   </Link>
@@ -102,7 +102,7 @@ export default async function MahasiswaBaruContent() {
       </section>
 
       <section>
-        <h2 className="font-bold text-[#1E3A5F] text-lg mb-4">Tips Sukses di STTPU</h2>
+        <h2 className="font-bold text-brand-navy text-lg mb-4">Tips Sukses di STTPU</h2>
         <ul className="space-y-2.5">
           {tips.map((tip, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
@@ -121,7 +121,7 @@ export default async function MahasiswaBaruContent() {
             Jangan ragu menghubungi Bagian Kemahasiswaan atau Dosen PA Anda. Tidak ada pertanyaan
             yang terlalu sepele — lebih baik bertanya daripada salah langkah.
           </p>
-          <Link href="/kontak" className="inline-flex items-center gap-1 text-xs text-amber-900 font-semibold mt-2 underline hover:text-[#1E3A5F] transition-colors">
+          <Link href="/kontak" className="inline-flex items-center gap-1 text-xs text-amber-900 font-semibold mt-2 underline hover:text-brand-navy transition-colors">
             Hubungi Kami <ArrowRight size={11} />
           </Link>
         </div>

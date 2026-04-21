@@ -123,7 +123,7 @@ function RouteProgressLogic() {
         >
           <div className="absolute inset-0 bg-brand-navy/10 backdrop-blur-[2px]" />
           <motion.div
-            className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-[#ffe08a] to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)]"
+            className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-brand-gold-soft to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)]"
             animate={{ width: `${progress}%` }}
             transition={{ ease: [0.22, 1, 0.36, 1], duration: shouldReduceMotion ? 0.12 : 0.24 }}
           >

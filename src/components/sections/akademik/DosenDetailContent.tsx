@@ -15,7 +15,7 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
       <aside className="w-full lg:w-64 flex-shrink-0 space-y-4">
         <div className="bg-white border border-gray-200 rounded-xl p-5 text-center">
           <div
-            className="w-28 h-32 bg-[#F0F4F8] border border-gray-200 rounded-xl flex items-center justify-center mx-auto mb-4"
+            className="w-28 h-32 bg-brand-mist border border-gray-200 rounded-xl flex items-center justify-center mx-auto mb-4"
             aria-hidden="true"
           >
             <span className="text-gray-400 text-xs">Foto Resmi</span>
@@ -30,7 +30,7 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
           <div className="mt-4 pt-4 border-t border-gray-100">
             <a
               href={`mailto:${dosen.email}`}
-              className="flex items-center justify-center gap-2 text-xs text-[#1E3A5F] hover:text-[#F5A623] transition-colors"
+              className="flex items-center justify-center gap-2 text-xs text-brand-navy hover:text-brand-gold transition-colors"
             >
               <Mail size={13} aria-hidden="true" />
               {dosen.email}
@@ -39,8 +39,8 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
         </div>
 
         <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="bg-[#F0F4F8] px-4 py-3 border-b border-gray-200">
-            <p className="font-bold text-[#1E3A5F] text-xs uppercase tracking-wide">Program Studi</p>
+          <div className="bg-brand-mist px-4 py-3 border-b border-gray-200">
+            <p className="font-bold text-brand-navy text-xs uppercase tracking-wide">Program Studi</p>
           </div>
           <ul>
             {dosen.programStudi.map((ps) => (
@@ -53,7 +53,7 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
 
         <Link
           href="/akademik/dosen"
-          className="block text-center text-sm text-[#1E3A5F] font-medium hover:text-[#F5A623] transition-colors"
+          className="block text-center text-sm text-brand-navy font-medium hover:text-brand-gold transition-colors"
         >
           ← Kembali ke Direktori Dosen
         </Link>
@@ -61,28 +61,28 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
 
       <article className="flex-1 min-w-0 space-y-8">
         <section>
-          <h2 className="text-lg font-bold text-[#1E3A5F] mb-3">Biografi</h2>
+          <h2 className="text-lg font-bold text-brand-navy mb-3">Biografi</h2>
           <p className="text-gray-700 text-sm leading-relaxed">{dosen.bio}</p>
         </section>
 
         <section>
           <div className="flex items-center gap-2 mb-4">
-            <GraduationCap size={18} className="text-[#F5A623]" aria-hidden="true" />
-            <h2 className="text-lg font-bold text-[#1E3A5F]">Pendidikan</h2>
+            <GraduationCap size={18} className="text-brand-gold" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-brand-navy">Pendidikan</h2>
           </div>
           <p className="text-gray-700 text-sm">{dosen.pendidikanTerakhir}</p>
         </section>
 
         <section>
           <div className="flex items-center gap-2 mb-4">
-            <Award size={18} className="text-[#F5A623]" aria-hidden="true" />
-            <h2 className="text-lg font-bold text-[#1E3A5F]">Bidang Keahlian</h2>
+            <Award size={18} className="text-brand-gold" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-brand-navy">Bidang Keahlian</h2>
           </div>
           <ul className="flex flex-wrap gap-2">
             {dosen.bidangKeahlian.map((k) => (
               <li
                 key={k}
-                className="bg-[#1E3A5F]/10 text-[#1E3A5F] text-sm font-medium px-3 py-1.5 rounded-lg border border-[#1E3A5F]/20"
+                className="bg-brand-navy/10 text-brand-navy text-sm font-medium px-3 py-1.5 rounded-lg border border-brand-navy/20"
               >
                 {k}
               </li>
@@ -92,8 +92,8 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
 
         <section>
           <div className="flex items-center gap-2 mb-5">
-            <BookOpen size={18} className="text-[#F5A623]" aria-hidden="true" />
-            <h2 className="text-lg font-bold text-[#1E3A5F]">
+            <BookOpen size={18} className="text-brand-gold" aria-hidden="true" />
+            <h2 className="text-lg font-bold text-brand-navy">
               Publikasi ({dosen.publikasi.length})
             </h2>
           </div>
@@ -101,10 +101,10 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
             {dosen.publikasi.map((pub, idx) => (
               <li
                 key={idx}
-                className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-[#1E3A5F]/30 transition-colors"
+                className="flex gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-brand-navy/30 transition-colors"
               >
                 <span
-                  className="flex-shrink-0 w-8 h-8 rounded-lg bg-[#F5A623]/15 text-[#1E3A5F] font-bold text-sm flex items-center justify-center"
+                  className="flex-shrink-0 w-8 h-8 rounded-lg bg-brand-gold/15 text-brand-navy font-bold text-sm flex items-center justify-center"
                   aria-hidden="true"
                 >
                   {pub.tahun.toString().slice(2)}
@@ -122,7 +122,7 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Baca publikasi: ${pub.judul}`}
-                    className="flex-shrink-0 text-[#1E3A5F] hover:text-[#F5A623] transition-colors"
+                    className="flex-shrink-0 text-brand-navy hover:text-brand-gold transition-colors"
                   >
                     <ExternalLink size={16} />
                   </a>

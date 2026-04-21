@@ -46,14 +46,14 @@ export default function DirectionsSection({ directions = defaultDirections.map((
     <section className="bg-gray-50 py-14 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-[#1E3A5F] font-extrabold text-2xl">Petunjuk Arah</h2>
-          <div className="w-12 h-1 bg-[#F5A623] rounded mt-3" />
+          <h2 className="text-brand-navy font-extrabold text-2xl">Petunjuk Arah</h2>
+          <div className="w-12 h-1 bg-brand-gold rounded mt-3" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           {directions.map((dir) => (
             <div key={dir.heading} className="bg-white border border-gray-200 rounded-xl p-6">
-              <h3 className="font-bold text-[#1E3A5F] text-sm mb-4 flex items-center gap-2">
+              <h3 className="font-bold text-brand-navy text-sm mb-4 flex items-center gap-2">
                 <span>{dir.emoji}</span>
                 {dir.heading}
               </h3>

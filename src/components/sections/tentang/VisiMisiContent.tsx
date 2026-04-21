@@ -26,10 +26,10 @@ export default async function VisiMisiContent() {
 
   return (
     <article className="space-y-10">
-      <section className="bg-[#1E3A5F] rounded-xl p-7 text-white">
+      <section className="bg-brand-navy rounded-xl p-7 text-white">
         <div className="flex items-start gap-4">
-          <div className="w-10 h-10 bg-[#F5A623] rounded-lg flex items-center justify-center flex-shrink-0">
-            <span className="text-[#1E3A5F] font-black text-xs">V</span>
+          <div className="w-10 h-10 bg-brand-gold rounded-lg flex items-center justify-center flex-shrink-0">
+            <span className="text-brand-navy font-black text-xs">V</span>
           </div>
           <div>
             <h2 className="font-bold text-lg mb-3">Visi</h2>
@@ -39,12 +39,12 @@ export default async function VisiMisiContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Misi</h2>
+        <h2 className="text-xl font-bold text-brand-navy mb-5">Misi</h2>
         <ol className="space-y-3" aria-label="Misi STTPU">
           {misi.map((item, idx) => (
             <li key={idx} className="flex items-start gap-3.5 text-sm text-gray-700 leading-relaxed">
               <span
-                className="flex-shrink-0 w-6 h-6 rounded-full bg-[#F5A623]/15 text-[#1E3A5F] font-bold text-xs flex items-center justify-center mt-0.5"
+                className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-gold/15 text-brand-navy font-bold text-xs flex items-center justify-center mt-0.5"
                 aria-hidden="true"
               >
                 {idx + 1}
@@ -56,12 +56,12 @@ export default async function VisiMisiContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Tujuan</h2>
+        <h2 className="text-xl font-bold text-brand-navy mb-5">Tujuan</h2>
         <ul className="space-y-3" aria-label="Tujuan STTPU">
           {tujuan.map((item, idx) => (
             <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
               <span
-                className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-[#F5A623] mt-2"
+                className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brand-gold mt-2"
                 aria-hidden="true"
               />
               {item}
@@ -71,15 +71,15 @@ export default async function VisiMisiContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Nilai-Nilai Kami</h2>
+        <h2 className="text-xl font-bold text-brand-navy mb-5">Nilai-Nilai Kami</h2>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Nilai-nilai STTPU">
           {nilaiNilai.map(({ nama, deskripsi }) => (
             <li
               key={nama}
-              className="flex items-start gap-3 p-4 bg-[#F0F4F8] rounded-lg border border-gray-200"
+              className="flex items-start gap-3 p-4 bg-brand-mist rounded-lg border border-gray-200"
             >
               <div
-                className="w-9 h-9 bg-[#1E3A5F] rounded-lg flex items-center justify-center flex-shrink-0 text-[#F5A623] font-black text-sm"
+                className="w-9 h-9 bg-brand-navy rounded-lg flex items-center justify-center flex-shrink-0 text-brand-gold font-black text-sm"
                 aria-hidden="true"
               >
                 {nama[0]}

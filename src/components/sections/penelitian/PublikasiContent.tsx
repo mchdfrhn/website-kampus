@@ -31,7 +31,7 @@ export default async function PublikasiContent() {
 
   return (
     <article className="space-y-6">
-      <div className="bg-[#F0F4F8] rounded-xl p-5">
+      <div className="bg-brand-mist rounded-xl p-5">
         <p className="text-sm text-gray-700 leading-relaxed">
           Database publikasi ilmiah dosen STTPU. Total <strong>{publikasi.length} publikasi</strong> terdaftar
           — mencakup artikel jurnal nasional/internasional, prosiding konferensi, dan buku teks.

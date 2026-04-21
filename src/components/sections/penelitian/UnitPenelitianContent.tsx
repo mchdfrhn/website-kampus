@@ -36,7 +36,7 @@ export default async function UnitPenelitianContent() {
 
   return (
     <article className="space-y-6">
-      <div className="bg-[#F0F4F8] rounded-xl p-5">
+      <div className="bg-brand-mist rounded-xl p-5">
         <p className="text-sm text-gray-700 leading-relaxed">
           STTPU memiliki <strong>{units.length} unit riset dan laboratorium aktif</strong> yang mendukung tridarma
           perguruan tinggi. Setiap unit dibina oleh dosen doktor berpengalaman dan terbuka untuk
@@ -46,15 +46,15 @@ export default async function UnitPenelitianContent() {
 
       <div className="space-y-5">
         {units.map((unit) => (
-          <div key={unit.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+          <div key={unit.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-brand-navy hover:shadow-sm transition-all">
             <div className="px-5 py-4 border-b border-gray-100 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-lg bg-[#1E3A5F] flex items-center justify-center flex-shrink-0">
+              <div className="w-9 h-9 rounded-lg bg-brand-navy flex items-center justify-center flex-shrink-0">
                 <FlaskConical size={17} className="text-white" aria-hidden="true" />
               </div>
               <div>
                 <h2 className="font-bold text-gray-900 text-sm leading-snug">{unit.nama}</h2>
                 {unit.singkatan && (
-                  <span className="text-[11px] font-bold text-[#1E3A5F] bg-[#F0F4F8] px-2 py-0.5 rounded-full inline-block mt-1">{unit.singkatan}</span>
+                  <span className="text-[11px] font-bold text-brand-navy bg-brand-mist px-2 py-0.5 rounded-full inline-block mt-1">{unit.singkatan}</span>
                 )}
               </div>
             </div>
@@ -100,4 +100,3 @@ export default async function UnitPenelitianContent() {
     </article>
   );
 }
-

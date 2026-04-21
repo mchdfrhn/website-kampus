@@ -73,7 +73,7 @@ export default async function KalenderContent() {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="font-bold text-[#1E3A5F] text-lg mb-1">{tahunAkademik}</h2>
+          <h2 className="font-bold text-brand-navy text-lg mb-1">{tahunAkademik}</h2>
           <p className="text-gray-500 text-sm">{deskripsi}</p>
         </div>
         {pdfUrl && (
@@ -81,7 +81,7 @@ export default async function KalenderContent() {
             href={pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-[#1E3A5F] text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-[#162d4a] transition-colors flex-shrink-0"
+            className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-brand-navy-dark transition-colors flex-shrink-0"
           >
             <Download size={15} aria-hidden="true" />
             Unduh PDF
@@ -99,14 +99,14 @@ export default async function KalenderContent() {
 
       {[semesterGanjil, semesterGenap].map((sem, semIdx) => (
         <div key={semIdx}>
-          <h3 className="font-bold text-[#1E3A5F] text-base mb-4 flex items-center gap-2">
-            <Calendar size={16} className="text-[#F5A623]" aria-hidden="true" />
+          <h3 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
+            <Calendar size={16} className="text-brand-gold" aria-hidden="true" />
             {sem.label}
           </h3>
           <div className="overflow-x-auto rounded-xl border border-gray-200">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-[#1E3A5F] text-white">
+                <tr className="bg-brand-navy text-white">
                   <th className="text-left px-4 py-3 font-semibold w-8 rounded-tl-xl">No</th>
                   <th className="text-left px-4 py-3 font-semibold">Kegiatan</th>
                   <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Tanggal</th>
@@ -117,7 +117,7 @@ export default async function KalenderContent() {
                 {sem.kegiatan.map((item, idx) => (
                   <tr
                     key={idx}
-                    className={`border-b border-gray-200 last:border-0 ${idx % 2 === 0 ? 'bg-white' : 'bg-[#F0F4F8]/50'}`}
+                    className={`border-b border-gray-200 last:border-0 ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/50'}`}
                   >
                     <td className="px-4 py-3 text-gray-500 text-xs">{idx + 1}</td>
                     <td className="px-4 py-3 font-medium text-gray-900">{item.kegiatan}</td>
@@ -132,16 +132,16 @@ export default async function KalenderContent() {
       ))}
 
       <div>
-        <h3 className="font-bold text-[#1E3A5F] text-base mb-4">Kegiatan Penting Lainnya</h3>
+        <h3 className="font-bold text-brand-navy text-base mb-4">Kegiatan Penting Lainnya</h3>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {kegiatanPenting.map((item, idx) => (
             <li key={idx} className="flex items-start gap-3 p-4 bg-white border border-gray-200 rounded-xl">
-              <div className="w-8 h-8 bg-[#F5A623]/15 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                <Calendar size={15} className="text-[#1E3A5F]" />
+              <div className="w-8 h-8 bg-brand-gold/15 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <Calendar size={15} className="text-brand-navy" />
               </div>
               <div>
                 <p className="font-semibold text-gray-900 text-sm">{item.nama}</p>
-                <p className="text-[#1E3A5F] text-xs font-medium mt-0.5">{item.tanggal}</p>
+                <p className="text-brand-navy text-xs font-medium mt-0.5">{item.tanggal}</p>
                 {item.keterangan && <p className="text-gray-500 text-xs mt-0.5">{item.keterangan}</p>}
               </div>
             </li>

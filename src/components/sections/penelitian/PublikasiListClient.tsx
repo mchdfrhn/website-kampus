@@ -39,7 +39,7 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
       <div className="flex flex-wrap gap-2">
         <button
           onClick={() => setFilterJenis(null)}
-          className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterJenis === null ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#1E3A5F]'}`}
+          className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterJenis === null ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
         >
           Semua Jenis
         </button>
@@ -47,7 +47,7 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
           <button
             key={j}
             onClick={() => setFilterJenis(filterJenis === j ? null : j)}
-            className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterJenis === j ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#1E3A5F]'}`}
+            className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterJenis === j ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
           >
             {jenisLabel[j]}
           </button>
@@ -55,7 +55,7 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
         <span className="w-px h-6 bg-gray-200 self-center mx-1" />
         <button
           onClick={() => setFilterTahun(null)}
-          className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterTahun === null ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#1E3A5F]'}`}
+          className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterTahun === null ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
         >
           Semua Tahun
         </button>
@@ -63,7 +63,7 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
           <button
             key={t}
             onClick={() => setFilterTahun(filterTahun === t ? null : t)}
-            className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterTahun === t ? 'bg-[#1E3A5F] text-white border-[#1E3A5F]' : 'bg-white text-gray-600 border-gray-200 hover:border-[#1E3A5F]'}`}
+            className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterTahun === t ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
           >
             {t}
           </button>
@@ -74,9 +74,9 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
 
       <ol className="space-y-3" aria-label="Daftar publikasi">
         {filtered.map((pub, i) => (
-          <li key={pub.id} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-[#1E3A5F] hover:shadow-sm transition-all">
+          <li key={pub.id} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
             <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-[#F0F4F8] text-[#1E3A5F] font-bold text-xs flex items-center justify-center" aria-hidden="true">
+              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-brand-mist text-brand-navy font-bold text-xs flex items-center justify-center" aria-hidden="true">
                 {i + 1}
               </span>
               <div className="flex-1 min-w-0">
@@ -91,7 +91,7 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
                 {pub.url && pub.url !== '#' && (
                   <a
                     href={pub.url}
-                    className="inline-flex items-center gap-1 text-xs text-[#1E3A5F] font-semibold mt-2 hover:text-[#F5A623] transition-colors"
+                    className="inline-flex items-center gap-1 text-xs text-brand-navy font-semibold mt-2 hover:text-brand-gold transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

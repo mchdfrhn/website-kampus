@@ -45,8 +45,8 @@ export default async function SocialMediaSection() {
     <section className="bg-white py-14 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h2 className="text-[#1E3A5F] font-extrabold text-2xl">Ikuti Kami</h2>
-          <div className="w-12 h-1 bg-[#F5A623] rounded mt-3" />
+          <h2 className="text-brand-navy font-extrabold text-2xl">Ikuti Kami</h2>
+          <div className="w-12 h-1 bg-brand-gold rounded mt-3" />
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
@@ -59,7 +59,7 @@ export default async function SocialMediaSection() {
               className="border border-gray-200 rounded-xl p-5 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-200 no-underline"
             >
               <span className="text-4xl mb-3 block">{platformEmoji[s.platform] ?? '🔗'}</span>
-              <p className="font-bold text-[#1E3A5F] text-sm">{platformLabel[s.platform] ?? s.platform}</p>
+              <p className="font-bold text-brand-navy text-sm">{platformLabel[s.platform] ?? s.platform}</p>
               {s.handle && <p className="text-gray-500 text-xs mt-1">{s.handle}</p>}
               {s.followers && <p className="text-gray-400 text-xs mt-1">{s.followers}</p>}
             </a>

@@ -37,11 +37,11 @@ export default async function PimpinanContent() {
       {pimpinan.map((person, idx) => (
         <section
           key={idx}
-          className={`${idx === 0 ? 'border-2 border-[#1E3A5F]' : 'border border-gray-200'} rounded-xl overflow-hidden`}
+          className={`${idx === 0 ? 'border-2 border-brand-navy' : 'border border-gray-200'} rounded-xl overflow-hidden`}
         >
-          <div className={`${idx === 0 ? 'bg-[#1E3A5F]' : 'bg-[#F0F4F8]'} px-6 py-3`}>
+          <div className={`${idx === 0 ? 'bg-brand-navy' : 'bg-brand-mist'} px-6 py-3`}>
             <p
-              className={`font-bold text-xs uppercase tracking-wide ${idx === 0 ? 'text-[#F5A623]' : 'text-[#1E3A5F]'}`}
+              className={`font-bold text-xs uppercase tracking-wide ${idx === 0 ? 'text-brand-gold' : 'text-brand-navy'}`}
             >
               {person.jabatan}
             </p>
@@ -63,7 +63,7 @@ export default async function PimpinanContent() {
                   <h2 className="font-bold text-lg text-gray-900 leading-tight">{person.nama}</h2>
                   {person.nip && <p className="text-gray-500 text-xs mt-0.5">{person.nip}</p>}
                   {person.keahlian && (
-                    <p className="text-[#1E3A5F] text-sm font-medium mt-1">{person.keahlian}</p>
+                    <p className="text-brand-navy text-sm font-medium mt-1">{person.keahlian}</p>
                   )}
                 </div>
 
@@ -71,13 +71,13 @@ export default async function PimpinanContent() {
                   {person.pendidikan && person.pendidikan.length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <GraduationCap size={15} className="text-[#F5A623]" aria-hidden="true" />
+                        <GraduationCap size={15} className="text-brand-gold" aria-hidden="true" />
                         <h3 className="font-semibold text-gray-800 text-sm">Riwayat Pendidikan</h3>
                       </div>
                       <ul className="space-y-1">
                         {person.pendidikan.map((edu, i) => (
                           <li key={i} className="text-gray-600 text-xs leading-relaxed flex items-start gap-2">
-                            <span className="text-[#F5A623] mt-1" aria-hidden="true">•</span>
+                            <span className="text-brand-gold mt-1" aria-hidden="true">•</span>
                             {edu.jenjang}
                           </li>
                         ))}
@@ -88,7 +88,7 @@ export default async function PimpinanContent() {
                   {person.pengalaman && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Award size={15} className="text-[#F5A623]" aria-hidden="true" />
+                        <Award size={15} className="text-brand-gold" aria-hidden="true" />
                         <h3 className="font-semibold text-gray-800 text-sm">Pengalaman</h3>
                       </div>
                       <p className="text-gray-600 text-xs leading-relaxed">{person.pengalaman}</p>
@@ -97,10 +97,10 @@ export default async function PimpinanContent() {
                 </div>
 
                 {person.sambutan && (
-                  <div className="bg-[#F0F4F8] rounded-lg p-4 border-l-4 border-[#F5A623]">
+                  <div className="bg-brand-mist rounded-lg p-4 border-l-4 border-brand-gold">
                     <div className="flex items-center gap-2 mb-2">
-                      <BookOpen size={14} className="text-[#1E3A5F]" aria-hidden="true" />
-                      <h3 className="font-semibold text-[#1E3A5F] text-sm">Sambutan Ketua</h3>
+                      <BookOpen size={14} className="text-brand-navy" aria-hidden="true" />
+                      <h3 className="font-semibold text-brand-navy text-sm">Sambutan Ketua</h3>
                     </div>
                     <p className="text-gray-700 text-sm leading-relaxed italic">
                       &ldquo;{person.sambutan}&rdquo;
