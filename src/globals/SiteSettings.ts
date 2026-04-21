@@ -1,10 +1,14 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateGlobal } from '../lib/revalidate'
+import { isAdmin } from '../access/isAdmin'
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: 'Pengaturan Situs',
-  access: { read: () => true },
+  access: {
+    read: () => true,
+    update: isAdmin,
+  },
   hooks: {
     afterChange: [revalidateGlobal(['/'])],
   },

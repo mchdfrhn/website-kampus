@@ -69,8 +69,8 @@ export default buildConfig({
   ],
   globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik, PortalLinks, MainMenu, PanduanMaba],
   editor: lexicalEditor(),
-  debug: true,
-  secret: process.env.PAYLOAD_SECRET || "",
+  debug: process.env.NODE_ENV !== 'production',
+  secret: process.env.PAYLOAD_SECRET as string,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },
@@ -79,7 +79,7 @@ export default buildConfig({
     : postgresAdapter({
         pool: {
           connectionString: process.env.DATABASE_URI || "",
-          ssl: false,
+          ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
         },
       })) as any,
   upload: {

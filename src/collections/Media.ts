@@ -4,6 +4,9 @@ export const Media: CollectionConfig = {
   slug: "media",
   access: {
     read: () => true,
+    create: ({ req }) => req.user != null,
+    update: ({ req }) => req.user != null,
+    delete: ({ req }) => req.user != null,
   },
   admin: {
     useAsTitle: "alt",
