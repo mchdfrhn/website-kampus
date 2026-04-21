@@ -36,7 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const beritaRoutes = berita.docs.map((doc) => ({
       url: `${baseUrl}/berita/${doc.slug}`,
-      lastModified: new Date(doc.updatedAt),
+      lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : new Date(),
       changeFrequency: 'weekly' as const,
       priority: 0.6,
     }));
