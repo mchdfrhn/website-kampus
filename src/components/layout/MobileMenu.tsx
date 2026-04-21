@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function MobileMenu({ navItems }: { navItems: { label: string; href: string; children?: { label: string; href: string; id?: string | null }[] | null; id?: string | null }[] }) {
@@ -39,70 +39,79 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
 
       <div
         className={cn(
-          'fixed top-0 left-0 z-50 h-full w-72 bg-[#1E3A5F] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out',
+          'fixed top-0 left-0 z-50 h-full w-80 bg-brand-navy shadow-[0_24px_60px_rgba(0,22,51,0.35)] flex flex-col transition-transform duration-500 ease-in-out border-r border-white/10',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         role="dialog"
         aria-modal="true"
         aria-label="Menu navigasi"
       >
-        <div className="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <div className="flex items-center justify-between px-6 py-6 border-b border-white/10 bg-brand-navy">
           <Link href="/" onClick={toggleMenu} className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-[#F5A623] rounded flex items-center justify-center font-black text-[#1E3A5F] text-xs leading-none">
+            <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs leading-none shadow-lg shadow-brand-gold/20">
               STTPU
             </div>
             <div className="text-white">
-              <div className="font-bold text-sm leading-tight">STTPU</div>
-              <div className="text-white/70 text-[10px] leading-tight">Sekolah Tinggi Teknologi PU Jakarta</div>
+              <div className="font-bold text-sm leading-tight tracking-tight">STTPU</div>
+              <div className="text-white/60 text-[10px] leading-tight font-medium">Sekolah Tinggi Teknologi PU</div>
             </div>
           </Link>
           <button
             onClick={toggleMenu}
             aria-label="Tutup menu"
-            className="w-8 h-8 flex items-center justify-center rounded text-white/70 hover:text-white hover:bg-white/10 transition-colors"
+            className="w-10 h-10 flex items-center justify-center rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-3" aria-label="Menu mobile">
+        <nav className="flex-1 overflow-y-auto py-6 px-3" aria-label="Menu mobile">
           {navItems.map((item) => (
-            <div key={item.label}>
+            <div key={item.label} className="mb-2">
               {item.children ? (
                 <>
                   <button
                     onClick={() => toggleSubmenu(item.label)}
                     aria-expanded={openSubmenu === item.label}
-                    className="w-full flex items-center justify-between px-5 py-3 text-white/85 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
+                    className={cn(
+                      "w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight",
+                      openSubmenu === item.label 
+                        ? "bg-white/10 text-brand-gold shadow-lg" 
+                        : "text-white/80 hover:text-white hover:bg-white/5"
+                    )}
                   >
                     <span>{item.label}</span>
-                    {openSubmenu === item.label ? (
-                      <ChevronDown size={16} className="text-[#F5A623]" />
-                    ) : (
-                      <ChevronRight size={16} className="text-white/50" />
-                    )}
+                    <div className={cn(
+                      "transition-transform duration-300",
+                      openSubmenu === item.label ? "rotate-180" : ""
+                    )}>
+                      <ChevronDown size={18} className={openSubmenu === item.label ? "text-brand-gold" : "text-white/30"} />
+                    </div>
                   </button>
-                  {openSubmenu === item.label && (
-                    <div className="bg-black/20">
+                  <div className={cn(
+                    "overflow-hidden transition-all duration-300",
+                    openSubmenu === item.label ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
+                  )}>
+                      <div className="bg-white/[0.05] border border-white/8 rounded-2xl p-2 ml-2 space-y-1">
                       {item.children.map((child) => (
                         <Link
                           key={child.label}
                           href={child.href}
                           onClick={toggleMenu}
-                          className="flex items-center gap-2 pl-9 pr-5 py-2.5 text-white/75 hover:text-white hover:bg-white/10 transition-colors text-sm"
+                          className="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-brand-gold hover:bg-white/5 rounded-xl transition-all duration-300 text-xs font-medium"
                         >
-                          <span className="w-1 h-1 rounded-full bg-[#F5A623] flex-shrink-0" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 flex-shrink-0" />
                           {child.label}
                         </Link>
                       ))}
                     </div>
-                  )}
+                  </div>
                 </>
               ) : (
                 <Link
                   href={item.href}
                   onClick={toggleMenu}
-                  className="flex items-center px-5 py-3 text-white/85 hover:text-white hover:bg-white/10 transition-colors text-sm font-medium"
+                  className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
                 >
                   {item.label}
                 </Link>
@@ -111,13 +120,14 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
           ))}
         </nav>
 
-        <div className="px-5 py-5 border-t border-white/10">
+        <div className="p-6 border-t border-white/10 bg-brand-navy">
           <Link
             href="/portal"
             onClick={toggleMenu}
-            className="flex items-center justify-center w-full py-3 bg-[#F5A623] text-[#1E3A5F] font-bold text-sm rounded hover:bg-[#E09520] transition-colors"
+            className="group relative flex items-center justify-center w-full py-4 bg-brand-gold text-brand-navy font-bold text-sm rounded-xl shadow-xl shadow-brand-gold/10 hover:shadow-brand-gold/30 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden"
           >
-            Portal Mahasiswa
+            <span className="relative z-10">Portal Mahasiswa</span>
+            <div className="absolute inset-0 bg-white/20 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
           </Link>
         </div>
       </div>

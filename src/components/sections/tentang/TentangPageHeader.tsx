@@ -1,34 +1,30 @@
-import Link from 'next/link';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
 interface TentangPageHeaderProps {
   title: string;
   subtitle: string;
-  breadcrumb: string;
 }
 
-export default function TentangPageHeader({ title, subtitle, breadcrumb }: TentangPageHeaderProps) {
+export default function TentangPageHeader({ title, subtitle }: TentangPageHeaderProps) {
   return (
     <>
-      <div className="bg-white border-b border-gray-200 px-6 py-2.5 text-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav aria-label="Breadcrumb" className="text-gray-500">
-            <Link href="/" className="hover:text-[#1E3A5F] transition-colors">
-              Beranda
-            </Link>
-            <span className="mx-2 text-gray-400">›</span>
-            <Link href="/tentang" className="hover:text-[#1E3A5F] transition-colors">
-              Tentang
-            </Link>
-            <span className="mx-2 text-gray-400">›</span>
-            <span className="text-gray-700 font-medium">{breadcrumb}</span>
-          </nav>
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <Breadcrumbs />
         </div>
       </div>
 
-      <div className="bg-[#1E3A5F] text-white px-6 py-10">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="font-extrabold text-3xl mb-2">{title}</h1>
-          <p className="text-white/85 text-sm leading-relaxed max-w-xl">{subtitle}</p>
+      <div className="bg-brand-navy text-white px-6 py-20 relative overflow-hidden">
+        <BlueAbstractBackground />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="max-w-3xl">
+            <h1 className="font-black text-4xl lg:text-5xl mb-6 tracking-tight leading-tight uppercase">{title}</h1>
+            <div className="w-16 h-1 bg-brand-gold rounded-full mb-8" />
+            <p className="text-white/70 text-lg font-medium leading-relaxed">
+              {subtitle}
+            </p>
+          </div>
         </div>
       </div>
     </>

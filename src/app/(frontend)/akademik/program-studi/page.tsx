@@ -36,10 +36,6 @@ export default async function ProgramStudiPage() {
       <AkademikPageHeader
         title="Program Studi"
         subtitle="Empat program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum dan infrastruktur nasional."
-        breadcrumbs={[
-          { label: 'Akademik', href: '#' },
-          { label: 'Program Studi' },
-        ]}
       />
       <ProgramStudiGrid prodiList={prodiList} />
     </>

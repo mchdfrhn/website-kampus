@@ -1,4 +1,4 @@
-import { MessageCircle } from 'lucide-react';
+import { MessageCircle, Phone, Mail, User2, BookOpen, CreditCard, Users, Database, Globe, Megaphone } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type UnitItem = {
@@ -8,6 +8,16 @@ type UnitItem = {
   telHref?: string
   email?: string
   tugas?: string
+}
+
+const icons: Record<string, any> = {
+  'Bagian Akademik': BookOpen,
+  'Bagian Keuangan': CreditCard,
+  'PMB': User2,
+  'Bagian Kemahasiswaan': Users,
+  'Unit Teknologi Informasi': Database,
+  'LPPM': Globe,
+  'Humas & Marketing': Megaphone,
 }
 
 const defaults: UnitItem[] = [
@@ -30,71 +40,87 @@ export default async function DirectorySection() {
       sort: 'urutan',
       limit: 50,
     })
-    units = result.docs as unknown as UnitItem[]
+    if (result.docs.length > 0) {
+      units = result.docs as unknown as UnitItem[]
+    }
   } catch {
     // DB unavailable — use defaults
   }
 
   return (
-    <section className="bg-white py-14 px-6 lg:px-8">
+    <section className="bg-gray-50 py-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h2 className="text-[#1E3A5F] font-extrabold text-2xl">Direktori Unit & Kontak</h2>
-          <div className="w-12 h-1 bg-[#F5A623] rounded mt-3" />
+        <div className="mb-16 text-center lg:text-left">
+          <h2 className="text-brand-navy font-bold text-3xl tracking-tight">Direktori Unit Kerja</h2>
+          <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+          <p className="mt-6 text-gray-600 font-medium max-w-2xl leading-relaxed">
+            Silakan hubungi unit terkait di bawah ini untuk bantuan administratif, akademik, atau layanan informasi lainnya.
+          </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="bg-[#1E3A5F] text-white">
-                <th className="px-4 py-3 text-left text-xs font-semibold">Unit / Bagian</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold">Kepala Unit</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold">Telepon</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold">Email</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold">Tugas Pokok</th>
-                <th className="px-4 py-3 text-left text-xs font-semibold">WhatsApp</th>
-              </tr>
-            </thead>
-            <tbody>
-              {units.map((row, index) => (
-                <tr
-                  key={row.unit}
-                  className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 transition-colors`}
-                >
-                  <td className="px-4 py-3 font-semibold text-[#1E3A5F] align-top whitespace-nowrap">{row.unit}</td>
-                  <td className="px-4 py-3 align-top whitespace-nowrap">
-                    <span className="text-gray-700">{row.kepala}</span>
-                  </td>
-                  <td className="px-4 py-3 align-top whitespace-nowrap">
-                    {row.telHref ? (
-                      <a href={`tel:${row.telHref}`} className="text-gray-700 hover:text-[#1E3A5F] transition-colors">{row.telepon}</a>
-                    ) : (
-                      <span className="text-gray-700">{row.telepon}</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 align-top whitespace-nowrap">
-                    {row.email ? (
-                      <a href={`mailto:${row.email}`} className="text-gray-700 hover:text-[#1E3A5F] transition-colors">{row.email}</a>
-                    ) : null}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 align-top">{row.tugas}</td>
-                  <td className="px-4 py-3 align-top">
-                    {row.telHref && (
-                      <a
-                        href={`https://wa.me/${row.telHref.replace(/\D/g, '')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full hover:bg-green-200 transition-colors"
-                      >
-                        <MessageCircle size={12} />
-                        Chat
-                      </a>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {units.map((row) => {
+            const Icon = icons[row.unit] || Users;
+            return (
+              <div
+                key={row.unit}
+                className="bg-white border border-gray-100 rounded-2xl p-8 lg:p-10 flex flex-col h-full hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-500 group"
+              >
+                <div className="flex items-center gap-5 mb-8">
+                  <div className="w-14 h-14 rounded-xl bg-brand-navy/5 flex items-center justify-center group-hover:bg-brand-gold transition-all duration-300">
+                    <Icon size={24} className="text-brand-navy group-hover:text-white transition-colors" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-brand-navy text-lg leading-tight group-hover:text-brand-gold transition-colors">{row.unit}</h3>
+                    <p className="text-brand-gold text-[10px] font-bold uppercase tracking-wider mt-1">Layanan Unit</p>
+                  </div>
+                </div>
+
+                <div className="flex-1 mb-10 space-y-6">
+                  <div>
+                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-2">Kepala Unit</p>
+                    <p className="text-brand-navy font-bold text-sm leading-relaxed">{row.kepala}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider mb-2">Tugas Pokok</p>
+                    <p className="text-gray-500 font-medium text-xs leading-relaxed">{row.tugas}</p>
+                  </div>
+                </div>
+
+                <div className="pt-8 border-t border-gray-50 flex flex-wrap gap-3">
+                  {row.telHref && (
+                    <a
+                      href={`https://wa.me/${row.telHref.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white text-[10px] font-bold uppercase tracking-wider py-4 rounded-xl hover:opacity-90 transition-all shadow-lg shadow-green-500/10"
+                    >
+                      <MessageCircle size={14} />
+                      WhatsApp
+                    </a>
+                  )}
+                  {row.email && (
+                    <a
+                      href={`mailto:${row.email}`}
+                      className="flex-1 flex items-center justify-center gap-2 bg-brand-navy text-white text-[10px] font-bold uppercase tracking-wider py-4 rounded-xl hover:bg-brand-navy/90 transition-all shadow-lg shadow-brand-navy/10"
+                    >
+                      <Mail size={14} />
+                      Email
+                    </a>
+                  )}
+                  {row.telHref && (
+                    <a
+                      href={`tel:${row.telHref}`}
+                      className="w-full flex items-center justify-center gap-2 border-2 border-gray-100 text-gray-400 text-[10px] font-bold uppercase tracking-wider py-4 rounded-xl hover:border-brand-gold hover:text-brand-gold hover:bg-gray-50 transition-all"
+                    >
+                      <Phone size={14} />
+                      {row.telepon}
+                    </a>
+                  )}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

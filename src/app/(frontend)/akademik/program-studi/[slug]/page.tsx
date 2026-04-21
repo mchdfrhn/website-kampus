@@ -73,11 +73,6 @@ export default async function ProgramStudiDetailPage({
       <AkademikPageHeader
         title={`${prodi.nama} (${prodi.jenjang})`}
         subtitle={prodi.deskripsiSingkat}
-        breadcrumbs={[
-          { label: 'Akademik', href: '#' },
-          { label: 'Program Studi', href: '/akademik/program-studi' },
-          { label: prodi.nama },
-        ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <ProgramStudiDetailContent prodi={prodi} />

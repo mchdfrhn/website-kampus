@@ -1,6 +1,9 @@
+import { getPayloadClient } from '@/lib/payload';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getPayloadClient } from '@/lib/payload';
+import { ArrowRight } from 'lucide-react';
+import { Reveal } from '@/components/ui/motion/Reveal';
+import { MotionList, MotionItem } from '@/components/ui/motion/MotionWrapper';
 
 type Program = {
   jenjang: string;
@@ -75,62 +78,97 @@ export default async function ProgramStudiSection() {
   }
 
   return (
-    <section className="bg-white py-16">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-[#1E3A5F] font-extrabold text-3xl">Program Studi</h2>
-          <div className="w-12 h-1 bg-[#F5A623] rounded mx-auto mt-3" />
-          <p className="text-gray-500 mt-4 text-base max-w-xl mx-auto">
-            Pilih program studi sesuai minat dan karir impianmu bersama STTPU Jakarta.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <section className="bg-brand-navy/[0.01] py-24 relative overflow-hidden">
+      {/* Premium Background Accents */}
+      <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-brand-navy/[0.02] rounded-full -translate-y-1/2 translate-x-1/2 blur-[120px] pointer-events-none animate-pulse-slow" />
+      <div className="absolute bottom-0 left-0 w-[30rem] h-[30rem] bg-brand-gold/[0.03] rounded-full translate-y-1/2 -translate-x-1/2 blur-[100px] pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <Reveal width="100%">
+          <div className="text-center mb-20">
+            <h2 className="text-brand-navy font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight leading-[1.2]">Program Studi Unggulan</h2>
+            <div className="w-20 h-1 bg-brand-gold rounded-full mx-auto mt-8" />
+            <p className="text-gray-600 mt-8 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-medium">
+              Mencetak tenaga ahli profesional yang siap membangun masa depan infrastruktur Indonesia dengan kompetensi teknis kelas dunia.
+            </p>
+          </div>
+        </Reveal>
+
+        <MotionList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {programs.map((program) => {
             const thumbUrl = typeof program.thumbnail === 'object' ? program.thumbnail?.url : null;
             
             return (
-              <div
-                key={program.nama}
-                className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-200 flex flex-col"
-              >
-                <div className="h-44 bg-gray-200 flex items-center justify-center relative overflow-hidden">
-                  {thumbUrl ? (
-                    <Image src={thumbUrl} alt={program.nama} fill className="object-cover" />
-                  ) : (
-                    <span className="text-gray-400 text-sm italic">Foto {program.nama}</span>
-                  )}
+              <MotionItem key={program.nama}>
+                <div
+                  className="group bg-white border border-brand-navy/5 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-[0.99] transition-all duration-700 ease-in-out flex flex-col h-full"
+                >
+                  <div className="h-64 bg-brand-navy/[0.02] relative overflow-hidden">
+                    {thumbUrl ? (
+                      <Image 
+                        src={thumbUrl} 
+                        alt={program.nama} 
+                        fill 
+                        className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out" 
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gradient-to-br from-brand-navy/5 to-brand-gold/5 flex items-center justify-center">
+                        <span className="text-brand-navy/10 text-[10px] font-bold uppercase tracking-[0.3em]">Institutional Vision</span>
+                      </div>
+                    )}
+                    <div className="absolute top-5 left-5 backdrop-blur-xl bg-brand-navy/90 text-white px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border border-white/10 shadow-2xl">
+                      {program.jenjang}
+                    </div>
+                  </div>
+
+                  <div className="p-10 flex-1 flex flex-col">
+                    <div className="flex-1">
+                      <h3 className="font-bold text-brand-navy text-xl mb-5 group-hover:text-brand-gold transition-colors duration-500 tracking-tight leading-tight">
+                        {program.nama}
+                      </h3>
+                      <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 font-medium">
+                        {program.deskripsiSingkat}
+                      </p>
+                    </div>
+
+                    <div className="mt-10 pt-8 border-t border-brand-navy/[0.03] flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-brand-gold/10 border border-brand-gold/20">
+                          <svg className="w-3 h-3 text-brand-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">
+                          Akreditasi <span className="text-brand-navy">{program.akreditasi}</span>
+                        </span>
+                      </div>
+                      
+                      <Link
+                        href="/akademik/program-studi"
+                        className="inline-flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-widest group/link hover:text-brand-gold transition-all duration-300"
+                      >
+                        Detail
+                        <ArrowRight size={14} className="group-hover/link:translate-x-1.5 transition-transform duration-300" />
+                      </Link>
+                    </div>
+                  </div>
                 </div>
-                <div className="p-5 flex-1">
-                  <span className="inline-block bg-blue-50 text-[#1E3A5F] text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                    {program.jenjang}
-                  </span>
-                  <h3 className="font-bold text-[#1E3A5F] text-base mb-2">{program.nama}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed">{program.deskripsiSingkat}</p>
-                </div>
-                <div className="border-t border-gray-100 px-5 py-3 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 inline-block" />
-                    Akreditasi {program.akreditasi}
-                  </span>
-                  <Link
-                    href="/akademik/program-studi"
-                    className="text-[#1E3A5F] border border-[#1E3A5F] text-xs font-semibold px-3 py-1.5 rounded-md hover:bg-[#1E3A5F] hover:text-white transition-colors"
-                  >
-                    Lihat Detail
-                  </Link>
-                </div>
-              </div>
+              </MotionItem>
             )
           })}
-        </div>
-        <div className="text-center mt-10">
-          <Link
-            href="/akademik/program-studi"
-            className="inline-block bg-[#1E3A5F] text-white font-bold px-8 py-3 rounded-lg hover:bg-[#162d4a] transition-colors"
-          >
-            Lihat Semua Program Studi
-          </Link>
-        </div>
+        </MotionList>
+
+        <Reveal width="100%" delay={0.5}>
+          <div className="text-center mt-24">
+            <Link
+              href="/akademik/program-studi"
+              className="group inline-flex items-center gap-4 bg-brand-navy text-white text-[11px] font-bold uppercase tracking-[0.15em] px-12 py-6 rounded-2xl hover:bg-brand-gold hover:text-brand-navy active:scale-95 shadow-2xl shadow-brand-navy/20 transition-all duration-500"
+            >
+              Lihat Semua Program Studi
+              <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform duration-500" />
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

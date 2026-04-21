@@ -1,6 +1,9 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
 type LinkItem = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: LinkItem[] }
@@ -76,25 +79,29 @@ export default function PersonaQuickLinks({ tabs }: Props) {
   if (!current) return null
 
   return (
-    <section className="bg-[#1E3A5F] py-16">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <h2 className="text-white font-extrabold text-3xl">Saya adalah...</h2>
-          <div className="w-12 h-1 bg-[#F5A623] rounded mx-auto mt-3" />
-          <p className="text-white/70 mt-4 text-base">
-            Temukan informasi dan layanan yang paling relevan untuk kebutuhan Anda.
-          </p>
-        </div>
+    <section className="bg-brand-navy py-16 lg:py-24 relative overflow-hidden">
+      <BlueAbstractBackground accentClassName="right-[14%]" />
 
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+        <Reveal width="100%">
+          <div className="text-center mb-16">
+            <h2 className="text-white font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Akses Cepat & Layanan</h2>
+            <div className="w-16 h-1 bg-brand-gold rounded-full mx-auto mt-6" />
+            <p className="text-white/50 mt-6 text-base md:text-lg font-medium max-w-3xl mx-auto leading-relaxed">
+              Temukan akses instan ke seluruh ekosistem layanan digital STTPU Jakarta yang telah dipersonalisasi untuk kebutuhan Anda.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="flex flex-wrap gap-3 justify-center mb-16">
           {resolvedTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-colors cursor-pointer ${
+              className={`px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-500 cursor-pointer border ${
                 activeTab === tab.id
-                  ? 'bg-[#F5A623] text-[#1E3A5F]'
-                  : 'bg-white/10 text-white/70 hover:bg-white/20'
+                  ? 'bg-brand-gold text-brand-navy border-brand-gold shadow-2xl shadow-brand-gold/20 scale-105'
+                  : 'bg-white/[0.03] text-white/40 border-white/5 hover:bg-white/[0.08] hover:text-white hover:border-white/10'
               }`}
             >
               {tab.label}
@@ -102,18 +109,36 @@ export default function PersonaQuickLinks({ tabs }: Props) {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {current.links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              className="bg-white/10 border border-white/15 rounded-lg p-4 text-center hover:bg-white/20 transition-colors no-underline"
+        <div className="min-h-[400px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <span className="text-3xl block mb-2">{link.icon}</span>
-              <span className="text-white text-sm font-medium">{link.label}</span>
-            </a>
-          ))}
+              <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                {current.links.map((link) => (
+                  <StaggerItem key={link.label}>
+                    <a
+                      href={link.href}
+                      {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      className="group bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl p-10 text-center hover:bg-white/[0.05] hover:border-brand-gold/20 active:scale-95 transition-all duration-500 no-underline flex flex-col items-center justify-center h-full"
+                    >
+                      <div className="w-16 h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-brand-gold transition-all duration-500 border border-white/5 shadow-2xl shadow-brand-navy/20">
+                        <span className="text-3xl group-hover:scale-110 transition-transform duration-500">{link.icon}</span>
+                      </div>
+                      <h3 className="text-white text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-brand-gold transition-colors leading-relaxed">
+                        {link.label}
+                      </h3>
+                      <div className="mt-6 w-6 h-0.5 bg-white/10 group-hover:w-12 group-hover:bg-brand-gold rounded-full transition-all duration-500" />
+                    </a>
+                  </StaggerItem>
+                ))}
+              </StaggerContainer>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>

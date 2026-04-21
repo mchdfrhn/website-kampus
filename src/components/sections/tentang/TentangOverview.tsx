@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { History, Target, Users, ShieldCheck, Building2, Landmark, ArrowRight } from 'lucide-react';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
 const sections = [
   {
@@ -47,73 +48,73 @@ const stats = [
   { value: 'Baik Sekali', label: 'Akreditasi Institusi' },
 ];
 
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
+
 export default function TentangOverview() {
   return (
     <>
-      <div className="bg-white border-b border-gray-200 px-6 py-2.5 text-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav aria-label="Breadcrumb" className="text-gray-500">
-            <Link href="/" className="hover:text-[#1E3A5F] transition-colors">
-              Beranda
-            </Link>
-            <span className="mx-2 text-gray-400">›</span>
-            <span className="text-gray-700 font-medium">Tentang STTPU</span>
-          </nav>
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <Breadcrumbs />
         </div>
       </div>
 
-      <div className="bg-[#1E3A5F] text-white px-6 py-10">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="font-extrabold text-3xl mb-2">Tentang STTPU</h1>
-          <p className="text-white/85 text-sm leading-relaxed max-w-xl">
-            Mengenal lebih dalam Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — sejarah, visi,
-            kepemimpinan, dan komitmen kami pada keunggulan pendidikan teknologi.
-          </p>
+      <div className="bg-brand-navy text-white px-6 py-20 relative overflow-hidden">
+        <BlueAbstractBackground />
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="max-w-3xl">
+            <h1 className="font-black text-4xl lg:text-5xl mb-6 tracking-tight leading-tight uppercase">Tentang STTPU</h1>
+            <div className="w-16 h-1 bg-brand-gold rounded-full mb-8" />
+            <p className="text-white/70 text-lg font-medium leading-relaxed">
+              Membangun masa depan infrastruktur Indonesia melalui pendidikan vokasi yang inovatif, berintegritas, dan kompeten.
+            </p>
+          </div>
         </div>
       </div>
 
-      <section className="bg-white border-b border-gray-100 py-6 px-6">
+      <section className="bg-white border-b border-gray-50 py-12 px-6">
         <div className="max-w-7xl mx-auto">
-          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-6" aria-label="Statistik STTPU">
+          <ul className="grid grid-cols-2 md:grid-cols-4 gap-8" aria-label="Statistik STTPU">
             {stats.map((stat) => (
-              <li key={stat.label} className="text-center">
-                <p className="font-extrabold text-2xl text-[#1E3A5F]">{stat.value}</p>
-                <p className="text-gray-500 text-xs mt-1">{stat.label}</p>
+              <li key={stat.label} className="text-center group">
+                <p className="font-black text-3xl text-brand-navy group-hover:text-brand-gold transition-colors">{stat.value}</p>
+                <p className="text-gray-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">{stat.label}</p>
               </li>
             ))}
           </ul>
         </div>
       </section>
 
-      <section className="px-6 py-12">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-gray-700 text-sm leading-relaxed max-w-3xl mb-10">
-            Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta adalah perguruan tinggi vokasi
-            yang berdedikasi menghasilkan tenaga ahli di bidang teknologi infrastruktur, konstruksi,
-            dan pekerjaan umum. Didirikan sejak 1987, kami telah meluluskan ribuan alumni yang
-            berkontribusi nyata bagi pembangunan Indonesia.
-          </p>
+      <section className="px-6 py-24 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="max-w-4xl mb-20">
+             <h2 className="text-2xl font-black text-brand-navy mb-6 tracking-tight uppercase">Komitmen Kami</h2>
+             <div className="w-12 h-1 bg-brand-gold rounded-full mb-8" />
+             <p className="text-gray-600 text-lg leading-relaxed font-medium">
+              Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta adalah pilar utama pengembangan sumber daya manusia di bidang teknologi infrastruktur. Sejak 1987, kami fokus pada kurikulum yang selaras dengan kebutuhan industri (Link and Match) untuk memastikan setiap lulusan siap menghadapi tantangan pembangunan nasional.
+             </p>
+          </div>
 
-          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" aria-label="Navigasi halaman tentang">
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" aria-label="Navigasi halaman tentang">
             {sections.map((item) => {
               const Icon = item.icon;
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group flex flex-col h-full p-5 bg-white border border-gray-200 rounded-xl hover:border-[#1E3A5F] hover:shadow-md transition-all"
+                    className="group flex flex-col h-full p-10 bg-gray-50 border border-gray-100 rounded-[2.5rem] hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
                   >
                     <div
-                      className="w-10 h-10 bg-[#1E3A5F]/10 group-hover:bg-[#1E3A5F] rounded-lg flex items-center justify-center mb-4 transition-colors"
+                      className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center mb-8 shadow-sm group-hover:bg-brand-gold transition-colors"
                       aria-hidden="true"
                     >
-                      <Icon size={18} className="text-[#1E3A5F] group-hover:text-[#F5A623] transition-colors" />
+                      <Icon size={20} className="text-brand-navy group-hover:text-brand-navy" />
                     </div>
-                    <h2 className="font-bold text-gray-900 text-sm mb-1.5">{item.title}</h2>
-                    <p className="text-gray-500 text-xs leading-relaxed flex-1">{item.desc}</p>
-                    <div className="flex items-center gap-1 text-[#1E3A5F] text-xs font-semibold mt-4 group-hover:gap-2 transition-all">
-                      Selengkapnya
-                      <ArrowRight size={13} aria-hidden="true" />
+                    <h3 className="font-black text-brand-navy text-lg mb-4 group-hover:text-brand-gold transition-colors uppercase tracking-tight">{item.title}</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed flex-1 group-hover:text-white/60 transition-colors font-medium">{item.desc}</p>
+                    <div className="flex items-center gap-2 text-brand-navy text-[10px] font-black uppercase tracking-widest mt-8 group-hover:text-white transition-all">
+                      Eksplorasi
+                      <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" aria-hidden="true" />
                     </div>
                   </Link>
                 </li>

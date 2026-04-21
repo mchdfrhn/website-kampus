@@ -49,17 +49,22 @@ export default async function GaleriPage() {
 
   return (
     <>
-      <div className="bg-white border-b border-gray-200 px-6 py-2.5 text-sm">
-        <div className="max-w-7xl mx-auto text-gray-500">
-          <span>Beranda</span>
-          <span className="mx-2 text-gray-400">›</span>
-          <span className="text-gray-700 font-medium">Galeri</span>
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <Breadcrumbs 
+            customItems={[
+              { label: 'Galeri', href: '/galeri' }
+            ]} 
+          />
         </div>
       </div>
-      <div className="bg-[#1E3A5F] text-white px-6 py-10">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="font-extrabold text-3xl mb-2">Galeri</h1>
-          <p className="text-white/85 text-sm leading-relaxed max-w-xl">
+      <div className="bg-brand-navy text-white px-6 py-12 relative overflow-hidden">
+        {/* Background Accent */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto relative z-10">
+          <h1 className="font-bold text-3xl md:text-4xl mb-4 tracking-tight">Galeri</h1>
+          <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
             Dokumentasi kegiatan, fasilitas, dan momen berharga di kampus STTPU Jakarta.
           </p>
         </div>

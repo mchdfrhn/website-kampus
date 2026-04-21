@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArtikelDetailContent from '@/components/sections/berita/ArtikelDetailContent';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import {
   artikelList as artikelStatic,
@@ -96,23 +97,14 @@ export default async function ArtikelPage({
   const artikelTerkait = await fetchArtikelTerkait(slug, artikel.kategori);
 
   return (
-    <>
-      <div className="bg-white border-b border-gray-200 px-6 py-2.5 text-sm">
-        <div className="max-w-7xl mx-auto">
-          <nav aria-label="Breadcrumb" className="text-gray-500">
-            <Link href="/" className="hover:text-[#1E3A5F] transition-colors">
-              Beranda
-            </Link>
-            <span className="mx-2 text-gray-400">›</span>
-            <Link href="/berita" className="hover:text-[#1E3A5F] transition-colors">
-              Berita
-            </Link>
-            <span className="mx-2 text-gray-400">›</span>
-            <span className="text-gray-700 font-medium line-clamp-1">{artikel.judul}</span>
-          </nav>
-        </div>
+      <><div className="bg-white border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <Breadcrumbs
+          customItems={[
+            { label: 'Berita', href: '/berita' },
+            { label: artikel.judul, href: `/berita/${artikel.slug}` }
+          ]} />
       </div>
-      <ArtikelDetailContent artikel={artikel} artikelTerkait={artikelTerkait} />
-    </>
+    </div><ArtikelDetailContent artikel={artikel} artikelTerkait={artikelTerkait} /></>
   );
 }

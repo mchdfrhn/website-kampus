@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, ChevronDown, Accessibility } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { getPayloadClient } from '@/lib/payload';
 
@@ -94,67 +94,17 @@ export default async function Navbar() {
     console.error('Error fetching navigation or settings:', error);
   }
   return (
-    <header>
-      <div className="hidden md:block bg-[#F0F4F8] border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-9 text-xs text-gray-600">
-            <div className="flex items-center gap-5">
-              <a
-                href={`tel:${settings.teleponUtamaHref}`}
-                className="flex items-center gap-1.5 hover:text-[#1E3A5F] transition-colors"
-                aria-label="Telepon STTPU"
-              >
-                <Phone size={12} className="text-[#1E3A5F]" />
-                <span>{settings.teleponUtama}</span>
-              </a>
-              <a
-                href={`mailto:${settings.emailUtama}`}
-                className="flex items-center gap-1.5 hover:text-[#1E3A5F] transition-colors"
-                aria-label="Email STTPU"
-              >
-                <Mail size={12} className="text-[#1E3A5F]" />
-                <span>{settings.emailUtama}</span>
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center border border-gray-300 rounded overflow-hidden text-[11px]">
-                <button
-                  aria-label="Bahasa Indonesia"
-                  className="px-2.5 py-1 bg-[#1E3A5F] text-white font-semibold"
-                >
-                  ID
-                </button>
-                <button
-                  aria-label="English"
-                  className="px-2.5 py-1 bg-white text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                  EN
-                </button>
-              </div>
-              <button
-                aria-label="Aksesibilitas"
-                className="flex items-center justify-center w-7 h-7 rounded border border-gray-300 bg-white text-gray-600 hover:bg-gray-100 hover:text-[#1E3A5F] transition-colors"
-              >
-                <Accessibility size={14} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <nav
-        className="bg-[#1E3A5F] sticky top-0 z-30 shadow-md"
-        aria-label="Navigasi utama"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center h-16">
+    <header className="h-20">
+      <div className="fixed inset-x-0 top-0 z-50 bg-brand-navy border-b border-white/10 shadow-[0_14px_40px_rgba(0,44,102,0.28)]">
+        <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
+          <div className="flex items-center h-20">
             <Link
               href="/"
-              className="flex items-center gap-3 mr-6 flex-shrink-0"
+              className="flex items-center gap-3 mr-8 flex-shrink-0 group"
               aria-label={`STTPU — Beranda`}
             >
               {settings.logoUrl ? (
-                <div className="relative w-10 h-10">
+                <div className="relative w-11 h-11 shadow-lg shadow-black/20 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-500">
                   <Image
                     src={settings.logoUrl}
                     alt={settings.namaInstitusi}
@@ -164,54 +114,57 @@ export default async function Navbar() {
                 </div>
               ) : (
                 <div
-                  className="w-10 h-10 bg-[#F5A623] rounded flex items-center justify-center font-black text-[#1E3A5F] text-[11px] leading-tight text-center"
+                  className="w-11 h-11 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-[12px] leading-tight text-center shadow-lg shadow-brand-gold/20 group-hover:scale-105 transition-transform duration-500"
                   aria-hidden="true"
                 >
                   STTPU
                 </div>
               )}
               <div className="text-white">
-                <div className="font-bold text-sm leading-tight">STTPU</div>
-                <div className="text-white/70 text-[10px] leading-tight font-normal">
+                <div className="font-bold text-lg leading-tight tracking-tight uppercase">STTPU</div>
+                <div className="text-white/40 text-[10px] leading-tight font-bold uppercase tracking-wider mt-0.5">
                   {settings.namaInstitusi}
                 </div>
               </div>
             </Link>
 
-            <ul className="hidden lg:flex flex-1 items-stretch gap-0" role="list">
+            <ul className="hidden xl:flex items-center gap-1" role="list">
               {navItems.map((item) =>
                 item.children ? (
                   <li key={item.label} className="relative group">
                     <button
-                      className="flex items-center gap-1 px-3.5 py-5 text-white/85 hover:text-white hover:bg-white/10 transition-colors text-sm whitespace-nowrap border-b-[3px] border-transparent group-hover:border-[#F5A623] group-hover:text-white h-full"
+                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold h-full"
                       aria-haspopup="true"
                       aria-expanded="false"
                     >
                       {item.label}
-                      <ChevronDown size={14} className="opacity-70 group-hover:opacity-100 transition-transform group-hover:rotate-180" />
+                      <ChevronDown size={14} className="opacity-40 group-hover:opacity-100 group-hover:text-brand-gold transition-all group-hover:rotate-180" />
                     </button>
-                    <ul
-                      className="absolute top-full left-0 min-w-52 bg-white shadow-lg rounded-b border-t-2 border-[#F5A623] py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 translate-y-1 group-hover:translate-y-0"
-                      role="menu"
-                    >
-                      {item.children.map((child) => (
-                        <li key={child.label} role="none">
-                          <Link
-                            href={child.href}
-                            role="menuitem"
-                            className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-[#1E3A5F] hover:text-white transition-colors"
-                          >
-                            {child.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="absolute top-full left-0 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 translate-y-2 group-hover:translate-y-0">
+                      <ul
+                        className="min-w-64 bg-brand-navy border border-white/10 shadow-[0_20px_50px_rgba(0,22,51,0.28)] rounded-2xl p-2 overflow-hidden"
+                        role="menu"
+                      >
+                        {item.children.map((child) => (
+                          <li key={child.label} role="none">
+                            <Link
+                              href={child.href}
+                              role="menuitem"
+                              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-white/60 hover:text-brand-gold hover:bg-white/5 rounded-xl transition-all duration-300"
+                            >
+                              <div className="w-1.5 h-1.5 rounded-full bg-brand-gold/30 flex-shrink-0" />
+                              {child.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </li>
                 ) : (
                   <li key={item.label}>
                     <Link
                       href={item.href}
-                      className="flex items-center px-3.5 py-5 text-white/85 hover:text-white hover:bg-white/10 transition-colors text-sm whitespace-nowrap border-b-[3px] border-transparent hover:border-[#F5A623] h-full"
+                      className="flex items-center px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold"
                     >
                       {item.label}
                     </Link>
@@ -223,18 +176,18 @@ export default async function Navbar() {
             <div className="hidden lg:block ml-auto flex-shrink-0">
               <Link
                 href="/portal"
-                className="inline-flex items-center px-4 py-2 bg-[#F5A623] text-[#1E3A5F] font-bold text-sm rounded hover:bg-[#E09520] transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F5A623]"
+                className="inline-flex items-center px-6 py-2.5 bg-brand-gold text-brand-navy font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-white hover:text-brand-navy hover:shadow-2xl hover:shadow-brand-gold/20 transition-all duration-500 shadow-xl shadow-brand-gold/10"
               >
                 Portal Mahasiswa
               </Link>
             </div>
 
-            <div className="ml-auto lg:hidden">
+            <div className="ml-auto xl:hidden">
               <MobileMenu navItems={navItems} />
             </div>
           </div>
         </div>
-      </nav>
+      </div>
     </header>
   );
 }

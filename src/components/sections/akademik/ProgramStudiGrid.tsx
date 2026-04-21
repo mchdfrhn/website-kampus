@@ -2,98 +2,98 @@ import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { programStudiList as staticProdiList } from '@/lib/data/program-studi';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
+
+import { cn } from '@/lib/utils';
 
 const akreditasiColor: Record<string, string> = {
-  Unggul: 'bg-green-100 text-green-800 border-green-200',
-  'Baik Sekali': 'bg-blue-100 text-blue-800 border-blue-200',
-  Baik: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-};
-
-const jenjangColor: Record<string, string> = {
-  'D-IV': 'bg-[#1E3A5F]/10 text-[#1E3A5F]',
+  Unggul: 'bg-green-50 text-green-700 border-green-100',
+  'Baik Sekali': 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
+  Baik: 'bg-yellow-50 text-yellow-700 border-yellow-100',
 };
 
 export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStudi[] }) {
   const list = prodiList ?? staticProdiList;
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <p className="text-gray-600 text-sm leading-relaxed max-w-2xl">
-          STTPU Jakarta menawarkan {list.length} program studi jenjang Diploma IV (D-IV)
-          yang dirancang untuk menghasilkan sarjana terapan yang siap berkarir di sektor pekerjaan
-          umum, konstruksi, dan infrastruktur nasional.
+    <section className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
+      <div className="mb-16 text-center lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Program Studi Unggulan</h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          STTPU Jakarta menawarkan kurikulum vokasi berbasis teknologi yang dirancang khusus untuk menghasilkan sarjana terapan yang kompeten di sektor infrastruktur dan pekerjaan umum nasional.
         </p>
       </div>
 
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-6" aria-label="Daftar program studi STTPU">
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10" aria-label="Daftar program studi STTPU">
         {list.map((prodi) => (
           <li key={prodi.slug}>
             <Link
               href={`/akademik/program-studi/${prodi.slug}`}
-              className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl p-6 hover:border-[#1E3A5F] hover:shadow-lg transition-all"
+              className="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
             >
-              <div className="flex items-start justify-between gap-3 mb-4">
-                <div className="flex flex-wrap gap-2">
-                  <span
-                    className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${jenjangColor[prodi.jenjang] ?? 'bg-gray-100 text-gray-700'}`}
-                  >
-                    {prodi.jenjang}
-                  </span>
-                  <span
-                    className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${akreditasiColor[prodi.akreditasi] ?? 'bg-gray-100 text-gray-700 border-gray-200'}`}
-                  >
-                    <ShieldCheck size={11} className="inline mr-1" aria-hidden="true" />
-                    {prodi.akreditasi}
-                  </span>
-                </div>
+              <div className="flex flex-wrap gap-3 mb-8">
+                <span className="bg-brand-navy/5 text-brand-navy text-[10px] font-bold px-3 py-1.5 rounded-lg border border-brand-navy/10 uppercase tracking-wider">
+                  {prodi.jenjang}
+                </span>
+                <span className={cn(
+                  "text-[10px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider flex items-center gap-2",
+                  akreditasiColor[prodi.akreditasi] ?? 'bg-gray-50 text-gray-500 border-gray-100'
+                )}>
+                  <ShieldCheck size={12} aria-hidden="true" />
+                  Akreditasi {prodi.akreditasi}
+                </span>
               </div>
 
-              <h2 className="font-bold text-lg text-gray-900 mb-2 group-hover:text-[#1E3A5F] transition-colors">
+              <h3 className="font-bold text-xl md:text-2xl text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
                 {prodi.nama}
-              </h2>
-              <p className="text-gray-600 text-sm leading-relaxed flex-1 mb-5">
+              </h3>
+              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-10 font-medium">
                 {prodi.deskripsiSingkat}
               </p>
 
-              <div className="grid grid-cols-2 gap-3 mb-5 text-xs">
-                <div className="bg-[#F0F4F8] rounded-lg p-3">
-                  <p className="text-gray-500 mb-0.5">Masa Studi</p>
-                  <p className="font-semibold text-gray-900">{prodi.masaStudi}</p>
+              <div className="grid grid-cols-2 gap-4 mb-10">
+                <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                  <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
+                  <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
                 </div>
-                <div className="bg-[#F0F4F8] rounded-lg p-3">
-                  <p className="text-gray-500 mb-0.5">Total SKS</p>
-                  <p className="font-semibold text-gray-900">{prodi.jumlahSKS} SKS</p>
+                <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
+                  <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Beban SKS</p>
+                  <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.jumlahSKS} SKS</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1.5 text-[#1E3A5F] text-sm font-semibold group-hover:gap-3 transition-all">
-                Lihat Detail Program
-                <ArrowRight size={15} aria-hidden="true" />
+              <div className="flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-wider group-hover:gap-4 transition-all">
+                Detail Kurikulum & Prospek
+                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </div>
             </Link>
           </li>
         ))}
       </ul>
 
-      <div className="mt-10 bg-[#F0F4F8] rounded-xl p-6 border border-gray-200">
-        <h2 className="font-bold text-[#1E3A5F] text-base mb-2">Butuh Informasi Lebih Lanjut?</h2>
-        <p className="text-gray-600 text-sm mb-4">
-          Hubungi Bagian Akademik STTPU untuk konsultasi pemilihan program studi yang sesuai dengan
-          minat dan bakat Anda.
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/kontak"
-            className="inline-flex items-center gap-1.5 bg-[#1E3A5F] text-white text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#162d4a] transition-colors"
-          >
-            Hubungi Kami
-          </Link>
-          <Link
-            href="/akademik/beasiswa"
-            className="inline-flex items-center gap-1.5 border border-[#1E3A5F] text-[#1E3A5F] text-sm font-semibold px-4 py-2 rounded-lg hover:bg-[#1E3A5F]/5 transition-colors"
-          >
-            Lihat Beasiswa
-          </Link>
+      <div className="mt-20 bg-brand-navy rounded-3xl p-10 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
+        <BlueAbstractBackground />
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="max-w-2xl text-center lg:text-left">
+            <h3 className="font-bold text-2xl md:text-3xl mb-4 tracking-tight">Konsultasi Akademik</h3>
+            <p className="text-white/60 text-base md:text-lg font-medium leading-relaxed">
+              Tim akademik kami siap membantu Anda memilih program studi yang paling sesuai dengan visi karir Anda.
+            </p>
+          </div>
+          <div className="flex flex-wrap justify-center lg:justify-end gap-4">
+            <Link
+              href="/kontak"
+              className="bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
+            >
+              Hubungi Kami
+            </Link>
+            <Link
+              href="/akademik/beasiswa"
+              className="border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
+            >
+              Info Beasiswa
+            </Link>
+          </div>
         </div>
       </div>
     </section>

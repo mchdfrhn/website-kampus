@@ -2,6 +2,9 @@ import type { Metadata } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import RouteProgressProvider from '@/components/providers/RouteProgressProvider';
+import ScrollProvider from '@/components/providers/ScrollProvider';
+import PageTransition from '@/components/ui/motion/PageTransition';
 import '../globals.css';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -28,13 +31,17 @@ export default function FrontendLayout({
   return (
     <html lang="id">
       <body className={`${plusJakartaSans.variable} antialiased font-sans`}>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-1" id="main-content" tabIndex={-1}>
-            {children}
-          </main>
-          <Footer />
-        </div>
+        <RouteProgressProvider>
+          <ScrollProvider>
+            <div className="flex flex-col min-h-screen">
+              <Navbar />
+              <main className="flex-1" id="main-content" tabIndex={-1}>
+                <PageTransition>{children}</PageTransition>
+              </main>
+              <Footer />
+            </div>
+          </ScrollProvider>
+        </RouteProgressProvider>
       </body>
     </html>
   );

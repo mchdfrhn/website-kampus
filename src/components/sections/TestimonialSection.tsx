@@ -1,4 +1,6 @@
 import { getPayloadClient } from '@/lib/payload';
+import { Reveal } from '@/components/ui/motion/Reveal';
+import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 
 type TestimonialItem = { teks: string; nama: string; prodi: string }
 
@@ -37,25 +39,37 @@ export default async function TestimonialSection() {
   }
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-[#1E3A5F] font-extrabold text-3xl">Kata Alumni</h2>
-          <div className="w-12 h-1 bg-[#F5A623] rounded mx-auto mt-3" />
-          <p className="text-gray-500 mt-4 text-base">
-            Pengalaman nyata dari alumni yang telah membuktikan kualitas STTPU.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Reveal width="100%">
+          <div className="text-center mb-20">
+            <h2 className="text-brand-navy font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight leading-[1.2]">Inspirasi Alumni</h2>
+            <div className="w-16 h-1 bg-brand-gold rounded-full mx-auto mt-6" />
+            <p className="text-gray-500 mt-8 text-lg font-medium max-w-3xl mx-auto leading-relaxed">
+              Kisah nyata dari para sarjana terapan kami yang kini telah menjadi pilar utama dalam pembangunan infrastruktur strategis di seluruh penjuru Indonesia.
+            </p>
+          </div>
+        </Reveal>
+        
+        <MotionWrapper 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
+          staggerChildren={0.15}
+        >
           {items.map((item) => (
-            <div key={item.nama} className="border border-gray-200 rounded-lg p-6 relative">
-              <span className="text-6xl text-gray-200 absolute top-2 left-4 leading-none font-serif select-none">
-                &ldquo;
-              </span>
-              <p className="pt-8 text-sm text-gray-700 leading-relaxed italic mb-5">{item.teks}</p>
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-full bg-gray-200 flex-shrink-0 flex items-center justify-center">
-                  <span className="text-gray-400 text-xs font-bold">
+            <div key={item.nama} 
+              className="group bg-gray-50 border border-gray-100 rounded-3xl p-12 relative hover:bg-brand-navy transition-all duration-700 hover:shadow-premium-hover hover:-translate-y-3 active:scale-[0.98] flex flex-col h-full"
+            >
+              <div className="text-7xl text-brand-gold absolute top-8 right-12 opacity-20 group-hover:opacity-10 transition-opacity font-serif italic">&rdquo;</div>
+              
+              <div className="flex-1 relative z-10">
+                <p className="text-lg text-gray-500 leading-relaxed font-medium italic mb-16 group-hover:text-white/70 transition-colors duration-500">
+                  &ldquo;{item.teks}&rdquo;
+                </p>
+              </div>
+
+              <div className="flex items-center gap-6 mt-auto relative z-10">
+                <div className="w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center shadow-2xl shadow-brand-gold/20 group-hover:bg-white group-hover:scale-110 transition-all duration-700">
+                  <span className="text-brand-navy text-[10px] font-black uppercase tracking-wider">
                     {item.nama
                       .split(' ')
                       .map((n) => n[0])
@@ -64,13 +78,17 @@ export default async function TestimonialSection() {
                   </span>
                 </div>
                 <div>
-                  <p className="font-bold text-[#1E3A5F] text-sm">{item.nama}</p>
-                  <p className="text-gray-500 text-xs">{item.prodi}</p>
+                  <p className="font-bold text-brand-navy text-lg group-hover:text-brand-gold transition-colors duration-500 tracking-tight">
+                    {item.nama}
+                  </p>
+                  <p className="text-gray-400 text-[9px] font-bold uppercase tracking-widest group-hover:text-white/30 transition-colors duration-500 mt-1.5">
+                    {item.prodi}
+                  </p>
                 </div>
               </div>
             </div>
           ))}
-        </div>
+        </MotionWrapper>
       </div>
     </section>
   );

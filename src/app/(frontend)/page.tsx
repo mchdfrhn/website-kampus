@@ -6,6 +6,7 @@ import BeritaTerakhirSection from '@/components/sections/BeritaTerakhirSection';
 import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
+import ScrollReveal from '@/components/ui/ScrollReveal';
 import { getPayloadClient } from '@/lib/payload';
 import { artikelList as artikelStatic, mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
 
@@ -23,7 +24,8 @@ type Tab = { id: string; label: string; links: TabLink[] }
 async function fetchHomePageData() {
   try {
     const payload = await getPayloadClient()
-    const [halamanUtama, siteSettings, berita] = await Promise.all([
+    
+    const [halamanUtamaRes, siteSettingsRes, beritaRes] = await Promise.allSettled([
       payload.findGlobal({ slug: 'halaman-utama', depth: 1 }),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }),
       payload.find({
@@ -35,13 +37,17 @@ async function fetchHomePageData() {
       })
     ])
 
+    const halamanUtama = halamanUtamaRes.status === 'fulfilled' ? halamanUtamaRes.value : null
+    const siteSettings = siteSettingsRes.status === 'fulfilled' ? siteSettingsRes.value : null
+    const beritaDocs = beritaRes.status === 'fulfilled' ? beritaRes.value.docs : []
+
     return {
       halamanUtama,
       siteSettings,
-      berita: berita.docs.map(mapPayloadToArtikel)
+      berita: beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
     }
   } catch (error) {
-    console.error('Error fetching home page data:', error)
+    console.error('Error in fetchHomePageData:', error)
     return {
       halamanUtama: null,
       siteSettings: null,
@@ -60,12 +66,19 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection data={halamanUtama as Parameters<typeof HeroSection>[0]['data']} />
+      
       <StatsBar items={stats as { angka: string; label: string }[]} />
+
       <ProgramStudiSection />
+
       <PersonaQuickLinks tabs={quickLinksTabs} />
+
       <BeritaTerakhirSection artikelList={berita} />
+
       <AkreditasiSection />
+
       <TestimonialSection />
+
       <WhatsAppFloat waNumber={waNumber as string | undefined} />
     </>
   );

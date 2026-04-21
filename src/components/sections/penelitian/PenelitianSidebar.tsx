@@ -12,23 +12,28 @@ const links = [
 export default function PenelitianSidebar() {
   const pathname = usePathname();
   return (
-    <aside className="w-full lg:w-64 flex-shrink-0">
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="bg-[#1E3A5F] px-4 py-3">
-          <p className="text-white font-bold text-sm uppercase tracking-wide">Penelitian</p>
+    <aside className="w-full lg:w-72 flex-shrink-0">
+      <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-premium transition-all">
+        <div className="bg-brand-navy px-6 py-5">
+          <p className="text-white font-black text-xs tracking-[0.08em]">Navigasi Penelitian</p>
         </div>
         <nav aria-label="Navigasi Penelitian">
           <ul role="list">
             {links.map((link) => {
               const active = pathname === link.href;
               return (
-                <li key={link.href} className="border-b border-gray-100 last:border-0">
+                <li key={link.href} className="border-b border-gray-50 last:border-0">
                   <Link
                     href={link.href}
                     aria-current={active ? 'page' : undefined}
-                    className={`flex items-center gap-2.5 px-4 py-3 text-sm transition-colors border-l-4 ${active ? 'bg-[#F0F4F8] text-[#1E3A5F] font-semibold border-[#F5A623]' : 'text-gray-700 hover:bg-gray-50 hover:text-[#1E3A5F] border-transparent'}`}
+                    className={`flex items-center justify-between px-6 py-4 text-sm leading-snug transition-all duration-300 border-l-4 ${
+                      active
+                        ? 'bg-brand-navy/[0.02] text-brand-navy font-black border-brand-gold'
+                        : 'text-gray-400 font-bold hover:bg-gray-50 hover:text-brand-navy border-transparent'
+                    }`}
                   >
                     {link.label}
+                    {active && <div className="w-1.5 h-1.5 bg-brand-gold rounded-full" />}
                   </Link>
                 </li>
               );

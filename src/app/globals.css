@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand-navy: #002c66;
+  --color-brand-navy-dark: #001633;
+  --color-brand-navy-light: #004299;
+  --color-brand-ink: #06213f;
+  --color-brand-ink-soft: #0d2747;
+  --color-brand-gold: #fcb603;
+  --color-brand-gold-dark: #ca9102;
+  --color-brand-gold-light: #fdd368;
+  --color-brand-indigo: #220066;
+  --shadow-premium: 0 10px 30px -5px rgba(0, 22, 51, 0.1), 0 10px 10px -5px rgba(0, 22, 51, 0.04);
+  --shadow-premium-hover: 0 20px 40px -10px rgba(0, 22, 51, 0.15), 0 15px 15px -8px rgba(0, 22, 51, 0.08);
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -31,6 +45,15 @@
     --ring: 214 100% 25%;
 
     --radius: 0.5rem;
+  }
+
+  @keyframes pulse-slow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.1); }
+  }
+
+  .animate-pulse-slow {
+    animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
   * {
