@@ -54,8 +54,55 @@
     50% { opacity: 0.5; transform: scale(1.1); }
   }
 
+  @keyframes drift {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+    50% { transform: translate3d(0, -12px, 0) rotate(3deg); }
+  }
+
+  @keyframes orbit {
+    0% { transform: rotate(0deg) translateX(0) rotate(0deg); }
+    50% { transform: rotate(4deg) translateX(8px) rotate(-2deg); }
+    100% { transform: rotate(0deg) translateX(0) rotate(0deg); }
+  }
+
+  @keyframes beacon {
+    0%, 100% { opacity: 0.28; transform: scale(0.92); }
+    50% { opacity: 0.58; transform: scale(1.08); }
+  }
+
+  @keyframes float-soft {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -10px, 0); }
+  }
+
+  @keyframes route-flow {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: -48; }
+  }
+
   .animate-pulse-slow {
     animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-drift {
+    animation: drift 7s ease-in-out infinite;
+  }
+
+  .animate-orbit {
+    animation: orbit 9s ease-in-out infinite;
+    transform-origin: center;
+  }
+
+  .animate-beacon {
+    animation: beacon 3.8s ease-in-out infinite;
+  }
+
+  .animate-float-soft {
+    animation: float-soft 6s ease-in-out infinite;
+  }
+
+  .animate-route-flow {
+    animation: route-flow 4s linear infinite;
   }
 
   * {
