@@ -124,27 +124,38 @@ export default function HeroSection({ data }: { data?: HeroData }) {
           </StaggerItem>
         </StaggerContainer>
         
-        <motion.div 
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="flex-1 w-full max-w-lg xl:max-w-xl lg:ml-auto lg:self-stretch"
+	        <motion.div 
+	          initial={{ opacity: 0, x: 40 }}
+	          animate={{ opacity: 1, x: 0 }}
+	          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
+	          className="flex-1 w-full max-w-lg xl:max-w-xl lg:ml-auto lg:self-stretch"
         >
           <div className="relative aspect-[5/6] lg:aspect-auto h-full min-h-[360px] lg:min-h-[460px] lg:max-h-[520px] group">
             {/* Artistic Frame - Precise Lines */}
             <div className="absolute -inset-4 border border-brand-gold/10 rounded-2xl -rotate-2 group-hover:rotate-0 transition-all duration-700 ease-in-out" />
             <div className="absolute -inset-4 border border-white/5 rounded-2xl rotate-1 group-hover:rotate-0 transition-all duration-700 ease-in-out" />
             
-            <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.3)] border border-white/10 bg-brand-navy/50 backdrop-blur-2xl">
-              {fotoUrl ? (
-                <Image 
-                  src={fotoUrl} 
-                  alt="Kampus STTPU" 
-                  fill 
-                  className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-in-out"
-                  priority 
-                />
-              ) : (
+	            <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.3)] border border-white/10 bg-brand-navy/50 backdrop-blur-2xl">
+	              {fotoUrl ? (
+                  <motion.div
+                    initial={{ scale: 1.08, y: 18, rotate: -1.5 }}
+                    animate={{ scale: 1, y: [0, -10, 0], rotate: [0, -1, 0] }}
+                    transition={{
+                      scale: { duration: 1.4, delay: 0.55, ease: [0.16, 1, 0.3, 1] },
+                      y: { duration: 7.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
+                      rotate: { duration: 8.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
+                    }}
+                    className="absolute inset-0"
+                  >
+                    <Image 
+                      src={fotoUrl} 
+                      alt="Kampus STTPU" 
+                      fill 
+                      className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-in-out"
+                      priority 
+                    />
+                  </motion.div>
+	              ) : (
                 <div className="h-full w-full flex flex-col items-center justify-center p-12 text-center">
                   <div className="w-24 h-24 mb-6 rounded-full bg-white/[0.03] flex items-center justify-center border border-white/10">
                     <svg className="w-10 h-10 text-white/10" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ChevronDown } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import HomeNavLink from './HomeNavLink';
+import NavDesktopItems from './NavDesktopItems';
 import { getPayloadClient } from '@/lib/payload';
 
 type NavItem = {
@@ -129,61 +129,7 @@ export default async function Navbar() {
               </div>
             </HomeNavLink>
 
-            <ul className="hidden xl:flex items-center gap-1" role="list">
-              {navItems.map((item) => {
-                const hasChildren = Array.isArray(item.children) && item.children.length > 0;
-
-                return hasChildren ? (
-                  <li key={item.label} className="relative group">
-                    <button
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold h-full"
-                      aria-haspopup="true"
-                      aria-expanded="false"
-                    >
-                      {item.label}
-                      <ChevronDown size={14} className="opacity-40 group-hover:opacity-100 group-hover:text-brand-gold transition-all group-hover:rotate-180" />
-                    </button>
-                    <div className="absolute top-full left-0 pt-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 translate-y-2 group-hover:translate-y-0">
-                      <ul
-                        className="min-w-64 bg-brand-navy border border-white/10 shadow-[0_20px_50px_rgba(0,22,51,0.28)] rounded-2xl p-2 overflow-hidden"
-                        role="menu"
-                      >
-                        {item.children!.map((child) => (
-                          <li key={child.label} role="none">
-                            <Link
-                              href={child.href}
-                              role="menuitem"
-                              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-white/60 hover:text-brand-gold hover:bg-white/5 rounded-xl transition-all duration-300"
-                            >
-                              <div className="w-1.5 h-1.5 rounded-full bg-brand-gold/30 flex-shrink-0" />
-                              {child.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                ) : (
-                  <li key={item.label}>
-                    {item.href === '/' ? (
-                      <HomeNavLink
-                        href={item.href}
-                        className="flex items-center px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold"
-                      >
-                        {item.label}
-                      </HomeNavLink>
-                    ) : (
-                      <Link
-                        href={item.href}
-                        className="flex items-center px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold"
-                      >
-                        {item.label}
-                      </Link>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
+            <NavDesktopItems navItems={navItems} />
 
             <div className="hidden lg:block ml-auto flex-shrink-0">
               <Link

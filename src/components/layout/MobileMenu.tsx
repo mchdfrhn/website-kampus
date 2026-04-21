@@ -5,10 +5,23 @@ import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import HomeNavLink from './HomeNavLink';
+import { usePathname } from 'next/navigation';
 
 export default function MobileMenu({ navItems }: { navItems: { label: string; href: string; children?: { label: string; href: string; id?: string | null }[] | null; id?: string | null }[] }) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  const matchesPath = (href: string) => {
+    if (!href || href === '#') return false;
+    if (href === '/') return pathname === '/';
+    return pathname === href || pathname.startsWith(`${href}/`);
+  };
+
+  const isItemActive = (item: { href: string; children?: { href: string }[] | null }) => {
+    if (matchesPath(item.href)) return true;
+    return Array.isArray(item.children) ? item.children.some((child) => matchesPath(child.href)) : false;
+  };
 
   const toggleMenu = () => {
     setIsOpen((prev) => !prev);
@@ -69,6 +82,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
         <nav className="flex-1 overflow-y-auto py-6 px-3" aria-label="Menu mobile">
           {navItems.map((item) => {
             const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+            const active = isItemActive(item);
 
             return (
               <div key={item.label} className="mb-2">
@@ -79,7 +93,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
                       aria-expanded={openSubmenu === item.label}
                       className={cn(
                         "w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight",
-                        openSubmenu === item.label
+                        openSubmenu === item.label || active
                           ? "bg-white/10 text-brand-gold shadow-lg"
                           : "text-white/80 hover:text-white hover:bg-white/5"
                       )}
@@ -89,7 +103,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
                         "transition-transform duration-300",
                         openSubmenu === item.label ? "rotate-180" : ""
                       )}>
-                        <ChevronDown size={18} className={openSubmenu === item.label ? "text-brand-gold" : "text-white/30"} />
+                        <ChevronDown size={18} className={openSubmenu === item.label || active ? "text-brand-gold" : "text-white/30"} />
                       </div>
                     </button>
                     <div className={cn(
@@ -102,9 +116,14 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
                             key={child.label}
                             href={child.href}
                             onClick={toggleMenu}
-                            className="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-brand-gold hover:bg-white/5 rounded-xl transition-all duration-300 text-xs font-medium"
+                            aria-current={matchesPath(child.href) ? 'page' : undefined}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-xs font-medium ${
+                              matchesPath(child.href)
+                                ? 'bg-white/10 text-brand-gold'
+                                : 'text-white/70 hover:text-brand-gold hover:bg-white/5'
+                            }`}
                           >
-                            <div className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 flex-shrink-0" />
+                            <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${matchesPath(child.href) ? 'bg-brand-gold' : 'bg-brand-gold/40'}`} />
                             {child.label}
                           </Link>
                         ))}
@@ -116,7 +135,11 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
                     <HomeNavLink
                       href={item.href}
                       onClick={toggleMenu}
-                      className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
+                      className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight ${
+                        active
+                          ? 'bg-white/10 text-brand-gold shadow-lg'
+                          : 'text-white/80 hover:text-white hover:bg-white/5'
+                      }`}
                     >
                       {item.label}
                     </HomeNavLink>
@@ -124,7 +147,12 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
                     <Link
                       href={item.href}
                       onClick={toggleMenu}
-                      className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
+                      aria-current={active ? 'page' : undefined}
+                      className={`flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight ${
+                        active
+                          ? 'bg-white/10 text-brand-gold shadow-lg'
+                          : 'text-white/80 hover:text-white hover:bg-white/5'
+                      }`}
                     >
                       {item.label}
                     </Link>
