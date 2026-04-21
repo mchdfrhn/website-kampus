@@ -2,72 +2,20 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import TentangSidebar from '@/components/sections/tentang/TentangSidebar';
-import SejarahContent from '@/components/sections/tentang/SejarahContent';
-import VisiMisiContent from '@/components/sections/tentang/VisiMisiContent';
-import PimpinanContent from '@/components/sections/tentang/PimpinanContent';
-import AkreditasiContent from '@/components/sections/tentang/AkreditasiContent';
-import StrukturOrganisasiContent from '@/components/sections/tentang/StrukturOrganisasiContent';
-import FasilitasContent from '@/components/sections/tentang/FasilitasContent';
 import { getPayloadClient } from '@/lib/payload';
-
-type SectionConfig = {
-  title: string;
-  subtitle: string;
-  breadcrumb: string;
-  component: React.ComponentType;
-};
-
-const sections: Record<string, SectionConfig> = {
-  sejarah: {
-    title: 'Sejarah & Profil STTPU',
-    subtitle: 'Lebih dari tiga dekade melahirkan tenaga ahli teknologi pekerjaan umum yang berkontribusi bagi pembangunan Indonesia.',
-    breadcrumb: 'Sejarah & Profil',
-    component: SejarahContent,
-  },
-  'visi-misi': {
-    title: 'Visi, Misi & Nilai',
-    subtitle: 'Arah strategis dan nilai-nilai yang memandu setiap langkah STTPU dalam mencetak generasi insinyur unggul.',
-    breadcrumb: 'Visi, Misi & Nilai',
-    component: VisiMisiContent,
-  },
-  pimpinan: {
-    title: 'Profil Pimpinan',
-    subtitle: 'Kenali jajaran pimpinan yang mengelola STTPU dengan komitmen pada keunggulan pendidikan teknologi.',
-    breadcrumb: 'Profil Pimpinan',
-    component: PimpinanContent,
-  },
-  akreditasi: {
-    title: 'Akreditasi & Legalitas',
-    subtitle: 'Status akreditasi resmi BAN-PT dan dokumen legalitas institusi yang dapat diverifikasi secara publik.',
-    breadcrumb: 'Akreditasi & Legalitas',
-    component: AkreditasiContent,
-  },
-  'struktur-organisasi': {
-    title: 'Struktur Organisasi',
-    subtitle: 'Peta kepemimpinan dan unit-unit fungsional yang mendukung operasional akademik dan administratif STTPU.',
-    breadcrumb: 'Struktur Organisasi',
-    component: StrukturOrganisasiContent,
-  },
-  fasilitas: {
-    title: 'Fasilitas Kampus',
-    subtitle: 'Infrastruktur dan sarana pendukung pembelajaran yang terus dikembangkan untuk pengalaman akademik terbaik.',
-    breadcrumb: 'Fasilitas Kampus',
-    component: FasilitasContent,
-  },
-};
-
-type SectionMeta = { slug: string; title: string; subtitle?: string; breadcrumb?: string }
+import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 
 export async function generateStaticParams() {
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'tentang-kami' });
-    const subpages = (global as { subpages?: SectionMeta[] }).subpages || [];
-    if (subpages.length > 0) return subpages.map((item) => ({ slug: item.slug }));
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    const resolved = resolveTentangSections(subpages);
+    if (resolved.length > 0) return resolved.map((item) => ({ slug: item.slug }));
   } catch {
     // fallback below
   }
-  return Object.keys(sections).map((slug) => ({ slug }));
+  return resolveTentangSections().map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({
@@ -76,24 +24,17 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  let section = sections[slug];
-  if (!section) return {};
+  let resolvedSections = resolveTentangSections();
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'tentang-kami' });
-    const subpages = (global as { subpages?: SectionMeta[] }).subpages || [];
-    const fromPayload = subpages.find((item) => item.slug === slug);
-    if (fromPayload) {
-      section = {
-        ...section,
-        title: fromPayload.title,
-        subtitle: fromPayload.subtitle || section.subtitle,
-        breadcrumb: fromPayload.breadcrumb || section.breadcrumb,
-      };
-    }
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    resolvedSections = resolveTentangSections(subpages);
   } catch {
     // keep route defaults
   }
+  const section = resolvedSections.find((item) => item.slug === slug);
+  if (!section) return {};
   return {
     title: `${section.title} | STTPU Jakarta`,
     description: section.subtitle,
@@ -106,31 +47,22 @@ export default async function TentangSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  let section = sections[slug];
-  if (!section) notFound();
+  let resolvedSections = resolveTentangSections();
 
   let sidebarTitle = 'Navigasi Institusi'
-  let sidebarLinks = Object.keys(sections).map((key) => ({
-    label: sections[key].breadcrumb,
-    href: `/tentang/${key}`,
+  let sidebarLinks = resolvedSections.map((section) => ({
+    label: section.breadcrumb,
+    href: `/tentang/${section.slug}`,
   }))
 
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'tentang-kami' });
-    const data = global as { subpages?: SectionMeta[]; sidebarTitle?: string };
-    const fromPayload = (data.subpages || []).find((item) => item.slug === slug);
-    if (fromPayload) {
-      section = {
-        ...section,
-        title: fromPayload.title,
-        subtitle: fromPayload.subtitle || section.subtitle,
-        breadcrumb: fromPayload.breadcrumb || section.breadcrumb,
-      };
-    }
+    const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string };
+    resolvedSections = resolveTentangSections(data.subpages || []);
     sidebarTitle = data.sidebarTitle || sidebarTitle
-    if (data.subpages && data.subpages.length > 0) {
-      sidebarLinks = data.subpages.map((item) => ({
+    if (resolvedSections.length > 0) {
+      sidebarLinks = resolvedSections.map((item) => ({
         label: item.breadcrumb || item.title,
         href: `/tentang/${item.slug}`,
       }))
@@ -138,6 +70,9 @@ export default async function TentangSlugPage({
   } catch {
     // keep defaults
   }
+
+  const section = resolvedSections.find((item) => item.slug === slug);
+  if (!section) notFound();
 
   const { title, subtitle, component: SectionContent } = section;
 

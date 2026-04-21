@@ -2,95 +2,57 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import PenelitianPageHeader from '@/components/sections/penelitian/PenelitianPageHeader';
 import PenelitianSidebar from '@/components/sections/penelitian/PenelitianSidebar';
-import UnitPenelitianContent from '@/components/sections/penelitian/UnitPenelitianContent';
-import PublikasiContent from '@/components/sections/penelitian/PublikasiContent';
-import HibahContent from '@/components/sections/penelitian/HibahContent';
 import { getPayloadClient } from '@/lib/payload';
+import { resolvePenelitianSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 
-type SectionConfig = {
-  title: string;
-  subtitle: string;
-  breadcrumb: string;
-  component: React.ComponentType;
-};
+export async function generateStaticParams() {
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'penelitian-page' as never });
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    const resolved = resolvePenelitianSections(subpages);
+    if (resolved.length > 0) return resolved.map((item) => ({ slug: item.slug }));
+  } catch {
+    // fallback below
+  }
 
-type SectionMeta = { slug: string; title: string; subtitle?: string; breadcrumb?: string }
-
-const sections: Record<string, SectionConfig> = {
-  unit: {
-    title: 'Unit Penelitian & Laboratorium',
-    subtitle: '5 unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.',
-    breadcrumb: 'Unit Penelitian & Lab',
-    component: UnitPenelitianContent,
-  },
-  publikasi: {
-    title: 'Database Publikasi',
-    subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU — jurnal, prosiding, dan buku.',
-    breadcrumb: 'Database Publikasi',
-    component: PublikasiContent,
-  },
-  hibah: {
-    title: 'Hibah & Pendanaan Penelitian',
-    subtitle: 'Skema hibah dari Kemendikti, Kementerian PUPR, mitra industri, dan pendanaan internal LP3M STTPU.',
-    breadcrumb: 'Hibah & Pendanaan',
-    component: HibahContent,
-  },
-};
-
-export function generateStaticParams() {
-  return Object.keys(sections).map((slug) => ({ slug }));
+  return resolvePenelitianSections().map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  let s = sections[slug];
-  if (!s) return {};
+  let resolvedSections = resolvePenelitianSections();
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'penelitian-page' as never });
-    const subpages = (global as { subpages?: SectionMeta[] }).subpages || [];
-    const fromPayload = subpages.find((item) => item.slug === slug);
-    if (fromPayload) {
-      s = {
-        ...s,
-        title: fromPayload.title,
-        subtitle: fromPayload.subtitle || s.subtitle,
-        breadcrumb: fromPayload.breadcrumb || s.breadcrumb,
-      };
-    }
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    resolvedSections = resolvePenelitianSections(subpages);
   } catch {
     // keep defaults
   }
+  const s = resolvedSections.find((item) => item.slug === slug);
+  if (!s) return {};
   return { title: `${s.title} | STTPU Jakarta`, description: s.subtitle };
 }
 
 export default async function PenelitianSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  let s = sections[slug];
-  if (!s) notFound();
+  let resolvedSections = resolvePenelitianSections();
 
   let sidebarTitle = 'Navigasi Penelitian'
-  let sidebarLinks = Object.keys(sections).map((key) => ({
-    label: sections[key].breadcrumb,
-    href: `/penelitian/${key}`,
+  let sidebarLinks = resolvedSections.map((section) => ({
+    label: section.breadcrumb,
+    href: `/penelitian/${section.slug}`,
   }))
 
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'penelitian-page' as never });
-    const data = global as { subpages?: SectionMeta[]; sidebarTitle?: string };
-    const fromPayload = (data.subpages || []).find((item) => item.slug === slug);
-    if (fromPayload) {
-      s = {
-        ...s,
-        title: fromPayload.title,
-        subtitle: fromPayload.subtitle || s.subtitle,
-        breadcrumb: fromPayload.breadcrumb || s.breadcrumb,
-      };
-    }
+    const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string };
+    resolvedSections = resolvePenelitianSections(data.subpages || []);
     sidebarTitle = data.sidebarTitle || sidebarTitle
-    if (data.subpages && data.subpages.length > 0) {
-      sidebarLinks = data.subpages.map((item) => ({
+    if (resolvedSections.length > 0) {
+      sidebarLinks = resolvedSections.map((item) => ({
         label: item.breadcrumb || item.title,
         href: `/penelitian/${item.slug}`,
       }))
@@ -98,6 +60,9 @@ export default async function PenelitianSlugPage({ params }: { params: Promise<{
   } catch {
     // keep defaults
   }
+
+  const s = resolvedSections.find((item) => item.slug === slug);
+  if (!s) notFound();
 
   const { title, subtitle, breadcrumb, component: Content } = s;
 

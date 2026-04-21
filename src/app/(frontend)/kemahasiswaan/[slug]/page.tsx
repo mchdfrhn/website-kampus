@@ -2,109 +2,57 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import KemahasiswaanPageHeader from '@/components/sections/kemahasiswaan/KemahasiswaanPageHeader';
 import KemahasiswaanSidebar from '@/components/sections/kemahasiswaan/KemahasiswaanSidebar';
-import OrganisasiContent from '@/components/sections/kemahasiswaan/OrganisasiContent';
-import UKMContent from '@/components/sections/kemahasiswaan/UKMContent';
-import PrestasiContent from '@/components/sections/kemahasiswaan/PrestasiContent';
-import LayananContent from '@/components/sections/kemahasiswaan/LayananContent';
-import MahasiswaBaruContent from '@/components/sections/kemahasiswaan/MahasiswaBaruContent';
 import { getPayloadClient } from '@/lib/payload';
+import { resolveKemahasiswaanSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 
-type SectionConfig = {
-  title: string;
-  subtitle: string;
-  breadcrumb: string;
-  component: React.ComponentType;
-};
+export async function generateStaticParams() {
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'kemahasiswaan-page' as never });
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    const resolved = resolveKemahasiswaanSections(subpages);
+    if (resolved.length > 0) return resolved.map((item) => ({ slug: item.slug }));
+  } catch {
+    // fallback below
+  }
 
-const sections: Record<string, SectionConfig> = {
-  organisasi: {
-    title: 'Organisasi Mahasiswa',
-    subtitle: 'BEM, Senat, dan himpunan profesi yang mewakili dan mengembangkan mahasiswa STTPU.',
-    breadcrumb: 'Organisasi Mahasiswa',
-    component: OrganisasiContent,
-  },
-  ukm: {
-    title: 'Unit Kegiatan Mahasiswa',
-    subtitle: '12 UKM aktif yang memfasilitasi minat dan bakat mahasiswa STTPU di berbagai bidang.',
-    breadcrumb: 'Unit Kegiatan Mahasiswa',
-    component: UKMContent,
-  },
-  prestasi: {
-    title: 'Prestasi Mahasiswa',
-    subtitle: 'Rekam jejak pencapaian membanggakan mahasiswa STTPU di berbagai kompetisi dan ajang nasional-internasional.',
-    breadcrumb: 'Prestasi Mahasiswa',
-    component: PrestasiContent,
-  },
-  layanan: {
-    title: 'Layanan Mahasiswa',
-    subtitle: 'Berbagai layanan pendukung yang tersedia untuk memastikan kelancaran studi dan kesejahteraan mahasiswa STTPU.',
-    breadcrumb: 'Layanan Mahasiswa',
-    component: LayananContent,
-  },
-  'mahasiswa-baru': {
-    title: 'Panduan Mahasiswa Baru',
-    subtitle: 'Semua yang perlu Anda ketahui dan lakukan di awal masa studi di STTPU Jakarta.',
-    breadcrumb: 'Panduan Mahasiswa Baru',
-    component: MahasiswaBaruContent,
-  },
-};
-
-type SectionMeta = { slug: string; title: string; subtitle?: string; breadcrumb?: string }
-
-export function generateStaticParams() {
-  return Object.keys(sections).map((slug) => ({ slug }));
+  return resolveKemahasiswaanSections().map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  let s = sections[slug];
-  if (!s) return {};
+  let resolvedSections = resolveKemahasiswaanSections();
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'kemahasiswaan-page' as never });
-    const subpages = (global as { subpages?: SectionMeta[] }).subpages || [];
-    const fromPayload = subpages.find((item) => item.slug === slug);
-    if (fromPayload) {
-      s = {
-        ...s,
-        title: fromPayload.title,
-        subtitle: fromPayload.subtitle || s.subtitle,
-        breadcrumb: fromPayload.breadcrumb || s.breadcrumb,
-      };
-    }
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    resolvedSections = resolveKemahasiswaanSections(subpages);
   } catch {
     // keep defaults
   }
+  const s = resolvedSections.find((item) => item.slug === slug);
+  if (!s) return {};
   return { title: `${s.title} | STTPU Jakarta`, description: s.subtitle };
 }
 
 export default async function KemahasiswaanSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  let s = sections[slug];
-  if (!s) notFound();
+  let resolvedSections = resolveKemahasiswaanSections();
 
   let sidebarTitle = 'Navigasi Kemahasiswaan'
-  let sidebarLinks = Object.keys(sections).map((key) => ({
-    label: sections[key].breadcrumb,
-    href: `/kemahasiswaan/${key}`,
+  let sidebarLinks = resolvedSections.map((section) => ({
+    label: section.breadcrumb,
+    href: `/kemahasiswaan/${section.slug}`,
   }))
 
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'kemahasiswaan-page' as never });
-    const data = global as { subpages?: SectionMeta[]; sidebarTitle?: string };
-    const fromPayload = (data.subpages || []).find((item) => item.slug === slug);
-    if (fromPayload) {
-      s = {
-        ...s,
-        title: fromPayload.title,
-        subtitle: fromPayload.subtitle || s.subtitle,
-        breadcrumb: fromPayload.breadcrumb || s.breadcrumb,
-      };
-    }
+    const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string };
+    resolvedSections = resolveKemahasiswaanSections(data.subpages || []);
     sidebarTitle = data.sidebarTitle || sidebarTitle
-    if (data.subpages && data.subpages.length > 0) {
-      sidebarLinks = data.subpages.map((item) => ({
+    if (resolvedSections.length > 0) {
+      sidebarLinks = resolvedSections.map((item) => ({
         label: item.breadcrumb || item.title,
         href: `/kemahasiswaan/${item.slug}`,
       }))
@@ -112,6 +60,9 @@ export default async function KemahasiswaanSlugPage({ params }: { params: Promis
   } catch {
     // keep defaults
   }
+
+  const s = resolvedSections.find((item) => item.slug === slug);
+  if (!s) notFound();
 
   const { title, subtitle, breadcrumb, component: Content } = s;
 
