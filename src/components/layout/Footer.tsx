@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { unstable_noStore as noStore } from 'next/cache';
 import { MapPin, Phone, Mail, Camera, PlayCircle, Users, X, Globe, Accessibility } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
@@ -29,6 +30,7 @@ const platformIcon: Record<string, React.ElementType> = {
 }
 
 const defaultContact = {
+  namaInstitusi: 'STTPU Jakarta',
   alamat: 'Jl. Pattimura No.20, Kebayoran Baru, Jakarta Selatan 12110',
   teleponUtama: '(021) 2938-2938',
   teleponUtamaHref: '+622129382938',
@@ -44,6 +46,10 @@ const defaultContact = {
     { hari: 'Senin – Jumat', jam: '08.00 – 16.00 WIB' },
   ],
 }
+
+type MediaValue = {
+  url?: string | null;
+} | null;
 
 export default async function Footer() {
   noStore()
@@ -67,6 +73,12 @@ export default async function Footer() {
 
     if (settings) {
       contact = { ...defaultContact, ...(settings as unknown as typeof defaultContact) }
+      const logo = (typeof settings.logo === 'object' ? settings.logo : null) as MediaValue
+      const favicon = (typeof settings.favicon === 'object' ? settings.favicon : null) as MediaValue
+      contact = {
+        ...contact,
+        logoUrl: logo?.url || favicon?.url || null,
+      } as typeof defaultContact & { logoUrl?: string | null }
       const dynamicLinks = (settings as unknown as { footerQuickLinks?: { label: string; href: string }[] }).footerQuickLinks
       if (dynamicLinks && dynamicLinks.length > 0) {
         links = dynamicLinks
@@ -99,12 +111,23 @@ export default async function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 lg:gap-12">
           <div className="lg:pr-12 text-left">
             <Link href="/" className="inline-flex items-center justify-start gap-4 sm:gap-5 mb-8 sm:mb-10 group" aria-label="STTPU — Beranda">
-              <div
-                className="w-14 h-14 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-sm leading-tight text-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-700"
-                aria-hidden="true"
-              >
-                STTPU
-              </div>
+              {(contact as typeof defaultContact & { logoUrl?: string | null }).logoUrl ? (
+                <div className="relative w-14 h-14 flex-shrink-0 overflow-hidden rounded-xl shadow-lg transition-transform duration-700 group-hover:scale-110">
+                  <Image
+                    src={(contact as typeof defaultContact & { logoUrl?: string | null }).logoUrl || ''}
+                    alt={contact.namaInstitusi || defaultContact.namaInstitusi}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-14 h-14 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-sm leading-tight text-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-700"
+                  aria-hidden="true"
+                >
+                  STTPU
+                </div>
+              )}
             <div className="text-white">
                 <div className="font-bold text-xl leading-tight tracking-tight">STTPU</div>
                 <div className="text-white/40 text-[10px] leading-tight font-bold uppercase tracking-wider mt-1">Jakarta</div>
