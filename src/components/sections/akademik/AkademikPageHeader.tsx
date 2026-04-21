@@ -4,14 +4,20 @@ import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 interface AkademikPageHeaderProps {
   title: string;
   subtitle: string;
+  breadcrumbs?: { label: string; href?: string }[];
 }
 
-export default function AkademikPageHeader({ title, subtitle }: AkademikPageHeaderProps) {
+export default function AkademikPageHeader({ title, subtitle, breadcrumbs }: AkademikPageHeaderProps) {
+  const customItems = breadcrumbs?.map(b => ({
+    label: b.label,
+    href: b.href || '#'
+  }));
+
   return (
     <>
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <Breadcrumbs />
+          <Breadcrumbs customItems={customItems} />
         </div>
       </div>
 

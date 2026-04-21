@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ArtikelDetailContent from '@/components/sections/berita/ArtikelDetailContent';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';

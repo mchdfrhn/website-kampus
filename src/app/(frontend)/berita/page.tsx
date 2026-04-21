@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import { artikelList as artikelStatic, mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
 

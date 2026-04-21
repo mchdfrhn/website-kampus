@@ -2,11 +2,11 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
 const FINISH_DELAY = 220;
 
-export default function RouteProgressProvider({ children }: { children: ReactNode }) {
+function RouteProgressLogic() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const shouldReduceMotion = useReducedMotion();
@@ -111,28 +111,36 @@ export default function RouteProgressProvider({ children }: { children: ReactNod
   }, [pathname, searchParams, isLoading, shouldReduceMotion]);
 
   return (
-    <>
-      <AnimatePresence>
-        {isLoading && (
+    <AnimatePresence>
+      {isLoading && (
+        <motion.div
+          key="route-progress"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0.1 : 0.2 }}
+          className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-1"
+        >
+          <div className="absolute inset-0 bg-brand-navy/10 backdrop-blur-[2px]" />
           <motion.div
-            key="route-progress"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: shouldReduceMotion ? 0.1 : 0.2 }}
-            className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-1"
+            className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-[#ffe08a] to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)]"
+            animate={{ width: `${progress}%` }}
+            transition={{ ease: [0.22, 1, 0.36, 1], duration: shouldReduceMotion ? 0.12 : 0.24 }}
           >
-            <div className="absolute inset-0 bg-brand-navy/10 backdrop-blur-[2px]" />
-            <motion.div
-              className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-[#ffe08a] to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)]"
-              animate={{ width: `${progress}%` }}
-              transition={{ ease: [0.22, 1, 0.36, 1], duration: shouldReduceMotion ? 0.12 : 0.24 }}
-            >
-              <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-white/0 via-white/70 to-white/0 opacity-80" />
-            </motion.div>
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-white/0 via-white/70 to-white/0 opacity-80" />
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+export default function RouteProgressProvider({ children }: { children: ReactNode }) {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <RouteProgressLogic />
+      </Suspense>
       {children}
     </>
   );

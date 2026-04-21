@@ -6,9 +6,8 @@ import BeritaTerakhirSection from '@/components/sections/BeritaTerakhirSection';
 import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
-import ScrollReveal from '@/components/ui/ScrollReveal';
 import { getPayloadClient } from '@/lib/payload';
-import { artikelList as artikelStatic, mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
+import { artikelList as artikelStatic, mapPayloadToArtikel } from '@/lib/data/berita';
 
 export const revalidate = 3600; // Cache for 1 hour
 

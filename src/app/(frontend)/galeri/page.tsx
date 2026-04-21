@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import GaleriContent, { type Album } from '@/components/sections/galeri/GaleriContent';
 

@@ -1,5 +1,6 @@
 import { MessageCircle, Phone, Mail, User2, BookOpen, CreditCard, Users, Database, Globe, Megaphone } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import type { ElementType } from 'react';
 
 type UnitItem = {
   unit: string
@@ -10,7 +11,7 @@ type UnitItem = {
   tugas?: string
 }
 
-const icons: Record<string, any> = {
+const icons: Record<string, ElementType> = {
   'Bagian Akademik': BookOpen,
   'Bagian Keuangan': CreditCard,
   'PMB': User2,

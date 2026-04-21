@@ -82,7 +82,7 @@ export default async function TentangSlugPage({
   const section = sections[slug];
   if (!section) notFound();
 
-  const { title, subtitle, breadcrumb, component: SectionContent } = section;
+  const { title, subtitle, component: SectionContent } = section;
 
   return (
     <>

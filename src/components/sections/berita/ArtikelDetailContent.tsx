@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { Clock, Calendar, User, Tag, ArrowLeft, ArrowRight, Share2, Pin } from 'lucide-react';
+import { Clock, Calendar, User, ArrowLeft, ArrowRight, Share2, Pin } from 'lucide-react';
 import type { Artikel } from '@/lib/data/berita';
 import { kategoriLabel, kategoriColor, formatTanggal } from '@/lib/data/berita';
+import { cn } from '@/lib/utils';
 
 function parseMarkdown(text: string): string {
   return text
