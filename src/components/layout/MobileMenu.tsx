@@ -2,12 +2,19 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import HomeNavLink from './HomeNavLink';
 import { usePathname } from 'next/navigation';
 
-export default function MobileMenu({ navItems }: { navItems: { label: string; href: string; children?: { label: string; href: string; id?: string | null }[] | null; id?: string | null }[] }) {
+type MobileMenuProps = {
+  navItems: { label: string; href: string; children?: { label: string; href: string; id?: string | null }[] | null; id?: string | null }[];
+  logoUrl?: string | null;
+  institutionName?: string;
+};
+
+export default function MobileMenu({ navItems, logoUrl, institutionName = 'Sekolah Tinggi Teknologi PU' }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const pathname = usePathname();
@@ -62,12 +69,23 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
       >
         <div className="flex items-center justify-between px-4 sm:px-6 py-5 sm:py-6 border-b border-white/10 bg-brand-navy rounded-tr-3xl">
           <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3 min-w-0 pr-3">
-            <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs leading-none shadow-lg shadow-brand-gold/20">
-              STTPU
-            </div>
+            {logoUrl ? (
+              <div className="relative w-10 h-10 flex-shrink-0 overflow-hidden rounded-xl shadow-lg shadow-black/20">
+                <Image
+                  src={logoUrl}
+                  alt={institutionName}
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs leading-none shadow-lg shadow-brand-gold/20">
+                STTPU
+              </div>
+            )}
             <div className="text-white min-w-0">
               <div className="font-bold text-sm leading-tight tracking-tight">STTPU</div>
-              <div className="text-white/60 text-[10px] leading-tight font-medium break-words">Sekolah Tinggi Teknologi PU</div>
+              <div className="text-white/60 text-[10px] leading-tight font-medium break-words">{institutionName}</div>
             </div>
           </HomeNavLink>
           <button

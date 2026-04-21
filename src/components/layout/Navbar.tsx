@@ -12,6 +12,10 @@ type NavItem = {
   id?: string | null;
 };
 
+type MediaValue = {
+  url?: string | null;
+} | null;
+
 const fallbackNavItems: NavItem[] = [
   { label: 'Beranda', href: '/' },
   {
@@ -83,12 +87,15 @@ export default async function Navbar() {
     // Fetch Settings
     const siteSettings = await payload.findGlobal({ slug: 'site-settings', depth: 1 });
     if (siteSettings) {
+      const logo = (typeof siteSettings.logo === 'object' ? siteSettings.logo : null) as MediaValue;
+      const favicon = (typeof siteSettings.favicon === 'object' ? siteSettings.favicon : null) as MediaValue;
+
       settings = {
         teleponUtama: siteSettings.teleponUtama || settings.teleponUtama,
         teleponUtamaHref: siteSettings.teleponUtamaHref || settings.teleponUtamaHref,
         emailUtama: siteSettings.emailUtama || settings.emailUtama,
         namaInstitusi: siteSettings.namaInstitusi || settings.namaInstitusi,
-        logoUrl: typeof siteSettings.logo === 'object' && siteSettings.logo ? siteSettings.logo.url || null : null
+        logoUrl: logo?.url || favicon?.url || null
       };
     }
   } catch (error) {
@@ -141,7 +148,11 @@ export default async function Navbar() {
             </div>
 
             <div className="ml-auto flex-shrink-0 xl:hidden">
-              <MobileMenu navItems={navItems} />
+              <MobileMenu
+                navItems={navItems}
+                logoUrl={settings.logoUrl}
+                institutionName={settings.namaInstitusi}
+              />
             </div>
           </div>
         </div>
