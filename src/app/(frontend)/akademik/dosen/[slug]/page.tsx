@@ -73,7 +73,7 @@ export default async function DosenDetailPage({
         title={dosen.nama}
         subtitle={`${dosen.jabatanFungsional} · ${dosen.programStudi.join(', ')}`}
         breadcrumbs={[
-          { label: 'Akademik', href: '#' },
+          { label: 'Akademik' },
           { label: 'Dosen', href: '/akademik/dosen' },
           { label: dosen.nama.split(',')[0] },
         ]}

@@ -4,7 +4,10 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
-const FINISH_DELAY = 220;
+const MIN_LOADING_DURATION = 720;
+const REDUCED_MOTION_MIN_LOADING_DURATION = 260;
+const HIDE_DELAY = 160;
+const REDUCED_MOTION_HIDE_DELAY = 70;
 
 function RouteProgressLogic() {
   const pathname = usePathname();
@@ -14,6 +17,8 @@ function RouteProgressLogic() {
   const [progress, setProgress] = useState(0);
   const intervalRef = useRef<number | null>(null);
   const finishTimeoutRef = useRef<number | null>(null);
+  const resetTimeoutRef = useRef<number | null>(null);
+  const loadingStartedAtRef = useRef<number | null>(null);
 
   useEffect(() => {
     const clearTimers = () => {
@@ -25,24 +30,34 @@ function RouteProgressLogic() {
         window.clearTimeout(finishTimeoutRef.current);
         finishTimeoutRef.current = null;
       }
+      if (resetTimeoutRef.current) {
+        window.clearTimeout(resetTimeoutRef.current);
+        resetTimeoutRef.current = null;
+      }
     };
 
     const startLoading = () => {
+      const startedAt = performance.now();
+      const minDuration = shouldReduceMotion
+        ? REDUCED_MOTION_MIN_LOADING_DURATION
+        : MIN_LOADING_DURATION;
+      const targetBeforeFinish = shouldReduceMotion ? 94 : 96;
+
       clearTimers();
+      loadingStartedAtRef.current = startedAt;
       setIsLoading(true);
-      setProgress(shouldReduceMotion ? 80 : 12);
+      setProgress(shouldReduceMotion ? 20 : 8);
 
       intervalRef.current = window.setInterval(() => {
-        setProgress((current) => {
-          const limit = shouldReduceMotion ? 92 : 88;
-          if (current >= limit) return current;
+        const elapsed = performance.now() - startedAt;
+        const ratio = Math.min(elapsed / minDuration, 1);
+        const nextProgress = Math.min(
+          targetBeforeFinish,
+          8 + ratio * (targetBeforeFinish - 8)
+        );
 
-          if (current < 35) return current + 10;
-          if (current < 60) return current + 6;
-          if (current < 78) return current + 3;
-          return current + 1.2;
-        });
-      }, shouldReduceMotion ? 120 : 180);
+        setProgress((current) => (current >= nextProgress ? current : nextProgress));
+      }, shouldReduceMotion ? 40 : 16);
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -98,16 +113,30 @@ function RouteProgressLogic() {
       window.clearTimeout(finishTimeoutRef.current);
       finishTimeoutRef.current = null;
     }
+    if (resetTimeoutRef.current) {
+      window.clearTimeout(resetTimeoutRef.current);
+      resetTimeoutRef.current = null;
+    }
 
-    setProgress((current) => (current < 92 ? Math.max(current, 92) : current));
-
+    const minDuration = shouldReduceMotion
+      ? REDUCED_MOTION_MIN_LOADING_DURATION
+      : MIN_LOADING_DURATION;
+    const elapsed = loadingStartedAtRef.current
+      ? performance.now() - loadingStartedAtRef.current
+      : minDuration;
+    const remaining = Math.max(0, minDuration - elapsed);
     finishTimeoutRef.current = window.setTimeout(() => {
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
       setProgress(100);
-      window.setTimeout(() => {
+      resetTimeoutRef.current = window.setTimeout(() => {
         setIsLoading(false);
         setProgress(0);
-      }, shouldReduceMotion ? 70 : 160);
-    }, shouldReduceMotion ? 40 : FINISH_DELAY);
+        loadingStartedAtRef.current = null;
+      }, shouldReduceMotion ? REDUCED_MOTION_HIDE_DELAY : HIDE_DELAY);
+    }, remaining);
   }, [pathname, searchParams, isLoading, shouldReduceMotion]);
 
   return (

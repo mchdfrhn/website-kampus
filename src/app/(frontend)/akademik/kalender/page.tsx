@@ -15,7 +15,7 @@ export default function KalenderPage() {
         title="Kalender Akademik"
         subtitle="Jadwal resmi kegiatan akademik STTPU Jakarta Tahun Akademik 2025/2026 — dari registrasi KRS hingga wisuda."
         breadcrumbs={[
-          { label: 'Akademik', href: '#' },
+          { label: 'Akademik' },
           { label: 'Kalender Akademik' },
         ]}
       />

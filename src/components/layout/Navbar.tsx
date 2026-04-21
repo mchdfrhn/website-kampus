@@ -130,8 +130,10 @@ export default async function Navbar() {
             </HomeNavLink>
 
             <ul className="hidden xl:flex items-center gap-1" role="list">
-              {navItems.map((item) =>
-                item.children ? (
+              {navItems.map((item) => {
+                const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+
+                return hasChildren ? (
                   <li key={item.label} className="relative group">
                     <button
                       className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold h-full"
@@ -146,7 +148,7 @@ export default async function Navbar() {
                         className="min-w-64 bg-brand-navy border border-white/10 shadow-[0_20px_50px_rgba(0,22,51,0.28)] rounded-2xl p-2 overflow-hidden"
                         role="menu"
                       >
-                        {item.children.map((child) => (
+                        {item.children!.map((child) => (
                           <li key={child.label} role="none">
                             <Link
                               href={child.href}
@@ -179,8 +181,8 @@ export default async function Navbar() {
                       </Link>
                     )}
                   </li>
-                )
-              )}
+                );
+              })}
             </ul>
 
             <div className="hidden lg:block ml-auto flex-shrink-0">

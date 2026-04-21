@@ -6,7 +6,7 @@ import { ChevronRight, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type BreadcrumbProps = {
-  customItems?: { label: string; href: string }[];
+  customItems?: { label: string; href?: string }[];
   className?: string;
 };
 
@@ -41,9 +41,9 @@ export default function Breadcrumbs({ customItems, className }: BreadcrumbProps)
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           return (
-            <li key={item.href} className="flex items-center gap-2">
+            <li key={`${item.label}-${item.href ?? index}`} className="flex items-center gap-2">
               <ChevronRight size={10} className="text-brand-navy/20" />
-              {isLast ? (
+              {isLast || !item.href ? (
                 <span className="text-brand-navy/60" aria-current="page">
                   {item.label}
                 </span>

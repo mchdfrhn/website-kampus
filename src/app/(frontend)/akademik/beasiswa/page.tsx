@@ -15,7 +15,7 @@ export default function BeasiswaPage() {
         title="Beasiswa"
         subtitle="Berbagai program beasiswa tersedia untuk mendukung mahasiswa STTPU Jakarta dalam menyelesaikan pendidikan dengan optimal."
         breadcrumbs={[
-          { label: 'Akademik', href: '#' },
+          { label: 'Akademik' },
           { label: 'Beasiswa' },
         ]}
       />

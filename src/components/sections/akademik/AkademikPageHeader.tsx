@@ -10,7 +10,7 @@ interface AkademikPageHeaderProps {
 export default function AkademikPageHeader({ title, subtitle, breadcrumbs }: AkademikPageHeaderProps) {
   const customItems = breadcrumbs?.map(b => ({
     label: b.label,
-    href: b.href || '#'
+    href: b.href
   }));
 
   return (

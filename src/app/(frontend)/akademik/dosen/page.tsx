@@ -35,7 +35,7 @@ export default async function DosenPage() {
         title="Direktori Dosen"
         subtitle="Tenaga pengajar STTPU Jakarta yang berpengalaman, berkualifikasi tinggi, dan aktif dalam penelitian serta pengabdian masyarakat."
         breadcrumbs={[
-          { label: 'Akademik', href: '#' },
+          { label: 'Akademik' },
           { label: 'Dosen' },
         ]}
       />

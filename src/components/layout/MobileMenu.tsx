@@ -67,68 +67,72 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
         </div>
 
         <nav className="flex-1 overflow-y-auto py-6 px-3" aria-label="Menu mobile">
-          {navItems.map((item) => (
-            <div key={item.label} className="mb-2">
-              {item.children ? (
-                <>
-                  <button
-                    onClick={() => toggleSubmenu(item.label)}
-                    aria-expanded={openSubmenu === item.label}
-                    className={cn(
-                      "w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight",
-                      openSubmenu === item.label 
-                        ? "bg-white/10 text-brand-gold shadow-lg" 
-                        : "text-white/80 hover:text-white hover:bg-white/5"
-                    )}
-                  >
-                    <span>{item.label}</span>
+          {navItems.map((item) => {
+            const hasChildren = Array.isArray(item.children) && item.children.length > 0;
+
+            return (
+              <div key={item.label} className="mb-2">
+                {hasChildren ? (
+                  <>
+                    <button
+                      onClick={() => toggleSubmenu(item.label)}
+                      aria-expanded={openSubmenu === item.label}
+                      className={cn(
+                        "w-full flex items-center justify-between px-4 py-3.5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight",
+                        openSubmenu === item.label
+                          ? "bg-white/10 text-brand-gold shadow-lg"
+                          : "text-white/80 hover:text-white hover:bg-white/5"
+                      )}
+                    >
+                      <span>{item.label}</span>
+                      <div className={cn(
+                        "transition-transform duration-300",
+                        openSubmenu === item.label ? "rotate-180" : ""
+                      )}>
+                        <ChevronDown size={18} className={openSubmenu === item.label ? "text-brand-gold" : "text-white/30"} />
+                      </div>
+                    </button>
                     <div className={cn(
-                      "transition-transform duration-300",
-                      openSubmenu === item.label ? "rotate-180" : ""
+                      "overflow-hidden transition-all duration-300",
+                      openSubmenu === item.label ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
                     )}>
-                      <ChevronDown size={18} className={openSubmenu === item.label ? "text-brand-gold" : "text-white/30"} />
-                    </div>
-                  </button>
-                  <div className={cn(
-                    "overflow-hidden transition-all duration-300",
-                    openSubmenu === item.label ? "max-h-[500px] opacity-100 mt-2" : "max-h-0 opacity-0"
-                  )}>
                       <div className="bg-white/[0.05] border border-white/8 rounded-2xl p-2 ml-2 space-y-1">
-                      {item.children.map((child) => (
-                        <Link
-                          key={child.label}
-                          href={child.href}
-                          onClick={toggleMenu}
-                          className="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-brand-gold hover:bg-white/5 rounded-xl transition-all duration-300 text-xs font-medium"
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 flex-shrink-0" />
-                          {child.label}
-                        </Link>
-                      ))}
+                        {item.children!.map((child) => (
+                          <Link
+                            key={child.label}
+                            href={child.href}
+                            onClick={toggleMenu}
+                            className="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-brand-gold hover:bg-white/5 rounded-xl transition-all duration-300 text-xs font-medium"
+                          >
+                            <div className="w-1.5 h-1.5 rounded-full bg-brand-gold/40 flex-shrink-0" />
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </>
-              ) : (
-                item.href === '/' ? (
-                  <HomeNavLink
-                    href={item.href}
-                    onClick={toggleMenu}
-                    className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
-                  >
-                    {item.label}
-                  </HomeNavLink>
+                  </>
                 ) : (
-                  <Link
-                    href={item.href}
-                    onClick={toggleMenu}
-                    className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
-                  >
-                    {item.label}
-                  </Link>
-                )
-              )}
-            </div>
-          ))}
+                  item.href === '/' ? (
+                    <HomeNavLink
+                      href={item.href}
+                      onClick={toggleMenu}
+                      className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
+                    >
+                      {item.label}
+                    </HomeNavLink>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      onClick={toggleMenu}
+                      className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
+                    >
+                      {item.label}
+                    </Link>
+                  )
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         <div className="p-6 border-t border-white/10 bg-brand-navy">
