@@ -14,6 +14,34 @@ export const TentangKami: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
+          label: 'Overview',
+          fields: [
+            { name: 'overviewTitle', type: 'text', label: 'Judul Hero', defaultValue: 'Tentang STTPU' },
+            { name: 'overviewDescription', type: 'textarea', label: 'Deskripsi Hero' },
+            {
+              name: 'overviewStats',
+              type: 'array',
+              label: 'Statistik Ringkas',
+              fields: [
+                { name: 'value', type: 'text', label: 'Nilai', required: true },
+                { name: 'label', type: 'text', label: 'Label', required: true },
+              ],
+            },
+            { name: 'overviewCommitmentTitle', type: 'text', label: 'Judul Komitmen', defaultValue: 'Komitmen Kami' },
+            { name: 'overviewCommitmentText', type: 'textarea', label: 'Isi Komitmen' },
+            {
+              name: 'overviewSections',
+              type: 'array',
+              label: 'Kartu Section',
+              fields: [
+                { name: 'title', type: 'text', label: 'Judul', required: true },
+                { name: 'desc', type: 'textarea', label: 'Deskripsi' },
+                { name: 'href', type: 'text', label: 'Link Tujuan', required: true },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Sejarah',
           fields: [
             {

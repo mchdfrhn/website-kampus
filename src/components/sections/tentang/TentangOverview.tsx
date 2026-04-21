@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import { History, Target, Users, ShieldCheck, Building2, Landmark, ArrowRight } from 'lucide-react';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
+import { getPayloadClient } from '@/lib/payload';
+import Breadcrumbs from '@/components/ui/Breadcrumbs';
 
-const sections = [
+const defaultSections = [
   {
     icon: History,
     title: 'Sejarah & Profil',
@@ -41,16 +43,69 @@ const sections = [
   },
 ];
 
-const stats = [
+const defaultStats = [
   { value: '1987', label: 'Tahun Berdiri' },
   { value: '4', label: 'Program Studi' },
   { value: '3.000+', label: 'Alumni' },
   { value: 'Baik Sekali', label: 'Akreditasi Institusi' },
 ];
 
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
+const defaultContent = {
+  title: 'Tentang STTPU',
+  description:
+    'Membangun masa depan infrastruktur Indonesia melalui pendidikan vokasi yang inovatif, berintegritas, dan kompeten.',
+  commitmentTitle: 'Komitmen Kami',
+  commitmentText:
+    'Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta adalah pilar utama pengembangan sumber daya manusia di bidang teknologi infrastruktur. Sejak 1987, kami fokus pada kurikulum yang selaras dengan kebutuhan industri (Link and Match) untuk memastikan setiap lulusan siap menghadapi tantangan pembangunan nasional.',
+}
 
-export default function TentangOverview() {
+type OverviewSection = { title: string; desc: string; href: string }
+type OverviewStat = { value: string; label: string }
+
+const iconMap: Record<string, typeof History> = {
+  '/tentang/sejarah': History,
+  '/tentang/visi-misi': Target,
+  '/tentang/pimpinan': Users,
+  '/tentang/akreditasi': ShieldCheck,
+  '/tentang/struktur-organisasi': Landmark,
+  '/tentang/fasilitas': Building2,
+}
+
+export default async function TentangOverview() {
+  let content = defaultContent
+  let sections = defaultSections.map(({ title, desc, href }) => ({ title, desc, href }))
+  let stats = defaultStats
+
+  try {
+    const payload = await getPayloadClient()
+    const global = await payload.findGlobal({ slug: 'tentang-kami' })
+    const data = global as {
+      overviewTitle?: string
+      overviewDescription?: string
+      overviewStats?: OverviewStat[]
+      overviewCommitmentTitle?: string
+      overviewCommitmentText?: string
+      overviewSections?: OverviewSection[]
+    }
+
+    content = {
+      title: data.overviewTitle || defaultContent.title,
+      description: data.overviewDescription || defaultContent.description,
+      commitmentTitle: data.overviewCommitmentTitle || defaultContent.commitmentTitle,
+      commitmentText: data.overviewCommitmentText || defaultContent.commitmentText,
+    }
+
+    if (data.overviewStats && data.overviewStats.length > 0) {
+      stats = data.overviewStats
+    }
+
+    if (data.overviewSections && data.overviewSections.length > 0) {
+      sections = data.overviewSections
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
   return (
     <>
       <div className="bg-white border-b border-gray-100">
@@ -63,10 +118,10 @@ export default function TentangOverview() {
         <BlueAbstractBackground />
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-black text-4xl lg:text-5xl mb-6 tracking-tight leading-tight uppercase">Tentang STTPU</h1>
+            <h1 className="font-black text-4xl lg:text-5xl mb-6 tracking-tight leading-tight uppercase">{content.title}</h1>
             <div className="w-16 h-1 bg-brand-gold rounded-full mb-8" />
             <p className="text-white/70 text-lg font-medium leading-relaxed">
-              Membangun masa depan infrastruktur Indonesia melalui pendidikan vokasi yang inovatif, berintegritas, dan kompeten.
+              {content.description}
             </p>
           </div>
         </div>
@@ -88,16 +143,16 @@ export default function TentangOverview() {
       <section className="px-6 py-24 relative overflow-hidden">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-4xl mb-20">
-             <h2 className="text-2xl font-black text-brand-navy mb-6 tracking-tight uppercase">Komitmen Kami</h2>
+             <h2 className="text-2xl font-black text-brand-navy mb-6 tracking-tight uppercase">{content.commitmentTitle}</h2>
              <div className="w-12 h-1 bg-brand-gold rounded-full mb-8" />
              <p className="text-gray-600 text-lg leading-relaxed font-medium">
-              Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta adalah pilar utama pengembangan sumber daya manusia di bidang teknologi infrastruktur. Sejak 1987, kami fokus pada kurikulum yang selaras dengan kebutuhan industri (Link and Match) untuk memastikan setiap lulusan siap menghadapi tantangan pembangunan nasional.
+              {content.commitmentText}
              </p>
           </div>
 
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" aria-label="Navigasi halaman tentang">
             {sections.map((item) => {
-              const Icon = item.icon;
+              const Icon = iconMap[item.href] || History;
               return (
                 <li key={item.href}>
                   <Link

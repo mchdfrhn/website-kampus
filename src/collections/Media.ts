@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { publicPagePaths, revalidateCollection, revalidateDelete } from "../lib/revalidate";
 
 export const Media: CollectionConfig = {
   slug: "media",
@@ -25,4 +26,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: true,
+  hooks: {
+    afterChange: [revalidateCollection([...publicPagePaths])],
+    afterDelete: [revalidateDelete([...publicPagePaths])],
+  },
 };

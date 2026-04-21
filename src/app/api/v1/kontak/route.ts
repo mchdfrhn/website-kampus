@@ -14,17 +14,6 @@ const RATE_LIMIT_WINDOW_MS = 60_000; // 60 seconds
 // Validation helpers
 // ---------------------------------------------------------------------------
 
-const VALID_UNITS = [
-  "akademik",
-  "keuangan",
-  "kemahasiswaan",
-  "it",
-  "perpustakaan",
-  "umum",
-] as const;
-
-type Unit = (typeof VALID_UNITS)[number];
-
 interface ContactBody {
   nama?: unknown;
   email?: unknown;
@@ -60,9 +49,6 @@ function validateBody(body: ContactBody): ValidationErrors {
   const unit = typeof body.unit === "string" ? body.unit.trim() : "";
   if (!unit) {
     errors.unit = "Unit tujuan wajib dipilih.";
-  } else if (!VALID_UNITS.includes(unit as Unit)) {
-    errors.unit =
-      "Unit tidak valid. Pilih salah satu: akademik, keuangan, kemahasiswaan, it, perpustakaan, umum.";
   }
 
   const subjek = typeof body.subjek === "string" ? body.subjek.trim() : "";
@@ -134,7 +120,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   const email = (body.email as string).trim();
   const telepon =
     typeof body.telepon === "string" ? body.telepon.trim() : undefined;
-  const unit = (body.unit as Unit).trim();
+  const unit = (body.unit as string).trim();
   const subjek = (body.subjek as string).trim();
   const pesan = (body.pesan as string).trim();
 
@@ -148,7 +134,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         nama,
         email,
         ...(telepon ? { telepon } : {}),
-        unit: unit as 'akademik' | 'kemahasiswaan' | 'keuangan' | 'it' | 'perpustakaan' | 'umum',
+        unit: unit as never,
         subjek,
         pesan,
         status: "baru",

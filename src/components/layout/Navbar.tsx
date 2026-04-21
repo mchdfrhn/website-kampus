@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronDown } from 'lucide-react';
 import MobileMenu from './MobileMenu';
+import HomeNavLink from './HomeNavLink';
 import { getPayloadClient } from '@/lib/payload';
 
 type NavItem = {
@@ -98,10 +99,10 @@ export default async function Navbar() {
       <div className="fixed inset-x-0 top-0 z-50 bg-brand-navy border-b border-white/10 shadow-[0_14px_40px_rgba(0,44,102,0.28)]">
         <div className="max-w-[1440px] mx-auto px-6 lg:px-10">
           <div className="flex items-center h-20">
-            <Link
+            <HomeNavLink
               href="/"
               className="flex items-center gap-3 mr-8 flex-shrink-0 group"
-              aria-label={`STTPU — Beranda`}
+              ariaLabel={`STTPU — Beranda`}
             >
               {settings.logoUrl ? (
                 <div className="relative w-11 h-11 shadow-lg shadow-black/20 rounded-xl overflow-hidden group-hover:scale-105 transition-transform duration-500">
@@ -126,7 +127,7 @@ export default async function Navbar() {
                   {settings.namaInstitusi}
                 </div>
               </div>
-            </Link>
+            </HomeNavLink>
 
             <ul className="hidden xl:flex items-center gap-1" role="list">
               {navItems.map((item) =>
@@ -162,12 +163,21 @@ export default async function Navbar() {
                   </li>
                 ) : (
                   <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="flex items-center px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold"
-                    >
-                      {item.label}
-                    </Link>
+                    {item.href === '/' ? (
+                      <HomeNavLink
+                        href={item.href}
+                        className="flex items-center px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold"
+                      >
+                        {item.label}
+                      </HomeNavLink>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="flex items-center px-4 py-2 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300 text-sm font-semibold"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 )
               )}

@@ -32,6 +32,9 @@ import { KalenderAkademik } from "./src/globals/KalenderAkademik";
 import { PortalLinks } from "./src/globals/PortalLinks";
 import { MainMenu } from "./src/globals/MainMenu";
 import { PanduanMaba } from "./src/globals/PanduanMaba";
+import { KemahasiswaanPage } from "./src/globals/KemahasiswaanPage";
+import { PenelitianPage } from "./src/globals/PenelitianPage";
+import { KontakPage } from "./src/globals/KontakPage";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -67,7 +70,18 @@ export default buildConfig({
     Publikasi,
     Layanan,
   ],
-  globals: [SiteSettings, HalamanUtama, TentangKami, KalenderAkademik, PortalLinks, MainMenu, PanduanMaba],
+  globals: [
+    SiteSettings,
+    HalamanUtama,
+    TentangKami,
+    KalenderAkademik,
+    PortalLinks,
+    MainMenu,
+    PanduanMaba,
+    KemahasiswaanPage,
+    PenelitianPage,
+    KontakPage,
+  ],
   editor: lexicalEditor(),
   debug: process.env.NODE_ENV !== 'production',
   secret: process.env.PAYLOAD_SECRET as string,

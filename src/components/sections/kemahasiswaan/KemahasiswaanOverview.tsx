@@ -2,8 +2,9 @@ import Link from 'next/link';
 import { Users, Trophy, Heart, BookOpen, ArrowRight, Flag } from 'lucide-react';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import { getPayloadClient } from '@/lib/payload';
 
-const sections = [
+const defaultSections = [
   { icon: Flag, title: 'Organisasi Mahasiswa', desc: 'BEM dan Senat Mahasiswa sebagai wadah aspirasi dan kepemimpinan.', href: '/kemahasiswaan/organisasi' },
   { icon: Users, title: 'Unit Kegiatan Mahasiswa', desc: '12 UKM aktif mencakup bidang olahraga, seni, riset, dan sosial kemasyarakatan.', href: '/kemahasiswaan/ukm' },
   { icon: Trophy, title: 'Prestasi Mahasiswa', desc: 'Rekam jejak pencapaian mahasiswa di kompetisi nasional dan internasional.', href: '/kemahasiswaan/prestasi' },
@@ -11,14 +12,65 @@ const sections = [
   { icon: BookOpen, title: 'Panduan Mahasiswa Baru', desc: 'Panduan lengkap orientasi, sistem akademik, dan tips sukses perkuliahan di STTPU.', href: '/kemahasiswaan/mahasiswa-baru' },
 ];
 
-const stats = [
+const defaultStats = [
   { value: '1.200+', label: 'Mahasiswa Aktif' },
   { value: '12', label: 'UKM Aktif' },
   { value: '45+', label: 'Prestasi/Tahun' },
   { value: '4', label: 'Organisasi Mahasiswa' },
 ];
 
-export default function KemahasiswaanOverview() {
+const defaultContent = {
+  heroTitle: 'Kemahasiswaan',
+  heroDescription:
+    'Kehidupan kampus STTPU yang dinamis — dari organisasi dan UKM hingga layanan mahasiswa dan rekam prestasi yang membanggakan.',
+  introText:
+    'STTPU percaya bahwa pendidikan terbaik tidak hanya terjadi di dalam kelas. Kehidupan kemahasiswaan yang aktif membentuk karakter, kepemimpinan, dan kompetensi lunak yang dibutuhkan di dunia kerja.',
+}
+
+type SectionItem = { title: string; desc: string; href: string }
+type StatItem = { value: string; label: string }
+
+const iconMap: Record<string, typeof Flag> = {
+  '/kemahasiswaan/organisasi': Flag,
+  '/kemahasiswaan/ukm': Users,
+  '/kemahasiswaan/prestasi': Trophy,
+  '/kemahasiswaan/layanan': Heart,
+  '/kemahasiswaan/mahasiswa-baru': BookOpen,
+}
+
+export default async function KemahasiswaanOverview() {
+  let content = defaultContent
+  let sections = defaultSections.map(({ title, desc, href }) => ({ title, desc, href }))
+  let stats = defaultStats
+
+  try {
+    const payload = await getPayloadClient()
+    const global = await payload.findGlobal({ slug: 'kemahasiswaan-page' as never })
+    const data = global as {
+      heroTitle?: string
+      heroDescription?: string
+      introText?: string
+      stats?: StatItem[]
+      sections?: SectionItem[]
+    }
+
+    content = {
+      heroTitle: data.heroTitle || defaultContent.heroTitle,
+      heroDescription: data.heroDescription || defaultContent.heroDescription,
+      introText: data.introText || defaultContent.introText,
+    }
+
+    if (data.stats && data.stats.length > 0) {
+      stats = data.stats
+    }
+
+    if (data.sections && data.sections.length > 0) {
+      sections = data.sections
+    }
+  } catch {
+    // DB unavailable — use defaults
+  }
+
   return (
     <>
       <div className="bg-white border-b border-gray-100">
@@ -35,10 +87,9 @@ export default function KemahasiswaanOverview() {
         <BlueAbstractBackground />
         
         <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="font-bold text-3xl md:text-4xl mb-4 tracking-tight">Kemahasiswaan</h1>
+          <h1 className="font-bold text-3xl md:text-4xl mb-4 tracking-tight">{content.heroTitle}</h1>
           <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
-            Kehidupan kampus STTPU yang dinamis — dari organisasi dan UKM hingga layanan mahasiswa
-            dan rekam prestasi yang membanggakan.
+            {content.heroDescription}
           </p>
         </div>
       </div>
@@ -58,13 +109,11 @@ export default function KemahasiswaanOverview() {
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-2xl mb-12 font-medium">
-          STTPU percaya bahwa pendidikan terbaik tidak hanya terjadi di dalam kelas. Kehidupan
-          kemahasiswaan yang aktif membentuk karakter, kepemimpinan, dan kompetensi lunak yang
-          dibutuhkan di dunia kerja.
+          {content.introText}
         </p>
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {sections.map((item) => {
-            const Icon = item.icon;
+            const Icon = iconMap[item.href] || Flag;
             return (
               <li key={item.href}>
                 <Link

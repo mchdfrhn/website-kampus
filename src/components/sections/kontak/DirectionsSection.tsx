@@ -1,71 +1,47 @@
-const directions = [
+const defaultDirections = [
   {
     emoji: '🚌',
     heading: 'TransJakarta',
     steps: [
-      <>
-        Naik <strong className="text-gray-800">Koridor 1</strong> atau{' '}
-        <strong className="text-gray-800">Koridor 5</strong> menuju pusat kota
-      </>,
-      <>
-        Turun di halte <strong className="text-gray-800">Cawang UKI</strong> atau{' '}
-        <strong className="text-gray-800">Manggarai</strong>
-      </>,
-      <>
-        Lanjut naik <strong className="text-gray-800">feeder</strong> arah Tebet / Pasar Rumput
-      </>,
-      <>
-        Jalan kaki ±<strong className="text-gray-800">5 menit</strong> menuju Jl. Pelajar Pejuang
-        45 No. 1
-      </>,
+      'Naik Koridor 1 atau Koridor 5 menuju pusat kota.',
+      'Turun di halte Cawang UKI atau Manggarai.',
+      'Lanjut naik feeder arah Tebet / Pasar Rumput.',
+      'Jalan kaki sekitar 5 menit menuju Jl. Pelajar Pejuang 45 No. 1.',
     ],
   },
   {
     emoji: '🚇',
     heading: 'MRT Jakarta',
     steps: [
-      <>
-        Naik <strong className="text-gray-800">MRT Jalur Utara–Selatan</strong> dari Bundaran HI
-        atau Lebak Bulus
-      </>,
-      <>
-        Turun di stasiun <strong className="text-gray-800">Dukuh Atas</strong>
-      </>,
-      <>
-        Sambung dengan <strong className="text-gray-800">TransJakarta Koridor 4</strong> arah
-        Manggarai
-      </>,
-      <>
-        Turun di <strong className="text-gray-800">Manggarai</strong>, lanjut ojek online ±3 menit
-        ke kampus
-      </>,
+      'Naik MRT Jalur Utara-Selatan dari Bundaran HI atau Lebak Bulus.',
+      'Turun di stasiun Dukuh Atas.',
+      'Sambung dengan TransJakarta Koridor 4 arah Manggarai.',
+      'Turun di Manggarai, lalu lanjut ojek online sekitar 3 menit ke kampus.',
     ],
   },
   {
     emoji: '🚗',
     heading: 'Kendaraan Pribadi',
     steps: [
-      <>
-        Dari <strong className="text-gray-800">Tol Dalam Kota</strong>, keluar di exit{' '}
-        <strong className="text-gray-800">Tebet</strong>
-      </>,
-      <>
-        Menuju <strong className="text-gray-800">Jl. MT. Haryono</strong>, lurus melewati
-        Cawang
-      </>,
-      <>
-        Belok kiri ke <strong className="text-gray-800">Jl. Pelajar Pejuang 45</strong> setelah
-        lampu merah RS Tebet
-      </>,
-      <>
-        Kampus STTPU berada di <strong className="text-gray-800">No. 1</strong>, parkir tersedia
-        di dalam area kampus
-      </>,
+      'Dari Tol Dalam Kota, keluar di exit Tebet.',
+      'Menuju Jl. MT. Haryono, lalu lurus melewati Cawang.',
+      'Belok kiri ke Jl. Pelajar Pejuang 45 setelah lampu merah RS Tebet.',
+      'Kampus STTPU berada di No. 1, dengan area parkir tersedia di dalam kampus.',
     ],
   },
 ];
 
-export default function DirectionsSection() {
+type DirectionItem = {
+  emoji: string
+  heading: string
+  steps: string[]
+}
+
+export default function DirectionsSection({ directions = defaultDirections.map((item) => ({
+  emoji: item.emoji,
+  heading: item.heading,
+  steps: item.steps,
+})) }: { directions?: DirectionItem[] }) {
   return (
     <section className="bg-gray-50 py-14 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">

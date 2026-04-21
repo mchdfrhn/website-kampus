@@ -1,6 +1,35 @@
 import { revalidatePath } from 'next/cache'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterChangeHook } from 'payload'
 
+export const publicPagePaths = [
+  '/',
+  '/tentang',
+  '/tentang/sejarah',
+  '/tentang/visi-misi',
+  '/tentang/pimpinan',
+  '/tentang/akreditasi',
+  '/tentang/struktur-organisasi',
+  '/tentang/fasilitas',
+  '/akademik/program-studi',
+  '/akademik/dosen',
+  '/akademik/kalender',
+  '/akademik/beasiswa',
+  '/kemahasiswaan',
+  '/kemahasiswaan/organisasi',
+  '/kemahasiswaan/ukm',
+  '/kemahasiswaan/prestasi',
+  '/kemahasiswaan/layanan',
+  '/kemahasiswaan/mahasiswa-baru',
+  '/penelitian',
+  '/penelitian/unit',
+  '/penelitian/publikasi',
+  '/penelitian/hibah',
+  '/berita',
+  '/galeri',
+  '/kontak',
+  '/portal',
+] as const
+
 const performRevalidate = (paths: string[], doc: Record<string, unknown>) => {
   paths.forEach((path) => {
     // Jika path mengandung [slug], ganti dengan doc.slug
@@ -40,5 +69,4 @@ export const revalidateGlobal = (paths: string[]): GlobalAfterChangeHook => {
     return doc
   }
 }
-
 

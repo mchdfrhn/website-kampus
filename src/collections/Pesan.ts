@@ -30,17 +30,9 @@ export const Pesan: CollectionConfig = {
     },
     {
       name: "unit",
-      type: "select",
+      type: "text",
       label: "Unit Tujuan",
       required: true,
-      options: [
-        { label: "Akademik", value: "akademik" },
-        { label: "Keuangan", value: "keuangan" },
-        { label: "Kemahasiswaan", value: "kemahasiswaan" },
-        { label: "IT", value: "it" },
-        { label: "Perpustakaan", value: "perpustakaan" },
-        { label: "Umum", value: "umum" },
-      ],
     },
     {
       name: "subjek",

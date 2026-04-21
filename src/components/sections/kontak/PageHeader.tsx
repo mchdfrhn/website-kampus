@@ -1,7 +1,13 @@
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
-export default function PageHeader() {
+export default function PageHeader({
+  title = 'Hubungi Kami',
+  description = 'Kami siap membantu Anda. Silakan hubungi unit terkait atau kunjungi kampus kami untuk informasi lebih lanjut.',
+}: {
+  title?: string
+  description?: string
+}) {
   return (
     <>
       <div className="bg-white border-b border-gray-100">
@@ -15,10 +21,10 @@ export default function PageHeader() {
         
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="max-w-3xl">
-            <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl mb-6 tracking-tight leading-tight">Hubungi Kami</h1>
+            <h1 className="font-bold text-3xl md:text-4xl lg:text-5xl mb-6 tracking-tight leading-tight">{title}</h1>
             <div className="w-16 h-1 bg-brand-gold rounded-full mb-8" />
             <p className="text-white/70 text-base md:text-lg font-medium leading-relaxed">
-              Kami siap membantu Anda. Silakan hubungi unit terkait atau kunjungi kampus kami untuk informasi lebih lanjut.
+              {description}
             </p>
           </div>
         </div>

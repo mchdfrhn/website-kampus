@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import HomeNavLink from './HomeNavLink';
 
 export default function MobileMenu({ navItems }: { navItems: { label: string; href: string; children?: { label: string; href: string; id?: string | null }[] | null; id?: string | null }[] }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +48,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
         aria-label="Menu navigasi"
       >
         <div className="flex items-center justify-between px-6 py-6 border-b border-white/10 bg-brand-navy">
-          <Link href="/" onClick={toggleMenu} className="flex items-center gap-3">
+          <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3">
             <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs leading-none shadow-lg shadow-brand-gold/20">
               STTPU
             </div>
@@ -55,7 +56,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
               <div className="font-bold text-sm leading-tight tracking-tight">STTPU</div>
               <div className="text-white/60 text-[10px] leading-tight font-medium">Sekolah Tinggi Teknologi PU</div>
             </div>
-          </Link>
+          </HomeNavLink>
           <button
             onClick={toggleMenu}
             aria-label="Tutup menu"
@@ -108,13 +109,23 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
                   </div>
                 </>
               ) : (
-                <Link
-                  href={item.href}
-                  onClick={toggleMenu}
-                  className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
-                >
-                  {item.label}
-                </Link>
+                item.href === '/' ? (
+                  <HomeNavLink
+                    href={item.href}
+                    onClick={toggleMenu}
+                    className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
+                  >
+                    {item.label}
+                  </HomeNavLink>
+                ) : (
+                  <Link
+                    href={item.href}
+                    onClick={toggleMenu}
+                    className="flex items-center px-4 py-3.5 text-white/80 hover:text-white hover:bg-white/5 rounded-xl transition-all duration-300 text-sm font-bold tracking-tight"
+                  >
+                    {item.label}
+                  </Link>
+                )
               )}
             </div>
           ))}

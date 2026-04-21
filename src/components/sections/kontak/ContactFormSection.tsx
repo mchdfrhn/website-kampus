@@ -1,21 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { type ReactElement, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Send, MessageCircle, Mail, Phone, MapPin } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-
-const UNIT_OPTIONS = [
-  { label: 'Bagian Akademik', value: 'akademik' },
-  { label: 'Bagian Keuangan', value: 'keuangan' },
-  { label: 'Bagian Kemahasiswaan', value: 'kemahasiswaan' },
-  { label: 'Unit IT / Helpdesk', value: 'it' },
-  { label: 'Perpustakaan', value: 'perpustakaan' },
-  { label: 'Umum / Lainnya', value: 'umum' },
-] as const;
 
 const schema = z.object({
   nama: z.string().min(3, 'Nama minimal 3 karakter'),
@@ -34,38 +25,30 @@ type FormValues = z.infer<typeof schema>;
 const inputClass =
   'border border-gray-100 bg-gray-50 rounded-[1.25rem] px-5 py-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-navy focus:bg-white transition-all w-full placeholder:text-gray-400';
 
-const otherChannels = [
+const defaultOtherChannels = [
   {
-    icon: <MessageCircle size={20} />,
-    bg: 'bg-green-50',
-    color: 'text-[#25D366]',
+    icon: 'whatsapp',
     label: 'WhatsApp Official',
     desc: '+62 812-3456-7890',
     href: 'https://wa.me/6281234567890',
     external: true,
   },
   {
-    icon: <Mail size={20} />,
-    bg: 'bg-brand-navy/5',
-    color: 'text-brand-navy',
+    icon: 'email',
     label: 'Email Institusi',
     desc: 'info@sttpu.ac.id',
     href: 'mailto:info@sttpu.ac.id',
     external: false,
   },
   {
-    icon: <Phone size={20} />,
-    bg: 'bg-brand-gold/5',
-    color: 'text-brand-gold',
+    icon: 'phone',
     label: 'Saluran Telepon',
     desc: '(021) 555-1234',
     href: 'tel:+62215551234',
     external: false,
   },
   {
-    icon: <MapPin size={20} />,
-    bg: 'bg-gray-100',
-    color: 'text-gray-600',
+    icon: 'map',
     label: 'Lokasi Kampus',
     desc: 'Lihat Peta & Petunjuk',
     href: '#peta',
@@ -73,7 +56,7 @@ const otherChannels = [
   },
 ];
 
-const faqLinks = [
+const defaultFaqLinks = [
   { label: 'Prosedur pendaftaran mahasiswa baru', href: '/akademik/program-studi' },
   { label: 'Daftar program studi & akreditasi', href: '/akademik/program-studi' },
   { label: 'Akses SIAKAD & Portal Mahasiswa', href: '/portal' },
@@ -81,7 +64,43 @@ const faqLinks = [
   { label: 'Pengajuan surat keterangan akademik', href: '/portal' },
 ];
 
-export default function ContactFormSection() {
+type UnitOption = { label: string; value: string }
+type ChannelItem = {
+  icon: string
+  label: string
+  desc: string
+  href: string
+  external?: boolean
+}
+type FaqItem = { label: string; href: string }
+
+const defaultUnitOptions: UnitOption[] = [
+  { label: 'Bagian Akademik', value: 'Bagian Akademik' },
+  { label: 'Bagian Keuangan', value: 'Bagian Keuangan' },
+  { label: 'Bagian Kemahasiswaan', value: 'Bagian Kemahasiswaan' },
+  { label: 'Unit IT / Helpdesk', value: 'Unit IT / Helpdesk' },
+  { label: 'Perpustakaan', value: 'Perpustakaan' },
+  { label: 'Umum / Lainnya', value: 'Umum / Lainnya' },
+]
+
+const channelStyles: Record<string, { icon: ReactElement; bg: string; color: string }> = {
+  whatsapp: { icon: <MessageCircle size={20} />, bg: 'bg-green-50', color: 'text-[#25D366]' },
+  email: { icon: <Mail size={20} />, bg: 'bg-brand-navy/5', color: 'text-brand-navy' },
+  phone: { icon: <Phone size={20} />, bg: 'bg-brand-gold/5', color: 'text-brand-gold' },
+  map: { icon: <MapPin size={20} />, bg: 'bg-gray-100', color: 'text-gray-600' },
+}
+
+export default function ContactFormSection({
+  formTitle = 'Kirim Pesan',
+  unitOptions = defaultUnitOptions,
+  otherChannels = defaultOtherChannels,
+  faqLinks = defaultFaqLinks,
+}: {
+  formTitle?: string
+  unitOptions?: UnitOption[]
+  otherChannels?: ChannelItem[]
+  faqLinks?: FaqItem[]
+}) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -141,7 +160,7 @@ export default function ContactFormSection() {
     <section className="bg-white py-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-16 text-center lg:text-left">
-          <h2 className="text-brand-navy font-bold text-3xl tracking-tight">Kirim Pesan</h2>
+          <h2 className="text-brand-navy font-bold text-3xl tracking-tight">{formTitle}</h2>
           <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
         </div>
 
@@ -200,7 +219,7 @@ export default function ContactFormSection() {
                     <option value="" disabled>
                       Pilih unit kerja tujuan
                     </option>
-                    {UNIT_OPTIONS.map((opt) => (
+                    {unitOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>
@@ -282,21 +301,26 @@ export default function ContactFormSection() {
               <h3 className="font-bold text-brand-navy text-sm mb-8 uppercase tracking-wider">Saluran Langsung</h3>
               <div className="space-y-4">
                 {otherChannels.map((ch) => (
-                  <a
-                    key={ch.label}
-                    href={ch.href}
-                    target={ch.external ? '_blank' : undefined}
-                    rel={ch.external ? 'noopener noreferrer' : undefined}
-                    className="flex items-center gap-5 p-5 bg-white border border-gray-100 rounded-2xl hover:border-brand-gold hover:shadow-premium-hover hover:-translate-x-1.5 transition-all duration-300 group"
-                  >
-                    <div className={`${ch.bg} ${ch.color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
-                      {ch.icon}
-                    </div>
-                    <div>
-                      <p className="font-bold text-brand-navy text-[11px] uppercase tracking-wider">{ch.label}</p>
-                      <p className="text-gray-400 font-bold text-xs mt-1">{ch.desc}</p>
-                    </div>
-                  </a>
+                  (() => {
+                    const style = channelStyles[ch.icon] || channelStyles.map
+                    return (
+                      <a
+                        key={ch.label}
+                        href={ch.href}
+                        target={ch.external ? '_blank' : undefined}
+                        rel={ch.external ? 'noopener noreferrer' : undefined}
+                        className="flex items-center gap-5 p-5 bg-white border border-gray-100 rounded-2xl hover:border-brand-gold hover:shadow-premium-hover hover:-translate-x-1.5 transition-all duration-300 group"
+                      >
+                        <div className={`${style.bg} ${style.color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                          {style.icon}
+                        </div>
+                        <div>
+                          <p className="font-bold text-brand-navy text-[11px] uppercase tracking-wider">{ch.label}</p>
+                          <p className="text-gray-400 font-bold text-xs mt-1">{ch.desc}</p>
+                        </div>
+                      </a>
+                    )
+                  })()
                 ))}
               </div>
             </div>

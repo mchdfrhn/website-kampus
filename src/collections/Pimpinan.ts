@@ -25,7 +25,7 @@ export const Pimpinan: CollectionConfig = {
     { name: 'urutan', type: 'number', label: 'Urutan Tampil (0 = paling atas)', defaultValue: 0 },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/tentang/pimpinan'])],
-    afterDelete: [revalidateDelete(['/tentang/pimpinan'])],
+    afterChange: [revalidateCollection(['/tentang/pimpinan', '/tentang/struktur-organisasi'])],
+    afterDelete: [revalidateDelete(['/tentang/pimpinan', '/tentang/struktur-organisasi'])],
   },
 }

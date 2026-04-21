@@ -103,7 +103,7 @@ export const Berita: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateCollection(["/berita", "/berita/[slug]"])],
-    afterDelete: [revalidateDelete(["/berita", "/berita/[slug]"])],
+    afterChange: [revalidateCollection(["/", "/berita", "/berita/[slug]"])],
+    afterDelete: [revalidateDelete(["/", "/berita", "/berita/[slug]"])],
   },
 };
