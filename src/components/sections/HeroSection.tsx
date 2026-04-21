@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getPayloadClient } from '@/lib/payload';
 
 const defaults = {
   badge: 'Sekolah Tinggi Teknologi',
@@ -11,32 +10,30 @@ const defaults = {
   cta2: { teks: 'Pelajari Program Studi', href: '/akademik/program-studi' },
 };
 
-export default async function HeroSection() {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let data: Record<string, any> = {}
+type HeroData = {
+  heroBadge?: string | null
+  heroJudul?: string | null
+  heroSubjudul?: string | null
+  heroCta1Teks?: string | null
+  heroCta1Href?: string | null
+  heroCta2Teks?: string | null
+  heroCta2Href?: string | null
+  heroFoto?: { url: string } | string | null
+}
+
+export default function HeroSection({ data }: { data?: HeroData }) {
+  const badge = data?.heroBadge || defaults.badge
+  const judul = data?.heroJudul || defaults.judul
+  const subjudul = data?.heroSubjudul || defaults.subjudul
+  const cta1Teks = data?.heroCta1Teks || defaults.cta1.teks
+  const cta1Href = data?.heroCta1Href || defaults.cta1.href
+  const cta2Teks = data?.heroCta2Teks || defaults.cta2.teks
+  const cta2Href = data?.heroCta2Href || defaults.cta2.href
+
   let fotoUrl: string | null = null
-
-  try {
-    const payload = await getPayloadClient()
-    const global = await payload.findGlobal({ slug: 'halaman-utama', depth: 1 })
-    if (global) {
-      data = global as unknown as Record<string, unknown>
-      const foto = data.heroFoto
-      if (foto && typeof foto === 'object' && 'url' in foto) {
-        fotoUrl = (foto as { url: string }).url
-      }
-    }
-  } catch {
-    // DB unavailable — use defaults
+  if (data?.heroFoto && typeof data.heroFoto === 'object' && 'url' in data.heroFoto) {
+    fotoUrl = (data.heroFoto as { url: string }).url
   }
-
-  const badge = data.heroBadge || defaults.badge
-  const judul = data.heroJudul || defaults.judul
-  const subjudul = data.heroSubjudul || defaults.subjudul
-  const cta1Teks = data.heroCta1Teks || defaults.cta1.teks
-  const cta1Href = data.heroCta1Href || defaults.cta1.href
-  const cta2Teks = data.heroCta2Teks || defaults.cta2.teks
-  const cta2Href = data.heroCta2Href || defaults.cta2.href
 
   return (
     <section className="bg-[#1E3A5F] min-h-[520px] flex items-center relative overflow-hidden">
@@ -72,7 +69,7 @@ export default async function HeroSection() {
         <div className="hidden lg:flex flex-1 items-center justify-center">
           {fotoUrl ? (
             <div className="w-full max-w-md h-72 rounded-2xl overflow-hidden border border-white/20">
-              <Image src={fotoUrl} alt="Foto Kampus STTPU" fill className="object-cover" />
+              <Image src={fotoUrl} alt="Foto Kampus STTPU" fill className="object-cover" priority />
             </div>
           ) : (
             <div className="w-full max-w-md h-72 bg-white/10 rounded-2xl border border-white/20 flex items-center justify-center">

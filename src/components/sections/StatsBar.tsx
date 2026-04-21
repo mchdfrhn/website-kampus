@@ -1,4 +1,3 @@
-import { getPayloadClient } from '@/lib/payload';
 
 const defaultStats = [
   { angka: '2.400+', label: 'Mahasiswa Aktif' },
@@ -7,19 +6,8 @@ const defaultStats = [
   { angka: 'B', label: 'Akreditasi BAN-PT' },
 ];
 
-export default async function StatsBar() {
-  let stats = defaultStats
-
-  try {
-    const payload = await getPayloadClient()
-    const global = await payload.findGlobal({ slug: 'halaman-utama' })
-    const items = (global as unknown as { statistik?: { angka: string; label: string }[] }).statistik
-    if (items && items.length > 0) {
-      stats = items
-    }
-  } catch {
-    // DB unavailable — use defaults
-  }
+export default function StatsBar({ items }: { items?: { angka: string; label: string }[] }) {
+  const stats = items && items.length > 0 ? items : defaultStats
 
   return (
     <div className="bg-white shadow-sm border-b border-gray-100">

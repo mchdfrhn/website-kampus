@@ -9,8 +9,7 @@ import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
 import { getPayloadClient } from '@/lib/payload';
 import { artikelList as artikelStatic, mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 3600; // Cache for 1 hour
 
 export const metadata = {
   title: 'Beranda | STTPU Jakarta',
@@ -21,64 +20,53 @@ export const metadata = {
 type TabLink = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: TabLink[] }
 
-async function fetchBeritaTerbaru(): Promise<Artikel[]> {
-  try {
-    const payload = await getPayloadClient();
-    const result = await payload.find({
-      collection: 'berita',
-      where: { status: { equals: 'terbit' } },
-      limit: 4,
-      sort: '-tanggalTerbit',
-      depth: 1,
-    });
-    // Jika query berhasil, gunakan data dari DB (walaupun kosong)
-    return result.docs.map(mapPayloadToArtikel);
-  } catch {
-    // Hanya jika DB error — gunakan data statis
-    return artikelStatic.slice(0, 4);
-  }
-}
-
-async function fetchQuickLinksTabs(): Promise<Tab[]> {
+async function fetchHomePageData() {
   try {
     const payload = await getPayloadClient()
-    const global = await payload.findGlobal({ slug: 'halaman-utama' })
-    const tabs = (global as unknown as { quickLinksTabs?: Tab[] }).quickLinksTabs
-    if (tabs && tabs.length > 0) return tabs
-  } catch {
-    // DB not available — PersonaQuickLinks uses its own static fallback
-  }
-  return []
-}
+    const [halamanUtama, siteSettings, berita] = await Promise.all([
+      payload.findGlobal({ slug: 'halaman-utama', depth: 1 }),
+      payload.findGlobal({ slug: 'site-settings', depth: 1 }),
+      payload.find({
+        collection: 'berita',
+        where: { status: { equals: 'terbit' } },
+        limit: 4,
+        sort: '-tanggalTerbit',
+        depth: 1,
+      })
+    ])
 
-async function fetchSiteSettings() {
-  try {
-    const payload = await getPayloadClient()
-    return await payload.findGlobal({ slug: 'site-settings' })
-  } catch {
-    return null
+    return {
+      halamanUtama,
+      siteSettings,
+      berita: berita.docs.map(mapPayloadToArtikel)
+    }
+  } catch (error) {
+    console.error('Error fetching home page data:', error)
+    return {
+      halamanUtama: null,
+      siteSettings: null,
+      berita: artikelStatic.slice(0, 4)
+    }
   }
 }
 
 export default async function HomePage() {
-  const [artikelList, quickLinksTabs, settings] = await Promise.all([
-    fetchBeritaTerbaru(),
-    fetchQuickLinksTabs(),
-    fetchSiteSettings(),
-  ])
+  const { halamanUtama, siteSettings, berita } = await fetchHomePageData()
 
-  const waNumber = settings?.whatsapp || undefined
+  const quickLinksTabs = (halamanUtama as unknown as { quickLinksTabs?: Tab[] })?.quickLinksTabs || []
+  const waNumber = (siteSettings as { whatsapp?: string })?.whatsapp || undefined
+  const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || []
 
   return (
     <>
-      <HeroSection />
-      <StatsBar />
+      <HeroSection data={halamanUtama as Parameters<typeof HeroSection>[0]['data']} />
+      <StatsBar items={stats as { angka: string; label: string }[]} />
       <ProgramStudiSection />
       <PersonaQuickLinks tabs={quickLinksTabs} />
-      <BeritaTerakhirSection artikelList={artikelList} />
+      <BeritaTerakhirSection artikelList={berita} />
       <AkreditasiSection />
       <TestimonialSection />
-      <WhatsAppFloat waNumber={waNumber} />
+      <WhatsAppFloat waNumber={waNumber as string | undefined} />
     </>
   );
 }
