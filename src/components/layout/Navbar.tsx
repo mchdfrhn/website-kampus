@@ -115,13 +115,15 @@ export default async function Navbar() {
               ariaLabel={`STTPU — Beranda`}
             >
               {settings.logoUrl ? (
-                <div className="relative h-9 w-9 flex-shrink-0 overflow-hidden rounded-xl shadow-lg shadow-black/20 transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11">
+                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105 sm:h-12 sm:w-12 sm:p-2">
+                  <div className="relative h-full w-full overflow-hidden rounded-lg">
                   <Image
                     src={settings.logoUrl}
                     alt={settings.namaInstitusi}
                     fill
                     className="object-contain"
                   />
+                  </div>
                 </div>
               ) : (
                 <div

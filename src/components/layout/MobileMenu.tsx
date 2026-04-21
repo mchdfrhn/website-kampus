@@ -70,13 +70,15 @@ export default function MobileMenu({ navItems, logoUrl, institutionName = 'Sekol
         <div className="flex items-center justify-between px-4 sm:px-6 py-5 sm:py-6 border-b border-white/10 bg-brand-navy rounded-tr-3xl">
           <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3 min-w-0 pr-3">
             {logoUrl ? (
-              <div className="relative w-10 h-10 flex-shrink-0 overflow-hidden rounded-xl shadow-lg shadow-black/20">
-                <Image
-                  src={logoUrl}
-                  alt={institutionName}
-                  fill
-                  className="object-contain"
-                />
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5">
+                <div className="relative h-full w-full overflow-hidden rounded-lg">
+                  <Image
+                    src={logoUrl}
+                    alt={institutionName}
+                    fill
+                    className="object-contain"
+                  />
+                </div>
               </div>
             ) : (
               <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs leading-none shadow-lg shadow-brand-gold/20">
