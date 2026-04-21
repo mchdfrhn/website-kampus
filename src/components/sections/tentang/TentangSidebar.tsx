@@ -1,29 +1,23 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-const sidebarLinks = [
-  { label: 'Sejarah & Profil', href: '/tentang/sejarah' },
-  { label: 'Visi, Misi & Nilai', href: '/tentang/visi-misi' },
-  { label: 'Profil Pimpinan', href: '/tentang/pimpinan' },
-  { label: 'Akreditasi & Legalitas', href: '/tentang/akreditasi' },
-  { label: 'Struktur Organisasi', href: '/tentang/struktur-organisasi' },
-  { label: 'Fasilitas Kampus', href: '/tentang/fasilitas' },
-];
-
-export default function TentangSidebar() {
-  const pathname = usePathname();
+export default function TentangSidebar({
+  pathname,
+  title,
+  links,
+}: {
+  pathname: string
+  title: string
+  links: { label: string; href: string }[]
+}) {
 
   return (
     <aside className="w-full lg:w-72 flex-shrink-0">
       <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-premium transition-all">
         <div className="bg-brand-navy px-6 py-5">
-          <p className="text-white font-black text-[10px] uppercase tracking-[0.2em]">Navigasi Institusi</p>
+          <p className="text-white font-black text-[10px] uppercase tracking-[0.2em]">{title}</p>
         </div>
         <nav aria-label="Navigasi Tentang">
           <ul role="list">
-            {sidebarLinks.map((link) => {
+            {links.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <li key={link.href} className="border-b border-gray-50 last:border-0">

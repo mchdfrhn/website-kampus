@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import DosenGrid from '@/components/sections/akademik/DosenGrid';
-import { dosenList, mapPayloadToDosen } from '@/lib/data/dosen';
+import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
+import { getPayloadClient } from '@/lib/payload';
 
 export const metadata: Metadata = {
   title: 'Dosen | STTPU Jakarta',
@@ -12,18 +13,16 @@ export const metadata: Metadata = {
 
 async function fetchDosenList(): Promise<Dosen[]> {
   try {
-    const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'dosen',
       depth: 1,
       limit: 200,
     });
-    if (result.docs.length === 0) return dosenList;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return result.docs.map((doc: any) => mapPayloadToDosen(doc));
   } catch {
-    return dosenList;
+    return [];
   }
 }
 

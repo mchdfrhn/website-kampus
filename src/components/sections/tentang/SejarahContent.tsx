@@ -1,53 +1,31 @@
 import { getPayloadClient } from '@/lib/payload';
+import { serializeLexical } from '@/lib/utils';
 
 type Milestone = { tahun: string; judul: string; deskripsi?: string }
 
-const defaultMilestones: Milestone[] = [
-  { tahun: '1987', judul: 'Pendirian STTPU', deskripsi: 'Sekolah Tinggi Teknologi Pekerjaan Umum didirikan atas prakarsa Kementerian Pekerjaan Umum sebagai lembaga pendidikan vokasi yang berfokus pada teknologi infrastruktur dan konstruksi.' },
-  { tahun: '1995', judul: 'Akreditasi Pertama BAN-PT', deskripsi: 'STTPU berhasil meraih akreditasi dari Badan Akreditasi Nasional Perguruan Tinggi (BAN-PT) untuk seluruh program studi yang ada.' },
-  { tahun: '2003', judul: 'Pengembangan Program Studi Baru', deskripsi: 'Membuka program studi Teknik Pengairan dan Teknik Lingkungan sebagai respons terhadap kebutuhan tenaga ahli di bidang pengelolaan sumber daya air dan lingkungan hidup.' },
-  { tahun: '2010', judul: 'Renovasi Kampus & Laboratorium', deskripsi: 'Pembangunan gedung baru dan laboratorium modern yang dilengkapi dengan peralatan mutakhir untuk mendukung kegiatan praktikum dan penelitian mahasiswa.' },
-  { tahun: '2015', judul: 'Program Manajemen Konstruksi', deskripsi: 'Pembukaan program studi Manajemen Konstruksi (D-IV) sebagai wujud komitmen STTPU mengikuti kebutuhan industri konstruksi yang semakin berkembang.' },
-  { tahun: '2020', judul: 'Transformasi Digital', deskripsi: 'Implementasi sistem pembelajaran daring dan pengembangan infrastruktur IT kampus sebagai respons terhadap era digitalisasi pendidikan tinggi.' },
-  { tahun: '2024', judul: 'Akreditasi Unggul', deskripsi: 'Sejumlah program studi STTPU berhasil meraih akreditasi "Unggul" dari BAN-PT, menempatkan STTPU di antara perguruan tinggi vokasi teknologi terkemuka di Indonesia.' },
-];
-
 export default async function SejarahContent() {
-  let milestones = defaultMilestones
+  let milestones: Milestone[] = []
+  let sejarahHtml = ''
 
   try {
     const payload = await getPayloadClient()
     const global = await payload.findGlobal({ slug: 'tentang-kami' })
-    const data = global as unknown as { milestones?: Milestone[] }
-    if (data.milestones && data.milestones.length > 0) {
-      milestones = data.milestones
-    }
+    const data = global as unknown as { milestones?: Milestone[]; sejarahDeskripsi?: unknown }
+    milestones = data.milestones || []
+    sejarahHtml = serializeLexical(data.sejarahDeskripsi)
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   return (
     <article>
       <section className="mb-10">
         <h2 className="text-xl font-bold text-[#1E3A5F] mb-4">Tentang Kami</h2>
-        <div className="prose prose-gray max-w-none text-gray-700 leading-relaxed space-y-4 text-sm">
-          <p>
-            Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta adalah perguruan tinggi vokasi
-            yang berdedikasi menghasilkan tenaga ahli di bidang teknologi infrastruktur, konstruksi,
-            dan pekerjaan umum. Berdiri sejak 1987 atas inisiatif Kementerian Pekerjaan Umum,
-            STTPU hadir untuk menjawab kebutuhan nasional akan sumber daya manusia yang kompeten
-            dan siap kerja di sektor pembangunan infrastruktur Indonesia.
-          </p>
-          <p>
-            Selama lebih dari tiga dekade, STTPU telah meluluskan ribuan alumni yang tersebar di
-            berbagai instansi pemerintah, BUMN, dan perusahaan swasta nasional maupun multinasional.
-          </p>
-          <p>
-            Berlokasi di Jakarta — jantung pengambilan keputusan dan pusat industri konstruksi
-            nasional — STTPU memiliki akses strategis ke proyek-proyek infrastruktur skala nasional
-            yang menjadi laboratorium pembelajaran nyata bagi mahasiswa.
-          </p>
-        </div>
+        {sejarahHtml ? (
+          <div className="prose prose-gray max-w-none text-gray-700 text-sm" dangerouslySetInnerHTML={{ __html: sejarahHtml }} />
+        ) : (
+          <p className="text-sm text-gray-500">Deskripsi sejarah belum tersedia.</p>
+        )}
       </section>
 
       <section>

@@ -60,6 +60,11 @@ export const ProgramStudi: CollectionConfig = {
       label: "Deskripsi Lengkap",
     },
     {
+      name: "gelarLulusan",
+      type: "text",
+      label: "Gelar Lulusan",
+    },
+    {
       name: "visi",
       type: "textarea",
       label: "Visi",
@@ -87,6 +92,45 @@ export const ProgramStudi: CollectionConfig = {
       fields: [
         { name: "karir", type: "text", label: "Bidang Karir" },
       ],
+    },
+    {
+      name: "kurikulum",
+      type: "array",
+      label: "Struktur Kurikulum",
+      fields: [
+        { name: "semester", type: "number", label: "Semester", required: true },
+        {
+          name: "mataKuliah",
+          type: "array",
+          label: "Mata Kuliah",
+          fields: [{ name: "nama", type: "text", label: "Nama Mata Kuliah", required: true }],
+        },
+      ],
+    },
+    {
+      name: "nomorSKAkreditasi",
+      type: "text",
+      label: "Nomor SK Akreditasi",
+    },
+    {
+      name: "berlakuHingga",
+      type: "text",
+      label: "Berlaku Hingga",
+    },
+    {
+      name: "jumlahSKS",
+      type: "number",
+      label: "Jumlah SKS",
+    },
+    {
+      name: "masaStudi",
+      type: "text",
+      label: "Masa Studi",
+    },
+    {
+      name: "kurikulumPdfUrl",
+      type: "text",
+      label: "URL PDF Kurikulum",
     },
     {
       name: "thumbnail",

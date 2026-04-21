@@ -1,15 +1,9 @@
-
 import { Reveal } from '@/components/ui/motion/Reveal';
 
-const defaultStats = [
-  { angka: '2.400+', label: 'Mahasiswa Aktif' },
-  { angka: '6', label: 'Program Studi' },
-  { angka: '1987', label: 'Tahun Berdiri' },
-  { angka: 'B', label: 'Akreditasi BAN-PT' },
-];
-
 export default function StatsBar({ items }: { items?: { angka: string; label: string }[] }) {
-  const stats = items && items.length > 0 ? items : defaultStats
+  const stats = items && items.length > 0 ? items : []
+
+  if (stats.length === 0) return null
 
   return (
     <div className="relative z-20 -mt-10 lg:-mt-12 max-w-7xl mx-auto px-6 lg:px-8">

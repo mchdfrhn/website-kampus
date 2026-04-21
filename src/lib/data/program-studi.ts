@@ -17,6 +17,8 @@ export type ProgramStudi = {
   berlakuHingga: string;
   jumlahSKS: number;
   masaStudi: string;
+  gelarLulusan?: string;
+  kurikulumPdfUrl?: string;
 };
 
 export const programStudiList: ProgramStudi[] = [
@@ -325,8 +327,14 @@ export function mapPayloadToProgramStudi(doc: any): ProgramStudi {
     ? doc.prospekKarir.map((p: { karir: string }) => p.karir ?? '')
     : [];
 
-  // Enrich with static data for fields not present in Payload (kurikulum, SKS, etc.)
-  const staticData = getProgramStudiBySlug(doc.slug ?? '');
+  const kurikulum = Array.isArray(doc.kurikulum)
+    ? doc.kurikulum.map((semester: { semester?: number; mataKuliah?: { nama?: string }[] }) => ({
+        semester: typeof semester.semester === 'number' ? semester.semester : 0,
+        mataKuliah: Array.isArray(semester.mataKuliah)
+          ? semester.mataKuliah.map((item) => item.nama ?? '').filter(Boolean)
+          : [],
+      }))
+    : [];
 
   return {
     slug: doc.slug ?? '',
@@ -334,18 +342,19 @@ export function mapPayloadToProgramStudi(doc: any): ProgramStudi {
     jenjang: doc.jenjang ?? '',
     akreditasi: doc.akreditasi ?? '',
     deskripsiSingkat: doc.deskripsiSingkat ?? '',
-    deskripsi: deskripsiHtml || (staticData?.deskripsi ?? ''),
+    deskripsi: deskripsiHtml || '',
     deskripsiHtml,
     thumbnailUrl,
-    visi: doc.visi ?? staticData?.visi ?? '',
-    misi: misi.length > 0 ? misi : (staticData?.misi ?? []),
-    kompetensiLulusan: kompetensiLulusan.length > 0 ? kompetensiLulusan : (staticData?.kompetensiLulusan ?? []),
-    prospekKarir: prospekKarir.length > 0 ? prospekKarir : (staticData?.prospekKarir ?? []),
-    // These fields only exist in static data; fall back gracefully
-    kurikulum: staticData?.kurikulum ?? [],
-    nomorSKAkreditasi: staticData?.nomorSKAkreditasi ?? '',
-    berlakuHingga: staticData?.berlakuHingga ?? '',
-    jumlahSKS: staticData?.jumlahSKS ?? 0,
-    masaStudi: staticData?.masaStudi ?? '',
+    visi: doc.visi ?? '',
+    misi,
+    kompetensiLulusan,
+    prospekKarir,
+    kurikulum,
+    nomorSKAkreditasi: doc.nomorSKAkreditasi ?? '',
+    berlakuHingga: doc.berlakuHingga ?? '',
+    jumlahSKS: typeof doc.jumlahSKS === 'number' ? doc.jumlahSKS : 0,
+    masaStudi: doc.masaStudi ?? '',
+    gelarLulusan: doc.gelarLulusan ?? '',
+    kurikulumPdfUrl: doc.kurikulumPdfUrl ?? '',
   };
 }

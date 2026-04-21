@@ -4,36 +4,12 @@ type PimpinanItem = { jabatan: string; nama: string; urutan?: number }
 type UnitItem = { unit: string; kepala?: string }
 type BagianItem = { bagian: string; kepala?: string }
 
-const defaultPimpinan: PimpinanItem[] = [
-  { jabatan: 'Ketua STTPU', nama: 'Prof. Dr. Ir. Bambang Setiawan, M.T.', urutan: 0 },
-  { jabatan: 'Wakil Ketua I — Akademik', nama: 'Dr. Ir. Siti Rahayu, M.Sc.', urutan: 1 },
-  { jabatan: 'Wakil Ketua II — Administrasi & Keuangan', nama: 'Drs. Hendra Wijaya, M.M.', urutan: 2 },
-  { jabatan: 'Wakil Ketua III — Kemahasiswaan & Alumni', nama: 'Dr. Ahmad Fauzi, S.T., M.T.', urutan: 3 },
-]
-
-const defaultSenat = { jabatan: 'Ketua Senat Akademik', nama: 'Prof. Dr. Ir. Mulyadi Santoso, M.T.' }
-
-const defaultUPT: UnitItem[] = [
-  { unit: 'LPPM (Lembaga Penelitian & Pengabdian Masyarakat)', kepala: 'Dr. Rina Kusumawati, S.T., M.T.' },
-  { unit: 'LPPMP (Lembaga Penjaminan Mutu)', kepala: 'Dr. Budi Hartono, S.T., M.T.' },
-  { unit: 'UPT Perpustakaan', kepala: 'Dra. Endang Susanti, M.I.Kom.' },
-  { unit: 'UPT Teknologi Informasi', kepala: 'Ir. Yusuf Hidayat, M.Kom.' },
-  { unit: 'UPT Laboratorium Terpadu', kepala: 'Dr. Wahyu Prakoso, S.T., M.T.' },
-  { unit: 'UPT Career Center & Alumni', kepala: 'Drs. Agus Supriyanto, M.M.' },
-]
-
-const defaultBagian: BagianItem[] = [
-  { bagian: 'Bagian Akademik & Kemahasiswaan', kepala: 'Dra. Sri Wahyuni, M.Pd.' },
-  { bagian: 'Bagian Kepegawaian & Keuangan', kepala: 'Drs. Tono Wibowo, M.M.' },
-  { bagian: 'Bagian Umum & Perlengkapan', kepala: 'Ir. Joko Santoso' },
-  { bagian: 'Bagian Humas & Pemasaran', kepala: 'Anggraeni Putri, S.Sos., M.I.Kom.' },
-]
-
 export default async function StrukturOrganisasiContent() {
-  let pimpinan = defaultPimpinan
-  let senat = defaultSenat
-  let upt: UnitItem[] = defaultUPT
-  let bagian: BagianItem[] = defaultBagian
+  let pimpinan: PimpinanItem[] = []
+  let senat = { jabatan: '', nama: '' }
+  let upt: UnitItem[] = []
+  let bagian: BagianItem[] = []
+  let catatan = ''
 
   try {
     const payload = await getPayloadClient()
@@ -51,21 +27,26 @@ export default async function StrukturOrganisasiContent() {
       strukturSenat?: { jabatan: string; nama: string }
       strukturUPT?: UnitItem[]
       strukturBagian?: { bagian: string; kepala?: string }[]
+      strukturCatatan?: string
     }
 
     if (tentang.strukturSenat?.jabatan) senat = tentang.strukturSenat
-    if (tentang.strukturUPT && tentang.strukturUPT.length > 0) upt = tentang.strukturUPT
-    if (tentang.strukturBagian && tentang.strukturBagian.length > 0) {
-      bagian = tentang.strukturBagian.map((b) => ({ bagian: b.bagian, kepala: b.kepala }))
-    }
+    upt = tentang.strukturUPT || []
+    bagian = (tentang.strukturBagian || []).map((b) => ({ bagian: b.bagian, kepala: b.kepala }))
+    catatan = tentang.strukturCatatan || ''
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   const [ketua, ...wakilKetua] = pimpinan
 
   return (
     <article className="space-y-8">
+      {!ketua && upt.length === 0 && bagian.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+          Struktur organisasi belum tersedia.
+        </div>
+      ) : null}
       <section>
         <div className="bg-[#1E3A5F] rounded-xl p-5 text-center text-white mb-6">
           <p className="text-white/70 text-xs uppercase tracking-widest mb-1">Pimpinan Tertinggi</p>
@@ -117,9 +98,7 @@ export default async function StrukturOrganisasiContent() {
         </ul>
       </section>
 
-      <p className="text-gray-500 text-xs border-t border-gray-200 pt-4">
-        Untuk versi lengkap struktur organisasi, hubungi Bagian Humas STTPU Jakarta.
-      </p>
+      {catatan ? <p className="text-gray-500 text-xs border-t border-gray-200 pt-4">{catatan}</p> : null}
     </article>
   );
 }

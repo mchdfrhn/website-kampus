@@ -16,20 +16,6 @@ type LegalitasItem = {
   keterangan?: string
 }
 
-const defaultAkreditasi: AkreditasiProdi[] = [
-  { prodi: 'Teknik Sipil', jenjang: 'D-IV', akreditasi: 'Unggul', nomorSK: '1234/SK/BAN-PT/Akred/Dpl-IV/V/2023', berlakuHingga: '2028' },
-  { prodi: 'Teknik Pengairan', jenjang: 'D-IV', akreditasi: 'Baik Sekali', nomorSK: '1235/SK/BAN-PT/Akred/Dpl-IV/V/2022', berlakuHingga: '2027' },
-  { prodi: 'Teknik Lingkungan', jenjang: 'D-IV', akreditasi: 'Baik Sekali', nomorSK: '1236/SK/BAN-PT/Akred/Dpl-IV/VI/2022', berlakuHingga: '2027' },
-  { prodi: 'Manajemen Konstruksi', jenjang: 'D-IV', akreditasi: 'Baik Sekali', nomorSK: '1237/SK/BAN-PT/Akred/Dpl-IV/III/2023', berlakuHingga: '2028' },
-]
-
-const defaultLegalitas: LegalitasItem[] = [
-  { dokumen: 'Izin Pendirian', nomor: 'SK Mendiknas No. 123/D/O/1987', tanggal: '14 Oktober 1987', keterangan: 'Izin pendirian STTPU dari Menteri Pendidikan Nasional RI' },
-  { dokumen: 'Izin Operasional', nomor: 'SK Kemendikbudristek No. 456/E/O/2021', tanggal: '5 Maret 2021', keterangan: 'Perpanjangan izin operasional terakhir yang masih berlaku' },
-  { dokumen: 'Akreditasi Institusi', nomor: '789/SK/BAN-PT/Akred/PT/VII/2022', tanggal: '20 Juli 2022', keterangan: 'Akreditasi institusi STTPU dari BAN-PT dengan peringkat Baik Sekali' },
-  { dokumen: 'NPSN', nomor: '30131234', tanggal: '-', keterangan: 'Nomor identitas institusi dalam sistem PDDIKTI' },
-]
-
 const badgeColor = (akreditasi?: string) => {
   if (akreditasi === 'Unggul') return 'bg-green-100 text-green-800 border border-green-300'
   if (akreditasi === 'Baik Sekali') return 'bg-blue-100 text-blue-800 border border-blue-300'
@@ -38,20 +24,23 @@ const badgeColor = (akreditasi?: string) => {
 }
 
 export default async function AkreditasiContent() {
-  let akreditasiProdi = defaultAkreditasi
-  let legalitas = defaultLegalitas
+  let akreditasiProdi: AkreditasiProdi[] = []
+  let legalitas: LegalitasItem[] = []
+  let intro = ''
 
   try {
     const payload = await getPayloadClient()
     const global = await payload.findGlobal({ slug: 'tentang-kami', depth: 1 })
     const data = global as unknown as {
+      akreditasiIntro?: string
       akreditasiProdi?: AkreditasiProdi[]
       legalitas?: LegalitasItem[]
     }
-    if (data.akreditasiProdi && data.akreditasiProdi.length > 0) akreditasiProdi = data.akreditasiProdi
-    if (data.legalitas && data.legalitas.length > 0) legalitas = data.legalitas
+    intro = data.akreditasiIntro || ''
+    akreditasiProdi = data.akreditasiProdi || []
+    legalitas = data.legalitas || []
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   return (
@@ -59,16 +48,17 @@ export default async function AkreditasiContent() {
       <section className="bg-[#F0F4F8] rounded-xl p-5 border border-gray-200">
         <div className="flex items-start gap-3">
           <ShieldCheck size={20} className="text-[#1E3A5F] flex-shrink-0 mt-0.5" aria-hidden="true" />
-          <p className="text-gray-700 text-sm leading-relaxed">
-            STTPU Jakarta beroperasi sesuai dengan ketentuan peraturan perundang-undangan yang
-            berlaku dan telah mendapatkan pengakuan resmi dari Badan Akreditasi Nasional Perguruan
-            Tinggi (BAN-PT) serta Kementerian Pendidikan, Kebudayaan, Riset, dan Teknologi RI.
-          </p>
+          <p className="text-gray-700 text-sm leading-relaxed">{intro || 'Informasi akreditasi dan legalitas belum tersedia.'}</p>
         </div>
       </section>
 
       <section>
         <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Akreditasi Program Studi</h2>
+        {akreditasiProdi.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+            Data akreditasi program studi belum tersedia.
+          </div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm border-collapse" aria-label="Akreditasi program studi STTPU">
             <thead>
@@ -105,10 +95,16 @@ export default async function AkreditasiContent() {
             </tbody>
           </table>
         </div>
+        )}
       </section>
 
       <section>
         <h2 className="text-xl font-bold text-[#1E3A5F] mb-5">Legalitas Institusi</h2>
+        {legalitas.length === 0 ? (
+          <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+            Dokumen legalitas belum tersedia.
+          </div>
+        ) : (
         <ul className="space-y-4" aria-label="Dokumen legalitas STTPU">
           {legalitas.map((item, idx) => (
             <li key={idx} className="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-xl">
@@ -128,6 +124,7 @@ export default async function AkreditasiContent() {
             </li>
           ))}
         </ul>
+        )}
       </section>
     </article>
   );

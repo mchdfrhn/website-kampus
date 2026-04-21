@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import DosenDetailContent from '@/components/sections/akademik/DosenDetailContent';
-import { dosenList, getDosenBySlug, mapPayloadToDosen } from '@/lib/data/dosen';
+import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
+import { getPayloadClient } from '@/lib/payload';
 
 export async function generateStaticParams() {
   if (process.env.BUILD_SKIP_DB) return [];
   try {
-    const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'dosen',
@@ -20,14 +20,13 @@ export async function generateStaticParams() {
       return result.docs.map((doc: any) => ({ slug: doc.slug as string }));
     }
   } catch {
-    // fall through to static
+    // ignore
   }
-  return dosenList.map((d) => ({ slug: d.slug }));
+  return [];
 }
 
 async function fetchDosen(slug: string): Promise<Dosen | undefined> {
   try {
-    const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'dosen',
@@ -40,9 +39,9 @@ async function fetchDosen(slug: string): Promise<Dosen | undefined> {
       return mapPayloadToDosen(result.docs[0] as any);
     }
   } catch {
-    // fall through to static
+    return undefined;
   }
-  return getDosenBySlug(slug);
+  return undefined;
 }
 
 export async function generateMetadata({

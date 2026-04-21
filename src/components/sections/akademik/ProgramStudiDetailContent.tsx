@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
-import { programStudiList } from '@/lib/data/program-studi';
 import { ShieldCheck, BookOpen, Briefcase, GraduationCap, Clock, Hash, ChevronRight, User } from 'lucide-react';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 import { cn } from '@/lib/utils';
@@ -11,8 +10,13 @@ const akreditasiColor: Record<string, string> = {
   Baik: 'bg-yellow-100 text-yellow-800 border-yellow-300',
 };
 
-export default function ProgramStudiDetailContent({ prodi }: { prodi: ProgramStudi }) {
-  const others = programStudiList.filter((p) => p.slug !== prodi.slug);
+export default function ProgramStudiDetailContent({
+  prodi,
+  others = [],
+}: {
+  prodi: ProgramStudi
+  others?: ProgramStudi[]
+}) {
 
   return (
     <div className="flex flex-col lg:flex-row gap-12">
@@ -34,8 +38,8 @@ export default function ProgramStudiDetailContent({ prodi }: { prodi: ProgramStu
           {[
             { icon: Clock, label: 'Masa Studi', value: prodi.masaStudi },
             { icon: Hash, label: 'Total Beban', value: `${prodi.jumlahSKS} SKS` },
-            { icon: GraduationCap, label: 'Gelar Lulusan', value: 'S.Tr.T.' },
-            { icon: ShieldCheck, label: 'Legalitas', value: `s/d ${prodi.berlakuHingga.split(' ').pop()}` },
+            { icon: GraduationCap, label: 'Gelar Lulusan', value: prodi.gelarLulusan || '-' },
+            { icon: ShieldCheck, label: 'Legalitas', value: prodi.berlakuHingga ? `s/d ${prodi.berlakuHingga.split(' ').pop()}` : '-' },
           ].map(({ icon: Icon, label, value }) => (
             <div key={label} className="bg-white border border-gray-100 rounded-2xl p-6 text-center hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300">
               <div className="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center mx-auto mb-4">
@@ -167,10 +171,15 @@ export default function ProgramStudiDetailContent({ prodi }: { prodi: ProgramStu
             <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center md:text-left">
               * Kurikulum berbasis standar kompetensi nasional (SKKNI).
             </p>
-            <button className="bg-brand-navy text-white text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-brand-navy/90 transition-all shadow-xl shadow-brand-navy/10 flex items-center gap-2">
+            <a
+              href={prodi.kurikulumPdfUrl || '#'}
+              target={prodi.kurikulumPdfUrl ? '_blank' : undefined}
+              rel={prodi.kurikulumPdfUrl ? 'noopener noreferrer' : undefined}
+              className="bg-brand-navy text-white text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-brand-navy/90 transition-all shadow-xl shadow-brand-navy/10 flex items-center gap-2"
+            >
               Unduh Kurikulum (PDF)
               <ChevronRight size={14} />
-            </button>
+            </a>
           </div>
         </section>
       </article>

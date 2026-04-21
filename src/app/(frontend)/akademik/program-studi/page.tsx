@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import ProgramStudiGrid from '@/components/sections/akademik/ProgramStudiGrid';
-import { programStudiList, mapPayloadToProgramStudi } from '@/lib/data/program-studi';
+import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
+import { getPayloadClient } from '@/lib/payload';
 
 export const metadata: Metadata = {
   title: 'Program Studi | STTPU Jakarta',
@@ -12,7 +13,6 @@ export const metadata: Metadata = {
 
 async function fetchProdiList(): Promise<ProgramStudi[]> {
   try {
-    const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'program-studi',
@@ -20,11 +20,10 @@ async function fetchProdiList(): Promise<ProgramStudi[]> {
       limit: 100,
       where: { status: { equals: 'aktif' } },
     });
-    if (result.docs.length === 0) return programStudiList;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return result.docs.map((doc: any) => mapPayloadToProgramStudi(doc));
   } catch {
-    return programStudiList;
+    return [];
   }
 }
 

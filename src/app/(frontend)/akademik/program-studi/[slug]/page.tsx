@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import ProgramStudiDetailContent from '@/components/sections/akademik/ProgramStudiDetailContent';
-import { programStudiList, getProgramStudiBySlug, mapPayloadToProgramStudi } from '@/lib/data/program-studi';
+import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
+import { getPayloadClient } from '@/lib/payload';
 
 export async function generateStaticParams() {
   if (process.env.BUILD_SKIP_DB) return [];
   try {
-    const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'program-studi',
@@ -20,14 +20,13 @@ export async function generateStaticParams() {
       return result.docs.map((doc: any) => ({ slug: doc.slug as string }));
     }
   } catch {
-    // fall through to static
+    // ignore
   }
-  return programStudiList.map((p) => ({ slug: p.slug }));
+  return [];
 }
 
 async function fetchProdi(slug: string): Promise<ProgramStudi | undefined> {
   try {
-    const { getPayloadClient } = await import('@/lib/payload');
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'program-studi',
@@ -40,9 +39,30 @@ async function fetchProdi(slug: string): Promise<ProgramStudi | undefined> {
       return mapPayloadToProgramStudi(result.docs[0] as any);
     }
   } catch {
-    // fall through to static
+    return undefined;
   }
-  return getProgramStudiBySlug(slug);
+  return undefined;
+}
+
+async function fetchRelatedProdi(slug: string): Promise<ProgramStudi[]> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: 'program-studi',
+      depth: 1,
+      limit: 10,
+      where: {
+        and: [
+          { status: { equals: 'aktif' } },
+          { slug: { not_equals: slug } },
+        ],
+      },
+      sort: 'urutan',
+    });
+    return result.docs.map((doc) => mapPayloadToProgramStudi(doc));
+  } catch {
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -67,6 +87,7 @@ export default async function ProgramStudiDetailPage({
   const { slug } = await params;
   const prodi = await fetchProdi(slug);
   if (!prodi) notFound();
+  const others = await fetchRelatedProdi(slug);
 
   return (
     <>
@@ -75,7 +96,7 @@ export default async function ProgramStudiDetailPage({
         subtitle={prodi.deskripsiSingkat}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <ProgramStudiDetailContent prodi={prodi} />
+        <ProgramStudiDetailContent prodi={prodi} others={others} />
       </div>
     </>
   );

@@ -9,6 +9,17 @@ export const PenelitianPage: GlobalConfig = {
     afterChange: [revalidateGlobal(['/penelitian'])],
   },
   fields: [
+    {
+      name: 'subpages',
+      type: 'array',
+      label: 'Konfigurasi Subhalaman',
+      fields: [
+        { name: 'slug', type: 'text', label: 'Slug', required: true },
+        { name: 'title', type: 'text', label: 'Judul', required: true },
+        { name: 'subtitle', type: 'textarea', label: 'Subtitle' },
+        { name: 'breadcrumb', type: 'text', label: 'Breadcrumb' },
+      ],
+    },
     { name: 'heroTitle', type: 'text', label: 'Judul Hero', defaultValue: 'Penelitian & Pengabdian' },
     { name: 'heroDescription', type: 'textarea', label: 'Deskripsi Hero' },
     {
@@ -31,5 +42,6 @@ export const PenelitianPage: GlobalConfig = {
         { name: 'href', type: 'text', label: 'Link Tujuan', required: true },
       ],
     },
+    { name: 'sidebarTitle', type: 'text', label: 'Judul Sidebar', defaultValue: 'Navigasi Penelitian' },
   ],
 }

@@ -12,31 +12,8 @@ type Publikasi = {
   prodi?: string;
 };
 
-const defaults: Publikasi[] = [
-  {
-    id: 'p1',
-    judul: 'Analisis Kapasitas Dukung Fondasi Tiang Bor pada Tanah Lunak Jakarta Utara',
-    penulis: [{ nama: 'Dr. Rudi Santoso, M.T.' }, { nama: 'Ir. Agus Priyono, M.T.' }],
-    tahun: 2024,
-    jenis: 'jurnal',
-    penerbit: 'Jurnal Teknik Sipil dan Perencanaan, Vol. 26 No. 1',
-    url: '#',
-    prodi: 'Teknik Sipil',
-  },
-  {
-    id: 'p2',
-    judul: 'Efisiensi Irigasi Tetes pada Lahan Pertanian Perkotaan: Studi Kasus Kalideres',
-    penulis: [{ nama: 'Dr. Siti Rahayu, M.T.' }, { nama: 'Ir. Farida Hanum, M.T.' }],
-    tahun: 2024,
-    jenis: 'jurnal',
-    penerbit: 'Jurnal Irigasi, Vol. 19 No. 2',
-    url: '#',
-    prodi: 'Teknik Pengairan',
-  },
-];
-
 export default async function PublikasiContent() {
-  let publikasi = defaults
+  let publikasi: Publikasi[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -49,7 +26,7 @@ export default async function PublikasiContent() {
       publikasi = result.docs as unknown as Publikasi[]
     }
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   return (
@@ -61,7 +38,13 @@ export default async function PublikasiContent() {
         </p>
       </div>
 
-      <PublikasiListClient initialPublikasi={publikasi} />
+      {publikasi.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+          Data publikasi belum tersedia.
+        </div>
+      ) : (
+        <PublikasiListClient initialPublikasi={publikasi} />
+      )}
     </article>
   );
 }

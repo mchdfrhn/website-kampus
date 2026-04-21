@@ -35,6 +35,8 @@ import { PanduanMaba } from "./src/globals/PanduanMaba";
 import { KemahasiswaanPage } from "./src/globals/KemahasiswaanPage";
 import { PenelitianPage } from "./src/globals/PenelitianPage";
 import { KontakPage } from "./src/globals/KontakPage";
+import { AkademikPage } from "./src/globals/AkademikPage";
+import { BeritaPage } from "./src/globals/BeritaPage";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -81,6 +83,8 @@ export default buildConfig({
     KemahasiswaanPage,
     PenelitianPage,
     KontakPage,
+    AkademikPage,
+    BeritaPage,
   ],
   editor: lexicalEditor(),
   debug: process.env.NODE_ENV !== 'production',

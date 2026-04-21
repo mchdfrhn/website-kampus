@@ -4,8 +4,6 @@ import ArtikelDetailContent from '@/components/sections/berita/ArtikelDetailCont
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import {
-  artikelList as artikelStatic,
-  getArtikelBySlug,
   mapPayloadToArtikel,
   type Artikel,
 } from '@/lib/data/berita';
@@ -21,9 +19,9 @@ async function fetchArtikelBySlug(slug: string): Promise<Artikel | null> {
     });
     if (result.docs.length > 0) return mapPayloadToArtikel(result.docs[0]);
   } catch {
-    return getArtikelBySlug(slug) ?? null;
+    return null;
   }
-  return getArtikelBySlug(slug) ?? null;
+  return null;
 }
 
 async function fetchArtikelTerkait(slug: string, kategori: string): Promise<Artikel[]> {
@@ -44,11 +42,9 @@ async function fetchArtikelTerkait(slug: string, kategori: string): Promise<Arti
     });
     if (result.docs.length > 0) return result.docs.map(mapPayloadToArtikel);
   } catch {
-    // fallback below
+    return [];
   }
-  return artikelStatic
-    .filter((a) => a.slug !== slug && a.kategori === kategori)
-    .slice(0, 3);
+  return [];
 }
 
 export async function generateStaticParams() {
@@ -65,9 +61,9 @@ export async function generateStaticParams() {
       return result.docs.map((doc) => ({ slug: doc.slug as string }));
     }
   } catch {
-    // fallback to static slugs
+    // ignore
   }
-  return artikelStatic.map((a) => ({ slug: a.slug }));
+  return [];
 }
 
 export async function generateMetadata({

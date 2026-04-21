@@ -13,53 +13,8 @@ type Program = {
   thumbnail?: string | { url: string } | null;
 }
 
-const defaultPrograms: Program[] = [
-  {
-    jenjang: 'D4',
-    nama: 'Teknik Konstruksi Gedung',
-    deskripsiSingkat:
-      'Mempelajari perencanaan, pelaksanaan, dan pengawasan konstruksi gedung dengan pendekatan teknologi terkini dan BIM.',
-    akreditasi: 'B',
-  },
-  {
-    jenjang: 'D4',
-    nama: 'Teknik Arsitektur',
-    deskripsiSingkat:
-      'Desain arsitektur kontemporer yang memadukan estetika, fungsi, dan keberlanjutan lingkungan hidup.',
-    akreditasi: 'B',
-  },
-  {
-    jenjang: 'D4',
-    nama: 'Teknologi Informasi',
-    deskripsiSingkat:
-      'Pengembangan sistem informasi, rekayasa perangkat lunak, dan infrastruktur TI untuk sektor publik dan swasta.',
-    akreditasi: 'B',
-  },
-  {
-    jenjang: 'D3',
-    nama: 'Teknik Mesin',
-    deskripsiSingkat:
-      'Perancangan dan perawatan sistem mekanikal untuk industri konstruksi dan manufaktur nasional.',
-    akreditasi: 'B',
-  },
-  {
-    jenjang: 'D3',
-    nama: 'Teknik Listrik',
-    deskripsiSingkat:
-      'Instalasi, pemeliharaan, dan perancangan sistem ketenagalistrikan untuk gedung dan infrastruktur publik.',
-    akreditasi: 'B',
-  },
-  {
-    jenjang: 'D4',
-    nama: 'Teknik Lingkungan',
-    deskripsiSingkat:
-      'Pengelolaan lingkungan, sanitasi, dan teknologi pengolahan air bersih serta limbah untuk pembangunan berkelanjutan.',
-    akreditasi: 'B',
-  },
-];
-
 export default async function ProgramStudiSection() {
-  let programs = defaultPrograms
+  let programs: Program[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -70,12 +25,12 @@ export default async function ProgramStudiSection() {
       sort: 'urutan',
       depth: 1,
     })
-    if (result.docs.length > 0) {
-      programs = result.docs as unknown as Program[]
-    }
+    programs = result.docs as unknown as Program[]
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
+
+  if (programs.length === 0) return null
 
   return (
     <section className="bg-brand-navy/[0.01] py-24 relative overflow-hidden">

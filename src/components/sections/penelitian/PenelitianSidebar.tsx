@@ -1,21 +1,18 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-const links = [
-  { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
-  { label: 'Database Publikasi', href: '/penelitian/publikasi' },
-  { label: 'Hibah & Pendanaan', href: '/penelitian/hibah' },
-];
-
-export default function PenelitianSidebar() {
-  const pathname = usePathname();
+export default function PenelitianSidebar({
+  pathname,
+  title,
+  links,
+}: {
+  pathname: string
+  title: string
+  links: { label: string; href: string }[]
+}) {
   return (
     <aside className="w-full lg:w-72 flex-shrink-0">
       <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-premium transition-all">
         <div className="bg-brand-navy px-6 py-5">
-          <p className="text-white font-black text-xs tracking-[0.08em]">Navigasi Penelitian</p>
+          <p className="text-white font-black text-xs tracking-[0.08em]">{title}</p>
         </div>
         <nav aria-label="Navigasi Penelitian">
           <ul role="list">

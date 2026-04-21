@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { Dosen } from '@/lib/data/dosen';
-import { dosenList as staticDosenList } from '@/lib/data/dosen';
 import { Mail, BookOpen } from 'lucide-react';
 
 const jabatanLabel: Record<string, string> = {
@@ -18,7 +17,7 @@ const jabatanColor: Record<string, string> = {
 };
 
 export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
-  const list = dosenList ?? staticDosenList;
+  const list = dosenList ?? [];
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <p className="text-gray-600 text-sm leading-relaxed max-w-2xl mb-8">
@@ -27,6 +26,11 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
         penelitian dan pengabdian masyarakat.
       </p>
 
+      {list.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
+          Data dosen belum tersedia.
+        </div>
+      ) : (
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" aria-label="Daftar dosen STTPU">
         {list.map((dosen) => (
           <li key={dosen.slug}>
@@ -82,6 +86,7 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
           </li>
         ))}
       </ul>
+      )}
     </section>
   );
 }

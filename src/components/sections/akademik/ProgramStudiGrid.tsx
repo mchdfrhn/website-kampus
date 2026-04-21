@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
-import { programStudiList as staticProdiList } from '@/lib/data/program-studi';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
@@ -13,7 +12,7 @@ const akreditasiColor: Record<string, string> = {
 };
 
 export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStudi[] }) {
-  const list = prodiList ?? staticProdiList;
+  const list = prodiList ?? [];
   return (
     <section className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
       <div className="mb-16 text-center lg:text-left">
@@ -24,6 +23,11 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
         </p>
       </div>
 
+      {list.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
+          Data program studi belum tersedia.
+        </div>
+      ) : (
       <ul className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10" aria-label="Daftar program studi STTPU">
         {list.map((prodi) => (
           <li key={prodi.slug}>
@@ -70,6 +74,7 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
           </li>
         ))}
       </ul>
+      )}
 
       <div className="mt-20 bg-brand-navy rounded-3xl p-10 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
         <BlueAbstractBackground />

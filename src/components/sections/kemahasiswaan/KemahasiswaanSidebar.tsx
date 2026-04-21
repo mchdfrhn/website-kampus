@@ -1,23 +1,18 @@
-'use client';
-
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-const links = [
-  { label: 'Organisasi Mahasiswa', href: '/kemahasiswaan/organisasi' },
-  { label: 'Unit Kegiatan Mahasiswa', href: '/kemahasiswaan/ukm' },
-  { label: 'Prestasi Mahasiswa', href: '/kemahasiswaan/prestasi' },
-  { label: 'Layanan Mahasiswa', href: '/kemahasiswaan/layanan' },
-  { label: 'Panduan Mahasiswa Baru', href: '/kemahasiswaan/mahasiswa-baru' },
-];
-
-export default function KemahasiswaanSidebar() {
-  const pathname = usePathname();
+export default function KemahasiswaanSidebar({
+  pathname,
+  title,
+  links,
+}: {
+  pathname: string
+  title: string
+  links: { label: string; href: string }[]
+}) {
   return (
     <aside className="w-full lg:w-72 flex-shrink-0">
       <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden shadow-premium transition-all">
         <div className="bg-brand-navy px-6 py-5">
-          <p className="text-white font-black text-xs tracking-[0.08em]">Navigasi Kemahasiswaan</p>
+          <p className="text-white font-black text-xs tracking-[0.08em]">{title}</p>
         </div>
         <nav aria-label="Navigasi Kemahasiswaan">
           <ul role="list">

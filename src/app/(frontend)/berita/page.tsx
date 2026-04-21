@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
-import { artikelList as artikelStatic, mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
+import { mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
 
 export const metadata: Metadata = {
   title: 'Berita & Pengumuman | STTPU Jakarta',
@@ -22,7 +22,7 @@ async function fetchArtikelList(): Promise<Artikel[]> {
     });
     return result.docs.map(mapPayloadToArtikel);
   } catch {
-    return artikelStatic;
+    return [];
   }
 }
 

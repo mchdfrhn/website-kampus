@@ -14,33 +14,6 @@ type BeasiswaItem = {
   url?: string
 }
 
-const defaults: BeasiswaItem[] = [
-  {
-    nama: 'Beasiswa Prestasi Akademik', penyelenggara: 'STTPU Jakarta', tipe: 'internal',
-    jenis: 'Pembebasan UKT', nilai: 'Bebas UKT 1 semester', deadline: 'Setiap awal semester', status: 'buka',
-    deskripsi: 'Diberikan kepada mahasiswa berprestasi akademik tertinggi di setiap program studi.',
-    syarat: [{ poin: 'IPK ≥ 3.75 pada semester sebelumnya' }, { poin: 'Tidak sedang menerima beasiswa lain' }, { poin: 'Tidak memiliki nilai D atau E' }],
-  },
-  {
-    nama: 'Beasiswa Mahasiswa Tidak Mampu', penyelenggara: 'STTPU Jakarta', tipe: 'internal',
-    jenis: 'Keringanan UKT', nilai: 'Diskon UKT 25–50%', deadline: 'Awal semester ganjil (Juli)', status: 'buka',
-    deskripsi: 'Program keringanan biaya bagi mahasiswa yang membutuhkan dukungan finansial.',
-    syarat: [{ poin: 'Surat keterangan tidak mampu' }, { poin: 'Pendapatan orang tua ≤ Rp 3.000.000/bulan' }, { poin: 'IPK ≥ 2.50' }],
-  },
-  {
-    nama: 'KIP Kuliah (Kartu Indonesia Pintar)', penyelenggara: 'Kemendikbudristek RI', tipe: 'eksternal',
-    jenis: 'Beasiswa Penuh', nilai: 'Biaya kuliah + biaya hidup', deadline: 'Bersamaan dengan SNBP/SNBT', status: 'tahunan',
-    deskripsi: 'Program beasiswa pemerintah untuk mahasiswa dari keluarga kurang mampu.',
-    syarat: [{ poin: 'Lulus seleksi SNBP/SNBT/Mandiri' }, { poin: 'Pemegang KIP atau dari keluarga tidak mampu' }],
-  },
-  {
-    nama: 'Beasiswa LPDP', penyelenggara: 'Kementerian Keuangan RI', tipe: 'eksternal',
-    jenis: 'Beasiswa S2/S3', nilai: 'Biaya penuh termasuk hidup & penelitian', deadline: 'Dua periode per tahun', status: 'periodik',
-    deskripsi: 'Beasiswa bergengsi untuk melanjutkan studi pascasarjana di dalam dan luar negeri.',
-    syarat: [{ poin: 'Telah menyelesaikan jenjang S1/D-IV' }, { poin: 'IPK ≥ 3.00' }, { poin: 'Lulus seleksi LPDP' }],
-  },
-]
-
 const statusLabel: Record<string, string> = {
   buka: 'Buka',
   tutup: 'Tutup',
@@ -60,7 +33,7 @@ const statusColor: Record<string, string> = {
 }
 
 export default async function BeasiswaContent() {
-  let beasiswaList = defaults
+  let beasiswaList: BeasiswaItem[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -73,7 +46,7 @@ export default async function BeasiswaContent() {
       beasiswaList = result.docs as unknown as BeasiswaItem[]
     }
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   const internal = beasiswaList.filter((b) => b.tipe === 'internal')
@@ -149,6 +122,12 @@ export default async function BeasiswaContent() {
           Informasi beasiswa diperbarui secara berkala. Untuk informasi terkini, hubungi Bagian Kemahasiswaan STTPU Jakarta.
         </p>
       </div>
+
+      {beasiswaList.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+          Data beasiswa belum tersedia.
+        </div>
+      ) : null}
 
       {internal.length > 0 && (
         <div>

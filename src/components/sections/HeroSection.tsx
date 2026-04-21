@@ -5,15 +5,6 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 
-const defaults = {
-  badge: 'Sekolah Tinggi Teknologi',
-  judul: 'Teknologi untuk Indonesia yang Lebih Baik',
-  subjudul:
-    'Bergabunglah dengan ribuan alumni STTPU yang telah berkontribusi nyata bagi pembangunan Indonesia. Pendidikan vokasi teknologi terbaik di Jakarta Pusat sejak 1987.',
-  cta1: { teks: 'Daftar Sekarang', href: '/akademik/program-studi' },
-  cta2: { teks: 'Pelajari Program Studi', href: '/akademik/program-studi' },
-};
-
 type HeroData = {
   heroBadge?: string | null
   heroJudul?: string | null
@@ -26,13 +17,13 @@ type HeroData = {
 }
 
 export default function HeroSection({ data }: { data?: HeroData }) {
-  const badge = data?.heroBadge || defaults.badge
-  const judul = data?.heroJudul || defaults.judul
-  const subjudul = data?.heroSubjudul || defaults.subjudul
-  const cta1Teks = data?.heroCta1Teks || defaults.cta1.teks
-  const cta1Href = data?.heroCta1Href || defaults.cta1.href
-  const cta2Teks = data?.heroCta2Teks || defaults.cta2.teks
-  const cta2Href = data?.heroCta2Href || defaults.cta2.href
+  const badge = data?.heroBadge || ''
+  const judul = data?.heroJudul || ''
+  const subjudul = data?.heroSubjudul || ''
+  const cta1Teks = data?.heroCta1Teks || ''
+  const cta1Href = data?.heroCta1Href || '#'
+  const cta2Teks = data?.heroCta2Teks || ''
+  const cta2Href = data?.heroCta2Href || '#'
 
   let fotoUrl: string | null = null
   if (data?.heroFoto && typeof data.heroFoto === 'object' && 'url' in data.heroFoto) {
@@ -86,9 +77,11 @@ export default function HeroSection({ data }: { data?: HeroData }) {
           <StaggerItem>
             <div className="inline-flex items-center gap-3 bg-white/[0.03] backdrop-blur-md border border-white/10 px-5 py-2 rounded-full mb-6 lg:mb-8 shadow-2xl">
               <div className="w-2 h-2 bg-brand-gold rounded-full animate-ping" />
-              <span className="text-white/80 font-bold text-[10px] uppercase tracking-wider">
-                {badge}
-              </span>
+              {badge ? (
+                <span className="text-white/80 font-bold text-[10px] uppercase tracking-wider">
+                  {badge}
+                </span>
+              ) : null}
             </div>
           </StaggerItem>
           
@@ -110,19 +103,23 @@ export default function HeroSection({ data }: { data?: HeroData }) {
           
           <StaggerItem>
             <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-              <Link
-                href={cta1Href}
-                className="group relative bg-brand-gold text-brand-navy font-bold text-[11px] uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl shadow-brand-gold/10 hover:shadow-brand-gold/30 hover:-translate-y-1 active:scale-95 transition-all duration-500 overflow-hidden"
-              >
-                <span className="relative z-10">{cta1Teks}</span>
-                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-              </Link>
-              <Link
-                href={cta2Href}
-                className="group border border-white/20 text-white font-bold text-[11px] uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-white hover:text-brand-navy active:scale-95 transition-all duration-500 backdrop-blur-sm"
-              >
-                {cta2Teks}
-              </Link>
+              {cta1Teks ? (
+                <Link
+                  href={cta1Href}
+                  className="group relative bg-brand-gold text-brand-navy font-bold text-[11px] uppercase tracking-wider px-8 py-4 rounded-xl shadow-xl shadow-brand-gold/10 hover:shadow-brand-gold/30 hover:-translate-y-1 active:scale-95 transition-all duration-500 overflow-hidden"
+                >
+                  <span className="relative z-10">{cta1Teks}</span>
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                </Link>
+              ) : null}
+              {cta2Teks ? (
+                <Link
+                  href={cta2Href}
+                  className="group border border-white/20 text-white font-bold text-[11px] uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-white hover:text-brand-navy active:scale-95 transition-all duration-500 backdrop-blur-sm"
+                >
+                  {cta2Teks}
+                </Link>
+              ) : null}
             </div>
           </StaggerItem>
         </StaggerContainer>

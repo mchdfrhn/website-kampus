@@ -12,63 +12,8 @@ type PimpinanItem = {
   urutan?: number
 }
 
-const defaults: PimpinanItem[] = [
-  {
-    jabatan: 'Ketua STTPU',
-    nama: 'Prof. Dr. Ir. Bambang Setiawan, M.T.',
-    nip: 'NIP 196208141988031002',
-    keahlian: 'Rekayasa Struktur & Manajemen Konstruksi',
-    pendidikan: [
-      { jenjang: 'S3 Teknik Sipil — Universitas Indonesia' },
-      { jenjang: 'S2 Teknik Sipil — Institut Teknologi Bandung' },
-      { jenjang: 'S1 Teknik Sipil — Universitas Gadjah Mada' },
-    ],
-    pengalaman: 'Lebih dari 25 tahun berkecimpung di bidang pendidikan vokasi teknologi dan konsultansi konstruksi.',
-    sambutan: 'Selamat datang di Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta. STTPU hadir dengan tekad kuat untuk mencetak generasi insinyur dan ahli teknologi yang tidak hanya kompeten secara teknis, tetapi juga memiliki karakter yang kuat dan cinta tanah air.',
-    urutan: 0,
-  },
-  {
-    jabatan: 'Wakil Ketua I Bidang Akademik',
-    nama: 'Dr. Ir. Siti Rahayu, M.Sc.',
-    nip: 'NIP 197003251996032001',
-    keahlian: 'Teknik Lingkungan & Pengelolaan Sumber Daya Air',
-    pendidikan: [
-      { jenjang: 'S3 Environmental Engineering — Delft University of Technology, Belanda' },
-      { jenjang: 'S2 Water Resources Management — UNESCO-IHE' },
-      { jenjang: 'S1 Teknik Lingkungan — Institut Teknologi Bandung' },
-    ],
-    pengalaman: 'Pakar di bidang teknik lingkungan dan pengelolaan sumber daya air dengan pengalaman konsultansi proyek drainase perkotaan.',
-    urutan: 1,
-  },
-  {
-    jabatan: 'Wakil Ketua II Bidang Administrasi & Keuangan',
-    nama: 'Drs. Hendra Wijaya, M.M.',
-    nip: 'NIP 196511201990031003',
-    keahlian: 'Manajemen Organisasi & Keuangan Publik',
-    pendidikan: [
-      { jenjang: 'S2 Magister Manajemen — Universitas Indonesia' },
-      { jenjang: 'S1 Administrasi Negara — Universitas Padjadjaran' },
-    ],
-    pengalaman: 'Berpengalaman dalam pengelolaan administrasi perguruan tinggi dan manajemen keuangan lembaga pendidikan publik selama lebih dari 20 tahun.',
-    urutan: 2,
-  },
-  {
-    jabatan: 'Wakil Ketua III Bidang Kemahasiswaan & Alumni',
-    nama: 'Dr. Ahmad Fauzi, S.T., M.T.',
-    nip: 'NIP 197809152005011001',
-    keahlian: 'Teknik Sipil — Geoteknik & Pondasi',
-    pendidikan: [
-      { jenjang: 'S3 Geoteknik — Institut Teknologi Bandung' },
-      { jenjang: 'S2 Teknik Sipil — Institut Teknologi Bandung' },
-      { jenjang: 'S1 Teknik Sipil — Universitas Diponegoro' },
-    ],
-    pengalaman: 'Aktif dalam pengembangan program kemahasiswaan dan jejaring alumni. Peneliti di bidang rekayasa geoteknik.',
-    urutan: 3,
-  },
-]
-
 export default async function PimpinanContent() {
-  let pimpinan = defaults
+  let pimpinan: PimpinanItem[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -77,14 +22,18 @@ export default async function PimpinanContent() {
       sort: 'urutan',
       limit: 20,
     })
-    // Jika query berhasil, gunakan data dari DB (walaupun kosong)
     pimpinan = result.docs as unknown as PimpinanItem[]
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   return (
     <article className="space-y-10">
+      {pimpinan.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+          Data pimpinan belum tersedia.
+        </div>
+      ) : null}
       {pimpinan.map((person, idx) => (
         <section
           key={idx}

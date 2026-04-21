@@ -4,16 +4,8 @@ import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 
 type LembagaItem = { nama: string; status: string }
 
-const defaults: LembagaItem[] = [
-  { nama: 'BAN-PT', status: 'Akreditasi B' },
-  { nama: 'Kemendikbudristek', status: 'Terdaftar Resmi' },
-  { nama: 'LLDIKTI Wilayah III', status: 'Aktif & Terdaftar' },
-  { nama: 'PDDikti', status: 'Data Terverifikasi' },
-  { nama: 'ISO 9001:2015', status: 'Manajemen Mutu' },
-];
-
 export default async function AkreditasiSection() {
-  let lembaga = defaults
+  let lembaga: LembagaItem[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -24,8 +16,10 @@ export default async function AkreditasiSection() {
     })
     lembaga = result.docs as unknown as LembagaItem[]
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
+
+  if (lembaga.length === 0) return null
 
   return (
     <section className="bg-gray-50 py-20 lg:py-24 relative overflow-hidden border-t border-gray-100">

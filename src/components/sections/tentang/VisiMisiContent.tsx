@@ -1,37 +1,10 @@
 import { getPayloadClient } from '@/lib/payload';
 
-const defaultVisi =
-  'Menjadi Sekolah Tinggi Teknologi Pekerjaan Umum yang unggul, inovatif, dan berdaya saing nasional dalam menghasilkan tenaga ahli teknologi infrastruktur yang berkompeten dan berkarakter pada tahun 2030.'
-
-const defaultMisi = [
-  'Menyelenggarakan pendidikan vokasi berkualitas tinggi di bidang teknologi pekerjaan umum yang berorientasi pada kebutuhan industri dan perkembangan IPTEK.',
-  'Melaksanakan penelitian terapan yang relevan dengan permasalahan pembangunan infrastruktur dan pekerjaan umum di Indonesia.',
-  'Menjalin kemitraan strategis dengan pemerintah, industri, dan masyarakat untuk mengembangkan kompetensi lulusan yang berdaya saing.',
-  'Membangun budaya akademik yang berintegritas, inovatif, dan berwawasan kebangsaan dalam mendukung pembangunan berkelanjutan.',
-  'Mengembangkan tata kelola institusi yang profesional, transparan, dan akuntabel.',
-]
-
-const defaultTujuan = [
-  'Menghasilkan lulusan vokasi yang kompeten, berkarakter, dan siap berkontribusi pada pembangunan infrastruktur Indonesia.',
-  'Menjadi pusat keunggulan riset terapan di bidang teknologi konstruksi, pengairan, lingkungan, dan manajemen infrastruktur.',
-  'Memperkuat ekosistem kemitraan dengan dunia industri dan pemerintah untuk meningkatkan relevansi pendidikan.',
-  'Mewujudkan tata kelola institusi yang berbasis good governance menuju perguruan tinggi vokasi kelas nasional.',
-]
-
-const defaultNilai = [
-  { nama: 'Integritas', deskripsi: 'Bertindak jujur, transparan, dan konsisten antara ucapan dan perbuatan dalam setiap aktivitas akademik dan administratif.' },
-  { nama: 'Profesionalisme', deskripsi: 'Menjalankan tugas dengan standar kompetensi tertinggi, bertanggung jawab, dan berorientasi pada hasil yang berkualitas.' },
-  { nama: 'Inovasi', deskripsi: 'Senantiasa mendorong kreativitas dan pemikiran baru untuk menghadapi tantangan pembangunan infrastruktur masa depan.' },
-  { nama: 'Kolaborasi', deskripsi: 'Membangun sinergi yang konstruktif antara civitas akademika, industri, pemerintah, dan masyarakat luas.' },
-  { nama: 'Keberlanjutan', deskripsi: 'Berkomitmen pada praktik pendidikan dan pembangunan yang memperhatikan keseimbangan lingkungan dan sosial.' },
-  { nama: 'Kebangsaan', deskripsi: 'Menjunjung tinggi nilai-nilai Pancasila dan berkontribusi nyata pada kemajuan dan kejayaan bangsa Indonesia.' },
-]
-
 export default async function VisiMisiContent() {
-  let visi = defaultVisi
-  let misi: string[] = defaultMisi
-  let tujuan: string[] = defaultTujuan
-  let nilaiNilai = defaultNilai
+  let visi = ''
+  let misi: string[] = []
+  let tujuan: string[] = []
+  let nilaiNilai: { nama: string; deskripsi?: string }[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -43,12 +16,12 @@ export default async function VisiMisiContent() {
       nilaiNilai?: { nama: string; deskripsi?: string }[]
     }
 
-    if (data.visi) visi = data.visi
-    if (data.misi && data.misi.length > 0) misi = data.misi.map((m) => m.poin)
-    if (data.tujuan && data.tujuan.length > 0) tujuan = data.tujuan.map((t) => t.poin)
-    if (data.nilaiNilai && data.nilaiNilai.length > 0) nilaiNilai = data.nilaiNilai as { nama: string; deskripsi: string }[]
+    visi = data.visi || ''
+    misi = data.misi ? data.misi.map((m) => m.poin) : []
+    tujuan = data.tujuan ? data.tujuan.map((t) => t.poin) : []
+    nilaiNilai = data.nilaiNilai || []
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
 
   return (

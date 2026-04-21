@@ -4,26 +4,8 @@ import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 
 type TestimonialItem = { teks: string; nama: string; prodi: string }
 
-const defaults: TestimonialItem[] = [
-  {
-    teks: 'Kuliah di STTPU membuka banyak peluang karir di bidang konstruksi. Ilmu yang diajarkan sangat aplikatif dan langsung relevan dengan dunia kerja. Sekarang saya bekerja di salah satu BUMN konstruksi terbesar di Indonesia.',
-    nama: 'Ahmad Fauzi',
-    prodi: 'D4 Teknik Konstruksi Gedung, Angkatan 2018',
-  },
-  {
-    teks: 'Program Teknologi Informasi di STTPU benar-benar mempersiapkan saya untuk industri digital. Dosen-dosennya berpengalaman dan fasilitas lab-nya lengkap. Saya berhasil meraih beasiswa dan kini bekerja di perusahaan startup teknologi.',
-    nama: 'Sari Dewi Lestari',
-    prodi: 'D4 Teknologi Informasi, Angkatan 2019',
-  },
-  {
-    teks: 'Sebagai lulusan Teknik Arsitektur STTPU, saya bangga dengan kualitas pendidikan yang diterima. Kurikulum yang terus diperbarui membuat kami siap bersaing di tingkat nasional maupun regional ASEAN.',
-    nama: 'Budi Santoso',
-    prodi: 'D4 Teknik Arsitektur, Angkatan 2017',
-  },
-];
-
 export default async function TestimonialSection() {
-  let items = defaults
+  let items: TestimonialItem[] = []
 
   try {
     const payload = await getPayloadClient()
@@ -35,8 +17,10 @@ export default async function TestimonialSection() {
     })
     items = result.docs as unknown as TestimonialItem[]
   } catch {
-    // DB unavailable — use defaults
+    // DB unavailable
   }
+
+  if (items.length === 0) return null
 
   return (
     <section className="bg-white py-24 relative overflow-hidden">

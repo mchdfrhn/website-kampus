@@ -5,6 +5,7 @@ import PenelitianSidebar from '@/components/sections/penelitian/PenelitianSideba
 import UnitPenelitianContent from '@/components/sections/penelitian/UnitPenelitianContent';
 import PublikasiContent from '@/components/sections/penelitian/PublikasiContent';
 import HibahContent from '@/components/sections/penelitian/HibahContent';
+import { getPayloadClient } from '@/lib/payload';
 
 type SectionConfig = {
   title: string;
@@ -12,6 +13,8 @@ type SectionConfig = {
   breadcrumb: string;
   component: React.ComponentType;
 };
+
+type SectionMeta = { slug: string; title: string; subtitle?: string; breadcrumb?: string }
 
 const sections: Record<string, SectionConfig> = {
   unit: {
@@ -40,15 +43,61 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const s = sections[slug];
+  let s = sections[slug];
   if (!s) return {};
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'penelitian-page' as never });
+    const subpages = (global as { subpages?: SectionMeta[] }).subpages || [];
+    const fromPayload = subpages.find((item) => item.slug === slug);
+    if (fromPayload) {
+      s = {
+        ...s,
+        title: fromPayload.title,
+        subtitle: fromPayload.subtitle || s.subtitle,
+        breadcrumb: fromPayload.breadcrumb || s.breadcrumb,
+      };
+    }
+  } catch {
+    // keep defaults
+  }
   return { title: `${s.title} | STTPU Jakarta`, description: s.subtitle };
 }
 
 export default async function PenelitianSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const s = sections[slug];
+  let s = sections[slug];
   if (!s) notFound();
+
+  let sidebarTitle = 'Navigasi Penelitian'
+  let sidebarLinks = Object.keys(sections).map((key) => ({
+    label: sections[key].breadcrumb,
+    href: `/penelitian/${key}`,
+  }))
+
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'penelitian-page' as never });
+    const data = global as { subpages?: SectionMeta[]; sidebarTitle?: string };
+    const fromPayload = (data.subpages || []).find((item) => item.slug === slug);
+    if (fromPayload) {
+      s = {
+        ...s,
+        title: fromPayload.title,
+        subtitle: fromPayload.subtitle || s.subtitle,
+        breadcrumb: fromPayload.breadcrumb || s.breadcrumb,
+      };
+    }
+    sidebarTitle = data.sidebarTitle || sidebarTitle
+    if (data.subpages && data.subpages.length > 0) {
+      sidebarLinks = data.subpages.map((item) => ({
+        label: item.breadcrumb || item.title,
+        href: `/penelitian/${item.slug}`,
+      }))
+    }
+  } catch {
+    // keep defaults
+  }
 
   const { title, subtitle, breadcrumb, component: Content } = s;
 
@@ -57,7 +106,7 @@ export default async function PenelitianSlugPage({ params }: { params: Promise<{
       <PenelitianPageHeader title={title} subtitle={subtitle} breadcrumb={breadcrumb} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col lg:flex-row gap-8">
-          <PenelitianSidebar />
+          <PenelitianSidebar pathname={`/penelitian/${slug}`} title={sidebarTitle} links={sidebarLinks} />
           <div className="flex-1 min-w-0">
             <Content />
           </div>

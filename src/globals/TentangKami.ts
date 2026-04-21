@@ -39,6 +39,18 @@ export const TentangKami: GlobalConfig = {
                 { name: 'href', type: 'text', label: 'Link Tujuan', required: true },
               ],
             },
+            {
+              name: 'subpages',
+              type: 'array',
+              label: 'Konfigurasi Subhalaman',
+              fields: [
+                { name: 'slug', type: 'text', label: 'Slug', required: true },
+                { name: 'title', type: 'text', label: 'Judul', required: true },
+                { name: 'subtitle', type: 'textarea', label: 'Subtitle' },
+                { name: 'breadcrumb', type: 'text', label: 'Breadcrumb' },
+              ],
+            },
+            { name: 'sidebarTitle', type: 'text', label: 'Judul Sidebar', defaultValue: 'Navigasi Institusi' },
           ],
         },
         {
@@ -93,6 +105,7 @@ export const TentangKami: GlobalConfig = {
           label: 'Struktur Organisasi',
           fields: [
             { name: 'strukturGambar', type: 'upload', relationTo: 'media', label: 'Gambar Struktur Organisasi' },
+            { name: 'strukturCatatan', type: 'textarea', label: 'Catatan Footer Struktur Organisasi' },
             {
               name: 'strukturSenat',
               type: 'group',
@@ -125,6 +138,11 @@ export const TentangKami: GlobalConfig = {
         {
           label: 'Fasilitas',
           fields: [
+            { name: 'fasilitasIntro', type: 'textarea', label: 'Teks Pengantar Fasilitas' },
+            { name: 'fasilitasCtaTitle', type: 'text', label: 'Judul CTA Fasilitas' },
+            { name: 'fasilitasCtaDescription', type: 'textarea', label: 'Deskripsi CTA Fasilitas' },
+            { name: 'fasilitasCtaButtonLabel', type: 'text', label: 'Teks Tombol CTA Fasilitas' },
+            { name: 'fasilitasCtaButtonHref', type: 'text', label: 'Link Tombol CTA Fasilitas' },
             {
               name: 'fasilitas',
               type: 'array',
@@ -159,6 +177,7 @@ export const TentangKami: GlobalConfig = {
         {
           label: 'Akreditasi & Legalitas',
           fields: [
+            { name: 'akreditasiIntro', type: 'textarea', label: 'Teks Pengantar Akreditasi' },
             {
               name: 'akreditasiProdi',
               type: 'array',
