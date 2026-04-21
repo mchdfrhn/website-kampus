@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
+import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import DosenDetailContent from '@/components/sections/akademik/DosenDetailContent';
+import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
@@ -66,6 +68,7 @@ export default async function DosenDetailPage({
   const { slug } = await params;
   const dosen = await fetchDosen(slug);
   if (!dosen) notFound();
+  const { sidebarTitle, links } = await getAkademikNavigation();
 
   return (
     <>
@@ -79,7 +82,12 @@ export default async function DosenDetailPage({
         ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <DosenDetailContent dosen={dosen} />
+        <div className="flex flex-col lg:flex-row gap-8">
+          <AkademikSidebar pathname="/akademik/dosen" title={sidebarTitle} links={links} />
+          <div className="flex-1 min-w-0">
+            <DosenDetailContent dosen={dosen} />
+          </div>
+        </div>
       </div>
     </>
   );

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
+import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import DosenGrid from '@/components/sections/akademik/DosenGrid';
+import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
@@ -28,6 +30,7 @@ async function fetchDosenList(): Promise<Dosen[]> {
 
 export default async function DosenPage() {
   const fetchedDosenList = await fetchDosenList();
+  const { sidebarTitle, links } = await getAkademikNavigation();
 
   return (
     <>
@@ -39,7 +42,14 @@ export default async function DosenPage() {
           { label: 'Dosen' },
         ]}
       />
-      <DosenGrid dosenList={fetchedDosenList} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <AkademikSidebar pathname="/akademik/dosen" title={sidebarTitle} links={links} />
+          <div className="flex-1 min-w-0">
+            <DosenGrid dosenList={fetchedDosenList} />
+          </div>
+        </div>
+      </div>
     </>
   );
 }

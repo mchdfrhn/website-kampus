@@ -6,9 +6,14 @@ export const AkademikPage: GlobalConfig = {
   label: 'Halaman Akademik',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/akademik/program-studi', '/akademik/dosen', '/akademik/beasiswa'])],
+    afterChange: [revalidateGlobal(['/akademik/program-studi', '/akademik/dosen', '/akademik/kalender', '/akademik/beasiswa'])],
   },
   fields: [
+    {
+      name: 'sidebarTitle',
+      type: 'text',
+      label: 'Judul Sidebar',
+    },
     {
       name: 'sections',
       type: 'array',

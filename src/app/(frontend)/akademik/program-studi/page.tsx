@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
+import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import ProgramStudiGrid from '@/components/sections/akademik/ProgramStudiGrid';
+import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
@@ -29,6 +31,7 @@ async function fetchProdiList(): Promise<ProgramStudi[]> {
 
 export default async function ProgramStudiPage() {
   const prodiList = await fetchProdiList();
+  const { sidebarTitle, links } = await getAkademikNavigation();
 
   return (
     <>
@@ -36,7 +39,14 @@ export default async function ProgramStudiPage() {
         title="Program Studi"
         subtitle="Empat program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum dan infrastruktur nasional."
       />
-      <ProgramStudiGrid prodiList={prodiList} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col lg:flex-row gap-8">
+          <AkademikSidebar pathname="/akademik/program-studi" title={sidebarTitle} links={links} />
+          <div className="flex-1 min-w-0">
+            <ProgramStudiGrid prodiList={prodiList} />
+          </div>
+        </div>
+      </div>
     </>
   );
 }
