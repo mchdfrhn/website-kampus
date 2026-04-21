@@ -4,7 +4,7 @@ import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeade
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import ProgramStudiDetailContent from '@/components/sections/akademik/ProgramStudiDetailContent';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
-import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
+import { mapPayloadToProgramStudi, normalizeProgramStudiSlug } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
 
@@ -19,7 +19,9 @@ export async function generateStaticParams() {
     });
     if (result.docs.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return result.docs.map((doc: any) => ({ slug: doc.slug as string }));
+      return result.docs
+        .map((doc: any) => ({ slug: normalizeProgramStudiSlug(doc.slug as string) }))
+        .filter((doc) => doc.slug);
     }
   } catch {
     // ignore
@@ -29,16 +31,32 @@ export async function generateStaticParams() {
 
 async function fetchProdi(slug: string): Promise<ProgramStudi | undefined> {
   try {
+    const normalizedSlug = normalizeProgramStudiSlug(slug);
     const payload = await getPayloadClient();
     const result = await payload.find({
       collection: 'program-studi',
       depth: 1,
       limit: 1,
-      where: { slug: { equals: slug } },
+      where: { slug: { equals: normalizedSlug } },
     });
     if (result.docs.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return mapPayloadToProgramStudi(result.docs[0] as any);
+    }
+
+    const fallbackResult = await payload.find({
+      collection: 'program-studi',
+      depth: 1,
+      limit: 100,
+    });
+
+    const matchedDoc = fallbackResult.docs.find((doc) => {
+      const candidate = doc as { slug?: string | null; nama?: string | null };
+      return normalizeProgramStudiSlug(candidate.slug || candidate.nama || '') === normalizedSlug;
+    });
+
+    if (matchedDoc) {
+      return mapPayloadToProgramStudi(matchedDoc);
     }
   } catch {
     return undefined;
@@ -87,7 +105,7 @@ export default async function ProgramStudiDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const prodi = await fetchProdi(slug);
+  const prodi = await fetchProdi(normalizeProgramStudiSlug(slug));
   if (!prodi) notFound();
   const others = await fetchRelatedProdi(slug);
   const { sidebarTitle, links } = await getAkademikNavigation();

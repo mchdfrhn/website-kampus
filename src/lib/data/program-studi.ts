@@ -21,6 +21,14 @@ export type ProgramStudi = {
   kurikulumPdfUrl?: string;
 };
 
+export function normalizeProgramStudiSlug(value?: string | null): string {
+  return (value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 export const programStudiList: ProgramStudi[] = [
   {
     slug: 'teknik-sipil',
@@ -293,7 +301,8 @@ export const programStudiList: ProgramStudi[] = [
 ];
 
 export function getProgramStudiBySlug(slug: string): ProgramStudi | undefined {
-  return programStudiList.find((p) => p.slug === slug);
+  const normalizedSlug = normalizeProgramStudiSlug(slug);
+  return programStudiList.find((p) => normalizeProgramStudiSlug(p.slug) === normalizedSlug);
 }
 
 import { convertLexicalToHTML, defaultHTMLConverters } from '@payloadcms/richtext-lexical/html';
@@ -337,7 +346,7 @@ export function mapPayloadToProgramStudi(doc: any): ProgramStudi {
     : [];
 
   return {
-    slug: doc.slug ?? '',
+    slug: normalizeProgramStudiSlug(doc.slug ?? doc.nama ?? ''),
     nama: doc.nama ?? '',
     jenjang: doc.jenjang ?? '',
     akreditasi: doc.akreditasi ?? '',
