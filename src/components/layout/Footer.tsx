@@ -94,8 +94,8 @@ export default async function Footer() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 lg:gap-12">
-          <div className="lg:pr-12 text-center sm:text-left">
-            <Link href="/" className="inline-flex items-center justify-center sm:justify-start gap-4 sm:gap-5 mb-8 sm:mb-10 group" aria-label="STTPU — Beranda">
+          <div className="lg:pr-12 text-left">
+            <Link href="/" className="inline-flex items-center justify-start gap-4 sm:gap-5 mb-8 sm:mb-10 group" aria-label="STTPU — Beranda">
               <div
                 className="w-14 h-14 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-sm leading-tight text-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-700"
                 aria-hidden="true"
@@ -110,7 +110,7 @@ export default async function Footer() {
             <p className="text-white/30 text-sm leading-relaxed mb-8 sm:mb-10 font-medium italic">
               &ldquo;{contact.deskripsiFooter || defaultContact.deskripsiFooter}&rdquo;
             </p>
-            <div className="flex items-center justify-center sm:justify-start gap-3 sm:gap-4">
+            <div className="flex items-center justify-start gap-3 sm:gap-4">
               {socials.map((s) => {
                 const Icon = platformIcon[s.platform] ?? Camera
                 return (
@@ -129,7 +129,7 @@ export default async function Footer() {
             </div>
           </div>
 
-          <div className="text-center sm:text-left">
+          <div className="text-left">
             <h3 className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Navigasi</h3>
             <ul className="space-y-4" role="list">
               {links.map((link) => (
@@ -143,7 +143,7 @@ export default async function Footer() {
             </ul>
           </div>
 
-          <div className="text-center sm:text-left">
+          <div className="text-left">
             <h3 className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Akademik</h3>
             <ul className="space-y-4" role="list">
               {prodis.map((program) => (
@@ -157,10 +157,10 @@ export default async function Footer() {
             </ul>
           </div>
 
-          <div className="text-center sm:text-left">
+          <div className="text-left">
             <h3 className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Hubungi</h3>
             <ul className="space-y-6" role="list">
-              <li className="flex items-start sm:items-start justify-center sm:justify-start gap-4 sm:gap-5 text-sm text-white/40 font-medium group">
+              <li className="flex items-start justify-start gap-4 sm:gap-5 text-sm text-white/40 font-medium group">
                 <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-gold/20 transition-all duration-500">
                   <MapPin size={18} className="text-brand-gold" aria-hidden="true" />
                 </div>
@@ -170,7 +170,7 @@ export default async function Footer() {
                 <li>
                   <a
                     href={contact.teleponUtamaHref ? `tel:${contact.teleponUtamaHref}` : '#'}
-                    className="flex items-center gap-5 text-sm text-white/40 hover:text-white transition-all group"
+                    className="flex items-center justify-start gap-5 text-sm text-white/40 hover:text-white transition-all group"
                     aria-label="Telepon STTPU"
                   >
                     <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-gold/20 transition-all duration-500">
@@ -193,7 +193,7 @@ export default async function Footer() {
                 {(contact.teleponUtamaHref || contact.teleponUtama) && (
                   <a
                     href={contact.teleponUtamaHref ? `tel:${contact.teleponUtamaHref}` : '#'}
-                    className="flex items-center justify-center sm:justify-start gap-2 hover:text-brand-gold transition-colors group"
+                    className="flex items-center justify-start gap-2 hover:text-brand-gold transition-colors group"
                     aria-label="Telepon STTPU"
                   >
                     <Phone size={10} className="text-brand-gold/50 group-hover:text-brand-gold transition-colors" />
@@ -203,7 +203,7 @@ export default async function Footer() {
                 {(contact.emailUtama || defaultContact.emailUtama) && (
                   <a
                     href={`mailto:${contact.emailUtama || defaultContact.emailUtama}`}
-                    className="flex items-center justify-center sm:justify-start gap-2 hover:text-brand-gold transition-colors group"
+                    className="flex items-center justify-start gap-2 hover:text-brand-gold transition-colors group"
                     aria-label="Email STTPU"
                   >
                     <Mail size={10} className="text-brand-gold/50 group-hover:text-brand-gold transition-colors" />
@@ -211,7 +211,7 @@ export default async function Footer() {
                   </a>
                 )}
               </div>
-              <div className="flex items-center justify-center lg:justify-end gap-3 sm:gap-4">
+              <div className="flex items-center justify-start lg:justify-end gap-3 sm:gap-4">
                 <div className="flex items-center border border-white/10 rounded-lg overflow-hidden h-6">
                   <button
                     aria-label="Bahasa Indonesia"
@@ -234,11 +234,11 @@ export default async function Footer() {
                 </button>
               </div>
             </div>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 sm:gap-8 text-[10px] text-white/20 font-bold uppercase tracking-wider">
-            <span className="text-center md:text-left">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 sm:gap-8 text-[10px] text-white/20 font-bold uppercase tracking-wider">
+            <span className="text-left">
               &copy; {currentYear} Sekolah Tinggi Teknologi Pekerjaan Umum. Excellence in Infrastructure.
             </span>
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-8">
               <Link href="/kebijakan-privasi" className="hover:text-brand-gold transition-colors">Privacy Policy</Link>
               <Link href="/syarat-ketentuan" className="hover:text-brand-gold transition-colors">Terms of Service</Link>
             </div>
