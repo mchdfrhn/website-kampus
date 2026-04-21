@@ -82,9 +82,9 @@ export default function PersonaQuickLinks({ tabs }: Props) {
     <section className="bg-brand-navy py-16 lg:py-24 relative overflow-hidden">
       <BlueAbstractBackground accentClassName="right-[14%]" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <Reveal width="100%">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 sm:mb-16">
             <h2 className="text-white font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Akses Cepat & Layanan</h2>
             <div className="w-16 h-1 bg-brand-gold rounded-full mx-auto mt-6" />
             <p className="text-white/50 mt-6 text-base md:text-lg font-medium max-w-3xl mx-auto leading-relaxed">
@@ -93,12 +93,12 @@ export default function PersonaQuickLinks({ tabs }: Props) {
           </div>
         </Reveal>
 
-        <div className="flex flex-wrap gap-3 justify-center mb-16">
+        <div className="flex flex-wrap gap-2.5 sm:gap-3 justify-center mb-10 sm:mb-16">
           {resolvedTabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-8 py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-500 cursor-pointer border ${
+              className={`px-4 sm:px-6 lg:px-8 py-3.5 sm:py-4 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all duration-500 cursor-pointer border ${
                 activeTab === tab.id
                   ? 'bg-brand-gold text-brand-navy border-brand-gold shadow-2xl shadow-brand-gold/20 scale-105'
                   : 'bg-white/[0.03] text-white/40 border-white/5 hover:bg-white/[0.08] hover:text-white hover:border-white/10'
@@ -109,7 +109,7 @@ export default function PersonaQuickLinks({ tabs }: Props) {
           ))}
         </div>
 
-        <div className="min-h-[400px]">
+        <div className="min-h-[320px] sm:min-h-[400px]">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
@@ -118,15 +118,15 @@ export default function PersonaQuickLinks({ tabs }: Props) {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+              <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {current.links.map((link) => (
                   <StaggerItem key={link.label}>
                     <a
                       href={link.href}
                       {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      className="group bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl p-10 text-center hover:bg-white/[0.05] hover:border-brand-gold/20 active:scale-95 transition-all duration-500 no-underline flex flex-col items-center justify-center h-full"
+                      className="group bg-white/[0.02] backdrop-blur-2xl border border-white/5 rounded-2xl p-6 sm:p-8 lg:p-10 text-center hover:bg-white/[0.05] hover:border-brand-gold/20 active:scale-95 transition-all duration-500 no-underline flex flex-col items-center justify-center h-full"
                     >
-                      <div className="w-16 h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center mb-8 group-hover:bg-brand-gold transition-all duration-500 border border-white/5 shadow-2xl shadow-brand-navy/20">
+                      <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center mb-6 sm:mb-8 group-hover:bg-brand-gold transition-all duration-500 border border-white/5 shadow-2xl shadow-brand-navy/20">
                         <span className="text-3xl group-hover:scale-110 transition-transform duration-500">{link.icon}</span>
                       </div>
                       <h3 className="text-white text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-brand-gold transition-colors leading-relaxed">

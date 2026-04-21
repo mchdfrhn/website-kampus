@@ -19,8 +19,8 @@ export default function ProgramStudiDetailContent({
 }) {
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12">
-      <article className="flex-1 min-w-0 space-y-16">
+    <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+      <article className="flex-1 min-w-0 space-y-10 sm:space-y-12 lg:space-y-16">
         <div className="flex flex-wrap gap-3 items-center">
           <span className="bg-brand-navy/5 text-brand-navy text-[9px] font-bold px-3 py-1.5 rounded-lg border border-brand-navy/10 uppercase tracking-wider">
             Jenjang {prodi.jenjang}
@@ -34,14 +34,14 @@ export default function ProgramStudiDetailContent({
           </span>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {[
             { icon: Clock, label: 'Masa Studi', value: prodi.masaStudi },
             { icon: Hash, label: 'Total Beban', value: `${prodi.jumlahSKS} SKS` },
             { icon: GraduationCap, label: 'Gelar Lulusan', value: prodi.gelarLulusan || '-' },
             { icon: ShieldCheck, label: 'Legalitas', value: prodi.berlakuHingga ? `s/d ${prodi.berlakuHingga.split(' ').pop()}` : '-' },
           ].map(({ icon: Icon, label, value }) => (
-            <div key={label} className="bg-white border border-gray-100 rounded-2xl p-6 text-center hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300">
+            <div key={label} className="bg-white border border-gray-100 rounded-2xl p-5 sm:p-6 text-center hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300">
               <div className="w-12 h-12 rounded-xl bg-brand-gold/10 flex items-center justify-center mx-auto mb-4">
                 <Icon size={20} className="text-brand-gold" aria-hidden="true" />
               </div>
@@ -52,7 +52,7 @@ export default function ProgramStudiDetailContent({
         </div>
 
         <section>
-          <h2 className="text-2xl font-bold text-brand-navy mb-6 tracking-tight">Eksplorasi Program</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-brand-navy mb-5 sm:mb-6 tracking-tight">Eksplorasi Program</h2>
           <div className="w-12 h-1 bg-brand-gold rounded-full mb-8" />
           {prodi.deskripsiHtml ? (
             <div
@@ -60,27 +60,27 @@ export default function ProgramStudiDetailContent({
               dangerouslySetInnerHTML={{ __html: prodi.deskripsiHtml }}
             />
           ) : (
-            <p className="text-gray-600 text-lg leading-relaxed font-medium">{prodi.deskripsi}</p>
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed font-medium">{prodi.deskripsi}</p>
           )}
         </section>
 
-        <section className="bg-brand-navy rounded-3xl p-10 lg:p-12 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
+        <section className="bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-12 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
            <BlueAbstractBackground />
            <div className="relative z-10">
-            <h2 className="font-bold text-2xl mb-4 tracking-tight">Visi & Misi</h2>
-            <div className="w-12 h-1 bg-brand-gold rounded-full mb-10" />
+            <h2 className="font-bold text-xl sm:text-2xl mb-4 tracking-tight">Visi & Misi</h2>
+            <div className="w-12 h-1 bg-brand-gold rounded-full mb-8 sm:mb-10" />
             
             <div className="space-y-10">
               <div>
                 <p className="text-brand-gold text-[10px] font-bold uppercase tracking-wider mb-4">Visi Strategis</p>
-                <p className="text-white/80 text-lg leading-relaxed font-medium italic">&ldquo;{prodi.visi}&rdquo;</p>
+                <p className="text-white/80 text-base sm:text-lg leading-relaxed font-medium italic">&ldquo;{prodi.visi}&rdquo;</p>
               </div>
               
               <div>
                 <p className="text-brand-gold text-[10px] font-bold uppercase tracking-wider mb-6">Misi Operasional</p>
                 <ol className="space-y-4">
                   {prodi.misi.map((m, i) => (
-                    <li key={i} className="flex items-start gap-5 text-base text-white/70 group">
+                    <li key={i} className="flex items-start gap-4 sm:gap-5 text-sm sm:text-base text-white/70 group">
                       <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 text-brand-gold font-bold text-xs flex items-center justify-center group-hover:bg-brand-gold group-hover:text-brand-navy transition-all">
                         {(i + 1).toString().padStart(2, '0')}
                       </span>
@@ -95,11 +95,11 @@ export default function ProgramStudiDetailContent({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           <section>
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div className="w-10 h-10 rounded-lg bg-brand-gold/10 flex items-center justify-center">
                 <GraduationCap size={20} className="text-brand-gold" aria-hidden="true" />
               </div>
-              <h2 className="text-xl font-bold text-brand-navy tracking-tight">Kompetensi</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-brand-navy tracking-tight">Kompetensi</h2>
             </div>
             <ul className="space-y-4">
               {prodi.kompetensiLulusan.map((k, i) => (
@@ -112,11 +112,11 @@ export default function ProgramStudiDetailContent({
           </section>
 
           <section>
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
               <div className="w-10 h-10 rounded-lg bg-brand-gold/10 flex items-center justify-center">
                 <Briefcase size={20} className="text-brand-gold" aria-hidden="true" />
               </div>
-              <h2 className="text-xl font-bold text-brand-navy tracking-tight">Prospek Karir</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-brand-navy tracking-tight">Prospek Karir</h2>
             </div>
             <div className="grid grid-cols-1 gap-3">
               {prodi.prospekKarir.map((k, i) => (
@@ -133,11 +133,11 @@ export default function ProgramStudiDetailContent({
         </div>
 
         <section>
-          <div className="flex items-center gap-4 mb-10">
+          <div className="flex items-center gap-3 sm:gap-4 mb-8 sm:mb-10">
             <div className="w-10 h-10 rounded-lg bg-brand-gold/10 flex items-center justify-center">
               <BookOpen size={20} className="text-brand-gold" aria-hidden="true" />
             </div>
-            <h2 className="text-xl font-bold text-brand-navy tracking-tight">Struktur Kurikulum</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-brand-navy tracking-tight">Struktur Kurikulum</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {prodi.kurikulum.map((sem) => (
@@ -146,7 +146,7 @@ export default function ProgramStudiDetailContent({
                 className="bg-white border border-gray-100 rounded-2xl overflow-hidden group transition-all"
                 open={sem.semester <= 2}
               >
-                <summary className="flex items-center justify-between px-8 py-5 cursor-pointer select-none hover:bg-gray-50 transition-all list-none">
+                <summary className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 cursor-pointer select-none hover:bg-gray-50 transition-all list-none">
                   <span className="font-bold text-brand-navy text-[11px] uppercase tracking-wider">
                     Semester {sem.semester.toString().padStart(2, '0')}
                   </span>
@@ -154,7 +154,7 @@ export default function ProgramStudiDetailContent({
                     <ChevronRight size={14} className="text-brand-navy" aria-hidden="true" />
                   </div>
                 </summary>
-                <div className="px-8 pb-8 pt-2 border-t border-gray-50">
+                <div className="px-5 sm:px-8 pb-6 sm:pb-8 pt-2 border-t border-gray-50">
                   <ul className="space-y-3">
                     {sem.mataKuliah.map((mk, i) => (
                       <li key={i} className="flex items-center gap-4 text-[11px] font-bold text-gray-500">
@@ -167,7 +167,7 @@ export default function ProgramStudiDetailContent({
               </details>
             ))}
           </div>
-          <div className="mt-12 p-8 bg-gray-50 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6 border border-gray-100">
+          <div className="mt-10 sm:mt-12 p-5 sm:p-8 bg-gray-50 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-5 sm:gap-6 border border-gray-100">
             <p className="text-gray-400 text-[10px] font-bold uppercase tracking-wider text-center md:text-left">
               * Kurikulum berbasis standar kompetensi nasional (SKKNI).
             </p>
@@ -175,7 +175,7 @@ export default function ProgramStudiDetailContent({
               href={prodi.kurikulumPdfUrl || '#'}
               target={prodi.kurikulumPdfUrl ? '_blank' : undefined}
               rel={prodi.kurikulumPdfUrl ? 'noopener noreferrer' : undefined}
-              className="bg-brand-navy text-white text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-brand-navy/90 transition-all shadow-xl shadow-brand-navy/10 flex items-center gap-2"
+              className="w-full md:w-auto justify-center bg-brand-navy text-white text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-brand-navy/90 transition-all shadow-xl shadow-brand-navy/10 flex items-center gap-2"
             >
               Unduh Kurikulum (PDF)
               <ChevronRight size={14} />
@@ -185,10 +185,10 @@ export default function ProgramStudiDetailContent({
       </article>
 
       <aside className="w-full lg:w-80 flex-shrink-0 space-y-8">
-        <div className="bg-brand-gold rounded-3xl p-10 text-brand-navy relative overflow-hidden shadow-2xl shadow-brand-gold/10 group">
+        <div className="bg-brand-gold rounded-3xl p-6 sm:p-8 lg:p-10 text-brand-navy relative overflow-hidden shadow-2xl shadow-brand-gold/10 group">
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all" />
           <p className="font-bold text-xl mb-4 tracking-tight">Mulai Karir Anda</p>
-          <p className="text-brand-navy/60 text-xs mb-10 leading-relaxed font-bold uppercase tracking-wider">
+          <p className="text-brand-navy/60 text-xs mb-7 sm:mb-10 leading-relaxed font-bold uppercase tracking-wider">
             Pendaftaran Mahasiswa Baru angkatan 2024/2025 telah dibuka secara online.
           </p>
           <a
@@ -202,7 +202,7 @@ export default function ProgramStudiDetailContent({
         </div>
 
         <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-xl shadow-brand-navy/5">
-          <div className="bg-gray-50 px-8 py-6 border-b border-gray-100">
+          <div className="bg-gray-50 px-5 sm:px-8 py-5 sm:py-6 border-b border-gray-100">
             <p className="font-bold text-brand-navy text-[11px] uppercase tracking-wider">Program Studi Lain</p>
           </div>
           <ul className="divide-y divide-gray-50">
@@ -210,7 +210,7 @@ export default function ProgramStudiDetailContent({
               <li key={p.slug}>
                 <Link
                   href={`/akademik/program-studi/${p.slug}`}
-                  className="flex items-center justify-between px-8 py-5 text-[11px] font-bold uppercase tracking-wider text-gray-400 hover:text-brand-gold hover:bg-gray-50 transition-all group"
+                  className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-5 text-[11px] font-bold uppercase tracking-wider text-gray-400 hover:text-brand-gold hover:bg-gray-50 transition-all group"
                 >
                   <span className="line-clamp-1">{p.nama}</span>
                   <ChevronRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all flex-shrink-0" />
@@ -220,7 +220,7 @@ export default function ProgramStudiDetailContent({
           </ul>
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-3xl p-8 shadow-xl shadow-brand-navy/5 text-center">
+        <div className="bg-white border border-gray-100 rounded-3xl p-6 sm:p-8 shadow-xl shadow-brand-navy/5 text-center">
           <div className="w-16 h-16 rounded-full bg-brand-navy/5 flex items-center justify-center mx-auto mb-6">
             <User size={24} className="text-brand-navy" />
           </div>

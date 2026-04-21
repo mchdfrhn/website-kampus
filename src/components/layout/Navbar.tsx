@@ -136,7 +136,7 @@ export default async function Navbar() {
                 href="/portal"
                 className="inline-flex items-center px-6 py-2.5 bg-brand-gold text-brand-navy font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-white hover:text-brand-navy hover:shadow-2xl hover:shadow-brand-gold/20 transition-all duration-500 shadow-xl shadow-brand-gold/10"
               >
-                Portal Mahasiswa
+                Portal
               </Link>
             </div>
 

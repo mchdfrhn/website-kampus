@@ -53,21 +53,21 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
 
       <div
         className={cn(
-          'fixed top-0 left-0 z-50 h-full w-80 bg-brand-navy shadow-[0_24px_60px_rgba(0,22,51,0.35)] flex flex-col transition-transform duration-500 ease-in-out border-r border-white/10',
+          'fixed top-0 left-0 z-50 h-full w-[min(20rem,calc(100vw-0.75rem))] max-w-[calc(100vw-0.75rem)] bg-brand-navy shadow-[0_24px_60px_rgba(0,22,51,0.35)] flex flex-col transition-transform duration-500 ease-in-out border-r border-white/10 rounded-r-3xl',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         role="dialog"
         aria-modal="true"
         aria-label="Menu navigasi"
       >
-        <div className="flex items-center justify-between px-6 py-6 border-b border-white/10 bg-brand-navy">
-          <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-5 sm:py-6 border-b border-white/10 bg-brand-navy rounded-tr-3xl">
+          <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3 min-w-0 pr-3">
             <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs leading-none shadow-lg shadow-brand-gold/20">
               STTPU
             </div>
-            <div className="text-white">
+            <div className="text-white min-w-0">
               <div className="font-bold text-sm leading-tight tracking-tight">STTPU</div>
-              <div className="text-white/60 text-[10px] leading-tight font-medium">Sekolah Tinggi Teknologi PU</div>
+              <div className="text-white/60 text-[10px] leading-tight font-medium break-words">Sekolah Tinggi Teknologi PU</div>
             </div>
           </HomeNavLink>
           <button
@@ -79,7 +79,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-6 px-3" aria-label="Menu mobile">
+        <nav className="flex-1 overflow-y-auto py-5 px-2.5 sm:px-3" aria-label="Menu mobile">
           {navItems.map((item) => {
             const hasChildren = Array.isArray(item.children) && item.children.length > 0;
             const active = isItemActive(item);
@@ -163,7 +163,7 @@ export default function MobileMenu({ navItems }: { navItems: { label: string; hr
           })}
         </nav>
 
-        <div className="p-6 border-t border-white/10 bg-brand-navy">
+        <div className="p-4 sm:p-6 border-t border-white/10 bg-brand-navy rounded-br-3xl">
           <Link
             href="/portal"
             onClick={toggleMenu}

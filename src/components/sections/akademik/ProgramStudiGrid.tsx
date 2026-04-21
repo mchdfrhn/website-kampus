@@ -14,8 +14,8 @@ const akreditasiColor: Record<string, string> = {
 export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStudi[] }) {
   const list = prodiList ?? [];
   return (
-    <section className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
-      <div className="mb-16 text-center lg:text-left">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="mb-12 sm:mb-16 text-center lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Program Studi Unggulan</h2>
         <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
         <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
@@ -33,7 +33,7 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
           <li key={prodi.slug}>
             <Link
               href={`/akademik/program-studi/${prodi.slug}`}
-              className="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
+              className="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
             >
               <div className="flex flex-wrap gap-3 mb-8">
                 <span className="bg-brand-navy/5 text-brand-navy text-[10px] font-bold px-3 py-1.5 rounded-lg border border-brand-navy/10 uppercase tracking-wider">
@@ -55,7 +55,7 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
                 {prodi.deskripsiSingkat}
               </p>
 
-              <div className="grid grid-cols-2 gap-4 mb-10">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 sm:mb-10">
                 <div className="bg-gray-50 rounded-xl p-5 border border-gray-100">
                   <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
                   <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
@@ -85,16 +85,16 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
               Tim akademik kami siap membantu Anda memilih program studi yang paling sesuai dengan visi karir Anda.
             </p>
           </div>
-          <div className="flex flex-wrap justify-center lg:justify-end gap-4">
+          <div className="flex w-full sm:w-auto flex-col sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
             <Link
               href="/kontak"
-              className="bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
+              className="w-full sm:w-auto text-center bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
             >
               Hubungi Kami
             </Link>
             <Link
               href="/akademik/beasiswa"
-              className="border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
+              className="w-full sm:w-auto text-center border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
             >
               Info Beasiswa
             </Link>
