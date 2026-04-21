@@ -17,13 +17,13 @@ type HeroData = {
 }
 
 export default function HeroSection({ data }: { data?: HeroData }) {
-  const badge = data?.heroBadge || ''
-  const judul = data?.heroJudul || ''
-  const subjudul = data?.heroSubjudul || ''
-  const cta1Teks = data?.heroCta1Teks || ''
-  const cta1Href = data?.heroCta1Href || '#'
-  const cta2Teks = data?.heroCta2Teks || ''
-  const cta2Href = data?.heroCta2Href || '#'
+  const badge = data?.heroBadge || 'Sekolah Tinggi Teknologi'
+  const judul = data?.heroJudul || 'Membangun Talenta Infrastruktur Indonesia'
+  const subjudul = data?.heroSubjudul || 'STTPU Jakarta menghadirkan pendidikan vokasi teknologi yang terhubung dengan kebutuhan industri konstruksi, sumber daya air, dan infrastruktur masa depan.'
+  const cta1Teks = data?.heroCta1Teks || 'Lihat Program Studi'
+  const cta1Href = data?.heroCta1Href || '/akademik/program-studi'
+  const cta2Teks = data?.heroCta2Teks || 'Hubungi Kami'
+  const cta2Href = data?.heroCta2Href || '/kontak'
 
   let fotoUrl: string | null = null
   if (data?.heroFoto && typeof data.heroFoto === 'object' && 'url' in data.heroFoto) {
@@ -75,14 +75,14 @@ export default function HeroSection({ data }: { data?: HeroData }) {
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 flex flex-col lg:flex-row items-center gap-8 sm:gap-10 lg:gap-14">
         <StaggerContainer className="flex-1 max-w-[700px] text-center lg:text-left">
           <StaggerItem>
-            <div className="inline-flex max-w-full items-center gap-3 bg-white/[0.03] backdrop-blur-md border border-white/10 px-4 sm:px-5 py-2 rounded-full mb-5 sm:mb-6 lg:mb-8 shadow-2xl">
-              <div className="w-2 h-2 bg-brand-gold rounded-full animate-ping" />
-              {badge ? (
+            {badge ? (
+              <div className="inline-flex max-w-full items-center gap-3 bg-white/[0.03] backdrop-blur-md border border-white/10 px-4 sm:px-5 py-2 rounded-full mb-5 sm:mb-6 lg:mb-8 shadow-2xl">
+                <div className="w-2 h-2 bg-brand-gold rounded-full animate-ping" />
                 <span className="text-white/80 font-bold text-[10px] uppercase tracking-wider">
                   {badge}
                 </span>
-              ) : null}
-            </div>
+              </div>
+            ) : null}
           </StaggerItem>
           
           <StaggerItem>

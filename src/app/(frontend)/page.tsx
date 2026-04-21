@@ -20,6 +20,23 @@ export const metadata = {
 type TabLink = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: TabLink[] }
 
+const defaultHomePageData = {
+  heroBadge: 'Sekolah Tinggi Teknologi',
+  heroJudul: 'Membangun Talenta Infrastruktur Indonesia',
+  heroSubjudul:
+    'STTPU Jakarta menghadirkan pendidikan vokasi teknologi yang terhubung dengan kebutuhan industri konstruksi, sumber daya air, dan infrastruktur masa depan.',
+  heroCta1Teks: 'Lihat Program Studi',
+  heroCta1Href: '/akademik/program-studi',
+  heroCta2Teks: 'Hubungi Kami',
+  heroCta2Href: '/kontak',
+  statistik: [
+    { angka: '4', label: 'Program Studi' },
+    { angka: '3.000+', label: 'Alumni' },
+    { angka: '45+', label: 'Mitra Industri' },
+    { angka: '1987', label: 'Tahun Berdiri' },
+  ],
+};
+
 async function fetchHomePageData() {
   try {
     const payload = await getPayloadClient()
@@ -41,14 +58,14 @@ async function fetchHomePageData() {
     const beritaDocs = beritaRes.status === 'fulfilled' ? beritaRes.value.docs : []
 
     return {
-      halamanUtama,
+      halamanUtama: halamanUtama ? { ...defaultHomePageData, ...halamanUtama } : defaultHomePageData,
       siteSettings,
       berita: beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
     }
   } catch (error) {
     console.error('Error in fetchHomePageData:', error)
     return {
-      halamanUtama: null,
+      halamanUtama: defaultHomePageData,
       siteSettings: null,
       berita: artikelStatic.slice(0, 4)
     }
@@ -60,7 +77,7 @@ export default async function HomePage() {
 
   const quickLinksTabs = (halamanUtama as unknown as { quickLinksTabs?: Tab[] })?.quickLinksTabs || []
   const waNumber = (siteSettings as { whatsapp?: string })?.whatsapp || undefined
-  const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || []
+  const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || defaultHomePageData.statistik
 
   return (
     <>

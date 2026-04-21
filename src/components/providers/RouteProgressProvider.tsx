@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
-const SHOW_DELAY = 120;
+const SHOW_DELAY = 0;
 const REDUCED_MOTION_SHOW_DELAY = 0;
 const MIN_VISIBLE_DURATION = 260;
 const REDUCED_MOTION_MIN_VISIBLE_DURATION = 140;
