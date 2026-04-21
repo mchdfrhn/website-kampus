@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateGlobal } from '../lib/revalidate'
+import { publicPagePaths, revalidateGlobal } from '../lib/revalidate'
 import { isAdmin } from '../access/isAdmin'
 
 export const SiteSettings: GlobalConfig = {
@@ -10,7 +10,7 @@ export const SiteSettings: GlobalConfig = {
     update: isAdmin,
   },
   hooks: {
-    afterChange: [revalidateGlobal(['/'])],
+    afterChange: [revalidateGlobal([...publicPagePaths])],
   },
   fields: [
     {

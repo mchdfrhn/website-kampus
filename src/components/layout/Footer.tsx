@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { unstable_noStore as noStore } from 'next/cache';
 import { MapPin, Phone, Mail, Camera, PlayCircle, Users, X, Globe, Accessibility } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
@@ -45,6 +46,8 @@ const defaultContact = {
 }
 
 export default async function Footer() {
+  noStore()
+
   const currentYear = new Date().getFullYear()
   let contact = defaultContact
   let prodis: { label: string; href: string }[] = studyPrograms
