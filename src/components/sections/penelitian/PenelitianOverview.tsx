@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, FlaskConical, BookOpen, DollarSign } from 'lucide-react';
-import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
 
 const defaultStats = [
@@ -83,25 +82,11 @@ export default async function PenelitianOverview() {
 
   return (
     <>
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Breadcrumbs 
-            customItems={[
-              { label: 'Penelitian & Pengabdian', href: '/penelitian' }
-            ]} 
-          />
-        </div>
-      </div>
-      <div className="bg-brand-navy text-white px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16 relative overflow-hidden">
-        <BlueAbstractBackground />
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="font-bold text-3xl sm:text-4xl mb-4 tracking-tight">{content.heroTitle}</h1>
-          <p className="max-w-2xl text-sm sm:text-base leading-relaxed text-white/75 font-medium">
-            {content.heroDescription}
-          </p>
-        </div>
-      </div>
+      <SectionPageHeader
+        title={content.heroTitle}
+        subtitle={content.heroDescription}
+        breadcrumbs={[{ label: 'Penelitian & Pengabdian', href: '/penelitian' }]}
+      />
 
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto grid grid-cols-2 gap-6 px-4 py-8 text-center sm:gap-8 sm:px-6 sm:py-10 lg:grid-cols-4 lg:px-8">

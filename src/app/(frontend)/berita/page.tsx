@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
-import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
 import { mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
 
@@ -31,27 +31,11 @@ export default async function BeritaPage() {
 
   return (
     <>
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <Breadcrumbs 
-            customItems={[
-              { label: 'Berita & Pengumuman', href: '/berita' }
-            ]} 
-          />
-        </div>
-      </div>
-      <div className="bg-brand-navy text-white px-6 py-12 relative overflow-hidden">
-        {/* Background Accent */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <h1 className="font-bold text-3xl md:text-4xl mb-4 tracking-tight">Berita & Pengumuman</h1>
-          <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-2xl font-medium">
-            Informasi resmi, berita terkini, dan pengumuman penting dari Sekolah Tinggi Teknologi
-            Pekerjaan Umum Jakarta.
-          </p>
-        </div>
-      </div>
+      <SectionPageHeader
+        title="Berita & Pengumuman"
+        subtitle="Informasi resmi, berita terkini, dan pengumuman penting dari Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta."
+        breadcrumbs={[{ label: 'Berita & Pengumuman', href: '/berita' }]}
+      />
       <BeritaIndexContent artikelList={artikelList} />
     </>
   );
