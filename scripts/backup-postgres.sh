@@ -5,28 +5,44 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
+# Load .env file if it exists but DO NOT overwrite existing environment variables
 ENV_FILE="${ENV_FILE:-${PROJECT_ROOT}/.env}"
 if [[ -f "${ENV_FILE}" ]]; then
-  set -a
-  # shellcheck disable=SC1090
-  source "${ENV_FILE}"
-  set +a
+  # Use a subshell to avoid polluting the current shell if we only want to load missing vars
+  # However, standard practice for these scripts is to source it.
+  # We use 'set -a' but we should ideally only set if not already set.
+  while IFS='=' read -r key value; do
+    # Skip comments and empty lines
+    [[ "${key}" =~ ^#.*$ || -z "${key}" ]] && continue
+    # Only export if not already set in environment
+    if [[ -z "${!key:-}" ]]; then
+      export "${key}=${value}"
+    fi
+  done < "${ENV_FILE}"
 fi
 
-DATABASE_URL="${BACKUP_DATABASE_URL:-${DATABASE_URI:-}}"
-BACKUP_DIR="${BACKUP_DIR:-${PROJECT_ROOT}/backups/postgres}"
-BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-14}"
-BACKUP_PREFIX="${BACKUP_PREFIX:-sttpu-postgres}"
-BACKUP_FORMAT="${BACKUP_FORMAT:-custom}"
-BACKUP_S3_ENABLED="${BACKUP_S3_ENABLED:-false}"
-BACKUP_S3_BUCKET="${BACKUP_S3_BUCKET:-${S3_BUCKET:-}}"
-BACKUP_S3_PREFIX="${BACKUP_S3_PREFIX:-postgres}"
-BACKUP_S3_REGION="${BACKUP_S3_REGION:-${S3_REGION:-us-east-1}}"
-BACKUP_S3_ENDPOINT="${BACKUP_S3_ENDPOINT:-${S3_ENDPOINT:-}}"
-BACKUP_S3_STORAGE_CLASS="${BACKUP_S3_STORAGE_CLASS:-STANDARD}"
+# Database Connection (Priority: BACKUP_DATABASE_URL > DATABASE_URI)
+export DATABASE_URL="${BACKUP_DATABASE_URL:-${DATABASE_URI:-}}"
+
+# Backup Settings
+export BACKUP_DIR="${BACKUP_DIR:-${PROJECT_ROOT}/backups/postgres}"
+export BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-14}"
+export BACKUP_PREFIX="${BACKUP_PREFIX:-sttpu-postgres}"
+export BACKUP_FORMAT="${BACKUP_FORMAT:-custom}"
+
+# S3 / R2 Settings
+export BACKUP_S3_ENABLED="${BACKUP_S3_ENABLED:-false}"
+export BACKUP_S3_BUCKET="${BACKUP_S3_BUCKET:-${S3_BUCKET:-}}"
+export BACKUP_S3_PREFIX="${BACKUP_S3_PREFIX:-postgres}"
+export BACKUP_S3_REGION="${BACKUP_S3_REGION:-${S3_REGION:-us-east-1}}"
+export BACKUP_S3_ENDPOINT="${BACKUP_S3_ENDPOINT:-${S3_ENDPOINT:-}}"
+export BACKUP_S3_STORAGE_CLASS="${BACKUP_S3_STORAGE_CLASS:-STANDARD}"
+
+# AWS SDK Credentials (Common fallbacks)
 export AWS_ACCESS_KEY_ID="${BACKUP_S3_ACCESS_KEY_ID:-${AWS_ACCESS_KEY_ID:-${S3_ACCESS_KEY_ID:-}}}"
 export AWS_SECRET_ACCESS_KEY="${BACKUP_S3_SECRET_ACCESS_KEY:-${AWS_SECRET_ACCESS_KEY:-${S3_SECRET_ACCESS_KEY:-}}}"
 export AWS_DEFAULT_REGION="${BACKUP_S3_REGION}"
+
 UPLOAD_SCRIPT="${PROJECT_ROOT}/scripts/upload-backup-to-s3.mjs"
 
 if [[ -z "${DATABASE_URL}" ]]; then
