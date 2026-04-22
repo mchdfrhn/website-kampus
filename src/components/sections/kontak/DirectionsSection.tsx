@@ -1,6 +1,13 @@
 import * as LucideIcons from 'lucide-react';
 
-const defaultDirections = [
+type DirectionItem = {
+  icon: string
+  emoji?: string // Fallback for legacy data
+  heading: string
+  steps: string[]
+}
+
+const defaultDirections: DirectionItem[] = [
   {
     icon: 'Bus',
     heading: 'TransJakarta',
@@ -32,13 +39,6 @@ const defaultDirections = [
     ],
   },
 ];
-
-type DirectionItem = {
-  icon: string
-  emoji?: string // Fallback for legacy data
-  heading: string
-  steps: string[]
-}
 
 export default function DirectionsSection({ directions }: { directions?: DirectionItem[] }) {
   const items = directions && directions.length > 0 ? directions : defaultDirections;

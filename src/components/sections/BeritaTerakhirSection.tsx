@@ -11,7 +11,7 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
         <Reveal width="100%">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-12">
             <div className="max-w-3xl text-center md:text-left">
-              <h2 className="text-brand-navy font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight leading-[1.2]">Warta & Inovasi</h2>
+              <h2 className="text-brand-navy font-bold text-3xl md:text-4xl lg:text-5xl tracking-tight leading-[1.2]">Berita</h2>
               <div className="w-16 h-1 bg-brand-gold rounded-full mt-6 mx-auto md:mx-0" />
               <p className="text-gray-500 mt-8 text-lg font-medium leading-relaxed">
                 Eksplorasi pencapaian, publikasi ilmiah, dan dinamika kehidupan kampus di pusat keunggulan teknologi pekerjaan umum.

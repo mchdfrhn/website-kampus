@@ -19,7 +19,7 @@ type ContactGlobal = {
   formTitle?: string
   directChannels?: { icon?: string; label: string; desc: string; href: string; external?: boolean }[]
   faqLinks?: { label: string; href: string }[]
-  directions?: { emoji: string; heading: string; steps?: { text: string }[] }[]
+  directions?: { icon?: string; emoji?: string; heading: string; steps?: { text: string }[] }[]
 }
 
 export default async function KontakPage() {
@@ -68,6 +68,7 @@ export default async function KontakPage() {
       <SocialMediaSection />
       <DirectionsSection
         directions={pageContent.directions?.map((item) => ({
+          icon: item.icon || '',
           emoji: item.emoji,
           heading: item.heading,
           steps: (item.steps || []).map((step) => step.text),
