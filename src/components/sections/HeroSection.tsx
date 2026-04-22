@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
+import { usePathname } from 'next/navigation';
 
 type Slide = {
   badge?: string | null;
@@ -30,14 +31,28 @@ function isExternalHref(href?: string | null) {
 
 export default function HeroSection({ data }: { data?: HeroData }) {
   const slides = data?.heroSlides || [];
+  const pathname = usePathname();
   
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true,
     duration: 30,
+    align: 'start',
+    skipSnaps: false,
+    watchResize: true,
   });
   
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+
+  // Re-init embla when navigating back to home or resizing
+  useEffect(() => {
+    if (emblaApi) {
+      const timer = setTimeout(() => {
+        emblaApi.reInit();
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+  }, [emblaApi, pathname]);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
@@ -74,8 +89,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   }
 
   return (
-    <section className="-mt-20 relative overflow-hidden bg-brand-navy">
-      <div className="overflow-hidden" ref={emblaRef}>
+    <section className="-mt-20 relative overflow-hidden bg-brand-navy w-full">
+      <div className="overflow-hidden w-full" ref={emblaRef}>
         <div className="flex">
           {slides.map((slide, index) => {
             const isActive = selectedIndex === index;
@@ -84,7 +99,10 @@ export default function HeroSection({ data }: { data?: HeroData }) {
             const cta2External = isExternalHref(slide.cta2Href);
 
             return (
-              <div key={index} className="flex-[0_0_100%] min-w-0 relative h-[85vh] sm:h-[90vh] lg:h-[95vh] min-h-[600px] flex items-center">
+              <div 
+                key={index} 
+                className="relative flex-none w-full min-w-full h-[85vh] sm:h-[90vh] lg:h-[95vh] min-h-[600px] flex items-center overflow-hidden transform-gpu"
+              >
                 {/* Background Image with Parallax effect */}
                 <div className="absolute inset-0 z-0">
                   {bgUrl ? (
@@ -100,6 +118,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                         fill
                         className="object-cover"
                         priority={index === 0}
+                        sizes="100vw"
+                        loading={index === 0 ? "eager" : "lazy"}
                       />
                     </motion.div>
                   ) : (
