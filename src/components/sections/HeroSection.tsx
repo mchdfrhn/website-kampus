@@ -110,7 +110,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                   <div className="absolute inset-0 bg-brand-navy/20 z-10" />
                 </div>
 
-                <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-8">
+                <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-8 pt-10 pb-32 md:pb-0">
                   <AnimatePresence mode="wait">
                     {isActive && (
                       <StaggerContainer className="max-w-3xl">
@@ -134,7 +134,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-8 tracking-tight"
+                            className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6 md:mb-8 tracking-tight"
                           >
                             {slide.judul}
                           </motion.h1>
@@ -195,8 +195,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
       </div>
 
       {/* Navigation Controls */}
-      <div className="absolute bottom-20 left-0 right-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
+      <div className="absolute bottom-8 md:bottom-20 left-0 right-0 z-30">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center gap-6 md:gap-0 justify-between">
           {/* Indicators */}
           <div className="flex gap-3">
             {scrollSnaps.map((_, index) => (
@@ -224,17 +224,17 @@ export default function HeroSection({ data }: { data?: HeroData }) {
           <div className="flex gap-4">
             <button
               onClick={scrollPrev}
-              className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
               aria-label="Previous slide"
             >
-              <ChevronLeft size={24} className="group-active:scale-90 transition-transform" />
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6 group-active:scale-90 transition-transform" />
             </button>
             <button
               onClick={scrollNext}
-              className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
+              className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
               aria-label="Next slide"
             >
-              <ChevronRight size={24} className="group-active:scale-90 transition-transform" />
+              <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-active:scale-90 transition-transform" />
             </button>
           </div>
         </div>
