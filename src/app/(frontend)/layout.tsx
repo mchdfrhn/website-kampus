@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { unstable_noStore as noStore } from 'next/cache';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import RouteProgressProvider from '@/components/providers/RouteProgressProvider';
@@ -12,8 +11,6 @@ type MediaValue = {
 } | null;
 
 export async function generateMetadata(): Promise<Metadata> {
-  noStore();
-
   const baseMetadata: Metadata = {
     title: {
       default: 'STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta',

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { unstable_noStore as noStore } from 'next/cache';
 import MobileMenu from './MobileMenu';
 import HomeNavLink from './HomeNavLink';
 import NavDesktopItems from './NavDesktopItems';
@@ -108,8 +107,6 @@ function synchronizeNavItems(
 }
 
 export default async function Navbar() {
-  noStore();
-
   let navItems: NavItem[] = fallbackNavItems;
   let settings = {
     teleponUtama: '(021) 2938-2938',
