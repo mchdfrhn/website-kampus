@@ -85,11 +85,11 @@ export default async function HomePage() {
       
       <StatsBar items={stats as { angka: string; label: string }[]} />
 
+      <BeritaTerakhirSection artikelList={berita} />
+
       <ProgramStudiSection />
 
       <PersonaQuickLinks tabs={quickLinksTabs} />
-
-      <BeritaTerakhirSection artikelList={berita} />
 
       <AkreditasiSection />
 
