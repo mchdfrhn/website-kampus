@@ -13,16 +13,25 @@ export const HalamanUtama: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Hero',
+          label: 'Hero Carousel',
           fields: [
-            { name: 'heroBadge', type: 'text', label: 'Teks Badge', defaultValue: 'Sekolah Tinggi Teknologi' },
-            { name: 'heroJudul', type: 'text', label: 'Judul Utama', required: true },
-            { name: 'heroSubjudul', type: 'textarea', label: 'Deskripsi / Subjudul' },
-            { name: 'heroCta1Teks', type: 'text', label: 'CTA Utama — Teks' },
-            { name: 'heroCta1Href', type: 'text', label: 'CTA Utama — URL' },
-            { name: 'heroCta2Teks', type: 'text', label: 'CTA Kedua — Teks' },
-            { name: 'heroCta2Href', type: 'text', label: 'CTA Kedua — URL' },
-            { name: 'heroFoto', type: 'upload', relationTo: 'media', label: 'Foto Kampus' },
+            {
+              name: 'heroSlides',
+              type: 'array',
+              label: 'Slides',
+              minRows: 1,
+              maxRows: 5,
+              fields: [
+                { name: 'badge', type: 'text', label: 'Teks Badge', defaultValue: 'Sekolah Tinggi Teknologi' },
+                { name: 'judul', type: 'text', label: 'Judul Utama', required: true },
+                { name: 'subjudul', type: 'textarea', label: 'Deskripsi / Subjudul' },
+                { name: 'cta1Teks', type: 'text', label: 'CTA Utama — Teks' },
+                { name: 'cta1Href', type: 'text', label: 'CTA Utama — URL' },
+                { name: 'cta2Teks', type: 'text', label: 'CTA Kedua — Teks' },
+                { name: 'cta2Href', type: 'text', label: 'CTA Kedua — URL' },
+                { name: 'background', type: 'upload', relationTo: 'media', label: 'Gambar Background' },
+              ],
+            },
           ],
         },
         {

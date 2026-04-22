@@ -21,14 +21,17 @@ type TabLink = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: TabLink[] }
 
 const defaultHomePageData = {
-  heroBadge: 'Sekolah Tinggi Teknologi',
-  heroJudul: 'Membangun Talenta Infrastruktur Indonesia',
-  heroSubjudul:
-    'STTPU Jakarta menghadirkan pendidikan vokasi teknologi yang terhubung dengan kebutuhan industri konstruksi, sumber daya air, dan infrastruktur masa depan.',
-  heroCta1Teks: 'Lihat Program Studi',
-  heroCta1Href: '/akademik/program-studi',
-  heroCta2Teks: 'Hubungi Kami',
-  heroCta2Href: '/kontak',
+  heroSlides: [
+    {
+      badge: 'Sekolah Tinggi Teknologi',
+      judul: 'Membangun Talenta Infrastruktur Indonesia',
+      subjudul: 'STTPU Jakarta menghadirkan pendidikan vokasi teknologi yang terhubung dengan kebutuhan industri konstruksi, sumber daya air, dan infrastruktur masa depan.',
+      cta1Teks: 'Lihat Program Studi',
+      cta1Href: '/akademik/program-studi',
+      cta2Teks: 'Hubungi Kami',
+      cta2Href: '/kontak',
+    }
+  ],
   statistik: [
     { angka: '4', label: 'Program Studi' },
     { angka: '3.000+', label: 'Alumni' },
@@ -57,10 +60,29 @@ async function fetchHomePageData() {
     const siteSettings = siteSettingsRes.status === 'fulfilled' ? siteSettingsRes.value : null
     const beritaDocs = beritaRes.status === 'fulfilled' ? beritaRes.value.docs : []
 
+    const mappedBerita = beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
+    
+    // Inject top 2 latest news into hero slides
+    const newsSlides = mappedBerita.slice(0, 2).map((artikel) => ({
+      badge: `BERITA TERKINI — ${artikel.kategori?.toUpperCase() || 'WARTA'}`,
+      judul: artikel.judul,
+      subjudul: artikel.ringkasan,
+      cta1Teks: 'Baca Selengkapnya',
+      cta1Href: `/berita/${artikel.slug}`,
+      cta2Teks: 'Semua Berita',
+      cta2Href: '/berita',
+      background: artikel.thumbnailUrl ? { url: artikel.thumbnailUrl } : undefined
+    }))
+    
+    const baseHalamanUtama = halamanUtama ? { ...defaultHomePageData, ...halamanUtama } : defaultHomePageData
+    
+    // Prepend news slides to existing slides from Payload
+    baseHalamanUtama.heroSlides = [...newsSlides, ...(baseHalamanUtama.heroSlides || [])]
+
     return {
-      halamanUtama: halamanUtama ? { ...defaultHomePageData, ...halamanUtama } : defaultHomePageData,
+      halamanUtama: baseHalamanUtama,
       siteSettings,
-      berita: beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
+      berita: mappedBerita
     }
   } catch (error) {
     console.error('Error in fetchHomePageData:', error)

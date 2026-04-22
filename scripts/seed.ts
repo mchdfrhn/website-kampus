@@ -1,5 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
+import 'dotenv/config'
 import { getPayloadClient } from '../src/lib/payload';
 
 const plainTextToLexical = (text: string) => ({
@@ -277,10 +278,33 @@ async function seed() {
   await payload.updateGlobal({
     slug: 'halaman-utama',
     data: {
-      heroJudul: 'Membangun Masa Depan Infrastruktur Indonesia',
-      heroSubjudul: 'Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta mencetak sarjana terapan kompeten.',
-      statistik: [{ angka: '1.200+', label: 'Mahasiswa Aktif' }, { angka: '12', label: 'UKM Aktif' }]
-    }
+      heroSlides: [
+        {
+          badge: 'Sekolah Tinggi Teknologi',
+          judul: 'Membangun Talenta Infrastruktur Indonesia',
+          subjudul: 'Pendidikan vokasi teknik terbaik untuk mencetak tenaga ahli konstruksi, sumber daya air, dan teknologi lingkungan yang siap pakai.',
+          cta1Teks: 'Lihat Program Studi',
+          cta1Href: '/akademik/program-studi',
+          cta2Teks: 'Kontak Kami',
+          cta2Href: '/kontak',
+        },
+        {
+          badge: 'Akreditasi Unggul',
+          judul: 'Kampus Vokasi Terdepan di Bidang Konstruksi',
+          subjudul: 'Kurikulum berbasis industri dengan dukungan fasilitas laboratorium lengkap dan tenaga pendidik berpengalaman.',
+          cta1Teks: 'Pendaftaran Mahasiswa',
+          cta1Href: 'https://pmb.sttpu.ac.id',
+          cta2Teks: 'Tentang Kami',
+          cta2Href: '/tentang',
+        },
+      ],
+      statistik: [
+        { angka: '1.200+', label: 'Mahasiswa Aktif' },
+        { angka: '3.000+', label: 'Alumni' },
+        { angka: '45+', label: 'Mitra Industri' },
+        { angka: '12', label: 'UKM Aktif' },
+      ],
+    },
   });
 
   // Tentang Kami

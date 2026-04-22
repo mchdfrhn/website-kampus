@@ -1,195 +1,248 @@
 "use client";
 
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import useEmblaCarousel from 'embla-carousel-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 
+type Slide = {
+  badge?: string | null;
+  judul?: string | null;
+  subjudul?: string | null;
+  cta1Teks?: string | null;
+  cta1Href?: string | null;
+  cta2Teks?: string | null;
+  cta2Href?: string | null;
+  background?: { url: string } | string | null;
+};
+
 type HeroData = {
-  heroBadge?: string | null
-  heroJudul?: string | null
-  heroSubjudul?: string | null
-  heroCta1Teks?: string | null
-  heroCta1Href?: string | null
-  heroCta2Teks?: string | null
-  heroCta2Href?: string | null
-  heroFoto?: { url: string } | string | null
-}
+  heroSlides?: Slide[] | null;
+};
 
 function isExternalHref(href?: string | null) {
-  if (!href) return false
-  return /^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')
+  if (!href) return false;
+  return /^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
 }
 
 export default function HeroSection({ data }: { data?: HeroData }) {
-  const badge = data?.heroBadge || 'Sekolah Tinggi Teknologi'
-  const judul = data?.heroJudul || 'Membangun Talenta Infrastruktur Indonesia'
-  const subjudul = data?.heroSubjudul || 'STTPU Jakarta menghadirkan pendidikan vokasi teknologi yang terhubung dengan kebutuhan industri konstruksi, sumber daya air, dan infrastruktur masa depan.'
-  const cta1Teks = data?.heroCta1Teks || 'Lihat Program Studi'
-  const cta1Href = data?.heroCta1Href || '/akademik/program-studi'
-  const cta2Teks = data?.heroCta2Teks || 'Hubungi Kami'
-  const cta2Href = data?.heroCta2Href || '/kontak'
-  const cta1External = isExternalHref(cta1Href)
-  const cta2External = isExternalHref(cta2Href)
+  const slides = data?.heroSlides || [];
+  
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    duration: 30,
+  });
+  
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
 
-  let fotoUrl: string | null = null
-  if (data?.heroFoto && typeof data.heroFoto === 'object' && 'url' in data.heroFoto) {
-    fotoUrl = (data.heroFoto as { url: string }).url
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index: number) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    onSelect();
+    setScrollSnaps(emblaApi.scrollSnapList());
+    emblaApi.on('select', onSelect);
+    emblaApi.on('reInit', onSelect);
+  }, [emblaApi, onSelect]);
+
+  // Auto play
+  useEffect(() => {
+    if (!emblaApi) return;
+    const interval = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 8000);
+    return () => clearInterval(interval);
+  }, [emblaApi]);
+
+  if (!slides || slides.length === 0) {
+    return (
+      <section className="-mt-20 pt-20 bg-brand-navy min-h-[70vh] flex items-center justify-center">
+        <p className="text-white/20 uppercase tracking-widest font-bold">No Hero Content</p>
+      </section>
+    );
   }
 
   return (
-    <section className="-mt-20 pt-20 bg-brand-navy min-h-[calc(68vh+5rem)] sm:min-h-[calc(72vh+5rem)] lg:min-h-[calc(78vh+5rem)] flex items-center relative overflow-hidden">
-      {/* Premium Decorative Layers - Engineered Motion */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(252,182,3,0.12),transparent_28%),radial-gradient(circle_at_85%_18%,rgba(255,255,255,0.08),transparent_20%),linear-gradient(135deg,rgba(255,255,255,0.04),transparent_42%)] pointer-events-none" />
-      <div className="absolute inset-y-0 right-0 hidden sm:block w-[46%] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0))] pointer-events-none" />
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2 }}
-        className="absolute top-0 right-0 hidden sm:block w-1/2 h-full bg-white/[0.02] blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none animate-pulse-slow" 
-      />
-      <div className="absolute -top-24 right-[12%] hidden md:block h-72 w-72 rounded-[36%] border border-white/8 bg-white/[0.025] rotate-12 pointer-events-none" />
-      <div className="absolute top-24 right-[18%] hidden md:block h-56 w-56 rounded-[42%] border border-brand-gold/15 bg-brand-gold/[0.04] -rotate-12 blur-[1px] pointer-events-none" />
-      <div className="absolute left-[8%] top-28 hidden md:block h-44 w-44 rounded-full border border-white/8 bg-[radial-gradient(circle,rgba(255,255,255,0.08),transparent_68%)] pointer-events-none" />
-      <div className="absolute left-[14%] bottom-20 hidden md:block h-40 w-40 rounded-[30%] border border-white/8 bg-white/[0.025] rotate-6 pointer-events-none" />
-      <div className="absolute inset-y-16 left-[52%] hidden lg:block w-px bg-gradient-to-b from-transparent via-white/12 to-transparent pointer-events-none" />
-      <div className="absolute inset-x-0 top-[22%] hidden lg:block h-px bg-gradient-to-r from-transparent via-white/8 to-transparent pointer-events-none" />
-      <svg
-        className="absolute inset-0 h-full w-full opacity-[0.14] pointer-events-none"
-        viewBox="0 0 1600 900"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      >
-        <path d="M1040 40C1170 120 1215 282 1328 350C1418 404 1517 396 1600 360V0H1045C1012 0 1008 18 1040 40Z" fill="url(#heroGlowA)" />
-        <path d="M0 672C124 620 210 708 336 690C470 670 530 548 656 516C778 486 882 540 948 626C1020 720 1122 760 1236 742C1368 722 1480 626 1600 592V900H0V672Z" fill="url(#heroGlowB)" />
-        <path d="M680 102C820 182 846 348 952 410C1032 456 1126 438 1204 388" stroke="rgba(255,255,255,0.2)" strokeWidth="2" fill="none" strokeDasharray="10 12" />
-        <path d="M38 222C158 170 246 192 320 276C384 348 448 404 562 386" stroke="rgba(252,182,3,0.28)" strokeWidth="2" fill="none" strokeDasharray="14 16" />
-        <defs>
-          <linearGradient id="heroGlowA" x1="1020" x2="1540" y1="50" y2="420" gradientUnits="userSpaceOnUse">
-            <stop stopColor="rgba(255,255,255,0.16)" />
-            <stop offset="1" stopColor="rgba(255,255,255,0)" />
-          </linearGradient>
-          <linearGradient id="heroGlowB" x1="180" x2="1260" y1="760" y2="430" gradientUnits="userSpaceOnUse">
-            <stop stopColor="rgba(252,182,3,0.12)" />
-            <stop offset="0.5" stopColor="rgba(255,255,255,0.04)" />
-            <stop offset="1" stopColor="rgba(255,255,255,0)" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <div className="absolute -bottom-48 -left-48 hidden sm:block w-[40rem] h-[40rem] bg-brand-gold/[0.04] rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute top-20 left-1/4 hidden sm:block w-32 h-32 bg-white/[0.02] rounded-full blur-3xl pointer-events-none" />
-      
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 flex flex-col lg:flex-row items-center gap-8 sm:gap-10 lg:gap-14">
-        <StaggerContainer className="flex-1 max-w-[700px] text-center lg:text-left">
-          <StaggerItem>
-            {badge ? (
-              <div className="inline-flex max-w-full items-center gap-3 bg-white/[0.03] backdrop-blur-md border border-white/10 px-4 sm:px-5 py-2 rounded-full mb-5 sm:mb-6 lg:mb-8 shadow-2xl">
-                <div className="w-2 h-2 bg-brand-gold rounded-full animate-ping" />
-                <span className="text-white/80 font-bold text-[10px] uppercase tracking-wider">
-                  {badge}
-                </span>
-              </div>
-            ) : null}
-          </StaggerItem>
-          
-          <StaggerItem>
-            <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold leading-[1.1] mb-5 sm:mb-6 lg:mb-8 tracking-tight">
-              {judul.split(' ').map((word, i) => (
-                <span key={i} className={word.toLowerCase() === 'indonesia' ? 'text-brand-gold' : ''}>
-                  {word}{' '}
-                </span>
-              ))}
-            </h1>
-          </StaggerItem>
-          
-          <StaggerItem>
-            <p className="text-white/70 text-sm sm:text-base md:text-lg lg:text-[1.05rem] leading-relaxed mb-7 sm:mb-8 lg:mb-10 max-w-2xl mx-auto lg:mx-0 font-medium">
-              {subjudul}
-            </p>
-          </StaggerItem>
-          
-          <StaggerItem>
-            <div className="flex w-full flex-col sm:flex-row sm:flex-wrap justify-center lg:justify-start gap-3 sm:gap-4">
-              {cta1Teks ? (
-                <Link
-                  href={cta1Href}
-                  target={cta1External ? '_blank' : undefined}
-                  rel={cta1External ? 'noopener noreferrer' : undefined}
-                  className="group relative w-full sm:w-auto text-center bg-brand-gold text-brand-navy font-bold text-[11px] uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl shadow-xl shadow-brand-gold/10 hover:shadow-brand-gold/30 hover:-translate-y-1 active:scale-95 transition-all duration-500 overflow-hidden"
-                >
-                  <span className="relative z-10">{cta1Teks}</span>
-                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
-                </Link>
-              ) : null}
-              {cta2Teks ? (
-                <Link
-                  href={cta2Href}
-                  target={cta2External ? '_blank' : undefined}
-                  rel={cta2External ? 'noopener noreferrer' : undefined}
-                  className="group w-full sm:w-auto text-center border border-white/20 text-white font-bold text-[11px] uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white hover:text-brand-navy active:scale-95 transition-all duration-500 backdrop-blur-sm"
-                >
-                  {cta2Teks}
-                </Link>
-              ) : null}
-            </div>
-          </StaggerItem>
-        </StaggerContainer>
-        
-	        <motion.div 
-	          initial={{ opacity: 0, x: 40 }}
-	          animate={{ opacity: 1, x: 0 }}
-	          transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-		          className="flex-1 w-full max-w-md sm:max-w-lg xl:max-w-xl lg:ml-auto lg:self-stretch"
-        >
-	          <div className="relative aspect-[5/6] sm:aspect-[4/5] lg:aspect-auto h-full min-h-[280px] sm:min-h-[360px] lg:min-h-[460px] lg:max-h-[520px] group">
-            {/* Artistic Frame - Precise Lines */}
-            <div className="absolute -inset-4 border border-brand-gold/10 rounded-2xl -rotate-2 group-hover:rotate-0 transition-all duration-700 ease-in-out" />
-            <div className="absolute -inset-4 border border-white/5 rounded-2xl rotate-1 group-hover:rotate-0 transition-all duration-700 ease-in-out" />
-            
-	            <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.3)] border border-white/10 bg-brand-navy/50 backdrop-blur-2xl">
-	              {fotoUrl ? (
-                  <motion.div
-                    initial={{ scale: 1.08, y: 18, rotate: -1.5 }}
-                    animate={{ scale: 1, y: [0, -10, 0], rotate: [0, -1, 0] }}
-                    transition={{
-                      scale: { duration: 1.4, delay: 0.55, ease: [0.16, 1, 0.3, 1] },
-                      y: { duration: 7.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
-                      rotate: { duration: 8.5, repeat: Infinity, repeatType: 'mirror', ease: 'easeInOut' },
-                    }}
-                    className="absolute inset-0"
-                  >
-                    <Image 
-                      src={fotoUrl} 
-                      alt="Kampus STTPU" 
-                      fill 
-                      className="object-cover group-hover:scale-105 transition-transform duration-1000 ease-in-out"
-                      priority 
-                    />
-                  </motion.div>
-	              ) : (
-                <div className="h-full w-full flex flex-col items-center justify-center p-12 text-center">
-                  <div className="w-24 h-24 mb-6 rounded-full bg-white/[0.03] flex items-center justify-center border border-white/10">
-                    <svg className="w-10 h-10 text-white/10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                    </svg>
-                  </div>
-                  <p className="text-white/10 text-[10px] font-bold uppercase tracking-wider">Institutional Vision</p>
+    <section className="-mt-20 relative overflow-hidden bg-brand-navy">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {slides.map((slide, index) => {
+            const isActive = selectedIndex === index;
+            const bgUrl = typeof slide.background === 'object' ? slide.background?.url : null;
+            const cta1External = isExternalHref(slide.cta1Href);
+            const cta2External = isExternalHref(slide.cta2Href);
+
+            return (
+              <div key={index} className="flex-[0_0_100%] min-w-0 relative h-[85vh] sm:h-[90vh] lg:h-[95vh] min-h-[600px] flex items-center">
+                {/* Background Image with Parallax effect */}
+                <div className="absolute inset-0 z-0">
+                  {bgUrl ? (
+                    <motion.div
+                      initial={{ scale: 1.1 }}
+                      animate={{ scale: isActive ? 1 : 1.1 }}
+                      transition={{ duration: 10, ease: "linear" }}
+                      className="relative h-full w-full"
+                    >
+                      <Image
+                        src={bgUrl}
+                        alt={slide.judul || "Hero Background"}
+                        fill
+                        className="object-cover"
+                        priority={index === 0}
+                      />
+                    </motion.div>
+                  ) : (
+                    <div className="absolute inset-0 bg-brand-navy" />
+                  )}
+                  {/* Overlays */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/90 via-brand-navy/40 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-brand-navy/20 z-10" />
                 </div>
-              )}
-              {/* Complex Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-transparent opacity-80" />
-	              <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6">
-	                <div className="bg-white/[0.03] backdrop-blur-2xl border border-white/10 p-4 sm:p-6 rounded-2xl group-hover:bg-white/[0.08] transition-colors duration-500">
-	                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-10 h-1 bg-brand-gold rounded-full group-hover:w-16 transition-all duration-500" />
-                    <p className="text-white/80 text-[10px] font-bold uppercase tracking-wider leading-none">Infrastruktur Masa Depan</p>
-                  </div>
+
+                <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-8">
+                  <AnimatePresence mode="wait">
+                    {isActive && (
+                      <StaggerContainer className="max-w-3xl">
+                        <StaggerItem>
+                          {slide.badge && (
+                            <motion.div 
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="inline-flex items-center gap-3 bg-brand-gold/10 backdrop-blur-md border border-brand-gold/20 px-4 py-2 rounded-full mb-8 shadow-xl"
+                            >
+                              <div className="w-2 h-2 bg-brand-gold rounded-full animate-pulse" />
+                              <span className="text-brand-gold font-bold text-[10px] uppercase tracking-wider">
+                                {slide.badge}
+                              </span>
+                            </motion.div>
+                          )}
+                        </StaggerItem>
+
+                        <StaggerItem>
+                          <motion.h1 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1, duration: 0.8 }}
+                            className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-8 tracking-tight"
+                          >
+                            {slide.judul}
+                          </motion.h1>
+                        </StaggerItem>
+
+                        <StaggerItem>
+                          <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
+                            className="text-white/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl font-medium"
+                          >
+                            {slide.subjudul}
+                          </motion.p>
+                        </StaggerItem>
+
+                        <StaggerItem>
+                          <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.8 }}
+                            className="flex flex-col sm:flex-row gap-4"
+                          >
+                            {slide.cta1Teks && (
+                              <Link
+                                href={slide.cta1Href || '#'}
+                                target={cta1External ? '_blank' : undefined}
+                                rel={cta1External ? 'noopener noreferrer' : undefined}
+                                className="group relative bg-brand-gold text-brand-navy font-bold text-[11px] uppercase tracking-widest px-10 py-5 rounded-2xl shadow-2xl hover:shadow-brand-gold/40 hover:-translate-y-1 transition-all duration-500 overflow-hidden text-center"
+                              >
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                  {slide.cta1Teks}
+                                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                </span>
+                                <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                              </Link>
+                            )}
+                            {slide.cta2Teks && (
+                              <Link
+                                href={slide.cta2Href || '#'}
+                                target={cta2External ? '_blank' : undefined}
+                                rel={cta2External ? 'noopener noreferrer' : undefined}
+                                className="group border border-white/20 text-white font-bold text-[11px] uppercase tracking-widest px-10 py-5 rounded-2xl hover:bg-white hover:text-brand-navy transition-all duration-500 backdrop-blur-md text-center"
+                              >
+                                {slide.cta2Teks}
+                              </Link>
+                            )}
+                          </motion.div>
+                        </StaggerItem>
+                      </StaggerContainer>
+                    )}
+                  </AnimatePresence>
                 </div>
               </div>
-            </div>
-          </div>
-        </motion.div>
+            );
+          })}
+        </div>
       </div>
+
+      {/* Navigation Controls */}
+      <div className="absolute bottom-20 left-0 right-0 z-30">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
+          {/* Indicators */}
+          <div className="flex gap-3">
+            {scrollSnaps.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`group relative h-1.5 transition-all duration-500 rounded-full overflow-hidden ${
+                  selectedIndex === index ? 'w-12 bg-brand-gold' : 'w-6 bg-white/20 hover:bg-white/40'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              >
+                {selectedIndex === index && (
+                  <motion.div 
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '0%' }}
+                    transition={{ duration: 8, ease: 'linear' }}
+                    className="absolute inset-0 bg-white/40"
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Arrows */}
+          <div className="flex gap-4">
+            <button
+              onClick={scrollPrev}
+              className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
+              aria-label="Previous slide"
+            >
+              <ChevronLeft size={24} className="group-active:scale-90 transition-transform" />
+            </button>
+            <button
+              onClick={scrollNext}
+              className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={24} className="group-active:scale-90 transition-transform" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Decorative Accents */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/[0.03] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-white/[0.02] rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none" />
     </section>
   );
 }
