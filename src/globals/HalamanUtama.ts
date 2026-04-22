@@ -54,7 +54,14 @@ export const HalamanUtama: GlobalConfig = {
                   type: 'array',
                   label: 'Daftar Link',
                   fields: [
-                    { name: 'icon', type: 'text', label: 'Ikon Emoji (mis: 📝)' },
+                    { 
+                      name: 'icon', 
+                      type: 'text', 
+                      label: 'Nama Icon Lucide (mis: UserPlus)',
+                      admin: {
+                        description: 'Gunakan PascalCase untuk nama icon. Referensi: https://lucide.dev'
+                      }
+                    },
                     { name: 'label', type: 'text', label: 'Label Link', required: true },
                     { name: 'href', type: 'text', label: 'URL', required: true },
                     { name: 'external', type: 'checkbox', label: 'Buka di tab baru?' },

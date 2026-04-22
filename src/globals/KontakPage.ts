@@ -38,7 +38,15 @@ export const KontakPage: GlobalConfig = {
       type: 'array',
       label: 'Petunjuk Arah',
       fields: [
-        { name: 'emoji', type: 'text', label: 'Emoji / Ikon', required: true },
+        { 
+          name: 'icon', 
+          type: 'text', 
+          label: 'Nama Icon Lucide (mis: Bus, Train, Car)',
+          admin: {
+            description: 'Gunakan nama icon dari lucide.dev (PascalCase)'
+          },
+          required: true 
+        },
         { name: 'heading', type: 'text', label: 'Judul', required: true },
         {
           name: 'steps',
