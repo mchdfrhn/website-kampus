@@ -7,7 +7,16 @@ export type AkademikSectionMeta = {
   breadcrumb?: string
 };
 
-const defaultSections: AkademikSectionMeta[] = [
+export const akademikSectionSlugOptions = [
+  { label: 'Program Studi', value: 'program-studi' },
+  { label: 'Dosen', value: 'dosen' },
+  { label: 'Kalender Akademik', value: 'kalender' },
+  { label: 'Beasiswa', value: 'beasiswa' },
+] as const;
+
+const validAkademikSectionSlugs = new Set(akademikSectionSlugOptions.map((option) => option.value));
+
+export const defaultSections: AkademikSectionMeta[] = [
   {
     slug: 'program-studi',
     title: 'Program Studi',
@@ -52,12 +61,18 @@ export async function getAkademikNavigation() {
 
     if (data.sidebarTitle) sidebarTitle = data.sidebarTitle;
     if (Array.isArray(data.sections) && data.sections.length > 0) {
-      sections = data.sections.map((section) => ({
-        slug: section.slug,
-        title: section.title,
-        subtitle: section.subtitle,
-        breadcrumb: section.breadcrumb,
-      }));
+      const sanitizedSections = data.sections
+        .filter((section) => validAkademikSectionSlugs.has(section.slug as (typeof akademikSectionSlugOptions)[number]['value']))
+        .map((section) => ({
+          slug: section.slug,
+          title: section.title,
+          subtitle: section.subtitle,
+          breadcrumb: section.breadcrumb,
+        }));
+
+      if (sanitizedSections.length > 0) {
+        sections = sanitizedSections;
+      }
     }
   } catch {
     // Keep defaults when Payload is unavailable.

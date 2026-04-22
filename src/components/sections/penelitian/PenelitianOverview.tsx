@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { ArrowRight, FlaskConical, BookOpen, DollarSign } from 'lucide-react';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
+import { resolvePenelitianSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+import { synchronizeOverviewSections } from '@/lib/section-links';
 
 const defaultStats = [
   { label: 'Peneliti Aktif', value: '42+' },
@@ -53,6 +55,7 @@ export default async function PenelitianOverview() {
   let content = defaultContent
   let stats = defaultStats
   let sections: SectionItem[] = defaultSections.map(({ href, title, desc, cta }) => ({ href, title, desc, cta }))
+  let resolvedSections = resolvePenelitianSections()
 
   try {
     const payload = await getPayloadClient()
@@ -62,7 +65,10 @@ export default async function PenelitianOverview() {
       heroDescription?: string
       stats?: StatItem[]
       sections?: SectionItem[]
+      subpages?: PayloadSectionMeta[]
     }
+
+    resolvedSections = resolvePenelitianSections(data.subpages || [])
 
     content = {
       heroTitle: data.heroTitle || defaultContent.heroTitle,
@@ -79,6 +85,8 @@ export default async function PenelitianOverview() {
   } catch {
     // DB unavailable — use defaults
   }
+
+  sections = synchronizeOverviewSections('/penelitian', resolvedSections, sections)
 
   return (
     <>

@@ -21,6 +21,7 @@ export const Dosen: CollectionConfig = {
       name: "slug",
       type: "text",
       label: "Slug URL",
+      required: true,
       unique: true,
       admin: { position: "sidebar" },
     },

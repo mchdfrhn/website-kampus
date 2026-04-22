@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Users, Trophy, Heart, BookOpen, ArrowRight, Flag } from 'lucide-react';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
+import { resolveKemahasiswaanSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+import { synchronizeOverviewSections } from '@/lib/section-links';
 
 const defaultSections = [
   { icon: Flag, title: 'Organisasi Mahasiswa', desc: 'BEM dan Senat Mahasiswa sebagai wadah aspirasi dan kepemimpinan.', href: '/kemahasiswaan/organisasi' },
@@ -41,6 +43,7 @@ export default async function KemahasiswaanOverview() {
   let content = defaultContent
   let sections = defaultSections.map(({ title, desc, href }) => ({ title, desc, href }))
   let stats = defaultStats
+  let resolvedSections = resolveKemahasiswaanSections()
 
   try {
     const payload = await getPayloadClient()
@@ -51,7 +54,10 @@ export default async function KemahasiswaanOverview() {
       introText?: string
       stats?: StatItem[]
       sections?: SectionItem[]
+      subpages?: PayloadSectionMeta[]
     }
+
+    resolvedSections = resolveKemahasiswaanSections(data.subpages || [])
 
     content = {
       heroTitle: data.heroTitle || defaultContent.heroTitle,
@@ -69,6 +75,8 @@ export default async function KemahasiswaanOverview() {
   } catch {
     // DB unavailable — use defaults
   }
+
+  sections = synchronizeOverviewSections('/kemahasiswaan', resolvedSections, sections)
 
   return (
     <>

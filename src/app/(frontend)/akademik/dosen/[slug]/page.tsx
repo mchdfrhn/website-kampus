@@ -19,7 +19,9 @@ export async function generateStaticParams() {
     });
     if (result.docs.length > 0) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return result.docs.map((doc: any) => ({ slug: doc.slug as string }));
+      return result.docs
+        .map((doc: any) => ({ slug: doc.slug as string }))
+        .filter((doc) => doc.slug);
     }
   } catch {
     // ignore

@@ -16,6 +16,11 @@ type HeroData = {
   heroFoto?: { url: string } | string | null
 }
 
+function isExternalHref(href?: string | null) {
+  if (!href) return false
+  return /^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:')
+}
+
 export default function HeroSection({ data }: { data?: HeroData }) {
   const badge = data?.heroBadge || 'Sekolah Tinggi Teknologi'
   const judul = data?.heroJudul || 'Membangun Talenta Infrastruktur Indonesia'
@@ -24,6 +29,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   const cta1Href = data?.heroCta1Href || '/akademik/program-studi'
   const cta2Teks = data?.heroCta2Teks || 'Hubungi Kami'
   const cta2Href = data?.heroCta2Href || '/kontak'
+  const cta1External = isExternalHref(cta1Href)
+  const cta2External = isExternalHref(cta2Href)
 
   let fotoUrl: string | null = null
   if (data?.heroFoto && typeof data.heroFoto === 'object' && 'url' in data.heroFoto) {
@@ -106,6 +113,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
               {cta1Teks ? (
                 <Link
                   href={cta1Href}
+                  target={cta1External ? '_blank' : undefined}
+                  rel={cta1External ? 'noopener noreferrer' : undefined}
                   className="group relative w-full sm:w-auto text-center bg-brand-gold text-brand-navy font-bold text-[11px] uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl shadow-xl shadow-brand-gold/10 hover:shadow-brand-gold/30 hover:-translate-y-1 active:scale-95 transition-all duration-500 overflow-hidden"
                 >
                   <span className="relative z-10">{cta1Teks}</span>
@@ -115,6 +124,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
               {cta2Teks ? (
                 <Link
                   href={cta2Href}
+                  target={cta2External ? '_blank' : undefined}
+                  rel={cta2External ? 'noopener noreferrer' : undefined}
                   className="group w-full sm:w-auto text-center border border-white/20 text-white font-bold text-[11px] uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white hover:text-brand-navy active:scale-95 transition-all duration-500 backdrop-blur-sm"
                 >
                   {cta2Teks}

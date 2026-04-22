@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { revalidateGlobal } from '../lib/revalidate'
+import { akademikSectionSlugOptions } from '../lib/akademik-navigation'
 
 export const AkademikPage: GlobalConfig = {
   slug: 'akademik-page',
@@ -14,12 +15,12 @@ export const AkademikPage: GlobalConfig = {
       type: 'text',
       label: 'Judul Sidebar',
     },
-    {
-      name: 'sections',
-      type: 'array',
-      label: 'Konfigurasi Subhalaman',
-      fields: [
-        { name: 'slug', type: 'text', label: 'Slug', required: true },
+        {
+          name: 'sections',
+          type: 'array',
+          label: 'Konfigurasi Subhalaman',
+          fields: [
+        { name: 'slug', type: 'select', label: 'Slug', required: true, options: [...akademikSectionSlugOptions] },
         { name: 'title', type: 'text', label: 'Judul', required: true },
         { name: 'subtitle', type: 'textarea', label: 'Subtitle' },
         { name: 'breadcrumb', type: 'text', label: 'Breadcrumb' },

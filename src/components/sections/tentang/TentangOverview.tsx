@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { History, Target, Users, ShieldCheck, Building2, Landmark, ArrowRight } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
+import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+import { synchronizeOverviewSections } from '@/lib/section-links';
 
 const defaultSections = [
   {
@@ -74,6 +76,7 @@ export default async function TentangOverview() {
   let content = defaultContent
   let sections = defaultSections.map(({ title, desc, href }) => ({ title, desc, href }))
   let stats = defaultStats
+  let resolvedSections = resolveTentangSections()
 
   try {
     const payload = await getPayloadClient()
@@ -85,7 +88,10 @@ export default async function TentangOverview() {
       overviewCommitmentTitle?: string
       overviewCommitmentText?: string
       overviewSections?: OverviewSection[]
+      subpages?: PayloadSectionMeta[]
     }
+
+    resolvedSections = resolveTentangSections(data.subpages || [])
 
     content = {
       title: data.overviewTitle || defaultContent.title,
@@ -104,6 +110,8 @@ export default async function TentangOverview() {
   } catch {
     // DB unavailable — use defaults
   }
+
+  sections = synchronizeOverviewSections('/tentang', resolvedSections, sections)
 
   return (
     <>

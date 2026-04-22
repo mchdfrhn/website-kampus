@@ -6,7 +6,7 @@ export const PenelitianPage: GlobalConfig = {
   label: 'Halaman Penelitian',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/penelitian'])],
+    afterChange: [revalidateGlobal(['/penelitian', '/penelitian/[slug]'])],
   },
   fields: [
     {

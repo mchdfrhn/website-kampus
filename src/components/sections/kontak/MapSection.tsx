@@ -5,6 +5,16 @@ type JamItem = { hari: string; jam?: string; tutup?: boolean }
 type TeleponItem = { nomor: string; href?: string; label?: string }
 type EmailItem = { email: string; label?: string }
 
+function resolveGoogleMapsEmbed(value?: string | null) {
+  const raw = (value || '').trim()
+  if (!raw) return ''
+
+  const iframeSrcMatch = raw.match(/src=["']([^"']+)["']/i)
+  if (iframeSrcMatch?.[1]) return iframeSrcMatch[1]
+
+  return raw
+}
+
 const defaultSettings = {
   alamat: 'Jl. Pelajar Pejuang 45 No. 1, Kelurahan Babakan Ciparay, Kota Bandung, Jawa Barat 40264',
   teleponUtama: '(021) 555-1234',
@@ -40,12 +50,14 @@ export default async function MapSection() {
     // DB unavailable — use defaults
   }
 
+  const googleMapsEmbedSrc = resolveGoogleMapsEmbed(s.googleMapsEmbed)
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3">
-      {s.googleMapsEmbed ? (
+      {googleMapsEmbedSrc ? (
         <div className="lg:col-span-2 h-80 lg:h-[400px]">
           <iframe
-            src={s.googleMapsEmbed}
+            src={googleMapsEmbedSrc}
             width="100%"
             height="100%"
             style={{ border: 0 }}

@@ -6,7 +6,7 @@ export const KemahasiswaanPage: GlobalConfig = {
   label: 'Halaman Kemahasiswaan',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/kemahasiswaan'])],
+    afterChange: [revalidateGlobal(['/kemahasiswaan', '/kemahasiswaan/[slug]'])],
   },
   fields: [
     {
