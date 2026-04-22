@@ -35,18 +35,18 @@ export default async function AkreditasiSection() {
         </Reveal>
 
         <MotionWrapper 
-          className="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 sm:gap-6 lg:gap-8"
+          className="grid grid-cols-1 justify-items-center min-[420px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
           staggerChildren={0.1}
         >
           {lembaga.map((item) => (
             <div
               key={item.nama}
-              className="group bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 text-center shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-95 transition-all duration-700"
+              className="group w-full max-w-[18rem] bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 text-center shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-95 transition-all duration-700"
             >
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 mx-auto mb-6 sm:mb-8 rounded-2xl flex items-center justify-center border border-gray-100 group-hover:bg-brand-navy transition-all duration-700 shadow-inner overflow-hidden">
                 <span className="px-2 text-center text-brand-navy/20 group-hover:text-white/20 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em]">{item.nama.split(' ')[0]}</span>
               </div>
-              <h3 className="text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.18em] leading-relaxed mb-5 sm:mb-6 group-hover:text-brand-gold transition-colors break-words">
+              <h3 className="mx-auto max-w-[14rem] text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.14em] leading-relaxed mb-5 sm:mb-6 group-hover:text-brand-gold transition-colors break-words">
                 {item.nama}
               </h3>
               <div className="inline-flex max-w-full items-center justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2.5 bg-green-50 rounded-xl border border-green-100">

@@ -140,14 +140,14 @@ export default async function TentangOverview() {
              </p>
           </div>
 
-          <ul className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3" aria-label="Navigasi halaman tentang">
+          <ul className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 xl:grid-cols-3" aria-label="Navigasi halaman tentang">
             {sections.map((item) => {
               const Icon = iconMap[item.href] || History;
               return (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group flex h-full flex-col rounded-[2rem] border border-gray-100 bg-gray-50 p-6 sm:rounded-[2.25rem] sm:p-8 lg:rounded-[2.5rem] lg:p-10 hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
+                    className="group flex h-full flex-col items-center rounded-[2rem] border border-gray-100 bg-gray-50 p-6 text-center sm:rounded-[2.25rem] sm:p-8 lg:rounded-[2.5rem] lg:p-10 hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
                   >
                     <div
                       className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm transition-colors group-hover:bg-brand-gold sm:mb-8"
@@ -157,7 +157,7 @@ export default async function TentangOverview() {
                     </div>
                     <h3 className="mb-4 text-lg font-black uppercase tracking-tight text-brand-navy transition-colors group-hover:text-brand-gold">{item.title}</h3>
                     <p className="text-gray-500 text-sm leading-relaxed flex-1 group-hover:text-white/60 transition-colors font-medium">{item.desc}</p>
-                    <div className="mt-6 sm:mt-8 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-navy transition-all group-hover:text-white">
+                    <div className="mt-6 sm:mt-8 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-brand-navy transition-all group-hover:text-white">
                       Eksplorasi
                       <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" aria-hidden="true" />
                     </div>
