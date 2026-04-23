@@ -14,8 +14,8 @@ const akreditasiColor: Record<string, string> = {
 export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStudi[] }) {
   const list = prodiList ?? [];
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-      <div className="mb-12 sm:mb-16 text-center lg:text-left">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Program Studi Unggulan</h2>
         <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
         <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
@@ -28,7 +28,7 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
           Data program studi belum tersedia.
         </div>
       ) : (
-      <ul className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-10" aria-label="Daftar program studi STTPU">
+      <ul className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-10" aria-label="Daftar program studi STTPU">
         {list.map((prodi) => (
           <li key={prodi.slug}>
             <Link
@@ -76,7 +76,7 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
       </ul>
       )}
 
-      <div className="mt-14 sm:mt-20 bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
+      <div className="bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
         <BlueAbstractBackground />
         <div className="relative z-10 flex flex-col items-start gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
           <div className="max-w-2xl text-center lg:text-left">

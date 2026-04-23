@@ -29,6 +29,28 @@ export function normalizeProgramStudiSlug(value?: string | null): string {
     .replace(/^-+|-+$/g, '');
 }
 
+function formatJenjang(value?: string | null): string {
+  const normalized = (value || '').trim().toLowerCase();
+
+  const jenjangMap: Record<string, string> = {
+    d3: 'D3',
+    d4: 'D4',
+    'd-3': 'D3',
+    'd-4': 'D4',
+    'd iii': 'D3',
+    'd iv': 'D4',
+    s1: 'S1',
+    s2: 'S2',
+    s3: 'S3',
+    's-1': 'S1',
+    's-2': 'S2',
+    's-3': 'S3',
+  };
+
+  if (jenjangMap[normalized]) return jenjangMap[normalized];
+  return (value || '').trim().toUpperCase();
+}
+
 export const programStudiList: ProgramStudi[] = [
   {
     slug: 'teknik-sipil',
@@ -348,7 +370,7 @@ export function mapPayloadToProgramStudi(doc: any): ProgramStudi {
   return {
     slug: normalizeProgramStudiSlug(doc.slug ?? doc.nama ?? ''),
     nama: doc.nama ?? '',
-    jenjang: doc.jenjang ?? '',
+    jenjang: formatJenjang(doc.jenjang),
     akreditasi: doc.akreditasi ?? '',
     deskripsiSingkat: doc.deskripsiSingkat ?? '',
     deskripsi: deskripsiHtml || '',

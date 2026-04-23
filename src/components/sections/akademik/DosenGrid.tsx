@@ -1,6 +1,9 @@
+'use client';
+
+import { useState } from 'react';
 import Link from 'next/link';
 import type { Dosen } from '@/lib/data/dosen';
-import { Mail, BookOpen } from 'lucide-react';
+import { BookOpen, ChevronRight, Mail, Users } from 'lucide-react';
 
 const jabatanLabel: Record<string, string> = {
   Profesor: 'Profesor',
@@ -10,132 +13,207 @@ const jabatanLabel: Record<string, string> = {
 };
 
 const jabatanColor: Record<string, string> = {
-  Profesor: 'bg-purple-100 text-purple-800 border-purple-200',
-  'Lektor Kepala': 'bg-blue-100 text-blue-800 border-blue-200',
-  Lektor: 'bg-green-100 text-green-800 border-green-200',
-  'Asisten Ahli': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+  Profesor: 'border-fuchsia-200 bg-fuchsia-50 text-fuchsia-800',
+  'Lektor Kepala': 'border-sky-200 bg-sky-50 text-sky-800',
+  Lektor: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+  'Asisten Ahli': 'border-amber-200 bg-amber-50 text-amber-800',
 };
+
+function getInitials(name: string) {
+  return (
+    name
+      .split(',')
+      .shift()
+      ?.split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase() || 'DS'
+  );
+}
+
+function groupByProgramStudi(list: Dosen[]) {
+  const map = new Map<string, Dosen[]>();
+
+  list.forEach((dosen) => {
+    const programs = dosen.programStudi.length > 0 ? dosen.programStudi : ['Lainnya'];
+
+    programs.forEach((program) => {
+      const current = map.get(program) ?? [];
+      current.push(dosen);
+      map.set(program, current);
+    });
+  });
+
+  return Array.from(map.entries())
+    .map(([program, dosen]) => ({
+      program,
+      dosen: dosen.sort((a, b) => a.nama.localeCompare(b.nama, 'id')),
+    }))
+    .sort((a, b) => a.program.localeCompare(b.program, 'id'));
+}
+
+function DosenCard({ dosen }: { dosen: Dosen }) {
+  const initials = getInitials(dosen.nama);
+  const content = (
+    <>
+      <div className="flex items-start gap-4 sm:gap-5">
+        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-brand-navy/10 bg-[linear-gradient(155deg,#eef4ff_0%,#f8fafc_42%,#fff5d9_100%)] text-base font-bold tracking-[0.16em] text-brand-navy/55 shadow-inner sm:h-16 sm:w-16 sm:text-lg">
+          {initials}
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <div className="mb-2.5 flex flex-wrap items-center gap-2">
+            <span
+              className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${jabatanColor[dosen.jabatanFungsional] ?? 'border-slate-200 bg-slate-100 text-slate-700'}`}
+            >
+              {jabatanLabel[dosen.jabatanFungsional] ?? dosen.jabatanFungsional}
+            </span>
+          </div>
+
+          <h3 className="text-base font-bold leading-snug tracking-tight text-brand-navy transition-colors group-hover:text-brand-gold">
+            {dosen.nama}
+          </h3>
+          <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
+            NIDN {dosen.nidn || '-'}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {dosen.bidangKeahlian.slice(0, 3).map((keahlian) => (
+          <span
+            key={keahlian}
+            className="rounded-full border border-brand-navy/8 bg-brand-navy/[0.03] px-3 py-1.5 text-[11px] font-semibold text-brand-navy"
+          >
+            {keahlian}
+          </span>
+        ))}
+        {dosen.bidangKeahlian.length > 3 ? (
+          <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-500">
+            +{dosen.bidangKeahlian.length - 3} lainnya
+          </span>
+        ) : null}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-2.5 border-t border-slate-100 pt-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2">
+          <BookOpen size={13} />
+          <span>{dosen.publikasi.length} publikasi terdata</span>
+        </div>
+        <div className="flex min-w-0 items-center gap-2">
+          <Mail size={13} />
+          <span className="truncate sm:max-w-[20rem]">{dosen.email}</span>
+        </div>
+      </div>
+
+      <div className="mt-4 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-navy transition-colors group-hover:text-brand-gold">
+        Lihat Profil
+        <ChevronRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+      </div>
+    </>
+  );
+
+  if (dosen.slug) {
+    return (
+      <Link
+        href={`/akademik/dosen/${dosen.slug}`}
+        className="group flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(10,31,68,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_24px_50px_rgba(10,31,68,0.08)] sm:p-6"
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-5 opacity-85 shadow-[0_16px_40px_rgba(10,31,68,0.04)] sm:p-6">
+      {content}
+    </div>
+  );
+}
 
 export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
   const list = dosenList ?? [];
+  const groupedPrograms = groupByProgramStudi(list);
+  const [activeTab, setActiveTab] = useState(groupedPrograms[0]?.program ?? '');
+
+  const activeGroup = groupedPrograms.find((group) => group.program === activeTab) ?? groupedPrograms[0];
+
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
-      <p className="text-gray-600 text-sm leading-relaxed max-w-2xl mb-8">
-        STTPU Jakarta didukung oleh tenaga pengajar berpengalaman dan berkualifikasi tinggi —
-        doktor dan master dari universitas terkemuka dalam dan luar negeri — yang aktif dalam
-        penelitian dan pengabdian masyarakat.
-      </p>
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Temukan Dosen Berdasarkan Program Studi
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Jelajahi tenaga pengajar STTPU Jakarta berdasarkan afiliasi program studi untuk melihat
+          fokus keahlian, publikasi, dan profil akademik mereka dalam satu alur yang lebih rapi.
+        </p>
+      </div>
 
       {list.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
+        <div className="mt-8 rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
           Data dosen belum tersedia.
         </div>
-      ) : (
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3" aria-label="Daftar dosen STTPU">
-        {list.map((dosen) => (
-          <li key={dosen.slug || dosen.email || dosen.nama}>
-            {dosen.slug ? (
-              <Link
-                href={`/akademik/dosen/${dosen.slug}`}
-                className="group flex flex-col h-full bg-white border border-gray-200 rounded-xl p-4 sm:p-5 hover:border-brand-navy hover:shadow-md transition-all"
-              >
-                <div className="flex items-start gap-4 mb-4">
-                  <div
-                    className="w-14 h-14 bg-brand-mist border border-gray-200 rounded-xl flex items-center justify-center flex-shrink-0 text-lg font-bold text-brand-navy/30"
-                    aria-hidden="true"
-                  >
-                    {dosen.nama.charAt(dosen.nama.indexOf('.') + 2)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-900 text-sm leading-snug group-hover:text-brand-navy transition-colors line-clamp-2">
-                      {dosen.nama}
-                    </p>
-                    <p className="text-gray-500 text-xs mt-0.5">NIDN {dosen.nidn}</p>
-                  </div>
-                </div>
+      ) : activeGroup ? (
+        <div className="mt-10 space-y-6">
+          <div
+            className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            aria-label="Tab program studi"
+          >
+            {groupedPrograms.map((group) => {
+              const isActive = group.program === activeGroup.program;
 
-                <span
-                  className={`self-start text-xs font-semibold px-2.5 py-0.5 rounded-full border mb-3 ${jabatanColor[dosen.jabatanFungsional] ?? 'bg-gray-100 text-gray-700 border-gray-200'}`}
+              return (
+                <button
+                  key={group.program}
+                  type="button"
+                  onClick={() => setActiveTab(group.program)}
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-all duration-300 ${
+                    isActive
+                      ? 'border-brand-navy/10 bg-brand-navy text-white shadow-premium'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-brand-navy/20 hover:text-brand-navy'
+                  }`}
                 >
-                  {jabatanLabel[dosen.jabatanFungsional] ?? dosen.jabatanFungsional}
-                </span>
-
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {dosen.bidangKeahlian.slice(0, 2).map((k) => (
-                    <span key={k} className="inline-block bg-brand-mist text-brand-navy text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200">
-                      {k}
-                    </span>
-                  ))}
-                  {dosen.bidangKeahlian.length > 2 && (
-                    <span className="inline-block text-gray-400 text-[10px] px-1">
-                      +{dosen.bidangKeahlian.length - 2}
-                    </span>
-                  )}
-                </div>
-
-                <div className="mt-auto flex flex-col gap-2 border-t border-gray-100 pt-3 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-                  <span className="flex items-center gap-1.5 min-w-0">
-                    <BookOpen size={12} aria-hidden="true" />
-                    {dosen.publikasi.length} publikasi
-                  </span>
-                  <span className="flex items-center gap-1.5 min-w-0">
-                    <Mail size={12} aria-hidden="true" />
-                    <span className="truncate max-w-32">{dosen.email}</span>
-                  </span>
-                </div>
-              </Link>
-            ) : (
-              <div className="flex flex-col h-full bg-white border border-gray-200 rounded-xl p-4 sm:p-5 opacity-80">
-                <div className="flex items-start gap-4 mb-4">
-                  <div
-                    className="w-14 h-14 bg-brand-mist border border-gray-200 rounded-xl flex items-center justify-center flex-shrink-0 text-lg font-bold text-brand-navy/30"
-                    aria-hidden="true"
+                  <span>{group.program}</span>
+                  <span
+                    className={`rounded-lg px-2 py-0.5 text-[10px] font-bold ${
+                      isActive ? 'bg-white/14 text-white' : 'bg-gray-100 text-gray-500'
+                    }`}
                   >
-                    {dosen.nama.charAt(dosen.nama.indexOf('.') + 2)}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">
-                      {dosen.nama}
-                    </p>
-                    <p className="text-gray-500 text-xs mt-0.5">NIDN {dosen.nidn}</p>
-                  </div>
-                </div>
-
-                <span
-                  className={`self-start text-xs font-semibold px-2.5 py-0.5 rounded-full border mb-3 ${jabatanColor[dosen.jabatanFungsional] ?? 'bg-gray-100 text-gray-700 border-gray-200'}`}
-                >
-                  {jabatanLabel[dosen.jabatanFungsional] ?? dosen.jabatanFungsional}
-                </span>
-
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {dosen.bidangKeahlian.slice(0, 2).map((k) => (
-                    <span key={k} className="inline-block bg-brand-mist text-brand-navy text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200">
-                      {k}
-                    </span>
-                  ))}
-                  {dosen.bidangKeahlian.length > 2 && (
-                    <span className="inline-block text-gray-400 text-[10px] px-1">
-                      +{dosen.bidangKeahlian.length - 2}
-                    </span>
-                  )}
-                </div>
-
-                <div className="mt-auto flex flex-col gap-2 border-t border-gray-100 pt-3 text-xs text-gray-500 sm:flex-row sm:items-center sm:justify-between">
-                  <span className="flex items-center gap-1.5 min-w-0">
-                    <BookOpen size={12} aria-hidden="true" />
-                    {dosen.publikasi.length} publikasi
+                    {group.dosen.length}
                   </span>
-                  <span className="flex items-center gap-1.5 min-w-0">
-                    <Mail size={12} aria-hidden="true" />
-                    <span className="truncate max-w-32">{dosen.email}</span>
-                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-premium sm:p-8">
+            <div className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-5 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">
+                  Program Studi
                 </div>
+                <h3 className="mt-2 text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">
+                  {activeGroup.program}
+                </h3>
               </div>
-            )}
-          </li>
-        ))}
-      </ul>
-      )}
+              <div className="inline-flex items-center gap-2 self-start rounded-lg border border-gray-200 bg-gray-50 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-gray-500 sm:self-auto">
+                <Users size={13} />
+                {activeGroup.dosen.length} dosen
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {activeGroup.dosen.map((dosen) => (
+                <DosenCard key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`} dosen={dosen} />
+              ))}
+            </div>
+          </section>
+        </div>
+      ) : null}
     </section>
   );
 }
