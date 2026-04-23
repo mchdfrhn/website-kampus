@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import PageHeader from '@/components/sections/kontak/PageHeader';
 import MapSection from '@/components/sections/kontak/MapSection';
@@ -6,6 +7,7 @@ import ContactFormSection from '@/components/sections/kontak/ContactFormSection'
 import SocialMediaSection from '@/components/sections/kontak/SocialMediaSection';
 import DirectionsSection from '@/components/sections/kontak/DirectionsSection';
 import { getPayloadClient } from '@/lib/payload';
+
 
 export const metadata: Metadata = {
   title: 'Kontak',

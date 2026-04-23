@@ -1,5 +1,7 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import TentangOverview from '@/components/sections/tentang/TentangOverview';
+
 
 export const metadata: Metadata = {
   title: 'Tentang STTPU | STTPU Jakarta',

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
@@ -8,6 +9,7 @@ import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
 import {
+
   buildBreadcrumbJsonLd,
   buildPageMetadata,
   buildPersonJsonLd,

@@ -1,5 +1,7 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import PenelitianOverview from '@/components/sections/penelitian/PenelitianOverview';
+
 
 export const metadata: Metadata = {
   title: 'Penelitian & Pengabdian | STTPU Jakarta',

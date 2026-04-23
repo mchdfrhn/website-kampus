@@ -1,9 +1,11 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import KemahasiswaanPageHeader from '@/components/sections/kemahasiswaan/KemahasiswaanPageHeader';
 import KemahasiswaanSidebar from '@/components/sections/kemahasiswaan/KemahasiswaanSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveKemahasiswaanSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+
 
 export async function generateStaticParams() {
   try {

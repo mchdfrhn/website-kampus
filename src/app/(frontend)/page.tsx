@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import HeroSection from '@/components/sections/HeroSection';
 import StatsBar from '@/components/sections/StatsBar';
 import ProgramStudiSection from '@/components/sections/ProgramStudiSection';
@@ -14,7 +15,6 @@ import {
   mapPayloadToArtikel,
 } from '@/lib/data/berita';
 
-export const dynamic = 'force-dynamic';
 
 export const metadata = buildPageMetadata({
   title: 'Beranda | STTPU Jakarta',

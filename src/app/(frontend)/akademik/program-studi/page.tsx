@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
@@ -7,6 +8,7 @@ import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
+
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Program Studi | STTPU Jakarta',

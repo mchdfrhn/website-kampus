@@ -1,9 +1,11 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import TentangSidebar from '@/components/sections/tentang/TentangSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+
 
 export async function generateStaticParams() {
   try {

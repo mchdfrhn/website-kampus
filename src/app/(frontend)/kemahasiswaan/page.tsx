@@ -1,5 +1,7 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import KemahasiswaanOverview from '@/components/sections/kemahasiswaan/KemahasiswaanOverview';
+
 
 export const metadata: Metadata = {
   title: 'Kemahasiswaan | STTPU Jakarta',

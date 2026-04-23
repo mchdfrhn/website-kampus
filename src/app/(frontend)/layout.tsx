@@ -7,6 +7,9 @@ import PageTransition from '@/components/ui/motion/PageTransition';
 import { getPayloadClient } from '@/lib/payload';
 import { buildOrganizationJsonLd, buildWebsiteJsonLd, getSiteUrl, toAbsoluteUrl } from '@/lib/seo';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 type MediaValue = {
   url?: string | null;
 } | null;

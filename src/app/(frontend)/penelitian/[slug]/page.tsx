@@ -1,9 +1,11 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import PenelitianPageHeader from '@/components/sections/penelitian/PenelitianPageHeader';
 import PenelitianSidebar from '@/components/sections/penelitian/PenelitianSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolvePenelitianSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+
 
 export async function generateStaticParams() {
   try {

@@ -1,8 +1,10 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import BeasiswaContent from '@/components/sections/akademik/BeasiswaContent';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+
 
 export const metadata: Metadata = {
   title: 'Beasiswa | STTPU Jakarta',

@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
@@ -7,6 +8,7 @@ import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
+
 
 export const metadata: Metadata = buildPageMetadata({
   title: 'Dosen | STTPU Jakarta',

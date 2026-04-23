@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
@@ -17,7 +18,6 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/galeri',
 });
 
-export const dynamic = 'force-dynamic';
 
 async function fetchAlbumList(): Promise<Album[]> {
   try {

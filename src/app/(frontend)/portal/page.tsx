@@ -1,6 +1,8 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import PortalContent from '@/components/sections/portal/PortalContent';
+
 
 export const metadata: Metadata = {
   title: 'Portal | STTPU Jakarta',

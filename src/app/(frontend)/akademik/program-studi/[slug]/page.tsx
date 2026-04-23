@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
@@ -7,6 +8,7 @@ import { mapPayloadToProgramStudi, normalizeProgramStudiSlug } from '@/lib/data/
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
 import {
+
   buildBreadcrumbJsonLd,
   buildPageMetadata,
   buildProgramJsonLd,

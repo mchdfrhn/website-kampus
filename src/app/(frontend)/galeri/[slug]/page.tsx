@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AlbumDetailContent from '@/components/sections/galeri/AlbumDetailContent';
@@ -5,6 +6,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import { mapPayloadToAlbum, type Album } from '@/lib/data/galeri';
+
 
 async function fetchAlbumBySlug(slug: string): Promise<Album | null> {
   try {
