@@ -5,10 +5,16 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, X, Info } from 'lucide-react';
 import { useLenis } from 'lenis/react';
+import { createPortal } from 'react-dom';
 
 export default function VideoProfileSection({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Helper function to ensure URL is in embed format
   const getEmbedUrl = (url: string) => {
@@ -67,6 +73,48 @@ export default function VideoProfileSection({ data }: { data?: any }) {
     };
   }, [isOpen, lenis]);
 
+  const Lightbox = (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/95 backdrop-blur-2xl flex items-center justify-center p-4 md:p-12"
+          onClick={() => setIsOpen(false)}
+          style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
+        >
+          {/* Close Button */}
+          <button
+            onClick={() => setIsOpen(false)}
+            className="absolute top-6 right-6 z-[110] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy transition-all active:scale-95"
+            aria-label="Tutup Video"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Video Player Container - Perfect Centering with Constraints */}
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-6xl aspect-video rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] bg-black max-h-[85vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <iframe
+              src={videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`}
+              title="STTPU Video Profile"
+              className="absolute inset-0 w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            ></iframe>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,7 +145,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl cursor-pointer"
+            className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl cursor-pointer group/thumb"
             onClick={() => setIsOpen(true)}
           >
             {/* Background Image */}
@@ -105,21 +153,18 @@ export default function VideoProfileSection({ data }: { data?: any }) {
               src={thumbnailUrl}
               alt={judul}
               fill
-              className="object-cover transition-transform duration-1000 group-hover:scale-105"
+              className="object-cover transition-transform duration-1000 group-hover/thumb:scale-105"
             />
             
             {/* Overlays */}
-            <div className="absolute inset-0 bg-brand-navy/30 group-hover:bg-brand-navy/20 transition-colors duration-500" />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/60 via-transparent to-transparent" />
-
+            <div className="absolute inset-0 bg-brand-navy/30 group-hover/thumb:bg-brand-navy/20 transition-colors duration-500" />
+            
             {/* Play Button */}
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="relative">
-                {/* Pulse Animation */}
-                <div className="absolute inset-0 rounded-full bg-brand-gold/40 animate-ping scale-150" />
                 <div className="absolute inset-0 rounded-full bg-brand-gold/20 animate-ping scale-125" />
                 
-                <button className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110">
+                <button className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center shadow-lg transition-transform duration-500 group-hover/thumb:scale-110">
                   <Play size={32} fill="currentColor" className="ml-1" />
                 </button>
               </div>
@@ -133,7 +178,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
                 </div>
                 <div>
                   <p className="text-white font-bold text-lg sm:text-xl">{judul}</p>
-                  <p className="text-white/60 text-xs sm:text-sm">Durasi: 3 Menit 45 Detik</p>
+                  <p className="text-white/60 text-xs sm:text-sm">Video Profil Resmi</p>
                 </div>
               </div>
             </div>
@@ -141,43 +186,8 @@ export default function VideoProfileSection({ data }: { data?: any }) {
         </div>
       </div>
 
-      {/* Video Lightbox Modal */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-brand-navy/60 backdrop-blur-3xl flex items-center justify-center p-4 sm:p-10"
-            onClick={() => setIsOpen(false)}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-6 right-6 z-[110] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy transition-all"
-            >
-              <X size={24} />
-            </button>
-
-            {/* Video Player Container */}
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-6xl aspect-video rounded-2xl overflow-hidden shadow-3xl bg-black"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <iframe
-                src={videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`}
-                title="STTPU Video Profile"
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              ></iframe>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Render the Lightbox through Portal to body to avoid container constraints */}
+      {mounted && createPortal(Lightbox, document.body)}
     </section>
   );
 }
