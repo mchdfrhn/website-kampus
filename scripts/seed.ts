@@ -23,6 +23,43 @@ const plainTextToLexical = (text: string) => ({
   },
 });
 
+const hasMeaningfulValue = (value: unknown): boolean => {
+  if (value === null || value === undefined) return false;
+  if (typeof value === 'string') return value.trim().length > 0;
+  if (typeof value === 'number' || typeof value === 'boolean') return true;
+  if (Array.isArray(value)) return value.length > 0;
+  if (typeof value === 'object') {
+    return Object.values(value as Record<string, unknown>).some(hasMeaningfulValue);
+  }
+
+  return false;
+};
+
+async function seedGlobalIfEmpty(
+  payload: Awaited<ReturnType<typeof getPayloadClient>>,
+  slug: string,
+  data: Record<string, unknown>,
+  watchedKeys: string[],
+) {
+  const existing = await payload.findGlobal({
+    slug,
+    depth: 0,
+  });
+
+  const alreadyHasContent = watchedKeys.some((key) => hasMeaningfulValue(existing?.[key]));
+
+  if (alreadyHasContent) {
+    console.log(`Skipping Global "${slug}" because it already has content.`);
+    return;
+  }
+
+  console.log(`Creating initial data for Global "${slug}"...`);
+  await payload.updateGlobal({
+    slug,
+    data,
+  });
+}
+
 async function seed() {
   console.log('--- Starting Seeding ---');
   const payload = await getPayloadClient();
@@ -275,9 +312,10 @@ async function seed() {
   console.log('Seeding Globals...');
   
   // Halaman Utama
-  await payload.updateGlobal({
-    slug: 'halaman-utama',
-    data: {
+  await seedGlobalIfEmpty(
+    payload,
+    'halaman-utama',
+    {
       heroSlides: [
         {
           badge: 'Sekolah Tinggi Teknologi',
@@ -305,12 +343,14 @@ async function seed() {
         { angka: '12', label: 'UKM Aktif' },
       ],
     },
-  });
+    ['heroSlides', 'statistik', 'quickLinksTabs'],
+  );
 
   // Tentang Kami
-  await payload.updateGlobal({
-    slug: 'tentang-kami',
-    data: {
+  await seedGlobalIfEmpty(
+    payload,
+    'tentang-kami',
+    {
       sejarahDeskripsi: plainTextToLexical('Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta didirikan untuk mencetak tenaga ahli konstruksi.'),
       milestones: [
         { tahun: '1987', judul: 'Pendirian STTPU', deskripsi: 'Didirikan oleh Kementerian PU.' },
@@ -318,13 +358,15 @@ async function seed() {
       ],
       visi: 'Menjadi institusi vokasi terdepan di bidang pekerjaan umum.',
       misi: [{ poin: 'Menyelenggarakan pendidikan berkualitas' }, { poin: 'Melakukan riset terapan' }]
-    }
-  });
+    },
+    ['overviewTitle', 'overviewDescription', 'overviewStats', 'sejarahDeskripsi', 'milestones', 'visi', 'misi'],
+  );
 
   // Kalender Akademik
-  await payload.updateGlobal({
-    slug: 'kalender-akademik',
-    data: {
+  await seedGlobalIfEmpty(
+    payload,
+    'kalender-akademik',
+    {
       tahunAkademik: '2025/2026',
       semesterGanjil: {
         label: 'Semester Ganjil 2025',
@@ -333,25 +375,29 @@ async function seed() {
           { kegiatan: 'UTS Ganjil', tanggal: '20 - 30 Oktober 2025' }
         ]
       }
-    }
-  });
+    },
+    ['tahunAkademik', 'deskripsi', 'pdfUrl', 'semesterGanjil', 'semesterGenap', 'kegiatanPenting'],
+  );
 
   // Portal Links
-  await payload.updateGlobal({
-    slug: 'portal-links',
-    data: {
+  await seedGlobalIfEmpty(
+    payload,
+    'portal-links',
+    {
       portals: [
         { nama: 'SIAKAD', url: 'https://siakad.sttpu.ac.id', deskripsi: 'Sistem Informasi Akademik', icon: 'graduation-cap' },
         { nama: 'ELNINO', url: 'https://elnino.sttpu.ac.id', deskripsi: 'E-Learning Platform', icon: 'laptop' }
       ]
-    }
-  });
+    },
+    ['portals', 'tautanCepat'],
+  );
 
   // Main Menu
   console.log('Seeding Main Menu...');
-  await payload.updateGlobal({
-    slug: 'main-menu',
-    data: {
+  await seedGlobalIfEmpty(
+    payload,
+    'main-menu',
+    {
       navItems: [
         { label: 'Beranda', href: '/' },
         {
@@ -400,8 +446,9 @@ async function seed() {
         { label: 'Galeri', href: '/galeri' },
         { label: 'Kontak', href: '/kontak' },
       ]
-    }
-  });
+    },
+    ['navItems'],
+  );
 
   console.log('--- Seeding Completed Successfully ---');
 }

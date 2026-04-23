@@ -1,8 +1,13 @@
 import { getPayloadClient } from '@/lib/payload';
+import Image from 'next/image';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 
-type LembagaItem = { nama: string; status: string }
+type LembagaItem = {
+  nama: string;
+  status: string;
+  logo?: { url?: string | null } | null;
+}
 
 export default async function AkreditasiSection() {
   let lembaga: LembagaItem[] = []
@@ -13,6 +18,7 @@ export default async function AkreditasiSection() {
       collection: 'akreditasi-lembaga',
       sort: 'urutan',
       limit: 20,
+      depth: 1,
     })
     lembaga = result.docs as unknown as LembagaItem[]
   } catch {
@@ -38,25 +44,42 @@ export default async function AkreditasiSection() {
           className="grid grid-cols-1 justify-items-center min-[420px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
           staggerChildren={0.1}
         >
-          {lembaga.map((item) => (
-            <div
-              key={item.nama}
-              className="group w-full max-w-[18rem] bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 text-center shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-95 transition-all duration-700"
-            >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 mx-auto mb-6 sm:mb-8 rounded-2xl flex items-center justify-center border border-gray-100 group-hover:bg-brand-navy transition-all duration-700 shadow-inner overflow-hidden">
-                <span className="px-2 text-center text-brand-navy/20 group-hover:text-white/20 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em]">{item.nama.split(' ')[0]}</span>
+          {lembaga.map((item) => {
+            const logoUrl = typeof item.logo === 'object' ? item.logo?.url : null;
+
+            return (
+              <div
+                key={item.nama}
+                className="group w-full max-w-[18rem] bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 text-center shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-95 transition-all duration-700"
+              >
+                <div className="mx-auto mb-6 sm:mb-7 flex h-24 w-24 items-center justify-center rounded-full border border-brand-navy/10 bg-gradient-to-br from-slate-50 via-white to-brand-gold/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_30px_rgba(15,23,42,0.08)] transition-all duration-700 group-hover:border-brand-gold/40 group-hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_38px_rgba(15,23,42,0.12)]">
+                  <div className="relative flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border border-brand-navy/8 bg-white/90 shadow-inner">
+                    {logoUrl ? (
+                      <Image
+                        src={logoUrl}
+                        alt={item.nama}
+                        fill
+                        className="object-contain p-3"
+                      />
+                    ) : (
+                      <span className="px-2 text-center text-brand-navy/20 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em]">
+                        {item.nama.split(' ')[0]}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <h3 className="mx-auto mb-5 line-clamp-2 max-w-[14rem] text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.14em] leading-relaxed group-hover:text-brand-gold transition-colors">
+                  {item.nama}
+                </h3>
+                <div className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-green-100 bg-green-50 px-4 py-2 sm:px-5">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
+                  <p className="text-green-700 font-bold text-[9px] sm:text-[10px] uppercase tracking-[0.16em] leading-relaxed break-words">
+                    {item.status}
+                  </p>
+                </div>
               </div>
-              <h3 className="mx-auto max-w-[14rem] text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.14em] leading-relaxed mb-5 sm:mb-6 group-hover:text-brand-gold transition-colors break-words">
-                {item.nama}
-              </h3>
-              <div className="inline-flex max-w-full items-center justify-center gap-2 sm:gap-3 px-4 sm:px-5 py-2.5 bg-green-50 rounded-xl border border-green-100">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
-                <p className="text-green-700 font-bold text-[9px] sm:text-[10px] uppercase tracking-[0.16em] leading-relaxed break-words">
-                  {item.status}
-                </p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </MotionWrapper>
       </div>
     </section>
