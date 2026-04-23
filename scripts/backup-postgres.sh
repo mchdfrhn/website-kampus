@@ -50,8 +50,11 @@ if [[ -z "${DATABASE_URL}" ]]; then
   exit 1
 fi
 
-if ! command -v pg_dump >/dev/null 2>&1; then
-  echo "Error: pg_dump is not installed or not in PATH."
+# Binary Paths
+PG_DUMP_BIN="${PG_DUMP_PATH:-pg_dump}"
+
+if ! command -v "${PG_DUMP_BIN}" >/dev/null 2>&1; then
+  echo "Error: ${PG_DUMP_BIN} is not installed or not in PATH."
   exit 1
 fi
 
@@ -105,7 +108,7 @@ if [[ "${BACKUP_FORMAT}" == "plain" ]]; then
   FINAL_FILE="${TEMP_FILE}.gz"
 
   echo "Creating plain SQL backup..."
-  pg_dump \
+  "${PG_DUMP_BIN}" \
     --dbname="${DATABASE_URL}" \
     --no-owner \
     --no-privileges \
@@ -119,7 +122,7 @@ else
   FINAL_FILE="${BACKUP_DIR}/${BACKUP_PREFIX}_${TIMESTAMP}.dump"
 
   echo "Creating custom-format backup..."
-  pg_dump \
+  "${PG_DUMP_BIN}" \
     --dbname="${DATABASE_URL}" \
     --format=custom \
     --compress=9 \
