@@ -17,6 +17,8 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/galeri',
 });
 
+export const dynamic = 'force-dynamic';
+
 async function fetchAlbumList(): Promise<Album[]> {
   try {
     const payload = await getPayloadClient();

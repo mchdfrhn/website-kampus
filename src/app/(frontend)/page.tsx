@@ -14,7 +14,7 @@ import {
   mapPayloadToArtikel,
 } from '@/lib/data/berita';
 
-export const revalidate = 3600; // Cache for 1 hour
+export const dynamic = 'force-dynamic';
 
 export const metadata = buildPageMetadata({
   title: 'Beranda | STTPU Jakarta',

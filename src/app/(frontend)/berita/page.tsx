@@ -17,6 +17,8 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/berita',
 });
 
+export const dynamic = 'force-dynamic';
+
 async function fetchArtikelList(): Promise<Artikel[]> {
   try {
     const payload = await getPayloadClient();
