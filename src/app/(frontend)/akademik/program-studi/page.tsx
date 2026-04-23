@@ -6,12 +6,14 @@ import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Program Studi | STTPU Jakarta',
   description:
     'Empat program studi D-IV unggulan di STTPU Jakarta: Teknik Sipil, Teknik Pengairan, Teknik Lingkungan, dan Manajemen Konstruksi.',
-};
+  path: '/akademik/program-studi',
+});
 
 async function fetchProdiList(): Promise<ProgramStudi[]> {
   try {

@@ -8,12 +8,14 @@ import {
   type Album,
   type AlbumKategori,
 } from '@/lib/data/galeri';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Galeri | STTPU Jakarta',
   description:
     'Galeri foto dokumentasi kegiatan, fasilitas, wisuda, dan momen berharga di kampus Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta.',
-};
+  path: '/galeri',
+});
 
 async function fetchAlbumList(): Promise<Album[]> {
   try {

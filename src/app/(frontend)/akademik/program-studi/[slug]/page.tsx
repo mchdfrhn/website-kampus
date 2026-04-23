@@ -6,6 +6,11 @@ import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToProgramStudi, normalizeProgramStudiSlug } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
+import {
+  buildBreadcrumbJsonLd,
+  buildPageMetadata,
+  buildProgramJsonLd,
+} from '@/lib/seo';
 
 export async function generateStaticParams() {
   if (process.env.BUILD_SKIP_DB) return [];
@@ -92,10 +97,12 @@ export async function generateMetadata({
   const { slug } = await params;
   const prodi = await fetchProdi(slug);
   if (!prodi) return {};
-  return {
+  return buildPageMetadata({
     title: `${prodi.nama} (${prodi.jenjang}) | STTPU Jakarta`,
     description: prodi.deskripsiSingkat,
-  };
+    path: `/akademik/program-studi/${prodi.slug}`,
+    image: prodi.thumbnailUrl,
+  });
 }
 
 export default async function ProgramStudiDetailPage({
@@ -108,9 +115,31 @@ export default async function ProgramStudiDetailPage({
   if (!prodi) notFound();
   const others = await fetchRelatedProdi(slug);
   const { sidebarTitle, links } = await getAkademikNavigation();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Akademik', path: '/akademik/program-studi' },
+    { name: 'Program Studi', path: '/akademik/program-studi' },
+    { name: `${prodi.nama} (${prodi.jenjang})`, path: `/akademik/program-studi/${prodi.slug}` },
+  ]);
+  const programJsonLd = buildProgramJsonLd({
+    name: `${prodi.nama} (${prodi.jenjang})`,
+    path: `/akademik/program-studi/${prodi.slug}`,
+    description: prodi.deskripsiSingkat,
+    image: prodi.thumbnailUrl,
+    providerName: 'STTPU Jakarta',
+    credentialCategory: prodi.jenjang,
+  });
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(programJsonLd) }}
+      />
       <AkademikPageHeader
         title={`${prodi.nama} (${prodi.jenjang})`}
         subtitle={prodi.deskripsiSingkat}

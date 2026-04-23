@@ -8,12 +8,14 @@ import {
   type Artikel,
   type ArtikelKategori,
 } from '@/lib/data/berita';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Berita & Pengumuman | STTPU Jakarta',
   description:
     'Berita terkini, pengumuman resmi, dan informasi kegiatan Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta.',
-};
+  path: '/berita',
+});
 
 async function fetchArtikelList(): Promise<Artikel[]> {
   try {

@@ -7,6 +7,11 @@ import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
+import {
+  buildBreadcrumbJsonLd,
+  buildPageMetadata,
+  buildPersonJsonLd,
+} from '@/lib/seo';
 
 export async function generateStaticParams() {
   if (process.env.BUILD_SKIP_DB) return [];
@@ -56,10 +61,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const dosen = await fetchDosen(slug);
   if (!dosen) return {};
-  return {
+  return buildPageMetadata({
     title: `${dosen.nama} | Dosen STTPU Jakarta`,
     description: `Profil akademik ${dosen.nama} — ${dosen.jabatanFungsional} di ${dosen.programStudi.join(', ')}, STTPU Jakarta.`,
-  };
+    path: `/akademik/dosen/${dosen.slug}`,
+    image: dosen.fotoUrl,
+    type: 'profile',
+  });
 }
 
 export default async function DosenDetailPage({
@@ -71,9 +79,31 @@ export default async function DosenDetailPage({
   const dosen = await fetchDosen(slug);
   if (!dosen) notFound();
   const { sidebarTitle, links } = await getAkademikNavigation();
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Akademik', path: '/akademik/dosen' },
+    { name: 'Dosen', path: '/akademik/dosen' },
+    { name: dosen.nama, path: `/akademik/dosen/${dosen.slug}` },
+  ]);
+  const personJsonLd = buildPersonJsonLd({
+    name: dosen.nama,
+    path: `/akademik/dosen/${dosen.slug}`,
+    description: dosen.bio,
+    image: dosen.fotoUrl,
+    email: dosen.email,
+    worksFor: 'STTPU Jakarta',
+  });
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
       <AkademikPageHeader
         title={dosen.nama}
         subtitle={`${dosen.jabatanFungsional} · ${dosen.programStudi.join(', ')}`}

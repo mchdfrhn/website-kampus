@@ -6,12 +6,14 @@ import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
+import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Dosen | STTPU Jakarta',
   description:
     'Direktori dosen STTPU Jakarta — tenaga pengajar berpengalaman dan berkualifikasi tinggi di bidang teknik sipil, pengairan, lingkungan, dan manajemen konstruksi.',
-};
+  path: '/akademik/dosen',
+});
 
 async function fetchDosenList(): Promise<Dosen[]> {
   try {

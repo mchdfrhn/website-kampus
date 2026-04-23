@@ -7,6 +7,7 @@ import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
 import { getPayloadClient } from '@/lib/payload';
+import { buildPageMetadata } from '@/lib/seo';
 import {
   artikelList as artikelStatic,
   getArtikelKategoriLabel,
@@ -15,11 +16,12 @@ import {
 
 export const revalidate = 3600; // Cache for 1 hour
 
-export const metadata = {
+export const metadata = buildPageMetadata({
   title: 'Beranda | STTPU Jakarta',
   description:
     'Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — Pendidikan vokasi teknologi konstruksi, arsitektur, dan teknologi informasi terbaik sejak 1987.',
-};
+  path: '/',
+});
 
 type TabLink = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: TabLink[] }

@@ -4,6 +4,11 @@ import ArtikelDetailContent from '@/components/sections/berita/ArtikelDetailCont
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import {
+  buildArticleJsonLd,
+  buildBreadcrumbJsonLd,
+  buildPageMetadata,
+} from '@/lib/seo';
+import {
   mapPayloadToArtikel,
   resolveArtikelKategori,
   type Artikel,
@@ -93,10 +98,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const artikel = await fetchArtikelBySlug(slug);
   if (!artikel) return {};
-  return {
+  return buildPageMetadata({
     title: `${artikel.judul} | STTPU Jakarta`,
     description: artikel.ringkasan,
-  };
+    path: `/berita/${artikel.slug}`,
+    image: artikel.thumbnailUrl,
+    type: 'article',
+  });
 }
 
 export default async function ArtikelPage({
@@ -112,16 +120,41 @@ export default async function ArtikelPage({
     fetchArtikelTerkait(slug, artikel.kategori.id),
     fetchKategoriBerita(),
   ]);
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Berita', path: '/berita' },
+    { name: artikel.judul, path: `/berita/${artikel.slug}` },
+  ]);
+  const articleJsonLd = buildArticleJsonLd({
+    title: artikel.judul,
+    description: artikel.ringkasan,
+    path: `/berita/${artikel.slug}`,
+    image: artikel.thumbnailUrl,
+    datePublished: artikel.tanggalTerbit,
+    dateModified: artikel.tanggalTerbit,
+    authorName: artikel.penulis,
+  });
 
   return (
-      <><div className="bg-white border-b border-gray-100">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <Breadcrumbs
-          customItems={[
-            { label: 'Berita', href: '/berita' },
-            { label: artikel.judul, href: `/berita/${artikel.slug}` }
-          ]} />
-      </div>
-    </div><ArtikelDetailContent artikel={artikel} artikelTerkait={artikelTerkait} categories={categories} /></>
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+        />
+        <div className="bg-white border-b border-gray-100">
+          <div className="max-w-7xl mx-auto px-6 lg:px-8">
+            <Breadcrumbs
+              customItems={[
+                { label: 'Berita', href: '/berita' },
+                { label: artikel.judul, href: `/berita/${artikel.slug}` }
+              ]} />
+          </div>
+        </div>
+        <ArtikelDetailContent artikel={artikel} artikelTerkait={artikelTerkait} categories={categories} />
+      </>
   );
 }
