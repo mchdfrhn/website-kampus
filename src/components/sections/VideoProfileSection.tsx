@@ -10,7 +10,39 @@ export default function VideoProfileSection({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const lenis = useLenis();
 
-  const videoUrl = data?.videoUrl || "https://www.youtube.com/embed/dQw4w9WgXcQ";
+  // Helper function to ensure URL is in embed format
+  const getEmbedUrl = (url: string) => {
+    if (!url) return "https://www.youtube.com/embed/dQw4w9WgXcQ";
+    
+    let cleanUrl = url.trim();
+
+    // If user pasted the whole <iframe> tag, extract only the src
+    if (cleanUrl.startsWith('<iframe')) {
+      const srcMatch = cleanUrl.match(/src="([^"]+)"/);
+      if (srcMatch && srcMatch[1]) {
+        cleanUrl = srcMatch[1];
+      }
+    }
+    
+    // If it's already an embed URL, return it
+    if (cleanUrl.includes('youtube.com/embed/')) return cleanUrl;
+    
+    // Handle standard watch?v= format
+    if (cleanUrl.includes('youtube.com/watch?v=')) {
+      const id = cleanUrl.split('v=')[1]?.split('&')[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    
+    // Handle youtu.be/ format
+    if (cleanUrl.includes('youtu.be/')) {
+      const id = cleanUrl.split('youtu.be/')[1]?.split('?')[0];
+      return `https://www.youtube.com/embed/${id}`;
+    }
+    
+    return cleanUrl;
+  };
+
+  const videoUrl = getEmbedUrl(data?.videoUrl);
   const thumbnailUrl = data?.videoThumbnail?.url || "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop";
   const judul = data?.videoJudul || "Jelajahi Kampus Kami";
   const deskripsi = data?.videoDeskripsi || "Saksikan sekilas kehidupan akademik dan fasilitas unggulan di Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta.";
@@ -131,7 +163,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
               onClick={(e) => e.stopPropagation()}
             >
               <iframe
-                src={`${videoUrl}?autoplay=1`}
+                src={videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`}
                 title="STTPU Video Profile"
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
