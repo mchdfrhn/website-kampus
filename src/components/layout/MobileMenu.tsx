@@ -98,9 +98,22 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
             >
               <div className="flex items-center justify-between px-6 h-20 border-b border-white/10 bg-brand-navy/40 flex-shrink-0">
                 <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs">
-                    STTPU
-                  </div>
+                  {logoUrl ? (
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5">
+                      <div className="relative h-full w-full overflow-hidden rounded-lg">
+                        <Image
+                          src={logoUrl}
+                          alt={institutionName}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-10 h-10 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-xs">
+                      STTPU
+                    </div>
+                  )}
                   <div className="text-white">
                     <div className="font-bold text-base leading-tight tracking-tight uppercase">STTPU</div>
                     <div className="text-brand-gold text-[10px] font-bold uppercase tracking-widest">Navigation</div>
@@ -218,7 +231,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                   onClick={toggleMenu}
                   className="flex items-center justify-center w-full py-4 bg-brand-gold text-brand-navy font-bold text-sm uppercase tracking-widest rounded-2xl shadow-xl active:scale-95 transition-all"
                 >
-                  Portal Mahasiswa
+                  Portal
                 </Link>
               </div>
             </motion.div>

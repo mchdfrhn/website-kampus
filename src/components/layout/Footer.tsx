@@ -10,7 +10,7 @@ const quickLinks = [
   { label: 'Program Studi', href: '/akademik/program-studi' },
   { label: 'Berita', href: '/berita' },
   { label: 'Kontak', href: '/kontak' },
-  { label: 'Portal Mahasiswa', href: '/portal' },
+  { label: 'Portal', href: '/portal' },
 ];
 
 const studyPrograms = [

@@ -130,10 +130,11 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                   <div className="absolute inset-0 bg-brand-navy/20 z-10" />
                 </div>
 
-                <div className="relative z-20 w-full max-w-7xl mx-auto px-6 lg:px-8 pt-10 pb-32 md:pb-0">
-                  <AnimatePresence mode="wait">
-                    {isActive && (
-                      <StaggerContainer className="max-w-3xl">
+                <div className="relative z-20 flex h-full w-full items-center">
+                  <div className="w-full max-w-7xl mx-auto px-6 py-24 sm:py-28 md:px-6 md:py-0 lg:px-8">
+                    <AnimatePresence mode="wait">
+                      {isActive && (
+                        <StaggerContainer className="max-w-3xl">
                         <StaggerItem>
                           {slide.badge && (
                             <motion.div 
@@ -204,9 +205,10 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                             )}
                           </motion.div>
                         </StaggerItem>
-                      </StaggerContainer>
-                    )}
-                  </AnimatePresence>
+                        </StaggerContainer>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
               </div>
             );
@@ -241,7 +243,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
           </div>
 
           {/* Arrows */}
-          <div className="flex gap-4">
+          <div className="hidden md:flex gap-4">
             <button
               onClick={scrollPrev}
               className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"
