@@ -16,14 +16,19 @@ export default function VideoProfileSection({ data }: { data?: any }) {
     
     let cleanUrl = url.trim();
 
-    // If user pasted the whole <iframe> tag, extract only the src
-    if (cleanUrl.startsWith('<iframe')) {
-      const srcMatch = cleanUrl.match(/src="([^"]+)"/);
+    // If user pasted the whole <iframe> tag, extract only the src (Robust Regex)
+    if (cleanUrl.toLowerCase().includes('<iframe')) {
+      const srcMatch = cleanUrl.match(/src=["']([^"']+)["']/i);
       if (srcMatch && srcMatch[1]) {
         cleanUrl = srcMatch[1];
       }
     }
     
+    // Ensure it's a valid URL string, otherwise fallback to default
+    if (!cleanUrl || cleanUrl.startsWith('<')) {
+      return "https://www.youtube.com/embed/dQw4w9WgXcQ";
+    }
+
     // If it's already an embed URL, return it
     if (cleanUrl.includes('youtube.com/embed/')) return cleanUrl;
     
