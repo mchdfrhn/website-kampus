@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import Image from 'next/image';
-import { formatGaleriTanggal, type Album } from '@/lib/data/galeri';
-import { getKategoriSoftBadgeClass } from '@/lib/data/kategori';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import { formatGaleriTanggal, type Album } from "@/lib/data/galeri";
+import { getKategoriSoftBadgeClass } from "@/lib/data/kategori";
+import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Image as ImageIcon, X, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 
 export default function AlbumDetailContent({ album }: { album: Album }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const lenis = useLenis();
 
   const nextImage = useCallback(() => {
     if (selectedIndex === null || !album.foto) return;
@@ -47,14 +49,21 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
       if (e.key === 'ArrowLeft') prevImage();
     };
     window.addEventListener('keydown', handleKeyDown);
-    if (selectedIndex !== null) document.body.style.overflow = 'hidden';
-    else document.body.style.overflow = 'unset';
+    
+    if (selectedIndex !== null) {
+      document.body.style.overflow = 'hidden';
+      lenis?.stop();
+    } else {
+      document.body.style.overflow = 'unset';
+      lenis?.start();
+    }
     
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
+      lenis?.start();
     };
-  }, [selectedIndex, closeLightbox, nextImage, prevImage]);
+  }, [selectedIndex, closeLightbox, nextImage, prevImage, lenis]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -133,29 +142,33 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-brand-navy/60 backdrop-blur-3xl flex flex-col"
           >
-            {/* Top Toolbar */}
-            <div className="flex items-center justify-between p-4 sm:p-6">
-              <div className="text-white">
-                <p className="text-xs font-bold uppercase tracking-widest text-brand-gold mb-1">
+            {/* Mobile-Friendly Close Button (Fixed) */}
+            <button
+              onClick={closeLightbox}
+              className="absolute top-4 right-4 z-[110] w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-95"
+              aria-label="Tutup Preview"
+            >
+              <X size={24} />
+            </button>
+
+            {/* Top Toolbar (Info Only) */}
+            <div className="relative z-[105] flex items-center justify-between p-4 sm:p-8">
+              <div className="pr-16">
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-gold mb-1">
                   {album.judul}
                 </p>
-                <p className="text-[10px] font-medium text-white/40">
-                  Foto {selectedIndex + 1} dari {album.foto.length}
+                <p className="text-[10px] font-medium text-white/50">
+                  FOTO {selectedIndex + 1} / {album.foto.length}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              
+              <div className="hidden sm:flex items-center gap-3">
                 <button
                   onClick={() => handleDownload(album.foto![selectedIndex].url, selectedIndex)}
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all"
-                  title="Download Foto"
+                  className="px-4 py-2 rounded-full bg-white/5 border border-white/10 flex items-center gap-2 text-white text-xs font-bold hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all"
                 >
-                  <Download size={18} />
-                </button>
-                <button
-                  onClick={closeLightbox}
-                  className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all"
-                >
-                  <X size={20} />
+                  <Download size={14} />
+                  UNDUH FOTO
                 </button>
               </div>
             </div>

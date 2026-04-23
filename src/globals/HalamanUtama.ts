@@ -80,6 +80,15 @@ export const HalamanUtama: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'Video Profil',
+          fields: [
+            { name: 'videoJudul', type: 'text', label: 'Judul Section Video', defaultValue: 'Jelajahi Kampus Kami' },
+            { name: 'videoDeskripsi', type: 'textarea', label: 'Deskripsi Video' },
+            { name: 'videoUrl', type: 'text', label: 'URL Video (YouTube Embed)', admin: { description: 'Contoh: https://www.youtube.com/embed/XXXXXX' } },
+            { name: 'videoThumbnail', type: 'upload', relationTo: 'media', label: 'Thumbnail Video' },
+          ],
+        },
       ],
     },
   ],

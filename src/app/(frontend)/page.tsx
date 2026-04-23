@@ -7,6 +7,7 @@ import BeritaTerakhirSection from '@/components/sections/BeritaTerakhirSection';
 import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
+import VideoProfileSection from '@/components/sections/VideoProfileSection';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -116,6 +117,13 @@ export default async function HomePage() {
       <BeritaTerakhirSection artikelList={berita} />
 
       <ProgramStudiSection />
+      
+      <VideoProfileSection data={{
+        videoJudul: (halamanUtama as any)?.videoJudul,
+        videoDeskripsi: (halamanUtama as any)?.videoDeskripsi,
+        videoUrl: (halamanUtama as any)?.videoUrl,
+        videoThumbnail: (halamanUtama as any)?.videoThumbnail,
+      }} />
 
       <PersonaQuickLinks tabs={quickLinksTabs} />
 
