@@ -9,6 +9,7 @@ const quickLinks = [
   { label: 'Tentang Kami', href: '/tentang' },
   { label: 'Program Studi', href: '/akademik/program-studi' },
   { label: 'Berita', href: '/berita' },
+  { label: 'Galeri', href: '/galeri' },
   { label: 'Kontak', href: '/kontak' },
   { label: 'Portal', href: '/portal' },
 ];

@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import MobileMenu from './MobileMenu';
-import HomeNavLink from './HomeNavLink';
-import NavDesktopItems from './NavDesktopItems';
+import dynamic from 'next/dynamic';
 import { getPayloadClient } from '@/lib/payload';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import {
@@ -19,6 +17,10 @@ type NavItem = {
   children?: { label: string; href: string; id?: string | null }[] | null;
   id?: string | null;
 };
+
+const NavDesktopItems = dynamic(() => import('./NavDesktopItems'), { ssr: true });
+const MobileMenu = dynamic(() => import('./MobileMenu'), { ssr: true });
+const HomeNavLink = dynamic(() => import('./HomeNavLink'), { ssr: true });
 
 type MediaValue = {
   url?: string | null;

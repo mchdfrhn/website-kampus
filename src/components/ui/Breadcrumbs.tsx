@@ -43,14 +43,17 @@ export default function Breadcrumbs({ customItems, className }: BreadcrumbProps)
           return (
             <li key={`${item.label}-${item.href ?? index}`} className="flex items-center gap-2 flex-shrink-0">
               <ChevronRight size={10} className="text-brand-navy/20" />
-              {isLast || !item.href ? (
+              {!item.href ? (
                 <span className="max-w-[12rem] truncate text-brand-navy/60 sm:max-w-none" aria-current="page">
                   {item.label}
                 </span>
               ) : (
                 <Link
                   href={item.href}
-                  className="max-w-[12rem] truncate text-brand-navy/40 transition-colors hover:text-brand-gold sm:max-w-none"
+                  className={cn(
+                    "max-w-[12rem] truncate transition-colors sm:max-w-none",
+                    isLast ? "text-brand-navy" : "text-brand-navy/40 hover:text-brand-gold"
+                  )}
                 >
                   {item.label}
                 </Link>

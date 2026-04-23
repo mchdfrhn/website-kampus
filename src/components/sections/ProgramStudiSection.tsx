@@ -5,6 +5,7 @@ import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import { MotionList, MotionItem } from '@/components/ui/motion/MotionWrapper';
+import { cn } from '@/lib/utils';
 
 type Program = {
   slug?: string;
@@ -19,27 +20,37 @@ type Program = {
 const accentTheme: Record<string, {
   card: string;
   badge: string;
+  accreditation: string;
+  cta: string;
   tint: string;
 }> = {
   navy: {
-    card: 'border-brand-navy/5',
-    badge: 'bg-brand-navy/90 text-white border-white/10',
+    card: 'border-brand-navy/8 bg-gradient-to-br from-white via-brand-mist/25 to-white',
+    badge: 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
+    accreditation: 'bg-brand-navy/[0.03] border-brand-navy/10 text-brand-navy',
+    cta: 'text-brand-navy',
     tint: 'from-brand-navy/5 to-brand-gold/5',
   },
   blue: {
-    card: 'border-sky-100',
-    badge: 'bg-sky-600/90 text-white border-sky-200/20',
-    tint: 'from-sky-100 to-sky-50',
+    card: 'border-sky-100 bg-gradient-to-br from-white via-sky-50/80 to-white',
+    badge: 'bg-sky-50 text-sky-800 border-sky-200',
+    accreditation: 'bg-sky-50/70 border-sky-100 text-sky-900',
+    cta: 'text-sky-800',
+    tint: 'from-sky-100 to-sky-50/80',
   },
   green: {
-    card: 'border-emerald-100',
-    badge: 'bg-emerald-600/90 text-white border-emerald-200/20',
-    tint: 'from-emerald-100 to-emerald-50',
+    card: 'border-emerald-100 bg-gradient-to-br from-white via-emerald-50/80 to-white',
+    badge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    accreditation: 'bg-emerald-50/70 border-emerald-100 text-emerald-900',
+    cta: 'text-emerald-800',
+    tint: 'from-emerald-100 to-emerald-50/80',
   },
   orange: {
-    card: 'border-orange-100',
-    badge: 'bg-orange-500/90 text-white border-orange-200/20',
-    tint: 'from-orange-100 to-orange-50',
+    card: 'border-orange-100 bg-gradient-to-br from-white via-orange-50/80 to-white',
+    badge: 'bg-orange-50 text-orange-800 border-orange-200',
+    accreditation: 'bg-orange-50/70 border-orange-100 text-orange-900',
+    cta: 'text-orange-800',
+    tint: 'from-orange-100 to-orange-50/80',
   },
 };
 
@@ -87,7 +98,10 @@ export default async function ProgramStudiSection() {
             return (
               <MotionItem key={program.nama}>
                 <div
-                  className={`group bg-white border rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-[0.99] transition-all duration-700 ease-in-out flex flex-col h-full ${accent.card}`}
+                  className={cn(
+                    'group rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-[0.99] transition-all duration-700 ease-in-out flex flex-col h-full border',
+                    accent.card,
+                  )}
                 >
                   <div className="h-64 bg-brand-navy/[0.02] relative overflow-hidden">
                     {thumbUrl ? (
@@ -102,9 +116,13 @@ export default async function ProgramStudiSection() {
                         <span className="text-brand-navy/10 text-[10px] font-bold uppercase tracking-[0.3em]">Institutional Vision</span>
                       </div>
                     )}
-                    <div className={`absolute top-5 left-5 backdrop-blur-xl px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-2xl border ${accent.badge}`}>
+                    <div className={cn(
+                      'absolute top-5 left-5 px-4 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest border shadow-lg',
+                      accent.badge,
+                    )}>
                       {program.jenjang}
                     </div>
+                    <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-brand-navy/10 via-brand-navy/0 to-transparent" />
                   </div>
 
                   <div className="p-10 flex-1 flex flex-col">
@@ -123,20 +141,26 @@ export default async function ProgramStudiSection() {
                     </div>
 
                     <div className="mt-10 pt-8 border-t border-brand-navy/[0.03] flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-brand-gold/10 border border-brand-gold/20">
+                      <div className={cn(
+                        'flex items-center gap-3 rounded-full border px-3 py-2',
+                        accent.accreditation,
+                      )}>
+                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-white/60 border border-white/60">
                           <svg className="w-3 h-3 text-brand-gold-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
                           </svg>
                         </div>
-                        <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">
-                          Akreditasi <span className="text-brand-navy">{program.akreditasi}</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">
+                          Akreditasi {program.akreditasi}
                         </span>
                       </div>
                       
                       <Link
                         href={program.slug ? `/akademik/program-studi/${program.slug}` : '/akademik/program-studi'}
-                        className="inline-flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-widest group/link hover:text-brand-gold transition-all duration-300"
+                        className={cn(
+                          'inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group/link hover:text-brand-gold transition-all duration-300',
+                          accent.cta,
+                        )}
                       >
                         Detail
                         <ArrowRight size={14} className="group-hover/link:translate-x-1.5 transition-transform duration-300" />

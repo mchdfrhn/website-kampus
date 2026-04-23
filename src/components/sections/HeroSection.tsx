@@ -29,12 +29,20 @@ function isExternalHref(href?: string | null) {
   return /^(https?:)?\/\//i.test(href) || href.startsWith('mailto:') || href.startsWith('tel:');
 }
 
+function getBackgroundUrl(background?: Slide['background']) {
+  if (!background) return null;
+  if (typeof background === 'string') return background;
+  if (typeof background === 'object' && typeof background.url === 'string') return background.url;
+  return null;
+}
+
 export default function HeroSection({ data }: { data?: HeroData }) {
   const slides = data?.heroSlides || [];
   const pathname = usePathname();
+  const hasMultipleSlides = slides.length > 1;
   
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
-    loop: true,
+    loop: hasMultipleSlides,
     duration: 30,
     align: 'start',
     skipSnaps: false,
@@ -47,10 +55,18 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   // Re-init embla when navigating back to home or resizing
   useEffect(() => {
     if (emblaApi) {
-      const timer = setTimeout(() => {
-        emblaApi.reInit();
-      }, 250);
-      return () => clearTimeout(timer);
+      const timers = [
+        window.setTimeout(() => emblaApi.reInit(), 50),
+        window.setTimeout(() => emblaApi.reInit(), 300),
+      ];
+
+      const onWindowLoad = () => emblaApi.reInit();
+      window.addEventListener('load', onWindowLoad);
+
+      return () => {
+        timers.forEach((timer) => window.clearTimeout(timer));
+        window.removeEventListener('load', onWindowLoad);
+      };
     }
   }, [emblaApi, pathname]);
 
@@ -66,19 +82,30 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
-    setScrollSnaps(emblaApi.scrollSnapList());
+    const updateSnaps = () => {
+      setScrollSnaps(emblaApi.scrollSnapList());
+    };
+
+    updateSnaps();
     emblaApi.on('select', onSelect);
     emblaApi.on('reInit', onSelect);
+    emblaApi.on('reInit', updateSnaps);
+
+    return () => {
+      emblaApi.off('select', onSelect);
+      emblaApi.off('reInit', onSelect);
+      emblaApi.off('reInit', updateSnaps);
+    };
   }, [emblaApi, onSelect]);
 
   // Auto play
   useEffect(() => {
-    if (!emblaApi) return;
+    if (!emblaApi || !hasMultipleSlides) return;
     const interval = setInterval(() => {
       emblaApi.scrollNext();
     }, 8000);
     return () => clearInterval(interval);
-  }, [emblaApi]);
+  }, [emblaApi, hasMultipleSlides]);
 
   if (!slides || slides.length === 0) {
     return (
@@ -94,7 +121,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
         <div className="flex">
           {slides.map((slide, index) => {
             const isActive = selectedIndex === index;
-            const bgUrl = typeof slide.background === 'object' ? slide.background?.url : null;
+            const bgUrl = getBackgroundUrl(slide.background);
             const cta1External = isExternalHref(slide.cta1Href);
             const cta2External = isExternalHref(slide.cta2Href);
 
@@ -120,6 +147,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                         priority={index === 0}
                         sizes="100vw"
                         loading={index === 0 ? "eager" : "lazy"}
+                        onLoad={() => emblaApi?.reInit()}
                       />
                     </motion.div>
                   ) : (
@@ -220,7 +248,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
       <div className="absolute bottom-8 md:bottom-20 left-0 right-0 z-30">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 flex flex-col md:flex-row items-center gap-6 md:gap-0 justify-between">
           {/* Indicators */}
-          <div className="flex gap-3">
+          <div className={`${hasMultipleSlides ? 'flex' : 'hidden'} gap-3`}>
             {scrollSnaps.map((_, index) => (
               <button
                 key={index}
@@ -243,7 +271,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
           </div>
 
           {/* Arrows */}
-          <div className="hidden md:flex gap-4">
+          <div className={`${hasMultipleSlides ? 'hidden md:flex' : 'hidden'} gap-4`}>
             <button
               onClick={scrollPrev}
               className="w-12 h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group"

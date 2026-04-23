@@ -12,6 +12,10 @@ export type Album = {
   coverFotoUrl?: string;
   jumlahFoto: number;
   tanggal?: string;
+  foto?: {
+    url: string;
+    keterangan?: string;
+  }[];
 };
 
 const galeriKategoriDefaults: Record<string, Omit<AlbumKategori, 'id' | 'urutan'>> = {
@@ -64,6 +68,15 @@ export function mapPayloadToAlbum(doc: any): Album {
       ? (doc.coverFoto.url as string)
       : undefined;
 
+  const foto = Array.isArray(doc.foto)
+    ? doc.foto
+        .map((f: any) => ({
+          url: f.gambar && typeof f.gambar === 'object' ? f.gambar.url : null,
+          keterangan: f.keterangan || undefined,
+        }))
+        .filter((f: any) => f.url !== null)
+    : undefined;
+
   return {
     id: String(doc.id),
     judul: doc.judul ?? '',
@@ -73,5 +86,6 @@ export function mapPayloadToAlbum(doc: any): Album {
     coverFotoUrl,
     jumlahFoto: doc.foto?.length ?? 0,
     tanggal: doc.tanggal ?? undefined,
+    foto,
   };
 }

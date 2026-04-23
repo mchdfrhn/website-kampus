@@ -75,48 +75,45 @@ export default function GaleriContent({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((album) => (
-            <div
-              key={album.id}
-              className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 flex flex-col"
-            >
-              <div className="h-52 bg-gray-50 relative overflow-hidden flex-shrink-0">
-                {album.coverFotoUrl ? (
-                  <Image
-                    src={album.coverFotoUrl}
-                    alt={album.judul}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <p className="text-gray-300 text-[10px] font-bold uppercase tracking-widest italic">Album Dokumentasi</p>
-                  </div>
-                )}
-                <span className={`absolute top-4 left-4 text-[9px] font-bold px-3 py-1 rounded-lg uppercase tracking-wider shadow-lg border ${getKategoriSoftBadgeClass(album.kategori.warna, 'navy')}`}>
-                  {album.kategori.nama}
-                </span>
-              </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <h3 className="font-bold text-brand-navy text-base leading-snug mb-2 line-clamp-2 group-hover:text-brand-gold transition-colors">
-                  {album.judul}
-                </h3>
-                {album.deskripsi && (
-                  <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2 flex-1 font-medium">
-                    {album.deskripsi}
-                  </p>
-                )}
-                <div className="flex items-center justify-between text-[11px] text-gray-400 mt-auto pt-4 border-t border-gray-50 font-medium">
-                  <span>{album.jumlahFoto} foto</span>
-                  {album.tanggal && <span>{formatGaleriTanggal(album.tanggal)}</span>}
+              <Link
+                href={`/galeri/${album.slug}`}
+                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 flex flex-col h-full"
+              >
+                <div className="h-52 bg-gray-50 relative overflow-hidden flex-shrink-0">
+                  {album.coverFotoUrl ? (
+                    <Image
+                      src={album.coverFotoUrl}
+                      alt={album.judul}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <p className="text-gray-300 text-[10px] font-bold uppercase tracking-widest italic">Album Dokumentasi</p>
+                    </div>
+                  )}
+                  <span className={`absolute top-4 left-4 text-[9px] font-bold px-3 py-1 rounded-lg uppercase tracking-wider shadow-lg border ${getKategoriSoftBadgeClass(album.kategori.warna, 'navy')}`}>
+                    {album.kategori.nama}
+                  </span>
                 </div>
-                <Link
-                  href="#"
-                  className="mt-5 inline-block text-center bg-brand-navy text-white font-bold text-[10px] uppercase tracking-wider px-4 py-3 rounded-xl hover:bg-brand-navy/90 hover:shadow-lg transition-all"
-                >
-                  Lihat Album
-                </Link>
-              </div>
-            </div>
+                <div className="p-6 flex-1 flex flex-col">
+                  <h3 className="font-bold text-brand-navy text-base leading-snug mb-2 line-clamp-2 group-hover:text-brand-gold transition-colors">
+                    {album.judul}
+                  </h3>
+                  {album.deskripsi && (
+                    <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2 flex-1 font-medium">
+                      {album.deskripsi}
+                    </p>
+                  )}
+                  <div className="flex items-center justify-between text-[11px] text-gray-400 mt-auto pt-4 border-t border-gray-50 font-medium">
+                    <span>{album.jumlahFoto} foto</span>
+                    {album.tanggal && <span>{formatGaleriTanggal(album.tanggal)}</span>}
+                  </div>
+                  <div className="mt-5 inline-block text-center bg-brand-navy text-white font-bold text-[10px] uppercase tracking-wider px-4 py-3 rounded-xl group-hover:bg-brand-navy/90 group-hover:shadow-lg transition-all">
+                    Lihat Album
+                  </div>
+                </div>
+              </Link>
           ))}
         </div>
       )}
