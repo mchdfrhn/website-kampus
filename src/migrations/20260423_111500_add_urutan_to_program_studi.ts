@@ -1,0 +1,13 @@
+import { MigrateDownArgs, MigrateUpArgs, sql } from '@payloadcms/db-postgres'
+
+export async function up({ db }: MigrateUpArgs): Promise<void> {
+  await db.execute(sql`
+   ALTER TABLE "program_studi" ADD COLUMN "urutan" numeric DEFAULT 0;
+  `)
+}
+
+export async function down({ db }: MigrateDownArgs): Promise<void> {
+  await db.execute(sql`
+   ALTER TABLE "program_studi" DROP COLUMN "urutan";
+  `)
+}

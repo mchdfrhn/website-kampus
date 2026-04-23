@@ -8,7 +8,7 @@ export const ProgramStudi: CollectionConfig = {
   },
   admin: {
     useAsTitle: "nama",
-    defaultColumns: ["nama", "jenjang", "akreditasi", "status"],
+    defaultColumns: ["nama", "jenjang", "urutan", "akreditasi", "status"],
   },
   fields: [
     {
@@ -26,6 +26,13 @@ export const ProgramStudi: CollectionConfig = {
       admin: { position: "sidebar" },
     },
     {
+      name: "urutan",
+      type: "number",
+      label: "Urutan Tampil (0 = paling atas)",
+      defaultValue: 0,
+      admin: { position: "sidebar" },
+    },
+    {
       name: "jenjang",
       type: "select",
       label: "Jenjang",
@@ -36,6 +43,21 @@ export const ProgramStudi: CollectionConfig = {
         { label: "S2", value: "s2" },
       ],
       required: true,
+    },
+    {
+      name: "accentColor",
+      type: "select",
+      label: "Aksen Warna Kartu",
+      options: [
+        { label: "Navy", value: "navy" },
+        { label: "Biru", value: "blue" },
+        { label: "Hijau", value: "green" },
+        { label: "Orange", value: "orange" },
+      ],
+      admin: {
+        description:
+          "Digunakan sebagai aksen warna ringan pada card program studi. Jika kosong, frontend memakai default berdasarkan nama program studi.",
+      },
     },
     {
       name: "akreditasi",

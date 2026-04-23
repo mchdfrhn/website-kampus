@@ -20,6 +20,7 @@ async function fetchProdiList(): Promise<ProgramStudi[]> {
       collection: 'program-studi',
       depth: 1,
       limit: 100,
+      sort: 'urutan',
       where: { status: { equals: 'aktif' } },
     });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

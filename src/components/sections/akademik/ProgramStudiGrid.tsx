@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
+import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { ArrowRight, ShieldCheck } from 'lucide-react';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
@@ -9,6 +10,33 @@ const akreditasiColor: Record<string, string> = {
   Unggul: 'bg-green-50 text-green-700 border-green-100',
   'Baik Sekali': 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
   Baik: 'bg-yellow-50 text-yellow-700 border-yellow-100',
+};
+
+const accentTheme: Record<string, {
+  card: string;
+  badge: string;
+  stat: string;
+}> = {
+  navy: {
+    card: 'border-brand-navy/8 bg-gradient-to-br from-white via-brand-mist/25 to-white',
+    badge: 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
+    stat: 'bg-brand-navy/[0.03] border-brand-navy/10',
+  },
+  blue: {
+    card: 'border-sky-100 bg-gradient-to-br from-white via-sky-50/80 to-white',
+    badge: 'bg-sky-50 text-sky-800 border-sky-200',
+    stat: 'bg-sky-50/70 border-sky-100',
+  },
+  green: {
+    card: 'border-emerald-100 bg-gradient-to-br from-white via-emerald-50/80 to-white',
+    badge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+    stat: 'bg-emerald-50/70 border-emerald-100',
+  },
+  orange: {
+    card: 'border-orange-100 bg-gradient-to-br from-white via-orange-50/80 to-white',
+    badge: 'bg-orange-50 text-orange-800 border-orange-200',
+    stat: 'bg-orange-50/70 border-orange-100',
+  },
 };
 
 export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStudi[] }) {
@@ -29,50 +57,60 @@ export default function ProgramStudiGrid({ prodiList }: { prodiList?: ProgramStu
         </div>
       ) : (
       <ul className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-10" aria-label="Daftar program studi STTPU">
-        {list.map((prodi) => (
-          <li key={prodi.slug}>
-            <Link
-              href={`/akademik/program-studi/${prodi.slug}`}
-              className="group flex flex-col h-full bg-white border border-gray-100 rounded-2xl p-5 sm:p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
-            >
-              <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8">
-                <span className="bg-brand-navy/5 text-brand-navy text-[10px] font-bold px-3 py-1.5 rounded-lg border border-brand-navy/10 uppercase tracking-wider">
-                  {prodi.jenjang}
-                </span>
-                <span className={cn(
-                  "text-[10px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider flex items-center gap-2",
-                  akreditasiColor[prodi.akreditasi] ?? 'bg-gray-50 text-gray-500 border-gray-100'
-                )}>
-                  <ShieldCheck size={12} aria-hidden="true" />
-                  Akreditasi {prodi.akreditasi}
-                </span>
-              </div>
+        {list.map((prodi) => {
+          const accent = accentTheme[resolveProgramStudiAccentColor(prodi.nama, prodi.accentColor)] ?? accentTheme.navy;
 
-              <h3 className="font-bold text-xl md:text-2xl text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
-                {prodi.nama}
-              </h3>
-              <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-8 sm:mb-10 font-medium">
-                {prodi.deskripsiSingkat}
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 sm:mb-10">
-                <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-100">
-                  <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
-                  <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
+          return (
+            <li key={prodi.slug}>
+              <Link
+                href={`/akademik/program-studi/${prodi.slug}`}
+                className={cn(
+                  "group flex flex-col h-full rounded-2xl p-5 sm:p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500",
+                  accent.card,
+                )}
+              >
+                <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8">
+                  <span className={cn(
+                    "text-[10px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider",
+                    accent.badge,
+                  )}>
+                    {prodi.jenjang}
+                  </span>
+                  <span className={cn(
+                    "text-[10px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider flex items-center gap-2",
+                    akreditasiColor[prodi.akreditasi] ?? 'bg-gray-50 text-gray-500 border-gray-100'
+                  )}>
+                    <ShieldCheck size={12} aria-hidden="true" />
+                    Akreditasi {prodi.akreditasi}
+                  </span>
                 </div>
-                <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-100">
-                  <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Beban SKS</p>
-                  <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.jumlahSKS} SKS</p>
-                </div>
-              </div>
 
-              <div className="flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-wider group-hover:gap-4 transition-all">
-                Detail Kurikulum & Prospek
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-              </div>
-            </Link>
-          </li>
-        ))}
+                <h3 className="font-bold text-xl md:text-2xl text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
+                  {prodi.nama}
+                </h3>
+                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-8 sm:mb-10 font-medium">
+                  {prodi.deskripsiSingkat}
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 sm:mb-10">
+                  <div className={cn("rounded-xl p-4 sm:p-5 border", accent.stat)}>
+                    <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
+                    <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
+                  </div>
+                  <div className={cn("rounded-xl p-4 sm:p-5 border", accent.stat)}>
+                    <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Beban SKS</p>
+                    <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.jumlahSKS} SKS</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-wider group-hover:gap-4 transition-all">
+                  Detail Kurikulum & Prospek
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                </div>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
       )}
 

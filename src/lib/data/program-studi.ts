@@ -2,6 +2,7 @@ export type ProgramStudi = {
   slug: string;
   nama: string;
   jenjang: string;
+  accentColor?: string;
   akreditasi: string;
   deskripsiSingkat: string;
   deskripsi: string;
@@ -49,6 +50,22 @@ function formatJenjang(value?: string | null): string {
 
   if (jenjangMap[normalized]) return jenjangMap[normalized];
   return (value || '').trim().toUpperCase();
+}
+
+export function resolveProgramStudiAccentColor(
+  nama?: string | null,
+  accentColor?: string | null,
+): string {
+  const explicit = (accentColor || '').trim().toLowerCase();
+  if (explicit) return explicit;
+
+  const normalizedName = (nama || '').trim().toLowerCase();
+
+  if (normalizedName.includes('teknik sipil')) return 'blue';
+  if (normalizedName.includes('teknik lingkungan')) return 'green';
+  if (normalizedName.includes('teknik informatika')) return 'orange';
+
+  return 'navy';
 }
 
 export const programStudiList: ProgramStudi[] = [
@@ -371,6 +388,7 @@ export function mapPayloadToProgramStudi(doc: any): ProgramStudi {
     slug: normalizeProgramStudiSlug(doc.slug ?? doc.nama ?? ''),
     nama: doc.nama ?? '',
     jenjang: formatJenjang(doc.jenjang),
+    accentColor: resolveProgramStudiAccentColor(doc.nama, doc.accentColor),
     akreditasi: doc.akreditasi ?? '',
     deskripsiSingkat: doc.deskripsiSingkat ?? '',
     deskripsi: deskripsiHtml || '',

@@ -28,8 +28,33 @@ async function fetchDosenList(): Promise<Dosen[]> {
   }
 }
 
+async function fetchProgramOrder(): Promise<string[]> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: 'program-studi',
+      depth: 0,
+      limit: 100,
+      sort: 'urutan',
+      where: { status: { equals: 'aktif' } },
+    });
+
+    return result.docs
+      .map((doc) => {
+        const item = doc as { nama?: string | null };
+        return item.nama?.trim() || '';
+      })
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 export default async function DosenPage() {
-  const fetchedDosenList = await fetchDosenList();
+  const [fetchedDosenList, programOrder] = await Promise.all([
+    fetchDosenList(),
+    fetchProgramOrder(),
+  ]);
   const { sidebarTitle, links } = await getAkademikNavigation();
 
   return (
@@ -46,7 +71,7 @@ export default async function DosenPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <AkademikSidebar pathname="/akademik/dosen" title={sidebarTitle} links={links} />
           <div className="flex-1 min-w-0">
-            <DosenGrid dosenList={fetchedDosenList} />
+            <DosenGrid dosenList={fetchedDosenList} programOrder={programOrder} />
           </div>
         </div>
       </div>

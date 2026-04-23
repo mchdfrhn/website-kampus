@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Dosen } from '@/lib/data/dosen';
+import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { BookOpen, ChevronRight, Mail, Users } from 'lucide-react';
 
 const jabatanLabel: Record<string, string> = {
@@ -19,6 +20,33 @@ const jabatanColor: Record<string, string> = {
   'Asisten Ahli': 'border-amber-200 bg-amber-50 text-amber-800',
 };
 
+const accentTheme: Record<string, {
+  card: string;
+  avatar: string;
+  chip: string;
+}> = {
+  navy: {
+    card: 'border-brand-navy/8 bg-gradient-to-br from-white via-brand-mist/20 to-white',
+    avatar: 'border-brand-navy/10 bg-[linear-gradient(155deg,#eef4ff_0%,#f8fafc_42%,#fff5d9_100%)] text-brand-navy/55',
+    chip: 'border-brand-navy/8 bg-brand-navy/[0.03] text-brand-navy',
+  },
+  blue: {
+    card: 'border-sky-100 bg-gradient-to-br from-white via-sky-50/70 to-white',
+    avatar: 'border-sky-100 bg-[linear-gradient(155deg,#eff6ff_0%,#f8fbff_45%,#ffffff_100%)] text-sky-700/55',
+    chip: 'border-sky-100 bg-sky-50 text-sky-800',
+  },
+  green: {
+    card: 'border-emerald-100 bg-gradient-to-br from-white via-emerald-50/70 to-white',
+    avatar: 'border-emerald-100 bg-[linear-gradient(155deg,#ecfdf5_0%,#f7fee7_45%,#ffffff_100%)] text-emerald-700/55',
+    chip: 'border-emerald-100 bg-emerald-50 text-emerald-800',
+  },
+  orange: {
+    card: 'border-orange-100 bg-gradient-to-br from-white via-orange-50/70 to-white',
+    avatar: 'border-orange-100 bg-[linear-gradient(155deg,#fff7ed_0%,#fffbeb_45%,#ffffff_100%)] text-orange-700/55',
+    chip: 'border-orange-100 bg-orange-50 text-orange-800',
+  },
+};
+
 function getInitials(name: string) {
   return (
     name
@@ -33,7 +61,7 @@ function getInitials(name: string) {
   );
 }
 
-function groupByProgramStudi(list: Dosen[]) {
+function groupByProgramStudi(list: Dosen[], programOrder: string[] = []) {
   const map = new Map<string, Dosen[]>();
 
   list.forEach((dosen) => {
@@ -46,20 +74,33 @@ function groupByProgramStudi(list: Dosen[]) {
     });
   });
 
-  return Array.from(map.entries())
+  const grouped = Array.from(map.entries())
     .map(([program, dosen]) => ({
       program,
       dosen: dosen.sort((a, b) => a.nama.localeCompare(b.nama, 'id')),
-    }))
-    .sort((a, b) => a.program.localeCompare(b.program, 'id'));
+    }));
+
+  const orderIndex = new Map(programOrder.map((program, index) => [program, index]));
+
+  return grouped.sort((a, b) => {
+    const aIndex = orderIndex.get(a.program);
+    const bIndex = orderIndex.get(b.program);
+
+    if (aIndex !== undefined && bIndex !== undefined) return aIndex - bIndex;
+    if (aIndex !== undefined) return -1;
+    if (bIndex !== undefined) return 1;
+
+    return a.program.localeCompare(b.program, 'id');
+  });
 }
 
-function DosenCard({ dosen }: { dosen: Dosen }) {
+function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string }) {
   const initials = getInitials(dosen.nama);
+  const accent = accentTheme[accentColor || 'navy'] ?? accentTheme.navy;
   const content = (
     <>
       <div className="flex items-start gap-4 sm:gap-5">
-        <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border border-brand-navy/10 bg-[linear-gradient(155deg,#eef4ff_0%,#f8fafc_42%,#fff5d9_100%)] text-base font-bold tracking-[0.16em] text-brand-navy/55 shadow-inner sm:h-16 sm:w-16 sm:text-lg">
+        <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border text-base font-bold tracking-[0.16em] shadow-inner sm:h-16 sm:w-16 sm:text-lg ${accent.avatar}`}>
           {initials}
         </div>
 
@@ -85,7 +126,7 @@ function DosenCard({ dosen }: { dosen: Dosen }) {
         {dosen.bidangKeahlian.slice(0, 3).map((keahlian) => (
           <span
             key={keahlian}
-            className="rounded-full border border-brand-navy/8 bg-brand-navy/[0.03] px-3 py-1.5 text-[11px] font-semibold text-brand-navy"
+            className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold ${accent.chip}`}
           >
             {keahlian}
           </span>
@@ -119,7 +160,7 @@ function DosenCard({ dosen }: { dosen: Dosen }) {
     return (
       <Link
         href={`/akademik/dosen/${dosen.slug}`}
-        className="group flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(10,31,68,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_24px_50px_rgba(10,31,68,0.08)] sm:p-6"
+        className={`group flex h-full flex-col rounded-[1.5rem] border bg-white p-5 shadow-[0_16px_40px_rgba(10,31,68,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_24px_50px_rgba(10,31,68,0.08)] sm:p-6 ${accent.card}`}
       >
         {content}
       </Link>
@@ -127,18 +168,25 @@ function DosenCard({ dosen }: { dosen: Dosen }) {
   }
 
   return (
-    <div className="flex h-full flex-col rounded-[1.5rem] border border-slate-200 bg-white p-5 opacity-85 shadow-[0_16px_40px_rgba(10,31,68,0.04)] sm:p-6">
+    <div className={`flex h-full flex-col rounded-[1.5rem] border bg-white p-5 opacity-85 shadow-[0_16px_40px_rgba(10,31,68,0.04)] sm:p-6 ${accent.card}`}>
       {content}
     </div>
   );
 }
 
-export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
+export default function DosenGrid({
+  dosenList,
+  programOrder = [],
+}: {
+  dosenList?: Dosen[];
+  programOrder?: string[];
+}) {
   const list = dosenList ?? [];
-  const groupedPrograms = groupByProgramStudi(list);
+  const groupedPrograms = groupByProgramStudi(list, programOrder);
   const [activeTab, setActiveTab] = useState(groupedPrograms[0]?.program ?? '');
 
   const activeGroup = groupedPrograms.find((group) => group.program === activeTab) ?? groupedPrograms[0];
+  const activeAccent = activeGroup ? resolveProgramStudiAccentColor(activeGroup.program) : 'navy';
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
@@ -167,7 +215,7 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
               const isActive = group.program === activeGroup.program;
 
               return (
-                <button
+              <button
                   key={group.program}
                   type="button"
                   onClick={() => setActiveTab(group.program)}
@@ -208,7 +256,11 @@ export default function DosenGrid({ dosenList }: { dosenList?: Dosen[] }) {
 
             <div className="grid grid-cols-1 gap-4">
               {activeGroup.dosen.map((dosen) => (
-                <DosenCard key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`} dosen={dosen} />
+                <DosenCard
+                  key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`}
+                  dosen={dosen}
+                  accentColor={activeAccent}
+                />
               ))}
             </div>
           </section>

@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import {
@@ -292,9 +293,34 @@ export default function ProgramStudiDetailContent({
               <li key={item.slug}>
                 <Link
                   href={`/akademik/program-studi/${item.slug}`}
-                  className="group flex items-center justify-between px-6 py-4 text-sm font-semibold text-gray-600 transition-all hover:bg-gray-50 hover:text-brand-navy"
+                  className="group flex items-center gap-4 px-6 py-4 transition-all hover:bg-gray-50"
                 >
-                  <span className="pr-4 leading-6">{item.nama}</span>
+                  <div className="relative h-14 w-16 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-brand-mist/60">
+                    {item.thumbnailUrl ? (
+                      <Image
+                        src={item.thumbnailUrl}
+                        alt={item.nama}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-navy/5 to-brand-gold/10">
+                        <span className="text-brand-navy/20 text-[9px] font-bold uppercase tracking-[0.2em]">
+                          {item.jenjang}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold leading-6 text-gray-600 transition-colors group-hover:text-brand-navy">
+                      {item.nama}
+                    </p>
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">
+                      {item.jenjang}
+                    </p>
+                  </div>
+
                   <ChevronRight
                     size={16}
                     className="flex-shrink-0 text-gray-300 transition-all group-hover:translate-x-1 group-hover:text-brand-gold"
