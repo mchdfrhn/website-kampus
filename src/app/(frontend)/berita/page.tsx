@@ -2,7 +2,12 @@ import type { Metadata } from 'next';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
-import { mapPayloadToArtikel, type Artikel } from '@/lib/data/berita';
+import {
+  mapPayloadToArtikel,
+  resolveArtikelKategori,
+  type Artikel,
+  type ArtikelKategori,
+} from '@/lib/data/berita';
 
 export const metadata: Metadata = {
   title: 'Berita & Pengumuman | STTPU Jakarta',
@@ -26,8 +31,30 @@ async function fetchArtikelList(): Promise<Artikel[]> {
   }
 }
 
-export default async function BeritaPage() {
+async function fetchKategoriBerita(): Promise<ArtikelKategori[]> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: 'kategori-berita',
+      limit: 100,
+      sort: 'urutan',
+    });
+
+    return result.docs.map(resolveArtikelKategori).filter((item) => item.slug);
+  } catch {
+    return [];
+  }
+}
+
+export default async function BeritaPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ kategori?: string }>;
+}) {
   const artikelList = await fetchArtikelList();
+  const categories = await fetchKategoriBerita();
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const initialFilter = resolvedSearchParams.kategori ?? 'semua';
 
   return (
     <>
@@ -36,7 +63,11 @@ export default async function BeritaPage() {
         subtitle="Informasi resmi, berita terkini, dan pengumuman penting dari Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta."
         breadcrumbs={[{ label: 'Berita & Pengumuman', href: '/berita' }]}
       />
-      <BeritaIndexContent artikelList={artikelList} />
+      <BeritaIndexContent
+        artikelList={artikelList}
+        categories={categories}
+        initialFilter={initialFilter}
+      />
     </>
   );
 }

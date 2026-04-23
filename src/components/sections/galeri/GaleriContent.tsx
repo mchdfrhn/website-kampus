@@ -3,46 +3,46 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  formatGaleriTanggal,
+  type Album,
+  type AlbumKategori,
+} from '@/lib/data/galeri';
+import { getKategoriSoftBadgeClass } from '@/lib/data/kategori';
 
-export type Album = {
-  id: string;
-  judul: string;
-  slug: string;
-  kategori: 'kegiatan' | 'fasilitas' | 'wisuda' | 'prestasi';
-  deskripsi?: string;
-  coverFotoUrl?: string;
-  jumlahFoto: number;
-  tanggal?: string;
-};
+const semua = 'semua';
 
-const kategoriLabel: Record<Album['kategori'], string> = {
-  kegiatan: 'Kegiatan Kampus',
-  fasilitas: 'Fasilitas',
-  wisuda: 'Wisuda',
-  prestasi: 'Prestasi',
-};
+export default function GaleriContent({
+  albumList,
+  categories,
+  initialFilter = semua,
+}: {
+  albumList: Album[];
+  categories: AlbumKategori[];
+  initialFilter?: string;
+}) {
+  const availableCategories =
+    categories.length > 0
+      ? categories
+      : albumList.reduce<AlbumKategori[]>((acc, album) => {
+          if (acc.some((item) => item.slug === album.kategori.slug)) return acc;
+          acc.push(album.kategori);
+          return acc;
+        }, []);
 
-const filterOptions: { value: 'semua' | Album['kategori']; label: string }[] = [
-  { value: 'semua', label: 'Semua' },
-  { value: 'kegiatan', label: 'Kegiatan Kampus' },
-  { value: 'fasilitas', label: 'Fasilitas' },
-  { value: 'wisuda', label: 'Wisuda' },
-  { value: 'prestasi', label: 'Prestasi' },
-];
-
-function formatTanggal(iso: string): string {
-  return new Date(iso).toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
-
-export default function GaleriContent({ albumList }: { albumList: Album[] }) {
-  const [filter, setFilter] = useState<'semua' | Album['kategori']>('semua');
+  const hasInitialFilter =
+    initialFilter !== semua && availableCategories.some((item) => item.slug === initialFilter);
+  const [filter, setFilter] = useState<string>(hasInitialFilter ? initialFilter : semua);
+  const filterOptions = [
+    { value: semua, label: 'Semua' },
+    ...availableCategories.map((item) => ({
+      value: item.slug,
+      label: item.nama,
+    })),
+  ];
 
   const filtered =
-    filter === 'semua' ? albumList : albumList.filter((a) => a.kategori === filter);
+    filter === semua ? albumList : albumList.filter((a) => a.kategori.slug === filter);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
@@ -92,8 +92,8 @@ export default function GaleriContent({ albumList }: { albumList: Album[] }) {
                     <p className="text-gray-300 text-[10px] font-bold uppercase tracking-widest italic">Album Dokumentasi</p>
                   </div>
                 )}
-                <span className="absolute top-4 left-4 bg-brand-gold text-brand-navy text-[9px] font-bold px-3 py-1 rounded-lg uppercase tracking-wider shadow-lg">
-                  {kategoriLabel[album.kategori]}
+                <span className={`absolute top-4 left-4 text-[9px] font-bold px-3 py-1 rounded-lg uppercase tracking-wider shadow-lg border ${getKategoriSoftBadgeClass(album.kategori.warna, 'navy')}`}>
+                  {album.kategori.nama}
                 </span>
               </div>
               <div className="p-6 flex-1 flex flex-col">
@@ -107,7 +107,7 @@ export default function GaleriContent({ albumList }: { albumList: Album[] }) {
                 )}
                 <div className="flex items-center justify-between text-[11px] text-gray-400 mt-auto pt-4 border-t border-gray-50 font-medium">
                   <span>{album.jumlahFoto} foto</span>
-                  {album.tanggal && <span>{formatTanggal(album.tanggal)}</span>}
+                  {album.tanggal && <span>{formatGaleriTanggal(album.tanggal)}</span>}
                 </div>
                 <Link
                   href="#"

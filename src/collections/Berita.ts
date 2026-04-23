@@ -30,16 +30,9 @@ export const Berita: CollectionConfig = {
     },
     {
       name: "kategori",
-      type: "select",
+      type: "relationship",
       label: "Kategori",
-      options: [
-        { label: "Akademik", value: "akademik" },
-        { label: "Kemahasiswaan", value: "kemahasiswaan" },
-        { label: "Penelitian", value: "penelitian" },
-        { label: "Kerjasama", value: "kerjasama" },
-        { label: "Prestasi", value: "prestasi" },
-        { label: "Pengumuman Resmi", value: "pengumuman" },
-      ],
+      relationTo: "kategori-berita",
       required: true,
     },
     {

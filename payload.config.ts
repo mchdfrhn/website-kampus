@@ -8,6 +8,8 @@ import { s3Storage } from "@payloadcms/storage-s3";
 import { Berita } from "./src/collections/Berita";
 import { Dosen } from "./src/collections/Dosen";
 import { Galeri } from "./src/collections/Galeri";
+import { KategoriBerita } from "./src/collections/KategoriBerita";
+import { KategoriGaleri } from "./src/collections/KategoriGaleri";
 import { Media } from "./src/collections/Media";
 import { Pesan } from "./src/collections/Pesan";
 import { ProgramStudi } from "./src/collections/ProgramStudi";
@@ -54,9 +56,11 @@ export default buildConfig({
   collections: [
     Users,
     Media,
+    KategoriBerita,
     Berita,
     Dosen,
     ProgramStudi,
+    KategoriGaleri,
     Galeri,
     Pesan,
     Testimonial,

@@ -27,14 +27,9 @@ export const Galeri: CollectionConfig = {
     },
     {
       name: "kategori",
-      type: "select",
+      type: "relationship",
       label: "Kategori",
-      options: [
-        { label: "Kegiatan Kampus", value: "kegiatan" },
-        { label: "Fasilitas", value: "fasilitas" },
-        { label: "Wisuda", value: "wisuda" },
-        { label: "Prestasi & Penghargaan", value: "prestasi" },
-      ],
+      relationTo: "kategori-galeri",
     },
     {
       name: "deskripsi",

@@ -1,7 +1,16 @@
+import {
+  getKategoriBadgeClass,
+  getKategoriDotClass,
+  mapPayloadToManagedKategori,
+  type ManagedKategori,
+} from './kategori';
+
+export type ArtikelKategori = ManagedKategori;
+
 export type Artikel = {
   slug: string;
   judul: string;
-  kategori: 'akademik' | 'kemahasiswaan' | 'penelitian' | 'kerjasama' | 'prestasi' | 'pengumuman';
+  kategori: ArtikelKategori;
   ringkasan: string;
   konten: string;
   kontenHtml?: string;
@@ -13,25 +22,60 @@ export type Artikel = {
   readingTime: number;
 };
 
-export const kategoriLabel: Record<Artikel['kategori'], string> = {
-  akademik: 'Akademik',
-  kemahasiswaan: 'Kemahasiswaan',
-  penelitian: 'Penelitian',
-  kerjasama: 'Kerjasama',
-  prestasi: 'Prestasi',
-  pengumuman: 'Pengumuman Resmi',
+const beritaKategoriDefaults: Record<string, Omit<ArtikelKategori, 'id' | 'urutan'>> = {
+  akademik: { nama: 'Akademik', slug: 'akademik', warna: 'blue' },
+  kemahasiswaan: { nama: 'Kemahasiswaan', slug: 'kemahasiswaan', warna: 'green' },
+  penelitian: { nama: 'Penelitian', slug: 'penelitian', warna: 'purple' },
+  kerjasama: { nama: 'Kerjasama', slug: 'kerjasama', warna: 'orange' },
+  prestasi: { nama: 'Prestasi', slug: 'prestasi', warna: 'gold' },
+  pengumuman: { nama: 'Pengumuman Resmi', slug: 'pengumuman', warna: 'red' },
 };
 
-export const kategoriColor: Record<Artikel['kategori'], string> = {
-  akademik: 'bg-blue-100 text-blue-800 border-blue-200',
-  kemahasiswaan: 'bg-green-100 text-green-800 border-green-200',
-  penelitian: 'bg-purple-100 text-purple-800 border-purple-200',
-  kerjasama: 'bg-orange-100 text-orange-800 border-orange-200',
-  prestasi: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-  pengumuman: 'bg-red-100 text-red-800 border-red-200',
-};
+export function resolveArtikelKategori(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any,
+): ArtikelKategori {
+  if (typeof value === 'string' && value in beritaKategoriDefaults) {
+    return beritaKategoriDefaults[value];
+  }
 
-export const artikelList: Artikel[] = [
+  const mapped = mapPayloadToManagedKategori(value);
+
+  if (mapped?.slug) {
+    const fallback = beritaKategoriDefaults[mapped.slug] ?? {
+      nama: mapped.nama || 'Berita',
+      slug: mapped.slug,
+      warna: 'navy',
+    };
+
+    return {
+      ...fallback,
+      ...mapped,
+      nama: mapped.nama || fallback.nama,
+      warna: mapped.warna || fallback.warna,
+    };
+  }
+
+  return beritaKategoriDefaults.akademik;
+}
+
+export function getArtikelKategoriLabel(kategori: Artikel['kategori']): string {
+  return kategori.nama;
+}
+
+export function getArtikelKategoriSlug(kategori: Artikel['kategori']): string {
+  return kategori.slug;
+}
+
+export function getArtikelKategoriColor(kategori: Artikel['kategori']): string {
+  return getKategoriBadgeClass(kategori.warna, 'navy');
+}
+
+export function getArtikelKategoriDotColor(kategori: Artikel['kategori']): string {
+  return getKategoriDotClass(kategori.warna, 'navy');
+}
+
+const artikelSeedList = [
   {
     slug: 'pengumuman-jadwal-uts-semester-genap-2025-2026',
     judul: 'Jadwal Ujian Tengah Semester (UTS) Genap Tahun Akademik 2025/2026',
@@ -329,17 +373,22 @@ Penghargaan ini semakin mengukuhkan posisi STTPU sebagai perguruan tinggi vokasi
   },
 ];
 
+export const artikelList: Artikel[] = artikelSeedList.map((artikel) => ({
+  ...artikel,
+  kategori: resolveArtikelKategori(artikel.kategori),
+}));
+
 export function getArtikelBySlug(slug: string): Artikel | undefined {
   return artikelList.find((a) => a.slug === slug);
 }
 
-export function getArtikelByKategori(kategori: Artikel['kategori']): Artikel[] {
-  return artikelList.filter((a) => a.kategori === kategori);
+export function getArtikelByKategori(kategori: string): Artikel[] {
+  return artikelList.filter((a) => a.kategori.slug === kategori);
 }
 
-export function getArtikelTerkait(slug: string, kategori: Artikel['kategori'], limit = 3): Artikel[] {
+export function getArtikelTerkait(slug: string, kategori: string, limit = 3): Artikel[] {
   return artikelList
-    .filter((a) => a.slug !== slug && a.kategori === kategori)
+    .filter((a) => a.slug !== slug && a.kategori.slug === kategori)
     .slice(0, limit);
 }
 
@@ -377,7 +426,7 @@ export function mapPayloadToArtikel(doc: any): Artikel {
   return {
     slug: doc.slug ?? '',
     judul: doc.judul ?? '',
-    kategori: doc.kategori ?? 'akademik',
+    kategori: resolveArtikelKategori(doc.kategori),
     ringkasan: doc.ringkasan ?? '',
     konten: '',
     kontenHtml,

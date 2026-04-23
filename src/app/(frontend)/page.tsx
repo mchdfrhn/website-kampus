@@ -7,7 +7,11 @@ import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
 import { getPayloadClient } from '@/lib/payload';
-import { artikelList as artikelStatic, mapPayloadToArtikel } from '@/lib/data/berita';
+import {
+  artikelList as artikelStatic,
+  getArtikelKategoriLabel,
+  mapPayloadToArtikel,
+} from '@/lib/data/berita';
 
 export const revalidate = 3600; // Cache for 1 hour
 
@@ -64,7 +68,7 @@ async function fetchHomePageData() {
     
     // Inject top 2 latest news into hero slides
     const newsSlides = mappedBerita.slice(0, 2).map((artikel) => ({
-      badge: `BERITA TERKINI — ${artikel.kategori?.toUpperCase() || 'WARTA'}`,
+      badge: `BERITA TERKINI — ${getArtikelKategoriLabel(artikel.kategori).toUpperCase() || 'WARTA'}`,
       judul: artikel.judul,
       subjudul: artikel.ringkasan,
       cta1Teks: 'Baca Selengkapnya',

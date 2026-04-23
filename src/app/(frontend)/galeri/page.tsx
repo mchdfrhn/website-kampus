@@ -1,7 +1,13 @@
 import type { Metadata } from 'next';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
-import GaleriContent, { type Album } from '@/components/sections/galeri/GaleriContent';
+import GaleriContent from '@/components/sections/galeri/GaleriContent';
+import {
+  mapPayloadToAlbum,
+  resolveGaleriKategori,
+  type Album,
+  type AlbumKategori,
+} from '@/lib/data/galeri';
 
 export const metadata: Metadata = {
   title: 'Galeri | STTPU Jakarta',
@@ -19,34 +25,37 @@ async function fetchAlbumList(): Promise<Album[]> {
       sort: '-tanggal',
       depth: 1,
     });
-    if (result.docs.length > 0) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return result.docs.map((doc: any): Album => {
-        const coverFotoUrl: string | undefined =
-          doc.coverFoto && typeof doc.coverFoto === 'object' && doc.coverFoto.url
-            ? (doc.coverFoto.url as string)
-            : undefined;
-
-        return {
-          id: String(doc.id),
-          judul: doc.judul ?? '',
-          slug: doc.slug ?? '',
-          kategori: doc.kategori ?? 'kegiatan',
-          deskripsi: doc.deskripsi ?? undefined,
-          coverFotoUrl,
-          jumlahFoto: doc.foto?.length ?? 0,
-          tanggal: doc.tanggal ?? undefined,
-        };
-      });
-    }
+    if (result.docs.length > 0) return result.docs.map(mapPayloadToAlbum);
   } catch {
     // DB not available — fall through to empty list
   }
   return [];
 }
 
-export default async function GaleriPage() {
+async function fetchKategoriGaleri(): Promise<AlbumKategori[]> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: 'kategori-galeri',
+      limit: 100,
+      sort: 'urutan',
+    });
+
+    return result.docs.map(resolveGaleriKategori).filter((item) => item.slug);
+  } catch {
+    return [];
+  }
+}
+
+export default async function GaleriPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ kategori?: string }>;
+}) {
   const albumList = await fetchAlbumList();
+  const categories = await fetchKategoriGaleri();
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const initialFilter = resolvedSearchParams.kategori ?? 'semua';
 
   return (
     <>
@@ -55,7 +64,11 @@ export default async function GaleriPage() {
         subtitle="Dokumentasi kegiatan, fasilitas, dan momen berharga di kampus STTPU Jakarta."
         breadcrumbs={[{ label: 'Galeri', href: '/galeri' }]}
       />
-      <GaleriContent albumList={albumList} />
+      <GaleriContent
+        albumList={albumList}
+        categories={categories}
+        initialFilter={initialFilter}
+      />
     </>
   );
 }

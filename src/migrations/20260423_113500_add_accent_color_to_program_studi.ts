@@ -2,12 +2,12 @@ import { MigrateDownArgs, MigrateUpArgs, sql } from '@payloadcms/db-postgres'
 
 export async function up({ db }: MigrateUpArgs): Promise<void> {
   await db.execute(sql`
-   ALTER TABLE "program_studi" ADD COLUMN "accent_color" varchar;
+   ALTER TABLE "program_studi" ADD COLUMN IF NOT EXISTS "accent_color" varchar;
   `)
 }
 
 export async function down({ db }: MigrateDownArgs): Promise<void> {
   await db.execute(sql`
-   ALTER TABLE "program_studi" DROP COLUMN "accent_color";
+   ALTER TABLE "program_studi" DROP COLUMN IF EXISTS "accent_color";
   `)
 }

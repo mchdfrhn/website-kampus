@@ -1,8 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Clock, Calendar, User, ArrowLeft, ArrowRight, Share2, Pin } from 'lucide-react';
-import type { Artikel } from '@/lib/data/berita';
-import { kategoriLabel, kategoriColor, formatTanggal } from '@/lib/data/berita';
+import type { Artikel, ArtikelKategori } from '@/lib/data/berita';
+import {
+  formatTanggal,
+  getArtikelKategoriColor,
+  getArtikelKategoriDotColor,
+  getArtikelKategoriLabel,
+} from '@/lib/data/berita';
 import { cn } from '@/lib/utils';
 
 function parseMarkdown(text: string): string {
@@ -29,11 +34,14 @@ function parseMarkdown(text: string): string {
 export default function ArtikelDetailContent({
   artikel,
   artikelTerkait = [],
+  categories = [],
 }: {
   artikel: Artikel;
   artikelTerkait?: Artikel[];
+  categories?: ArtikelKategori[];
 }) {
   const terkait = artikelTerkait;
+  const availableCategories = categories.length > 0 ? categories : [artikel.kategori];
 
   return (
     <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
@@ -41,9 +49,9 @@ export default function ArtikelDetailContent({
         <article className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-4 mb-8">
             <span
-              className={`text-[9px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider bg-white shadow-sm ${kategoriColor[artikel.kategori]}`}
+              className={`text-[9px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider bg-white shadow-sm ${getArtikelKategoriColor(artikel.kategori)}`}
             >
-              {kategoriLabel[artikel.kategori]}
+              {getArtikelKategoriLabel(artikel.kategori)}
             </span>
             {artikel.isPinned && (
               <span className="flex items-center gap-2 text-[9px] font-bold text-red-600 bg-red-50 border border-red-100 px-3 py-1.5 rounded-lg uppercase tracking-wider">
@@ -175,22 +183,15 @@ export default function ArtikelDetailContent({
           <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-xl shadow-brand-navy/5">
             <p className="font-bold text-brand-navy text-[11px] uppercase tracking-wider mb-6">Explore Kategori</p>
             <ul className="space-y-4">
-              {(Object.keys(kategoriLabel) as Artikel['kategori'][]).map((k) => (
-                <li key={k}>
+              {availableCategories.map((category) => (
+                <li key={category.slug}>
                   <Link
-                    href={`/berita?kategori=${k}`}
+                    href={`/berita?kategori=${category.slug}`}
                     className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-gray-500 hover:text-brand-gold transition-all group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className={cn(
-                        "w-2 h-2 rounded-full",
-                        k === 'pengumuman' ? 'bg-red-400' : 
-                        k === 'akademik' ? 'bg-blue-400' : 
-                        k === 'kemahasiswaan' ? 'bg-green-400' : 
-                        k === 'penelitian' ? 'bg-purple-400' : 
-                        k === 'kerjasama' ? 'bg-orange-400' : 'bg-yellow-400'
-                      )} />
-                      {kategoriLabel[k]}
+                      <div className={cn("w-2 h-2 rounded-full", getArtikelKategoriDotColor(category))} />
+                      {category.nama}
                     </div>
                     <ArrowRight size={12} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>

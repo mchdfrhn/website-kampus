@@ -2,7 +2,11 @@ import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion/Re
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { kategoriLabel, formatTanggal, type Artikel } from '@/lib/data/berita';
+import {
+  formatTanggal,
+  getArtikelKategoriLabel,
+  type Artikel,
+} from '@/lib/data/berita';
 
 export default function BeritaTerakhirSection({ artikelList }: { artikelList: Artikel[] }) {
   return (
@@ -50,7 +54,7 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
                   )}
                   <div className="absolute top-4 left-4">
                     <span className="bg-brand-navy/90 backdrop-blur-xl text-white text-[9px] font-bold uppercase tracking-widest px-4 py-2 rounded-lg border border-white/10 shadow-2xl">
-                      {kategoriLabel[item.kategori]}
+                      {getArtikelKategoriLabel(item.kategori)}
                     </span>
                   </div>
                 </div>

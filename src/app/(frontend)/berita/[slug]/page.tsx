@@ -5,7 +5,9 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { getPayloadClient } from '@/lib/payload';
 import {
   mapPayloadToArtikel,
+  resolveArtikelKategori,
   type Artikel,
+  type ArtikelKategori,
 } from '@/lib/data/berita';
 
 async function fetchArtikelBySlug(slug: string): Promise<Artikel | null> {
@@ -24,7 +26,9 @@ async function fetchArtikelBySlug(slug: string): Promise<Artikel | null> {
   return null;
 }
 
-async function fetchArtikelTerkait(slug: string, kategori: string): Promise<Artikel[]> {
+async function fetchArtikelTerkait(slug: string, kategoriId?: string): Promise<Artikel[]> {
+  if (!kategoriId) return [];
+
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
@@ -32,7 +36,7 @@ async function fetchArtikelTerkait(slug: string, kategori: string): Promise<Arti
       where: {
         and: [
           { status: { equals: 'terbit' } },
-          { kategori: { equals: kategori } },
+          { kategori: { equals: kategoriId } },
           { slug: { not_equals: slug } },
         ],
       },
@@ -45,6 +49,21 @@ async function fetchArtikelTerkait(slug: string, kategori: string): Promise<Arti
     return [];
   }
   return [];
+}
+
+async function fetchKategoriBerita(): Promise<ArtikelKategori[]> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: 'kategori-berita',
+      limit: 100,
+      sort: 'urutan',
+    });
+
+    return result.docs.map(resolveArtikelKategori).filter((item) => item.slug);
+  } catch {
+    return [];
+  }
 }
 
 export async function generateStaticParams() {
@@ -89,7 +108,10 @@ export default async function ArtikelPage({
   const artikel = await fetchArtikelBySlug(slug);
   if (!artikel) notFound();
 
-  const artikelTerkait = await fetchArtikelTerkait(slug, artikel.kategori);
+  const [artikelTerkait, categories] = await Promise.all([
+    fetchArtikelTerkait(slug, artikel.kategori.id),
+    fetchKategoriBerita(),
+  ]);
 
   return (
       <><div className="bg-white border-b border-gray-100">
@@ -100,6 +122,6 @@ export default async function ArtikelPage({
             { label: artikel.judul, href: `/berita/${artikel.slug}` }
           ]} />
       </div>
-    </div><ArtikelDetailContent artikel={artikel} artikelTerkait={artikelTerkait} /></>
+    </div><ArtikelDetailContent artikel={artikel} artikelTerkait={artikelTerkait} categories={categories} /></>
   );
 }

@@ -5,34 +5,52 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Pin, Clock, ArrowRight, Search } from 'lucide-react';
 import {
-  kategoriLabel,
-  kategoriColor,
   formatTanggal,
+  getArtikelKategoriColor,
+  getArtikelKategoriLabel,
+  getArtikelKategoriSlug,
+  type ArtikelKategori,
   type Artikel,
 } from '@/lib/data/berita';
 
 const semua = 'semua';
-type Filter = typeof semua | Artikel['kategori'];
+type Filter = typeof semua | string;
 
-const filterOptions: { value: Filter; label: string }[] = [
-  { value: 'semua', label: 'Semua' },
-  { value: 'pengumuman', label: 'Pengumuman' },
-  { value: 'akademik', label: 'Akademik' },
-  { value: 'kemahasiswaan', label: 'Kemahasiswaan' },
-  { value: 'prestasi', label: 'Prestasi' },
-  { value: 'penelitian', label: 'Penelitian' },
-  { value: 'kerjasama', label: 'Kerjasama' },
-];
+export default function BeritaIndexContent({
+  artikelList,
+  categories,
+  initialFilter = semua,
+}: {
+  artikelList: Artikel[];
+  categories: ArtikelKategori[];
+  initialFilter?: string;
+}) {
+  const availableCategories =
+    categories.length > 0
+      ? categories
+      : artikelList.reduce<ArtikelKategori[]>((acc, artikel) => {
+          if (acc.some((item) => item.slug === artikel.kategori.slug)) return acc;
+          acc.push(artikel.kategori);
+          return acc;
+        }, []);
 
-export default function BeritaIndexContent({ artikelList }: { artikelList: Artikel[] }) {
-  const [filter, setFilter] = useState<Filter>(semua);
+  const hasInitialFilter =
+    initialFilter !== semua && availableCategories.some((item) => item.slug === initialFilter);
+  const [filter, setFilter] = useState<Filter>(hasInitialFilter ? initialFilter : semua);
   const [query, setQuery] = useState('');
+  const filterOptions: { value: Filter; label: string }[] = [
+    { value: semua, label: 'Semua' },
+    ...availableCategories.map((item) => ({
+      value: item.slug,
+      label: item.nama,
+    })),
+  ];
 
   const pinned = artikelList.filter((a) => a.isPinned);
 
   const filtered = artikelList
     .filter((a) => !a.isPinned)
-    .filter((a) => filter === semua || a.kategori === filter)
+    .filter((a) => filter === semua || getArtikelKategoriSlug(a.kategori) === filter)
     .filter(
       (a) =>
         query === '' ||
@@ -128,9 +146,9 @@ export default function BeritaIndexContent({ artikelList }: { artikelList: Artik
                   <div className="flex flex-col flex-1 p-6">
                     <div className="flex items-center justify-between mb-4">
                       <span
-                        className={`text-[9px] font-bold px-3 py-1 rounded-lg border uppercase tracking-wider ${kategoriColor[a.kategori]}`}
+                        className={`text-[9px] font-bold px-3 py-1 rounded-lg border uppercase tracking-wider ${getArtikelKategoriColor(a.kategori)}`}
                       >
-                        {kategoriLabel[a.kategori]}
+                        {getArtikelKategoriLabel(a.kategori)}
                       </span>
                       <span className="text-gray-400 text-[11px] font-medium flex items-center gap-1.5">
                         <Clock size={12} aria-hidden="true" />
