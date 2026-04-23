@@ -8,9 +8,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, Image as ImageIcon, X, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 
+import { createPortal } from 'react-dom';
+
 export default function AlbumDetailContent({ album }: { album: Album }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const nextImage = useCallback(() => {
     if (selectedIndex === null || !album.foto) return;
@@ -64,6 +71,110 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
       lenis?.start();
     };
   }, [selectedIndex, closeLightbox, nextImage, prevImage, lenis]);
+
+  const Lightbox = (
+    <AnimatePresence>
+      {selectedIndex !== null && album.foto && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/60 backdrop-blur-3xl flex flex-col"
+          onClick={closeLightbox}
+          style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
+        >
+          {/* Mobile-Friendly Close Button (Fixed) */}
+          <button
+            onClick={closeLightbox}
+            className="absolute top-4 right-4 z-[110] w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90"
+            aria-label="Tutup Preview"
+          >
+            <X size={24} />
+          </button>
+
+          {/* Top Toolbar */}
+          <div className="relative z-[105] flex items-center justify-between p-4 sm:p-8" onClick={(e) => e.stopPropagation()}>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+              <div>
+                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-gold mb-1">
+                  {album.judul}
+                </p>
+                <div className="flex items-center gap-3">
+                  <p className="text-[10px] font-medium text-white/50 uppercase tracking-widest">
+                    FOTO {selectedIndex + 1} / {album.foto.length}
+                  </p>
+                  {/* Download Button for Mobile (Icon Only) / Desktop (Full) */}
+                  <button
+                    onClick={() => handleDownload(album.foto![selectedIndex].url, selectedIndex)}
+                    className="flex sm:hidden w-8 h-8 rounded-full bg-brand-gold text-brand-navy items-center justify-center shadow-lg active:scale-90 transition-transform"
+                    title="Unduh Foto"
+                  >
+                    <Download size={14} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Download Button for Desktop */}
+              <button
+                onClick={() => handleDownload(album.foto![selectedIndex].url, selectedIndex)}
+                className="hidden sm:flex px-4 py-2 rounded-full bg-white/5 border border-white/10 items-center gap-2 text-white text-xs font-bold hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all"
+              >
+                <Download size={14} />
+                UNDUH FOTO
+              </button>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="flex-1 relative flex items-center justify-center p-2 sm:p-4" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={prevImage}
+              className="absolute left-2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all sm:left-10"
+            >
+              <ChevronLeft size={24} />
+            </button>
+
+            <div className="relative w-full h-full max-w-5xl max-h-[75vh] sm:max-h-[80vh]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedIndex}
+                  initial={{ opacity: 0, scale: 0.98 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
+                  className="relative w-full h-full"
+                >
+                  <Image
+                    src={album.foto[selectedIndex].url}
+                    alt={album.foto[selectedIndex].keterangan || album.judul}
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <button
+              onClick={nextImage}
+              className="absolute right-2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all sm:right-10"
+            >
+              <ChevronRight size={24} />
+            </button>
+          </div>
+
+          {/* Bottom Caption */}
+          {album.foto[selectedIndex].keterangan && (
+            <div className="p-4 sm:p-10 text-center bg-gradient-to-t from-brand-navy/80 to-transparent" onClick={(e) => e.stopPropagation()}>
+              <p className="text-white/80 text-xs sm:text-sm font-medium max-w-2xl mx-auto leading-relaxed">
+                {album.foto[selectedIndex].keterangan}
+              </p>
+            </div>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -133,101 +244,15 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
         ))}
       </div>
 
-      {/* Lightbox Overlay */}
-      <AnimatePresence>
-        {selectedIndex !== null && album.foto && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-brand-navy/60 backdrop-blur-3xl flex flex-col"
-          >
-            {/* Mobile-Friendly Close Button (Fixed) */}
-            <button
-              onClick={closeLightbox}
-              className="absolute top-4 right-4 z-[110] w-12 h-12 rounded-full bg-black/20 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-95"
-              aria-label="Tutup Preview"
-            >
-              <X size={24} />
-            </button>
-
-            {/* Top Toolbar (Info Only) */}
-            <div className="relative z-[105] flex items-center justify-between p-4 sm:p-8">
-              <div className="pr-16">
-                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-gold mb-1">
-                  {album.judul}
-                </p>
-                <p className="text-[10px] font-medium text-white/50">
-                  FOTO {selectedIndex + 1} / {album.foto.length}
-                </p>
-              </div>
-              
-              <div className="hidden sm:flex items-center gap-3">
-                <button
-                  onClick={() => handleDownload(album.foto![selectedIndex].url, selectedIndex)}
-                  className="px-4 py-2 rounded-full bg-white/5 border border-white/10 flex items-center gap-2 text-white text-xs font-bold hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all"
-                >
-                  <Download size={14} />
-                  UNDUH FOTO
-                </button>
-              </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="flex-1 relative flex items-center justify-center p-4">
-              <button
-                onClick={prevImage}
-                className="absolute left-4 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all sm:left-10"
-              >
-                <ChevronLeft size={24} />
-              </button>
-
-              <div className="relative w-full h-full max-w-5xl max-h-[70vh]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={selectedIndex}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    className="relative w-full h-full"
-                  >
-                    <Image
-                      src={album.foto[selectedIndex].url}
-                      alt={album.foto[selectedIndex].keterangan || album.judul}
-                      fill
-                      className="object-contain"
-                      priority
-                    />
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              <button
-                onClick={nextImage}
-                className="absolute right-4 z-10 w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all sm:right-10"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-
-            {/* Bottom Caption */}
-            {album.foto[selectedIndex].keterangan && (
-              <div className="p-6 sm:p-10 text-center">
-                <p className="text-white/80 text-sm font-medium max-w-2xl mx-auto">
-                  {album.foto[selectedIndex].keterangan}
-                </p>
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {album.foto?.length === 0 && (
         <div className="text-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
           <ImageIcon size={48} className="mx-auto text-gray-200 mb-4" />
           <p className="text-gray-400 font-bold">Belum ada foto di album ini</p>
         </div>
       )}
+
+      {/* Portal for Lightbox */}
+      {mounted && createPortal(Lightbox, document.body)}
     </div>
   );
 }

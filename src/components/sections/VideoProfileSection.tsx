@@ -76,41 +76,41 @@ export default function VideoProfileSection({ data }: { data?: any }) {
   const Lightbox = (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/95 backdrop-blur-2xl flex items-center justify-center p-4 md:p-12"
-          onClick={() => setIsOpen(false)}
-          style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
-        >
-          {/* Close Button */}
-          <button
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/60 backdrop-blur-3xl flex items-center justify-center p-0 sm:p-4 md:p-12"
             onClick={() => setIsOpen(false)}
-            className="absolute top-6 right-6 z-[110] w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy transition-all active:scale-95"
-            aria-label="Tutup Video"
+            style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
           >
-            <X size={24} />
-          </button>
+            {/* Close Button - More accessible on mobile */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 z-[110] w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy transition-all active:scale-90"
+              aria-label="Tutup Video"
+            >
+              <X size={24} />
+            </button>
 
-          {/* Video Player Container - Perfect Centering with Constraints */}
-          <motion.div 
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-6xl aspect-video rounded-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.5)] bg-black max-h-[85vh] flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <iframe
-              src={videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`}
-              title="STTPU Video Profile"
-              className="absolute inset-0 w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            ></iframe>
+            {/* Video Player Container - Optimized for all screens */}
+            <motion.div 
+              initial={{ scale: 0.98, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.98, opacity: 0, y: 10 }}
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
+              className="relative w-full max-w-6xl aspect-video sm:rounded-2xl overflow-hidden shadow-2xl bg-black max-h-screen sm:max-h-[85vh] flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <iframe
+                src={videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`}
+                title="STTPU Video Profile"
+                className="absolute inset-0 w-full h-full border-0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              ></iframe>
+            </motion.div>
           </motion.div>
-        </motion.div>
       )}
     </AnimatePresence>
   );
