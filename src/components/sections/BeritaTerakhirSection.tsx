@@ -60,8 +60,13 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
                     <div className="w-1 h-1 rounded-full bg-brand-gold" />
                     <span className="text-brand-navy/60">{item.penulis}</span>
                   </div>
-                  <h3 className="font-bold text-brand-navy text-base leading-[1.4] mb-4 group-hover:text-brand-gold transition-colors line-clamp-2 tracking-tight">
-                    {item.judul}
+                  <h3 className="mb-4 line-clamp-2 text-base font-bold leading-[1.4] tracking-tight">
+                    <Link
+                      href={`/berita/${item.slug}`}
+                      className="text-brand-navy transition-colors hover:text-brand-gold"
+                    >
+                      {item.judul}
+                    </Link>
                   </h3>
                   <p className="text-gray-500 text-xs leading-relaxed mb-6 line-clamp-3 font-medium">{item.ringkasan}</p>
                   

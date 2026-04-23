@@ -7,6 +7,7 @@ import { Reveal } from '@/components/ui/motion/Reveal';
 import { MotionList, MotionItem } from '@/components/ui/motion/MotionWrapper';
 
 type Program = {
+  slug?: string;
   jenjang: string;
   nama: string;
   accentColor?: string;
@@ -108,8 +109,13 @@ export default async function ProgramStudiSection() {
 
                   <div className="p-10 flex-1 flex flex-col">
                     <div className="flex-1">
-                      <h3 className="font-bold text-brand-navy text-xl mb-5 group-hover:text-brand-gold transition-colors duration-500 tracking-tight leading-tight">
-                        {program.nama}
+                      <h3 className="mb-5 text-xl font-bold leading-tight tracking-tight">
+                        <Link
+                          href={program.slug ? `/akademik/program-studi/${program.slug}` : '/akademik/program-studi'}
+                          className="text-brand-navy transition-colors duration-500 hover:text-brand-gold"
+                        >
+                          {program.nama}
+                        </Link>
                       </h3>
                       <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 font-medium">
                         {program.deskripsiSingkat}
@@ -129,7 +135,7 @@ export default async function ProgramStudiSection() {
                       </div>
                       
                       <Link
-                        href="/akademik/program-studi"
+                        href={program.slug ? `/akademik/program-studi/${program.slug}` : '/akademik/program-studi'}
                         className="inline-flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-widest group/link hover:text-brand-gold transition-all duration-300"
                       >
                         Detail

@@ -52,7 +52,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
             {hasChildren ? (
               <div className="group">
                 <button
-                  className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl transition-colors duration-300 text-[13px] font-bold h-10 ${
+                  className={`relative flex min-w-[5.5rem] items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 ${
                     active ? 'text-white' : 'text-white/70 group-hover:text-white'
                   }`}
                   aria-haspopup="true"
@@ -116,47 +116,63 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 </div>
               </div>
             ) : (
-              <div className="relative">
+              <>
                 {item.href === '/' ? (
                   <HomeNavLink
                     href={item.href}
-                    className={`relative flex items-center px-4 py-2 rounded-xl transition-colors duration-300 text-[13px] font-bold h-10 ${
+                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >
+                    {(isHovered || active) && (
+                      <motion.div
+                        layoutId="nav-pill"
+                        className={`absolute inset-0 rounded-xl z-0 ${
+                          active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
+                        }`}
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
+                    {active && (
+                      <motion.div
+                        layoutId="nav-line"
+                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
                     <span className="relative z-10">{item.label}</span>
                   </HomeNavLink>
                 ) : (
                   <Link
                     href={item.href}
-                    className={`relative flex items-center px-4 py-2 rounded-xl transition-colors duration-300 text-[13px] font-bold h-10 ${
+                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >
+                    {(isHovered || active) && (
+                      <motion.div
+                        layoutId="nav-pill"
+                        className={`absolute inset-0 rounded-xl z-0 ${
+                          active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
+                        }`}
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
+                    {active && (
+                      <motion.div
+                        layoutId="nav-line"
+                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
                     <span className="relative z-10">{item.label}</span>
                   </Link>
                 )}
-
-                {/* Shared Indicator for Hover/Active Pill */}
-                {(isHovered || active) && (
-                  <motion.div
-                    layoutId="nav-pill"
-                    className={`absolute inset-0 rounded-xl z-0 ${
-                      active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
-                    }`}
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-
-                {/* Bottom Active Line */}
-                {active && (
-                  <motion.div
-                    layoutId="nav-line"
-                    className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
-                )}
-              </div>
+              </>
             )}
           </li>
         );
