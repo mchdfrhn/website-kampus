@@ -9,6 +9,9 @@ Project ini menggabungkan:
 - migrasi schema database
 - seed data awal
 
+Panduan admin non-teknis:
+- [ADMIN_USERGUIDE_PAYLOAD.md](/home/mchdfrhn/Project/sttpu/website-kampus/ADMIN_USERGUIDE_PAYLOAD.md)
+
 ## Stack
 
 - `Next.js 16`
@@ -62,6 +65,33 @@ scripts/
   seed.ts              # seed data awal
   backup-postgres.sh   # backup database
 ```
+
+## Peta Konten CMS
+
+Beberapa halaman frontend mengambil data dari `Globals` Payload, bukan dari collection terpisah.
+
+- `/tentang/*` diambil dari global `Tentang Kami`
+- `/akademik/kalender` diambil dari global `Kalender Akademik`
+- `/kemahasiswaan/*` diambil dari global `Kemahasiswaan Page` dan `Panduan Maba`
+- `/penelitian/*` diambil dari global `Penelitian Page` plus collection riset terkait
+
+Contoh penting:
+
+- isi subpage `/tentang/fasilitas` ada di `Globals -> Tentang Kami -> Fasilitas`
+- field yang dipakai frontend:
+  - `fasilitasIntro`
+  - `fasilitasCtaTitle`
+  - `fasilitasCtaDescription`
+  - `fasilitasCtaButtonLabel`
+  - `fasilitasCtaButtonHref`
+  - `fasilitas[]`
+- tiap item `fasilitas[]` berisi:
+  - `nama`
+  - `deskripsi`
+  - `kapasitas`
+  - `foto`
+  - `kategori`
+  - `items[]`
 
 ## Prasyarat
 
@@ -194,6 +224,7 @@ Masih ada beberapa peluang lanjutan, misalnya:
 
 ## Dokumentasi Tambahan
 
+- [ADMIN_USERGUIDE_PAYLOAD.md](/home/mchdfrhn/Project/sttpu/website-kampus/ADMIN_USERGUIDE_PAYLOAD.md)
 - [PRD.md](/home/mchdfrhn/Project/sttpu/website-kampus/PRD.md)
 - [TECH_STACK.md](/home/mchdfrhn/Project/sttpu/website-kampus/TECH_STACK.md)
 - [DATABASE_SCHEMA.md](/home/mchdfrhn/Project/sttpu/website-kampus/DATABASE_SCHEMA.md)

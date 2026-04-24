@@ -1,13 +1,18 @@
-import type { Metadata } from 'next';
-import Navbar from '@/components/layout/Navbar';
-import Footer from '@/components/layout/Footer';
-import RouteProgressProvider from '@/components/providers/RouteProgressProvider';
-import ScrollProvider from '@/components/providers/ScrollProvider';
-import PageTransition from '@/components/ui/motion/PageTransition';
-import { getPayloadClient } from '@/lib/payload';
-import { buildOrganizationJsonLd, buildWebsiteJsonLd, getSiteUrl, toAbsoluteUrl } from '@/lib/seo';
+import type { Metadata } from "next";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import RouteProgressProvider from "@/components/providers/RouteProgressProvider";
+import ScrollProvider from "@/components/providers/ScrollProvider";
+import PageTransition from "@/components/ui/motion/PageTransition";
+import { getPayloadClient } from "@/lib/payload";
+import {
+  buildOrganizationJsonLd,
+  buildWebsiteJsonLd,
+  getSiteUrl,
+  toAbsoluteUrl,
+} from "@/lib/seo";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 type MediaValue = {
@@ -17,30 +22,37 @@ type MediaValue = {
 export async function generateMetadata(): Promise<Metadata> {
   const baseMetadata: Metadata = {
     title: {
-      default: 'STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta',
-      template: '%s | STTPU',
+      default: "STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
+      template: "%s | STTPU",
     },
     description:
-      'Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.',
+      "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",
     metadataBase: new URL(getSiteUrl()),
     openGraph: {
-      siteName: 'STTPU Jakarta',
-      locale: 'id_ID',
-      type: 'website',
+      siteName: "STTPU Jakarta",
+      locale: "id_ID",
+      type: "website",
     },
     twitter: {
-      card: 'summary',
+      card: "summary",
     },
   };
 
   try {
     const payload = await getPayloadClient();
-    const siteSettings = await payload.findGlobal({ slug: 'site-settings', depth: 1 });
-    const favicon = (typeof siteSettings.favicon === 'object' ? siteSettings.favicon : null) as MediaValue;
-    const logo = (typeof siteSettings.logo === 'object' ? siteSettings.logo : null) as MediaValue;
+    const siteSettings = await payload.findGlobal({
+      slug: "site-settings",
+      depth: 1,
+    });
+    const favicon = (
+      typeof siteSettings.favicon === "object" ? siteSettings.favicon : null
+    ) as MediaValue;
+    const logo = (
+      typeof siteSettings.logo === "object" ? siteSettings.logo : null
+    ) as MediaValue;
     const socialMedia = Array.isArray(siteSettings.socialMedia)
       ? siteSettings.socialMedia
-          .map((item) => (typeof item?.url === 'string' ? item.url : ''))
+          .map((item) => (typeof item?.url === "string" ? item.url : ""))
           .filter(Boolean)
       : [];
     const socialImage = toAbsoluteUrl(logo?.url || favicon?.url);
@@ -58,26 +70,26 @@ export async function generateMetadata(): Promise<Metadata> {
         : {}),
       openGraph: {
         ...baseMetadata.openGraph,
-        title: 'STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta',
+        title: "STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
         description:
-          'Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.',
+          "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",
         url: getSiteUrl(),
         ...(socialImage
           ? {
               images: [
                 {
                   url: socialImage,
-                  alt: siteSettings.namaInstitusi || 'STTPU Jakarta',
+                  alt: siteSettings.namaInstitusi || "STTPU Jakarta",
                 },
               ],
             }
           : {}),
       },
       twitter: {
-        card: socialImage ? 'summary_large_image' : 'summary',
-        title: 'STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta',
+        card: socialImage ? "summary_large_image" : "summary",
+        title: "STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
         description:
-          'Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.',
+          "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",
         ...(socialImage ? { images: [socialImage] } : {}),
       },
     };
@@ -89,12 +101,19 @@ export async function generateMetadata(): Promise<Metadata> {
 async function fetchSeoSettings() {
   try {
     const payload = await getPayloadClient();
-    const siteSettings = await payload.findGlobal({ slug: 'site-settings', depth: 1 });
-    const logo = (typeof siteSettings.logo === 'object' ? siteSettings.logo : null) as MediaValue;
-    const favicon = (typeof siteSettings.favicon === 'object' ? siteSettings.favicon : null) as MediaValue;
+    const siteSettings = await payload.findGlobal({
+      slug: "site-settings",
+      depth: 1,
+    });
+    const logo = (
+      typeof siteSettings.logo === "object" ? siteSettings.logo : null
+    ) as MediaValue;
+    const favicon = (
+      typeof siteSettings.favicon === "object" ? siteSettings.favicon : null
+    ) as MediaValue;
 
     return {
-      namaInstitusi: siteSettings.namaInstitusi || 'STTPU Jakarta',
+      namaInstitusi: siteSettings.namaInstitusi || "STTPU Jakarta",
       deskripsiFooter: siteSettings.deskripsiFooter || null,
       logoUrl: logo?.url || favicon?.url || null,
       emailUtama: siteSettings.emailUtama || null,
@@ -102,13 +121,13 @@ async function fetchSeoSettings() {
       alamat: siteSettings.alamat || null,
       socialMedia: Array.isArray(siteSettings.socialMedia)
         ? siteSettings.socialMedia
-            .map((item) => (typeof item?.url === 'string' ? item.url : ''))
+            .map((item) => (typeof item?.url === "string" ? item.url : ""))
             .filter(Boolean)
         : [],
     };
   } catch {
     return {
-      namaInstitusi: 'STTPU Jakarta',
+      namaInstitusi: "STTPU Jakarta",
       deskripsiFooter: null,
       logoUrl: null,
       emailUtama: null,
@@ -142,7 +161,9 @@ export default async function FrontendLayout({
         <div className="flex flex-col min-h-screen">
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationJsonLd),
+            }}
           />
           <script
             type="application/ld+json"
