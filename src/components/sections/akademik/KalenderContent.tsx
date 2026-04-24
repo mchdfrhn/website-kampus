@@ -71,22 +71,23 @@ export default async function KalenderContent() {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-8 sm:space-y-10">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="font-bold text-brand-navy text-lg mb-1">{tahunAkademik}</h2>
-          <p className="text-gray-500 text-sm">{deskripsi}</p>
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">{tahunAkademik}</h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-8">
+          <p className="text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">{deskripsi}</p>
+          {pdfUrl && (
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-brand-navy-dark transition-colors shrink-0"
+            >
+              <Download size={15} aria-hidden="true" />
+              Unduh PDF
+            </a>
+          )}
         </div>
-        {pdfUrl && (
-          <a
-            href={pdfUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-brand-navy-dark transition-colors flex-shrink-0"
-          >
-            <Download size={15} aria-hidden="true" />
-            Unduh PDF
-          </a>
-        )}
       </div>
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 sm:p-5 flex items-start gap-3">

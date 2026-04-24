@@ -1,4 +1,4 @@
-import { GraduationCap, Award, BookOpen } from 'lucide-react';
+import { GraduationCap, Award, BookOpen, User } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type PimpinanItem = {
@@ -10,6 +10,7 @@ type PimpinanItem = {
   pengalaman?: string
   sambutan?: string
   urutan?: number
+  foto?: { url?: string } | null
 }
 
 export default async function PimpinanContent() {
@@ -21,6 +22,7 @@ export default async function PimpinanContent() {
       collection: 'pimpinan',
       sort: 'urutan',
       limit: 20,
+      depth: 1,
     })
     pimpinan = result.docs as unknown as PimpinanItem[]
   } catch {
@@ -28,7 +30,17 @@ export default async function PimpinanContent() {
   }
 
   return (
-    <article className="space-y-10">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Pimpinan Institusi
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Kenali para pemimpin STTPU Jakarta yang mengarahkan visi dan strategi institusi dalam mencetak lulusan berkualitas di bidang teknologi dan ilmu pengetahuan terapan.
+        </p>
+      </div>
+
       {pimpinan.length === 0 ? (
         <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
           Data pimpinan belum tersedia.
@@ -37,7 +49,7 @@ export default async function PimpinanContent() {
       {pimpinan.map((person, idx) => (
         <section
           key={idx}
-          className={`${idx === 0 ? 'border-2 border-brand-navy' : 'border border-gray-200'} rounded-xl overflow-hidden`}
+          className="border border-gray-200 rounded-xl overflow-hidden"
         >
           <div className={`${idx === 0 ? 'bg-brand-navy' : 'bg-brand-mist'} px-6 py-3`}>
             <p
@@ -50,24 +62,28 @@ export default async function PimpinanContent() {
           <div className="p-6">
             <div className="flex flex-col sm:flex-row gap-6">
               <div className="flex-shrink-0">
-                <div
-                  className="w-24 h-28 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center"
-                  aria-hidden="true"
-                >
-                  <span className="text-gray-400 text-xs text-center px-2">Foto Resmi</span>
-                </div>
+                {person.foto?.url ? (
+                  <img src={person.foto.url} alt={person.nama} className="w-24 h-28 object-cover rounded-lg border border-gray-200" />
+                ) : (
+                  <div
+                    className="w-24 h-28 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center"
+                    aria-hidden="true"
+                  >
+                    <User size={32} className="text-gray-400" />
+                  </div>
+                )}
               </div>
 
               <div className="flex-1 space-y-4">
                 <div>
-                  <h2 className="font-bold text-lg text-gray-900 leading-tight">{person.nama}</h2>
+                  <h3 className="font-bold text-lg text-gray-900 leading-tight">{person.nama}</h3>
                   {person.nip && <p className="text-gray-500 text-xs mt-0.5">{person.nip}</p>}
                   {person.keahlian && (
                     <p className="text-brand-navy text-sm font-medium mt-1">{person.keahlian}</p>
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-brand-mist/40 rounded-xl p-4 border border-gray-100">
                   {person.pendidikan && person.pendidikan.length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
@@ -100,7 +116,7 @@ export default async function PimpinanContent() {
                   <div className="bg-brand-mist rounded-lg p-4 border-l-4 border-brand-gold">
                     <div className="flex items-center gap-2 mb-2">
                       <BookOpen size={14} className="text-brand-navy" aria-hidden="true" />
-                      <h3 className="font-semibold text-brand-navy text-sm">Sambutan Ketua</h3>
+                      <h3 className="font-semibold text-brand-navy text-sm">Sambutan {person.jabatan}</h3>
                     </div>
                     <p className="text-gray-700 text-sm leading-relaxed italic">
                       &ldquo;{person.sambutan}&rdquo;

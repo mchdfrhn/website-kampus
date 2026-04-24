@@ -1,4 +1,4 @@
-import { ShieldCheck, FileText, Calendar } from 'lucide-react';
+import { ShieldCheck, FileText, Calendar, Download } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type AkreditasiProdi = {
@@ -7,6 +7,7 @@ type AkreditasiProdi = {
   akreditasi?: string
   nomorSK?: string
   berlakuHingga?: string
+  fileSK?: { url?: string } | null
 }
 
 type LegalitasItem = {
@@ -14,6 +15,7 @@ type LegalitasItem = {
   nomor?: string
   tanggal?: string
   keterangan?: string
+  file?: { url?: string } | null
 }
 
 const badgeColor = (akreditasi?: string) => {
@@ -44,7 +46,17 @@ export default async function AkreditasiContent() {
   }
 
   return (
-    <article className="space-y-10">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Akreditasi &amp; Legalitas
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Status akreditasi program studi dan dokumen legalitas institusi STTPU Jakarta yang diterbitkan oleh lembaga penjaminan mutu pendidikan dan kementerian terkait.
+        </p>
+      </div>
+
       <section className="bg-brand-mist rounded-xl p-5 border border-gray-200">
         <div className="flex items-start gap-3">
           <ShieldCheck size={20} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
@@ -53,13 +65,14 @@ export default async function AkreditasiContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-brand-navy mb-5">Akreditasi Program Studi</h2>
+        <h3 className="text-xl font-bold text-brand-navy mb-1">Akreditasi Program Studi</h3>
+        <p className="text-gray-500 text-sm mb-5">Status akreditasi resmi setiap program studi yang ditetapkan oleh BAN-PT.</p>
         {akreditasiProdi.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
             Data akreditasi program studi belum tersedia.
           </div>
         ) : (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
           <table className="w-full text-sm border-collapse" aria-label="Akreditasi program studi STTPU">
             <thead>
               <tr className="bg-brand-navy text-white">
@@ -67,7 +80,8 @@ export default async function AkreditasiContent() {
                 <th className="text-left px-4 py-3 font-semibold">Jenjang</th>
                 <th className="text-left px-4 py-3 font-semibold">Akreditasi</th>
                 <th className="text-left px-4 py-3 font-semibold">Berlaku Hingga</th>
-                <th className="text-left px-4 py-3 font-semibold rounded-tr-lg">SK</th>
+                <th className="text-left px-4 py-3 font-semibold">SK</th>
+                <th className="text-left px-4 py-3 font-semibold rounded-tr-lg">Unduh</th>
               </tr>
             </thead>
             <tbody>
@@ -90,6 +104,13 @@ export default async function AkreditasiContent() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{item.nomorSK}</td>
+                  <td className="px-4 py-3">
+                    {item.fileSK?.url ? (
+                      <a href={item.fileSK.url} target="_blank" rel="noopener noreferrer" className="text-brand-navy underline text-xs">Unduh SK</a>
+                    ) : (
+                      <span className="text-gray-400 text-xs">-</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -99,7 +120,8 @@ export default async function AkreditasiContent() {
       </section>
 
       <section>
-        <h2 className="text-xl font-bold text-brand-navy mb-5">Legalitas Institusi</h2>
+        <h3 className="text-xl font-bold text-brand-navy mb-1">Legalitas Institusi</h3>
+        <p className="text-gray-500 text-sm mb-5">Dokumen izin operasional dan legalitas STTPU Jakarta yang diterbitkan oleh kementerian terkait.</p>
         {legalitas.length === 0 ? (
           <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
             Dokumen legalitas belum tersedia.
@@ -119,6 +141,11 @@ export default async function AkreditasiContent() {
                 )}
                 {item.keterangan && (
                   <p className="text-gray-600 text-xs mt-1 leading-relaxed">{item.keterangan}</p>
+                )}
+                {item.file?.url && (
+                  <a href={item.file.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-brand-navy text-xs font-semibold mt-1 hover:underline">
+                    <Download size={11} />Unduh Dokumen
+                  </a>
                 )}
               </div>
             </li>
