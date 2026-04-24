@@ -80,6 +80,11 @@
     100% { stroke-dashoffset: -48; }
   }
 
+  @keyframes marquee-soft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
   .animate-pulse-slow {
     animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
@@ -103,6 +108,10 @@
 
   .animate-route-flow {
     animation: route-flow 4s linear infinite;
+  }
+
+  .animate-marquee-soft {
+    animation: marquee-soft 26s linear infinite;
   }
 
   * {

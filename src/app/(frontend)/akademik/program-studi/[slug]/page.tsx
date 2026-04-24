@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import ProgramStudiDetailContent from '@/components/sections/akademik/ProgramStudiDetailContent';
+import DetailBackButton from '@/components/ui/DetailBackButton';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { mapPayloadToProgramStudi, normalizeProgramStudiSlug } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
@@ -153,6 +154,9 @@ export default async function ProgramStudiDetailPage({
           sidebarTitle={sidebarTitle}
           sidebarLinks={links}
         />
+        <div className="mt-10 border-t border-gray-100 pt-8">
+          <DetailBackButton href="/akademik/program-studi" label="Kembali ke Program Studi" />
+        </div>
       </div>
     </>
   );

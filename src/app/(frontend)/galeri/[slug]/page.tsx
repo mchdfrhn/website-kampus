@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import AlbumDetailContent from '@/components/sections/galeri/AlbumDetailContent';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
+import DetailBackButton from '@/components/ui/DetailBackButton';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import { mapPayloadToAlbum, type Album } from '@/lib/data/galeri';
@@ -81,6 +82,9 @@ export default async function AlbumPage({
         </div>
       </div>
       <AlbumDetailContent album={album} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+        <DetailBackButton href="/galeri" label="Kembali ke Galeri" />
+      </div>
     </>
   );
 }

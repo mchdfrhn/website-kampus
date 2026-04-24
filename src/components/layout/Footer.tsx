@@ -84,6 +84,19 @@ type MediaValue = {
 
 export default async function Footer() {
   const currentYear = new Date().getFullYear()
+  const developerPortfolioUrl = process.env.NEXT_PUBLIC_DEVELOPER_PORTFOLIO_URL || '#'
+  const developerPortfolioLabel = developerPortfolioUrl === '#'
+    ? 'frhn.dev'
+    : developerPortfolioUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+  const watermarkStyle = (() => {
+    const style = (process.env.NEXT_PUBLIC_DEVELOPER_WATERMARK_STYLE || 'signature-badge').toLowerCase()
+
+    if (style === 'glass-pill' || style === 'engraved-line' || style === 'marquee-soft' || style === 'signature-badge') {
+      return style
+    }
+
+    return 'signature-badge'
+  })()
   let contact = defaultContact
   let prodis: { label: string; href: string }[] = studyPrograms
   let links = quickLinks
@@ -310,6 +323,76 @@ export default async function Footer() {
           </div>
         </div>
       </div>
+
+      {watermarkStyle === 'marquee-soft' ? (
+        <div className="border-t border-white/10 bg-brand-navy-dark/70 overflow-hidden">
+          <div className="py-3">
+            <div className="flex w-max animate-marquee-soft">
+              {Array.from({ length: 2 }).map((_, idx) => (
+                <span key={idx} className="mx-8 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.2em] text-white/55">
+                  Developed By Mochamad Farhan Ali • Portofolio:
+                  <a
+                    href={developerPortfolioUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="ml-2 text-brand-gold hover:text-brand-gold-light transition-colors"
+                  >
+                    {developerPortfolioLabel}
+                  </a>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="border-t border-white/10 bg-brand-navy-dark/70">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+            {watermarkStyle === 'glass-pill' && (
+              <p className="mx-auto flex w-fit max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full border border-white/20 bg-white/[0.06] px-4 py-2 text-center text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.18em] text-white/75 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-md">
+                <span className="text-brand-gold/85">Developed & Maintained By Mochamad Farhan Ali</span>
+                <span className="text-white/35" aria-hidden="true">•</span>
+                <span>Portofolio:</span>
+                <a
+                  href={developerPortfolioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-gold hover:text-brand-gold-light transition-colors"
+                >
+                  {developerPortfolioLabel}
+                </a>
+              </p>
+            )}
+
+            {watermarkStyle === 'engraved-line' && (
+              <p className="text-center text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.22em] text-white/35">
+                Developed By Mochamad Farhan Ali •
+                <a
+                  href={developerPortfolioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 text-white/60 hover:text-brand-gold transition-colors"
+                >
+                  Lihat Portofolio
+                </a>
+              </p>
+            )}
+
+            {watermarkStyle === 'signature-badge' && (
+              <div className="flex justify-center sm:justify-end">
+                <a
+                  href={developerPortfolioUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-md border border-white/15 bg-white/[0.04] px-3 py-1.5 text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.16em] text-white/70 hover:border-brand-gold/40 hover:text-brand-gold transition-all"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand-gold/80" />
+                  Built By Mochamad Farhan Ali
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </footer>
   );
 }

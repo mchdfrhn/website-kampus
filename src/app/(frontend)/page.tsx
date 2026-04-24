@@ -8,6 +8,7 @@ import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
 import VideoProfileSection from '@/components/sections/VideoProfileSection';
+import BackToTopControl from '@/components/sections/BackToTopControl';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -132,6 +133,7 @@ export default async function HomePage() {
       <TestimonialSection />
 
       <WhatsAppFloat waNumber={waNumber as string | undefined} />
+      <BackToTopControl />
     </>
   );
 }

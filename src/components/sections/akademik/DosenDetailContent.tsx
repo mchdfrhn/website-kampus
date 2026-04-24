@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import type { Dosen } from '@/lib/data/dosen';
+import DetailBackButton from '@/components/ui/DetailBackButton';
 import {
-  ArrowLeft,
   Award,
   BookOpen,
   ExternalLink,
@@ -220,13 +219,7 @@ export default function DosenDetailContent({ dosen }: { dosen: Dosen }) {
             </ul>
           </SectionCard>
 
-          <Link
-            href="/akademik/dosen"
-            className="group inline-flex w-full items-center justify-center gap-3 rounded-xl border border-brand-navy/10 bg-white px-5 py-4 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-navy shadow-sm shadow-brand-navy/[0.04] transition-all duration-300 hover:border-brand-gold hover:bg-brand-gold hover:text-brand-navy"
-          >
-            <ArrowLeft size={16} className="transition-transform duration-300 group-hover:-translate-x-1" />
-            Kembali ke Direktori Dosen
-          </Link>
+          <DetailBackButton href="/akademik/dosen" label="Kembali ke Direktori Dosen" />
         </aside>
       </div>
     </div>
