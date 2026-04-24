@@ -60,14 +60,26 @@ export default async function MahasiswaBaruContent() {
   }
 
   return (
-    <article className="space-y-10">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Panduan Mahasiswa Baru
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Semua langkah penting yang perlu Anda siapkan di awal masa studi agar transisi menjadi
+          mahasiswa STTPU Jakarta berjalan lebih tenang, jelas, dan terarah.
+        </p>
+      </div>
+
       <div className="bg-brand-navy rounded-xl p-6 text-white">
-        <h2 className="font-bold text-base mb-2">{judul}</h2>
+        <h3 className="font-bold text-base mb-2">{judul}</h3>
         <p className="text-white/85 text-sm leading-relaxed">{deskripsi}</p>
       </div>
 
       <section>
-        <h2 className="font-bold text-brand-navy text-lg mb-6">Langkah-Langkah Awal</h2>
+        <h3 className="font-bold text-brand-navy text-lg mb-1">Langkah-Langkah Awal</h3>
+        <p className="text-gray-500 text-sm mb-6">Prioritas utama yang perlu segera Anda lakukan pada minggu-minggu pertama perkuliahan.</p>
         <ol className="space-y-4" aria-label="Langkah awal mahasiswa baru">
           {langkah.map((l, idx) => (
             <li key={idx} className="flex items-start gap-4 bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
@@ -102,7 +114,8 @@ export default async function MahasiswaBaruContent() {
       </section>
 
       <section>
-        <h2 className="font-bold text-brand-navy text-lg mb-4">Tips Sukses di STTPU</h2>
+        <h3 className="font-bold text-brand-navy text-lg mb-1">Tips Sukses di STTPU</h3>
+        <p className="text-gray-500 text-sm mb-4">Kebiasaan kecil yang akan sangat membantu Anda beradaptasi dengan ritme kuliah dan kehidupan kampus.</p>
         <ul className="space-y-2.5">
           {tips.map((tip, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">

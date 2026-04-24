@@ -39,19 +39,32 @@ export default async function UKMContent() {
   const bidangList = Array.from(new Set(ukm.map((u) => u.bidang)))
 
   return (
-    <article className="space-y-8">
-      <p className="text-gray-600 text-sm leading-relaxed">
-        STTPU Jakarta memiliki Unit Kegiatan Mahasiswa (UKM) aktif yang mencakup bidang
-        olahraga, seni & budaya, riset & teknologi, serta sosial & keagamaan.
-      </p>
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Unit Kegiatan Mahasiswa
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          STTPU Jakarta memiliki Unit Kegiatan Mahasiswa yang aktif di bidang olahraga, seni dan
+          budaya, riset dan teknologi, serta sosial dan keagamaan sebagai ruang tumbuh di luar kelas.
+        </p>
+      </div>
+
+      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
+        <p className="text-gray-700 text-sm leading-relaxed">
+          Setiap UKM menjadi wadah eksplorasi minat, penguatan relasi antarmahasiswa, dan latihan
+          kepemimpinan yang melengkapi pengalaman akademik formal.
+        </p>
+      </div>
 
       {bidangList.map((bidang) => (
         <section key={bidang}>
-          <h2 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
+          <h3 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
             <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${bidangColor[bidang] ?? 'bg-gray-100 text-gray-800 border-gray-200'}`}>
               {bidang}
             </span>
-          </h2>
+          </h3>
           <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {ukm.filter((u) => u.bidang === bidang).map((u, idx) => (
               <li key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-navy hover:shadow-sm transition-all">

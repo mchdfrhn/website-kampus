@@ -1,8 +1,17 @@
+import Image from 'next/image';
 import { getPayloadClient } from '@/lib/payload';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 
-type TestimonialItem = { teks: string; nama: string; prodi: string }
+type TestimonialItem = {
+  teks: string;
+  nama: string;
+  prodi: string;
+  foto?: {
+    url?: string;
+    alt?: string;
+  } | null;
+}
 
 export default async function TestimonialSection() {
   let items: TestimonialItem[] = []
@@ -11,6 +20,7 @@ export default async function TestimonialSection() {
     const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'testimonial',
+      depth: 1,
       where: { status: { equals: 'aktif' } },
       sort: 'urutan',
       limit: 6,
@@ -52,14 +62,23 @@ export default async function TestimonialSection() {
               </div>
 
               <div className="flex items-center gap-6 mt-auto relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center shadow-2xl shadow-brand-gold/20 group-hover:bg-white group-hover:scale-110 transition-all duration-700">
-                  <span className="text-brand-navy text-[10px] font-black uppercase tracking-wider">
-                    {item.nama
-                      .split(' ')
-                      .map((n) => n[0])
-                      .slice(0, 2)
-                      .join('')}
-                  </span>
+                <div className="relative w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center overflow-hidden shadow-2xl shadow-brand-gold/20 group-hover:bg-white group-hover:scale-110 transition-all duration-700">
+                  {item.foto?.url ? (
+                    <Image
+                      src={item.foto.url}
+                      alt={item.foto.alt || item.nama}
+                      fill
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-brand-navy text-[10px] font-black uppercase tracking-wider">
+                      {item.nama
+                        .split(' ')
+                        .map((n) => n[0])
+                        .slice(0, 2)
+                        .join('')}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <p className="font-bold text-brand-navy text-lg group-hover:text-brand-gold transition-colors duration-500 tracking-tight">

@@ -26,17 +26,20 @@ export default async function UnitPenelitianContent() {
     console.error('Error fetching units:', error);
   }
 
-  if (units.length === 0) {
-    return (
-      <div className="text-center py-10 text-gray-500 text-sm">
-        Data unit penelitian belum tersedia.
-      </div>
-    );
-  }
-
   return (
-    <article className="space-y-6">
-      <div className="bg-brand-mist rounded-xl p-5">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Unit Penelitian & Laboratorium
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Peta unit riset dan laboratorium aktif di STTPU Jakarta yang menjadi pusat pengembangan
+          keilmuan, eksperimen, dan kolaborasi dengan mahasiswa maupun mitra eksternal.
+        </p>
+      </div>
+
+      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
         <p className="text-sm text-gray-700 leading-relaxed">
           STTPU memiliki <strong>{units.length} unit riset dan laboratorium aktif</strong> yang mendukung tridarma
           perguruan tinggi. Setiap unit dibina oleh dosen doktor berpengalaman dan terbuka untuk
@@ -44,6 +47,11 @@ export default async function UnitPenelitianContent() {
         </p>
       </div>
 
+      {units.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+          Data unit penelitian belum tersedia.
+        </div>
+      ) : (
       <div className="space-y-5">
         {units.map((unit) => (
           <div key={unit.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-brand-navy hover:shadow-sm transition-all">
@@ -52,7 +60,7 @@ export default async function UnitPenelitianContent() {
                 <FlaskConical size={17} className="text-white" aria-hidden="true" />
               </div>
               <div>
-                <h2 className="font-bold text-gray-900 text-sm leading-snug">{unit.nama}</h2>
+                <h3 className="font-bold text-gray-900 text-sm leading-snug">{unit.nama}</h3>
                 {unit.singkatan && (
                   <span className="text-[11px] font-bold text-brand-navy bg-brand-mist px-2 py-0.5 rounded-full inline-block mt-1">{unit.singkatan}</span>
                 )}
@@ -97,6 +105,7 @@ export default async function UnitPenelitianContent() {
           </div>
         ))}
       </div>
+      )}
     </article>
   );
 }

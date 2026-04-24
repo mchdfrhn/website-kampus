@@ -78,19 +78,32 @@ export default async function OrganisasiContent() {
   }
 
   return (
-    <article className="space-y-6">
-      <p className="text-gray-600 text-sm leading-relaxed">
-        STTPU Jakarta memiliki beberapa organisasi kemahasiswaan aktif yang menjalankan fungsi
-        eksekutif, legislatif, dan himpunan profesi untuk mendukung pengembangan mahasiswa secara
-        akademik dan non-akademik.
-      </p>
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Organisasi Mahasiswa
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          STTPU Jakarta memiliki organisasi kemahasiswaan aktif yang menjalankan fungsi eksekutif,
+          legislatif, dan himpunan profesi untuk mendukung pengembangan mahasiswa secara akademik
+          dan non-akademik.
+        </p>
+      </div>
+
+      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
+        <p className="text-gray-700 text-sm leading-relaxed">
+          Melalui organisasi ini, mahasiswa dapat belajar kepemimpinan, tata kelola program,
+          advokasi aspirasi, dan kolaborasi lintas program studi dalam konteks yang nyata.
+        </p>
+      </div>
 
       <ul className="space-y-6">
         {organisasi.map((org, idx) => (
           <li key={idx} className={`bg-white border-2 ${org.warna || 'border-gray-200'} rounded-xl overflow-hidden`}>
             <div className="px-5 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="font-bold text-gray-900 text-base">{org.nama}</h2>
+                <h3 className="font-bold text-gray-900 text-base">{org.nama}</h3>
                 <span className={`inline-block text-xs font-bold px-2.5 py-0.5 rounded-full mt-1 ${org.badge || 'bg-gray-100 text-gray-800'}`}>
                   {org.singkatan}
                 </span>

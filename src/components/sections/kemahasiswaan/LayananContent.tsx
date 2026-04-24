@@ -61,11 +61,25 @@ export default async function LayananContent() {
   }
 
   return (
-    <article className="space-y-5">
-      <p className="text-gray-600 text-sm leading-relaxed">
-        STTPU menyediakan berbagai layanan kemahasiswaan yang dapat diakses secara langsung maupun
-        online untuk mendukung kelancaran studi dan kesejahteraan mahasiswa.
-      </p>
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Layanan Mahasiswa
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          STTPU menyediakan berbagai layanan kemahasiswaan yang dapat diakses secara langsung maupun
+          online untuk mendukung kelancaran studi, kesejahteraan, dan kesiapan karier mahasiswa.
+        </p>
+      </div>
+
+      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
+        <p className="text-gray-700 text-sm leading-relaxed">
+          Setiap layanan dirancang untuk membantu mahasiswa mendapatkan dukungan akademik,
+          psikologis, administratif, hingga pengembangan karier dalam satu ekosistem kampus yang
+          lebih responsif.
+        </p>
+      </div>
 
       <ul className="space-y-4">
         {layanan.map((l, idx) => {
@@ -77,7 +91,7 @@ export default async function LayananContent() {
                   <Icon size={20} className="text-brand-gold" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h2 className="font-bold text-gray-900 text-sm mb-1">{l.nama}</h2>
+                  <h3 className="font-bold text-gray-900 text-sm mb-1">{l.nama}</h3>
                   <p className="text-gray-600 text-xs leading-relaxed mb-3">{l.deskripsi}</p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 mb-3">

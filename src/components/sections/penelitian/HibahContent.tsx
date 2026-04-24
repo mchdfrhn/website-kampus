@@ -39,30 +39,38 @@ export default async function HibahContent() {
     periodik: 'Pendaftaran Periodik',
   };
 
-  if (hibahList.length === 0) {
-    return (
-      <div className="text-center py-10 text-gray-500 text-sm">
-        Data hibah penelitian belum tersedia.
-      </div>
-    );
-  }
-
   return (
-    <article className="space-y-8">
-      <div className="bg-brand-mist rounded-xl p-5">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Hibah & Pendanaan Riset
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Informasi skema hibah penelitian yang dapat diakses dosen dan mahasiswa STTPU untuk
+          memperkuat budaya riset, kolaborasi, dan produksi pengetahuan terapan.
+        </p>
+      </div>
+
+      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
         <p className="text-sm text-gray-700 leading-relaxed">
           Berikut adalah skema hibah penelitian yang dapat diakses oleh dosen dan mahasiswa STTPU.
           Untuk bimbingan proposal, hubungi <strong>LP3M STTPU</strong> (lp3m@sttpu.ac.id).
         </p>
       </div>
 
+      {hibahList.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+          Data hibah penelitian belum tersedia.
+        </div>
+      ) : (
       <div className="space-y-5">
         {hibahList.map((hibah) => (
           <div key={hibah.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-brand-navy hover:shadow-sm transition-all">
             <div className="px-5 py-4 border-b border-gray-100">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                  <h2 className="font-bold text-gray-900 text-sm leading-snug">{hibah.nama}</h2>
+                  <h3 className="font-bold text-gray-900 text-sm leading-snug">{hibah.nama}</h3>
                   <p className="text-xs text-gray-500 mt-0.5">{hibah.penyelenggara}</p>
                 </div>
                 <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0 ${statusColor[hibah.status || 'buka']}`}>
@@ -106,6 +114,7 @@ export default async function HibahContent() {
           </div>
         ))}
       </div>
+      )}
 
       <div className="bg-amber-50 border border-amber-200 rounded-xl p-5 flex items-start gap-3">
         <AlertCircle size={16} className="text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />

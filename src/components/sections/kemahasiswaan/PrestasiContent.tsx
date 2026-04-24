@@ -77,7 +77,18 @@ export default async function PrestasiContent() {
   const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 
   return (
-    <article className="space-y-10">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+      <div className="mb-12 text-center lg:mb-16 lg:text-left">
+        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+          Prestasi Mahasiswa
+        </h2>
+        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+          Rekam jejak pencapaian mahasiswa STTPU Jakarta dalam berbagai kompetisi, program pendanaan,
+          dan ajang akademik yang menunjukkan kualitas karya serta daya saing mereka.
+        </p>
+      </div>
+
       <div className="grid grid-cols-3 gap-4">
         {(['Nasional', 'Internasional', 'Regional'] as Tingkat[]).map((t) => (
           <div key={t} className="text-center bg-brand-mist rounded-xl p-4 border border-gray-200">
@@ -91,9 +102,9 @@ export default async function PrestasiContent() {
 
       {years.map((year) => (
         <section key={year}>
-          <h2 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
+          <h3 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
             <Calendar size={16} className="text-brand-gold" aria-hidden="true" /> Tahun {year}
-          </h2>
+          </h3>
           <ul className="space-y-4">
             {byYear[year].map((p, idx) => (
               <li key={idx} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
