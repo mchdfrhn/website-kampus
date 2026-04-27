@@ -7,7 +7,7 @@ export const TentangKami: GlobalConfig = {
   label: 'Tentang Kami',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/tentang', '/tentang/[slug]'])],
+    afterChange: [revalidateGlobal(['/tentang', '/tentang/[slug]', '/tentang/kerjasama'])],
   },
   fields: [
     {
@@ -170,6 +170,35 @@ export const TentangKami: GlobalConfig = {
                   label: 'Item Fasilitas',
                   fields: [{ name: 'nama', type: 'text', label: 'Nama Item', required: true }],
                 },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Kerjasama & Mitra',
+          fields: [
+            { name: 'kerjasamaIntro', type: 'textarea', label: 'Teks Pengantar Kerjasama' },
+            { name: 'kerjasamaFormUrl', type: 'text', label: 'URL Form Kerjasama' },
+            {
+              name: 'kerjasamaMitra',
+              type: 'array',
+              label: 'Daftar Mitra',
+              fields: [
+                { name: 'nama', type: 'text', label: 'Nama Mitra', required: true },
+                {
+                  name: 'kategori',
+                  type: 'select',
+                  label: 'Kategori',
+                  options: [
+                    { label: 'Industri', value: 'industri' },
+                    { label: 'Akademik', value: 'akademik' },
+                    { label: 'Pemerintah', value: 'pemerintah' },
+                  ],
+                },
+                { name: 'tahun', type: 'text', label: 'Tahun Mulai' },
+                { name: 'deskripsi', type: 'textarea', label: 'Deskripsi' },
+                { name: 'website', type: 'text', label: 'URL Website' },
+                { name: 'logo', type: 'upload', relationTo: 'media', label: 'Logo Mitra' },
               ],
             },
           ],

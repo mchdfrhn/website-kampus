@@ -7,6 +7,7 @@ import ContactFormSection from '@/components/sections/kontak/ContactFormSection'
 import SocialMediaSection from '@/components/sections/kontak/SocialMediaSection';
 import DirectionsSection from '@/components/sections/kontak/DirectionsSection';
 import { getPayloadClient } from '@/lib/payload';
+import { buildBreadcrumbJsonLd, getSiteUrl } from '@/lib/seo';
 
 
 export const metadata: Metadata = {
@@ -47,8 +48,38 @@ export default async function KontakPage() {
     // DB unavailable — use defaults in components
   }
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Kontak', path: '/kontak' },
+  ]);
+
+  const contactPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Kontak STTPU Jakarta',
+    url: `${getSiteUrl()}/kontak`,
+    mainEntity: {
+      '@type': 'CollegeOrUniversity',
+      name: 'STTPU Jakarta',
+      telephone: '+62-21-0000000',
+      email: 'info@sttpu.ac.id',
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'ID',
+      },
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageJsonLd) }}
+      />
       <PageHeader
         title={pageContent.heroTitle}
         description={pageContent.heroDescription}

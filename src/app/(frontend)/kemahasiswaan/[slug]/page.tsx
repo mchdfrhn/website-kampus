@@ -5,6 +5,7 @@ import KemahasiswaanPageHeader from '@/components/sections/kemahasiswaan/Kemahas
 import KemahasiswaanSidebar from '@/components/sections/kemahasiswaan/KemahasiswaanSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveKemahasiswaanSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+import { buildBreadcrumbJsonLd } from '@/lib/seo';
 
 
 export async function generateStaticParams() {
@@ -68,8 +69,18 @@ export default async function KemahasiswaanSlugPage({ params }: { params: Promis
 
   const { title, subtitle, breadcrumb, component: Content } = s;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Kemahasiswaan', path: '/kemahasiswaan' },
+    { name: s.breadcrumb || s.title, path: `/kemahasiswaan/${slug}` },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <KemahasiswaanPageHeader title={title} subtitle={subtitle} breadcrumb={breadcrumb} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col lg:flex-row gap-8">

@@ -29,6 +29,11 @@ export async function generateMetadata(): Promise<Metadata> {
     description:
       "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",
     metadataBase: new URL(getSiteUrl()),
+    alternates: {
+      types: {
+        "application/rss+xml": "/feed.xml",
+      },
+    },
     openGraph: {
       siteName: "STTPU Jakarta",
       locale: "id_ID",

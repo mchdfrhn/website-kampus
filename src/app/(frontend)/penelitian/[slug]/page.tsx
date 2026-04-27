@@ -5,6 +5,7 @@ import PenelitianPageHeader from '@/components/sections/penelitian/PenelitianPag
 import PenelitianSidebar from '@/components/sections/penelitian/PenelitianSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolvePenelitianSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+import { buildBreadcrumbJsonLd } from '@/lib/seo';
 
 
 export async function generateStaticParams() {
@@ -68,8 +69,18 @@ export default async function PenelitianSlugPage({ params }: { params: Promise<{
 
   const { title, subtitle, breadcrumb, component: Content } = s;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Penelitian', path: '/penelitian' },
+    { name: s.breadcrumb || s.title, path: `/penelitian/${slug}` },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <PenelitianPageHeader title={title} subtitle={subtitle} breadcrumb={breadcrumb} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col lg:flex-row gap-8">

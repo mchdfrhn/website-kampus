@@ -5,6 +5,7 @@ import PimpinanContent from '@/components/sections/tentang/PimpinanContent';
 import AkreditasiContent from '@/components/sections/tentang/AkreditasiContent';
 import StrukturOrganisasiContent from '@/components/sections/tentang/StrukturOrganisasiContent';
 import FasilitasContent from '@/components/sections/tentang/FasilitasContent';
+import KerjasamaContent from '@/components/sections/tentang/KerjasamaContent';
 import OrganisasiContent from '@/components/sections/kemahasiswaan/OrganisasiContent';
 import UKMContent from '@/components/sections/kemahasiswaan/UKMContent';
 import PrestasiContent from '@/components/sections/kemahasiswaan/PrestasiContent';
@@ -168,6 +169,14 @@ const tentangDefinitions: SectionDefinition[] = [
     subtitle: 'Infrastruktur dan sarana pendukung pembelajaran yang terus dikembangkan untuk pengalaman akademik terbaik.',
     breadcrumb: 'Fasilitas Kampus',
     component: FasilitasContent,
+  },
+  {
+    key: 'kerjasama',
+    defaultSlug: 'kerjasama',
+    title: 'Kerjasama & Mitra',
+    subtitle: 'Kemitraan strategis STTPU dengan industri, institusi akademik, dan pemerintah yang memperkuat ekosistem pendidikan.',
+    breadcrumb: 'Kerjasama & Mitra',
+    component: KerjasamaContent,
   },
 ];
 

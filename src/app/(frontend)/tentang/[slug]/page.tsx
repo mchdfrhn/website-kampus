@@ -5,6 +5,7 @@ import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import TentangSidebar from '@/components/sections/tentang/TentangSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
+import { buildBreadcrumbJsonLd } from '@/lib/seo';
 
 
 export async function generateStaticParams() {
@@ -78,8 +79,18 @@ export default async function TentangSlugPage({
 
   const { title, subtitle, component: SectionContent } = section;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: 'Beranda', path: '/' },
+    { name: 'Tentang', path: '/tentang' },
+    { name: section.breadcrumb || section.title, path: `/tentang/${slug}` },
+  ]);
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <TentangPageHeader
         title={title}
         subtitle={subtitle}

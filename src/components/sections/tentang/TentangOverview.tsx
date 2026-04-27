@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { History, Target, Users, ShieldCheck, Building2, Landmark, ArrowRight } from 'lucide-react';
+import { History, Target, Users, ShieldCheck, Building2, Landmark, Handshake, ArrowRight } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
@@ -42,6 +42,12 @@ const defaultSections = [
     desc: 'Laboratorium, perpustakaan, fasilitas olahraga, dan infrastruktur digital yang mendukung proses belajar.',
     href: '/tentang/fasilitas',
   },
+  {
+    icon: Handshake,
+    title: 'Kerjasama & Mitra',
+    desc: 'Mitra industri, akademik, dan pemerintah yang berkolaborasi bersama STTPU dalam memajukan pendidikan teknologi.',
+    href: '/tentang/kerjasama',
+  },
 ];
 
 const defaultStats = [
@@ -70,6 +76,7 @@ const iconMap: Record<string, typeof History> = {
   '/tentang/akreditasi': ShieldCheck,
   '/tentang/struktur-organisasi': Landmark,
   '/tentang/fasilitas': Building2,
+  '/tentang/kerjasama': Handshake,
 }
 
 export default async function TentangOverview() {
