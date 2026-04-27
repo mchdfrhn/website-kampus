@@ -1,0 +1,1766 @@
+// DBML untuk dbdiagram.io
+// Generated from Payload collection/global config.
+// Jalankan ulang: npm run dbdiagram
+
+Enum enum_akademik_page_sections_slug {
+  "program-studi"
+  dosen
+  kalender
+  beasiswa
+}
+
+Enum enum_beasiswa_status {
+  buka
+  tutup
+  tahunan
+  periodik
+  conditional
+  "buka-pmb"
+}
+
+Enum enum_beasiswa_tipe {
+  internal
+  eksternal
+}
+
+Enum enum_berita_status {
+  draft
+  terbit
+}
+
+Enum enum_dosen_jabatan_fungsional {
+  "asisten-ahli"
+  lektor
+  "lektor-kepala"
+  profesor
+}
+
+Enum enum_dosen_pendidikan_terakhir {
+  s2
+  s3
+}
+
+Enum enum_galeri_status {
+  draft
+  terbit
+}
+
+Enum enum_hibah_status {
+  buka
+  tutup
+  periodik
+}
+
+Enum enum_kategori_berita_warna {
+  navy
+  blue
+  green
+  orange
+  red
+  purple
+  gold
+}
+
+Enum enum_kategori_galeri_warna {
+  navy
+  blue
+  green
+  orange
+  red
+  purple
+  gold
+}
+
+Enum enum_layanan_icon {
+  HeartHandshake
+  Briefcase
+  BookOpen
+  ShieldAlert
+  Landmark
+  MessageSquare
+}
+
+Enum enum_layanan_kontak_type {
+  tel
+  email
+  wa
+}
+
+Enum enum_panduan_maba_langkah_status {
+  wajib
+  penting
+  dianjurkan
+}
+
+Enum enum_pesan_status {
+  baru
+  dibaca
+  dibalas
+}
+
+Enum enum_prestasi_tingkat {
+  Nasional
+  Internasional
+  Regional
+}
+
+Enum enum_program_studi_accent_color {
+  navy
+  blue
+  green
+  orange
+}
+
+Enum enum_program_studi_akreditasi {
+  unggul
+  "baik-sekali"
+  baik
+  proses
+}
+
+Enum enum_program_studi_jenjang {
+  d3
+  d4
+  s1
+  s2
+}
+
+Enum enum_program_studi_status {
+  aktif
+  "tidak-aktif"
+}
+
+Enum enum_publikasi_jenis {
+  jurnal
+  prosiding
+  buku
+}
+
+Enum enum_site_settings_social_media_platform {
+  instagram
+  youtube
+  facebook
+  linkedin
+  twitter
+  tiktok
+}
+
+Enum enum_tentang_kami_akreditasi_prodi_akreditasi {
+  Unggul
+  "Baik Sekali"
+  Baik
+  "Dalam Proses"
+}
+
+Enum enum_tentang_kami_fasilitas_kategori {
+  laboratorium
+  perpustakaan
+  olahraga
+  penunjang
+  digital
+}
+
+Enum enum_testimonial_status {
+  aktif
+  nonaktif
+}
+
+Enum enum_ukm_bidang {
+  Olahraga
+  "Seni & Budaya"
+  "Riset & Teknologi"
+  "Sosial & Keagamaan"
+}
+
+Enum enum_users_role {
+  admin
+  editor
+}
+
+Table akademik_page {
+  Note: 'Payload global: akademik-page'
+  id serial [pk, not null]
+  sidebar_title varchar
+  program_studi_content_grid_title varchar
+  program_studi_content_grid_description text
+  program_studi_content_consultation_title varchar
+  program_studi_content_consultation_description text
+  program_studi_content_consultation_primary_label varchar
+  program_studi_content_consultation_primary_href varchar
+  program_studi_content_consultation_secondary_label varchar
+  program_studi_content_consultation_secondary_href varchar
+  program_studi_content_detail_career_title varchar
+  program_studi_content_detail_career_description text
+  program_studi_content_detail_career_button_label varchar
+  program_studi_content_detail_career_button_href varchar
+  program_studi_content_detail_info_title varchar
+  program_studi_content_detail_info_description text
+  program_studi_content_detail_info_button_label varchar
+  program_studi_content_detail_info_button_href varchar
+  dosen_content_grid_intro_text text
+  beasiswa_content_info_text text
+  beasiswa_content_internal_title varchar
+  beasiswa_content_internal_description text
+  beasiswa_content_external_title varchar
+  beasiswa_content_external_description text
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table akademik_page_sections {
+  Note: 'Array field: akademik_page.sections'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  slug enum_akademik_page_sections_slug [not null]
+  title varchar [not null]
+  subtitle text
+  breadcrumb varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table akreditasi_lembaga {
+  Note: 'Payload collection: akreditasi-lembaga'
+  id serial [pk, not null]
+  nama varchar [not null]
+  status varchar [not null]
+  logo_id integer
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table beasiswa {
+  Note: 'Payload collection: beasiswa'
+  id serial [pk, not null]
+  nama varchar [not null]
+  penyelenggara varchar [not null]
+  tipe enum_beasiswa_tipe [not null]
+  jenis varchar
+  nilai varchar
+  deadline varchar
+  status enum_beasiswa_status
+  deskripsi text
+  url varchar
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table beasiswa_syarat {
+  Note: 'Array field: beasiswa.syarat'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table berita {
+  Note: 'Payload collection: berita'
+  id serial [pk, not null]
+  judul varchar [not null]
+  slug varchar [not null]
+  kategori_id integer [not null]
+  thumbnail_id integer
+  ringkasan text
+  konten jsonb [not null]
+  penulis varchar
+  tanggal_terbit timestamptz
+  is_pinned boolean
+  status enum_berita_status
+  updated_at timestamptz
+  created_at timestamptz
+
+  indexes {
+    (slug) [unique]
+  }
+}
+
+Table berita_page {
+  Note: 'Payload global: berita-page'
+  id serial [pk, not null]
+  title varchar
+  description text
+  contact_cta_title varchar
+  contact_cta_description text
+  contact_cta_button_label varchar
+  contact_cta_button_href varchar
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table berita_tags {
+  Note: 'Array field: berita.tags'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  tag varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table dosen {
+  Note: 'Payload collection: dosen'
+  id serial [pk, not null]
+  nama varchar [not null]
+  slug varchar
+  nidn varchar
+  foto_id integer
+  jabatan_fungsional enum_dosen_jabatan_fungsional
+  pendidikan_terakhir enum_dosen_pendidikan_terakhir
+  bio text
+  email varchar
+  updated_at timestamptz
+  created_at timestamptz
+
+  indexes {
+    (slug) [unique]
+  }
+}
+
+Table dosen_bidang_keahlian {
+  Note: 'Array field: dosen.bidangKeahlian'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  keahlian varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table dosen_publikasi {
+  Note: 'Array field: dosen.publikasi'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  judul varchar
+  jurnal varchar
+  tahun numeric
+  url varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table dosen_rels {
+  Note: 'Payload relationship table for dosen'
+  id serial [pk, not null]
+  order integer
+  parent_id integer [not null]
+  path varchar [not null]
+  program_studi_id integer
+
+  indexes {
+    (parent_id)
+  }
+}
+
+Table galeri {
+  Note: 'Payload collection: galeri'
+  id serial [pk, not null]
+  judul varchar [not null]
+  slug varchar [not null]
+  kategori_id integer
+  deskripsi text
+  cover_foto_id integer
+  tanggal timestamptz
+  status enum_galeri_status
+  updated_at timestamptz
+  created_at timestamptz
+
+  indexes {
+    (slug) [unique]
+  }
+}
+
+Table galeri_foto {
+  Note: 'Array field: galeri.foto'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  gambar_id integer [not null]
+  keterangan varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table halaman_utama {
+  Note: 'Payload global: halaman-utama'
+  id serial [pk, not null]
+  video_judul varchar
+  video_deskripsi text
+  video_url varchar
+  video_thumbnail_id integer
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table halaman_utama_hero_slides {
+  Note: 'Array field: halaman_utama.heroSlides'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  badge varchar
+  judul varchar [not null]
+  subjudul text
+  cta1_teks varchar
+  cta1_href varchar
+  cta2_teks varchar
+  cta2_href varchar
+  background_id integer
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table halaman_utama_quick_links_tabs {
+  Note: 'Array field: halaman_utama.quickLinksTabs'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  label varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table halaman_utama_quick_links_tabs_links {
+  Note: 'Array field: halaman_utama_quick_links_tabs.links'
+  _order integer [not null]
+  _parent_id varchar [not null]
+  id varchar [pk, not null]
+  icon varchar
+  label varchar [not null]
+  href varchar [not null]
+  external boolean
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table halaman_utama_statistik {
+  Note: 'Array field: halaman_utama.statistik'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  angka varchar [not null]
+  label varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table hibah {
+  Note: 'Payload collection: hibah'
+  id serial [pk, not null]
+  nama varchar [not null]
+  penyelenggara varchar [not null]
+  deskripsi text
+  status enum_hibah_status
+  deadline varchar
+  url varchar
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table hibah_persyaratan {
+  Note: 'Array field: hibah.persyaratan'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kalender_akademik {
+  Note: 'Payload global: kalender-akademik'
+  id serial [pk, not null]
+  tahun_akademik varchar [not null]
+  deskripsi varchar
+  pdf_url varchar
+  semester_ganjil_label varchar
+  semester_genap_label varchar
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table kalender_akademik_kegiatan {
+  Note: 'Array field: kalender_akademik.kegiatan'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  kegiatan varchar [not null]
+  tanggal varchar [not null]
+  keterangan varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kalender_akademik_kegiatan_penting {
+  Note: 'Array field: kalender_akademik.kegiatanPenting'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar [not null]
+  tanggal varchar [not null]
+  keterangan varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kategori_berita {
+  Note: 'Payload collection: kategori-berita'
+  id serial [pk, not null]
+  nama varchar [not null]
+  slug varchar [not null]
+  warna enum_kategori_berita_warna
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+
+  indexes {
+    (slug) [unique]
+  }
+}
+
+Table kategori_galeri {
+  Note: 'Payload collection: kategori-galeri'
+  id serial [pk, not null]
+  nama varchar [not null]
+  slug varchar [not null]
+  warna enum_kategori_galeri_warna
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+
+  indexes {
+    (slug) [unique]
+  }
+}
+
+Table kemahasiswaan_page {
+  Note: 'Payload global: kemahasiswaan-page'
+  id serial [pk, not null]
+  hero_title varchar
+  hero_description text
+  intro_text text
+  sidebar_title varchar
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table kemahasiswaan_page_sections {
+  Note: 'Array field: kemahasiswaan_page.sections'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  title varchar [not null]
+  desc text
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kemahasiswaan_page_stats {
+  Note: 'Array field: kemahasiswaan_page.stats'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  value varchar [not null]
+  label varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kemahasiswaan_page_subpages {
+  Note: 'Array field: kemahasiswaan_page.subpages'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  slug varchar [not null]
+  title varchar [not null]
+  subtitle text
+  breadcrumb varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kontak_page {
+  Note: 'Payload global: kontak-page'
+  id serial [pk, not null]
+  hero_title varchar
+  hero_description text
+  form_title varchar
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table kontak_page_direct_channels {
+  Note: 'Array field: kontak_page.directChannels'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  icon varchar
+  label varchar [not null]
+  desc varchar
+  href varchar [not null]
+  external boolean
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kontak_page_directions {
+  Note: 'Array field: kontak_page.directions'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  icon varchar [not null]
+  heading varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kontak_page_directions_steps {
+  Note: 'Array field: kontak_page_directions.steps'
+  _order integer [not null]
+  _parent_id varchar [not null]
+  id varchar [pk, not null]
+  text varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table kontak_page_faq_links {
+  Note: 'Array field: kontak_page.faqLinks'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  label varchar [not null]
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table layanan {
+  Note: 'Payload collection: layanan'
+  id serial [pk, not null]
+  nama varchar [not null]
+  icon enum_layanan_icon [not null]
+  deskripsi text [not null]
+  jam varchar
+  lokasi varchar
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table layanan_kontak {
+  Note: 'Array field: layanan.kontak'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  type enum_layanan_kontak_type
+  value varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table layanan_layanan_detail {
+  Note: 'Array field: layanan.layananDetail'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table main_menu {
+  Note: 'Payload global: main-menu'
+  id serial [pk, not null]
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table main_menu_nav_items {
+  Note: 'Array field: main_menu.navItems'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  label varchar [not null]
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table main_menu_nav_items_children {
+  Note: 'Array field: main_menu_nav_items.children'
+  _order integer [not null]
+  _parent_id varchar [not null]
+  id varchar [pk, not null]
+  label varchar [not null]
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table media {
+  Note: 'Payload collection: media'
+  id serial [pk, not null]
+  alt varchar [not null]
+  caption varchar
+  updated_at timestamptz
+  created_at timestamptz
+  url varchar
+  thumbnail_url varchar
+  filename varchar
+  mime_type varchar
+  filesize numeric
+  width numeric
+  height numeric
+  focal_x numeric
+  focal_y numeric
+
+  indexes {
+    (filename) [unique]
+  }
+}
+
+Table organisasi {
+  Note: 'Payload collection: organisasi'
+  id serial [pk, not null]
+  nama varchar [not null]
+  singkatan varchar [not null]
+  deskripsi text [not null]
+  ketua varchar
+  kontak varchar
+  instagram varchar
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table organisasi_program {
+  Note: 'Array field: organisasi.program'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table panduan_maba {
+  Note: 'Payload global: panduan-maba'
+  id serial [pk, not null]
+  judul varchar
+  deskripsi text
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table panduan_maba_langkah {
+  Note: 'Array field: panduan_maba.langkah'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  judul varchar [not null]
+  tenggat varchar
+  deskripsi text
+  link varchar
+  status enum_panduan_maba_langkah_status
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table panduan_maba_tips {
+  Note: 'Array field: panduan_maba.tips'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  tip varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table payload_kv {
+  Note: 'Payload collection: payload-kv'
+  id serial [pk, not null]
+  key varchar [not null]
+  data jsonb [not null]
+  updated_at timestamptz [not null]
+  created_at timestamptz [not null]
+
+  indexes {
+    (key) [unique]
+    (key) [unique]
+  }
+}
+
+Table payload_locked_documents {
+  Note: 'Payload collection: payload-locked-documents'
+  id serial [pk, not null]
+  document_id integer
+  global_slug varchar
+  user_id integer [not null]
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table payload_locked_documents_rels {
+  Note: 'Payload internal lock relationships'
+  id serial [pk, not null]
+  order integer
+  parent_id integer [not null]
+  path varchar [not null]
+  users_id integer
+  media_id integer
+  kategori_berita_id integer
+  berita_id integer
+  dosen_id integer
+  program_studi_id integer
+  kategori_galeri_id integer
+  galeri_id integer
+  pesan_id integer
+  testimonial_id integer
+  pimpinan_id integer
+  ukm_id integer
+  beasiswa_id integer
+  akreditasi_lembaga_id integer
+  unit_kontak_id integer
+  unit_penelitian_id integer
+  hibah_id integer
+  organisasi_id integer
+  prestasi_id integer
+  publikasi_id integer
+  layanan_id integer
+  payload_kv_id integer
+  payload_locked_documents_id integer
+  payload_preferences_id integer
+  payload_migrations_id integer
+
+  indexes {
+    (parent_id)
+  }
+}
+
+Table payload_migrations {
+  Note: 'Payload collection: payload-migrations'
+  id serial [pk, not null]
+  name varchar
+  batch numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table payload_preferences {
+  Note: 'Payload collection: payload-preferences'
+  id serial [pk, not null]
+  user_id integer [not null]
+  key varchar
+  value jsonb
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table payload_preferences_rels {
+  Note: 'Payload internal admin preference relationships'
+  id serial [pk, not null]
+  order integer
+  parent_id integer [not null]
+  path varchar [not null]
+  users_id integer
+
+  indexes {
+    (parent_id)
+  }
+}
+
+Table penelitian_page {
+  Note: 'Payload global: penelitian-page'
+  id serial [pk, not null]
+  hero_title varchar
+  hero_description text
+  sidebar_title varchar
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table penelitian_page_sections {
+  Note: 'Array field: penelitian_page.sections'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  title varchar [not null]
+  desc text
+  cta varchar
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table penelitian_page_stats {
+  Note: 'Array field: penelitian_page.stats'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  value varchar [not null]
+  label varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table penelitian_page_subpages {
+  Note: 'Array field: penelitian_page.subpages'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  slug varchar [not null]
+  title varchar [not null]
+  subtitle text
+  breadcrumb varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table pesan {
+  Note: 'Payload collection: pesan'
+  id serial [pk, not null]
+  nama varchar [not null]
+  email varchar [not null]
+  telepon varchar
+  unit varchar [not null]
+  subjek varchar [not null]
+  pesan text [not null]
+  status enum_pesan_status
+  ip_address varchar
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table pimpinan {
+  Note: 'Payload collection: pimpinan'
+  id serial [pk, not null]
+  jabatan varchar [not null]
+  nama varchar [not null]
+  nip varchar
+  keahlian varchar
+  foto_id integer
+  pengalaman text
+  sambutan text
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table pimpinan_pendidikan {
+  Note: 'Array field: pimpinan.pendidikan'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  jenjang varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table portal_links {
+  Note: 'Payload global: portal-links'
+  id serial [pk, not null]
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table portal_links_portals {
+  Note: 'Array field: portal_links.portals'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar [not null]
+  url varchar [not null]
+  deskripsi varchar
+  icon varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table portal_links_tautan_cepat {
+  Note: 'Array field: portal_links.tautanCepat'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  label varchar [not null]
+  url varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table prestasi {
+  Note: 'Payload collection: prestasi'
+  id serial [pk, not null]
+  judul varchar [not null]
+  prodi varchar [not null]
+  penyelenggara varchar [not null]
+  peringkat varchar [not null]
+  tingkat enum_prestasi_tingkat [not null]
+  tahun numeric [not null]
+  deskripsi text [not null]
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table prestasi_mahasiswa {
+  Note: 'Array field: prestasi.mahasiswa'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table program_studi {
+  Note: 'Payload collection: program-studi'
+  id serial [pk, not null]
+  nama varchar [not null]
+  slug varchar [not null]
+  urutan numeric
+  jenjang enum_program_studi_jenjang [not null]
+  accent_color enum_program_studi_accent_color
+  akreditasi enum_program_studi_akreditasi
+  deskripsi_singkat text
+  deskripsi jsonb
+  gelar_lulusan varchar
+  visi text
+  nomor_skakreditasi varchar
+  berlaku_hingga varchar
+  jumlah_sks numeric
+  masa_studi varchar
+  kurikulum_pdf_url varchar
+  thumbnail_id integer
+  status enum_program_studi_status
+  updated_at timestamptz
+  created_at timestamptz
+
+  indexes {
+    (slug) [unique]
+  }
+}
+
+Table program_studi_kompetensi_lulusan {
+  Note: 'Array field: program_studi.kompetensiLulusan'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  kompetensi varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table program_studi_kurikulum {
+  Note: 'Array field: program_studi.kurikulum'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  semester numeric [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table program_studi_kurikulum_mata_kuliah {
+  Note: 'Array field: program_studi_kurikulum.mataKuliah'
+  _order integer [not null]
+  _parent_id varchar [not null]
+  id varchar [pk, not null]
+  nama varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table program_studi_misi {
+  Note: 'Array field: program_studi.misi'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table program_studi_prospek_karir {
+  Note: 'Array field: program_studi.prospekKarir'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  karir varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table publikasi {
+  Note: 'Payload collection: publikasi'
+  id serial [pk, not null]
+  judul varchar [not null]
+  tahun numeric [not null]
+  jenis enum_publikasi_jenis [not null]
+  penerbit varchar [not null]
+  url varchar
+  prodi varchar
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table publikasi_penulis {
+  Note: 'Array field: publikasi.penulis'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table site_settings {
+  Note: 'Payload global: site-settings'
+  id serial [pk, not null]
+  nama_institusi varchar
+  logo_id integer
+  favicon_id integer
+  deskripsi_footer text
+  alamat text
+  telepon_utama varchar
+  telepon_utama_href varchar
+  email_utama varchar
+  whatsapp varchar
+  whatsapp_tampil varchar
+  google_maps_embed text
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table site_settings_email_lainnya {
+  Note: 'Array field: site_settings.emailLainnya'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  email varchar [not null]
+  label varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table site_settings_footer_quick_links {
+  Note: 'Array field: site_settings.footerQuickLinks'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  label varchar [not null]
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table site_settings_jam_operasional {
+  Note: 'Array field: site_settings.jamOperasional'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  hari varchar [not null]
+  jam varchar
+  tutup boolean
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table site_settings_social_media {
+  Note: 'Array field: site_settings.socialMedia'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  platform enum_site_settings_social_media_platform [not null]
+  handle varchar
+  url varchar [not null]
+  followers varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table site_settings_telepon_lainnya {
+  Note: 'Array field: site_settings.teleponLainnya'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nomor varchar [not null]
+  href varchar
+  label varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami {
+  Note: 'Payload global: tentang-kami'
+  id serial [pk, not null]
+  overview_title varchar
+  overview_description text
+  overview_commitment_title varchar
+  overview_commitment_text text
+  sidebar_title varchar
+  sejarah_deskripsi jsonb
+  visi text
+  struktur_gambar_id integer
+  struktur_catatan text
+  struktur_senat_jabatan varchar
+  struktur_senat_nama varchar
+  fasilitas_intro text
+  fasilitas_cta_title varchar
+  fasilitas_cta_description text
+  fasilitas_cta_button_label varchar
+  fasilitas_cta_button_href varchar
+  akreditasi_intro text
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table tentang_kami_akreditasi_prodi {
+  Note: 'Array field: tentang_kami.akreditasiProdi'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  prodi varchar [not null]
+  jenjang varchar
+  akreditasi enum_tentang_kami_akreditasi_prodi_akreditasi
+  nomor_sk varchar
+  berlaku_hingga varchar
+  file_sk_id integer
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_fasilitas {
+  Note: 'Array field: tentang_kami.fasilitas'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar [not null]
+  deskripsi text
+  kapasitas varchar
+  foto_id integer
+  kategori enum_tentang_kami_fasilitas_kategori
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_fasilitas_items {
+  Note: 'Array field: tentang_kami_fasilitas.items'
+  _order integer [not null]
+  _parent_id varchar [not null]
+  id varchar [pk, not null]
+  nama varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_legalitas {
+  Note: 'Array field: tentang_kami.legalitas'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  dokumen varchar [not null]
+  nomor varchar
+  tanggal varchar
+  keterangan text
+  file_id integer
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_milestones {
+  Note: 'Array field: tentang_kami.milestones'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  tahun varchar [not null]
+  judul varchar [not null]
+  deskripsi text
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_misi {
+  Note: 'Array field: tentang_kami.misi'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_nilai_nilai {
+  Note: 'Array field: tentang_kami.nilaiNilai'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  nama varchar [not null]
+  deskripsi text
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_overview_sections {
+  Note: 'Array field: tentang_kami.overviewSections'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  title varchar [not null]
+  desc text
+  href varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_overview_stats {
+  Note: 'Array field: tentang_kami.overviewStats'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  value varchar [not null]
+  label varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_struktur_bagian {
+  Note: 'Array field: tentang_kami.strukturBagian'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  bagian varchar [not null]
+  kepala varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_struktur_upt {
+  Note: 'Array field: tentang_kami.strukturUPT'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  unit varchar [not null]
+  kepala varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_subpages {
+  Note: 'Array field: tentang_kami.subpages'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  slug varchar [not null]
+  title varchar [not null]
+  subtitle text
+  breadcrumb varchar
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table tentang_kami_tujuan {
+  Note: 'Array field: tentang_kami.tujuan'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table testimonial {
+  Note: 'Payload collection: testimonial'
+  id serial [pk, not null]
+  teks text [not null]
+  nama varchar [not null]
+  prodi varchar [not null]
+  foto_id integer
+  urutan numeric
+  status enum_testimonial_status
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table ukm {
+  Note: 'Payload collection: ukm'
+  id serial [pk, not null]
+  nama varchar [not null]
+  bidang enum_ukm_bidang [not null]
+  deskripsi text [not null]
+  prestasi varchar
+  anggota numeric
+  kontak varchar
+  logo_id integer
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table unit_kontak {
+  Note: 'Payload collection: unit-kontak'
+  id serial [pk, not null]
+  unit varchar [not null]
+  kepala varchar
+  telepon varchar
+  tel_href varchar
+  email varchar
+  tugas text
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table unit_penelitian {
+  Note: 'Payload collection: unit-penelitian'
+  id serial [pk, not null]
+  nama varchar [not null]
+  singkatan varchar
+  kepala varchar
+  deskripsi text [not null]
+  lokasi varchar
+  kontak varchar
+  anggota numeric
+  urutan numeric
+  updated_at timestamptz
+  created_at timestamptz
+}
+
+Table unit_penelitian_fokus {
+  Note: 'Array field: unit_penelitian.fokus'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  poin varchar [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Table users {
+  Note: 'Payload collection: users'
+  id serial [pk, not null]
+  name varchar [not null]
+  role enum_users_role [not null]
+  updated_at timestamptz
+  created_at timestamptz
+  email varchar [not null]
+  reset_password_token varchar
+  reset_password_expiration timestamptz
+  salt varchar
+  hash varchar
+  login_attempts numeric
+  lock_until timestamptz
+
+  indexes {
+    (email) [unique]
+  }
+}
+
+Table users_sessions {
+  Note: 'Array field: users.sessions'
+  _order integer [not null]
+  _parent_id integer [not null]
+  id varchar [pk, not null]
+  created_at timestamptz
+  expires_at timestamptz [not null]
+
+  indexes {
+    (_order)
+    (_parent_id)
+  }
+}
+
+Ref: akademik_page_sections._parent_id > akademik_page.id
+Ref: akreditasi_lembaga.logo_id > media.id
+Ref: beasiswa_syarat._parent_id > beasiswa.id
+Ref: berita_tags._parent_id > berita.id
+Ref: berita.kategori_id > kategori_berita.id
+Ref: berita.thumbnail_id > media.id
+Ref: dosen_bidang_keahlian._parent_id > dosen.id
+Ref: dosen_publikasi._parent_id > dosen.id
+Ref: dosen_rels.parent_id > dosen.id
+Ref: dosen_rels.program_studi_id > program_studi.id
+Ref: dosen.foto_id > media.id
+Ref: galeri_foto._parent_id > galeri.id
+Ref: galeri_foto.gambar_id > media.id
+Ref: galeri.cover_foto_id > media.id
+Ref: galeri.kategori_id > kategori_galeri.id
+Ref: halaman_utama_hero_slides._parent_id > halaman_utama.id
+Ref: halaman_utama_hero_slides.background_id > media.id
+Ref: halaman_utama_quick_links_tabs_links._parent_id > halaman_utama_quick_links_tabs.id
+Ref: halaman_utama_quick_links_tabs._parent_id > halaman_utama.id
+Ref: halaman_utama_statistik._parent_id > halaman_utama.id
+Ref: halaman_utama.video_thumbnail_id > media.id
+Ref: hibah_persyaratan._parent_id > hibah.id
+Ref: kalender_akademik_kegiatan_penting._parent_id > kalender_akademik.id
+Ref: kalender_akademik_kegiatan._parent_id > kalender_akademik.id
+Ref: kemahasiswaan_page_sections._parent_id > kemahasiswaan_page.id
+Ref: kemahasiswaan_page_stats._parent_id > kemahasiswaan_page.id
+Ref: kemahasiswaan_page_subpages._parent_id > kemahasiswaan_page.id
+Ref: kontak_page_direct_channels._parent_id > kontak_page.id
+Ref: kontak_page_directions_steps._parent_id > kontak_page_directions.id
+Ref: kontak_page_directions._parent_id > kontak_page.id
+Ref: kontak_page_faq_links._parent_id > kontak_page.id
+Ref: layanan_kontak._parent_id > layanan.id
+Ref: layanan_layanan_detail._parent_id > layanan.id
+Ref: main_menu_nav_items_children._parent_id > main_menu_nav_items.id
+Ref: main_menu_nav_items._parent_id > main_menu.id
+Ref: organisasi_program._parent_id > organisasi.id
+Ref: panduan_maba_langkah._parent_id > panduan_maba.id
+Ref: panduan_maba_tips._parent_id > panduan_maba.id
+Ref: payload_locked_documents_rels.akreditasi_lembaga_id > akreditasi_lembaga.id
+Ref: payload_locked_documents_rels.beasiswa_id > beasiswa.id
+Ref: payload_locked_documents_rels.berita_id > berita.id
+Ref: payload_locked_documents_rels.dosen_id > dosen.id
+Ref: payload_locked_documents_rels.galeri_id > galeri.id
+Ref: payload_locked_documents_rels.hibah_id > hibah.id
+Ref: payload_locked_documents_rels.kategori_berita_id > kategori_berita.id
+Ref: payload_locked_documents_rels.kategori_galeri_id > kategori_galeri.id
+Ref: payload_locked_documents_rels.layanan_id > layanan.id
+Ref: payload_locked_documents_rels.media_id > media.id
+Ref: payload_locked_documents_rels.organisasi_id > organisasi.id
+Ref: payload_locked_documents_rels.parent_id > payload_locked_documents.id
+Ref: payload_locked_documents_rels.payload_kv_id > payload_kv.id
+Ref: payload_locked_documents_rels.payload_locked_documents_id > payload_locked_documents.id
+Ref: payload_locked_documents_rels.payload_migrations_id > payload_migrations.id
+Ref: payload_locked_documents_rels.payload_preferences_id > payload_preferences.id
+Ref: payload_locked_documents_rels.pesan_id > pesan.id
+Ref: payload_locked_documents_rels.pimpinan_id > pimpinan.id
+Ref: payload_locked_documents_rels.prestasi_id > prestasi.id
+Ref: payload_locked_documents_rels.program_studi_id > program_studi.id
+Ref: payload_locked_documents_rels.publikasi_id > publikasi.id
+Ref: payload_locked_documents_rels.testimonial_id > testimonial.id
+Ref: payload_locked_documents_rels.ukm_id > ukm.id
+Ref: payload_locked_documents_rels.unit_kontak_id > unit_kontak.id
+Ref: payload_locked_documents_rels.unit_penelitian_id > unit_penelitian.id
+Ref: payload_locked_documents_rels.users_id > users.id
+Ref: payload_preferences_rels.parent_id > payload_preferences.id
+Ref: payload_preferences_rels.users_id > users.id
+Ref: penelitian_page_sections._parent_id > penelitian_page.id
+Ref: penelitian_page_stats._parent_id > penelitian_page.id
+Ref: penelitian_page_subpages._parent_id > penelitian_page.id
+Ref: pimpinan_pendidikan._parent_id > pimpinan.id
+Ref: pimpinan.foto_id > media.id
+Ref: portal_links_portals._parent_id > portal_links.id
+Ref: portal_links_tautan_cepat._parent_id > portal_links.id
+Ref: prestasi_mahasiswa._parent_id > prestasi.id
+Ref: program_studi_kompetensi_lulusan._parent_id > program_studi.id
+Ref: program_studi_kurikulum_mata_kuliah._parent_id > program_studi_kurikulum.id
+Ref: program_studi_kurikulum._parent_id > program_studi.id
+Ref: program_studi_misi._parent_id > program_studi.id
+Ref: program_studi_prospek_karir._parent_id > program_studi.id
+Ref: program_studi.thumbnail_id > media.id
+Ref: publikasi_penulis._parent_id > publikasi.id
+Ref: site_settings_email_lainnya._parent_id > site_settings.id
+Ref: site_settings_footer_quick_links._parent_id > site_settings.id
+Ref: site_settings_jam_operasional._parent_id > site_settings.id
+Ref: site_settings_social_media._parent_id > site_settings.id
+Ref: site_settings_telepon_lainnya._parent_id > site_settings.id
+Ref: site_settings.favicon_id > media.id
+Ref: site_settings.logo_id > media.id
+Ref: tentang_kami_akreditasi_prodi._parent_id > tentang_kami.id
+Ref: tentang_kami_akreditasi_prodi.file_sk_id > media.id
+Ref: tentang_kami_fasilitas_items._parent_id > tentang_kami_fasilitas.id
+Ref: tentang_kami_fasilitas._parent_id > tentang_kami.id
+Ref: tentang_kami_fasilitas.foto_id > media.id
+Ref: tentang_kami_legalitas._parent_id > tentang_kami.id
+Ref: tentang_kami_legalitas.file_id > media.id
+Ref: tentang_kami_milestones._parent_id > tentang_kami.id
+Ref: tentang_kami_misi._parent_id > tentang_kami.id
+Ref: tentang_kami_nilai_nilai._parent_id > tentang_kami.id
+Ref: tentang_kami_overview_sections._parent_id > tentang_kami.id
+Ref: tentang_kami_overview_stats._parent_id > tentang_kami.id
+Ref: tentang_kami_struktur_bagian._parent_id > tentang_kami.id
+Ref: tentang_kami_struktur_upt._parent_id > tentang_kami.id
+Ref: tentang_kami_subpages._parent_id > tentang_kami.id
+Ref: tentang_kami_tujuan._parent_id > tentang_kami.id
+Ref: tentang_kami.struktur_gambar_id > media.id
+Ref: testimonial.foto_id > media.id
+Ref: ukm.logo_id > media.id
+Ref: unit_penelitian_fokus._parent_id > unit_penelitian.id
+Ref: users_sessions._parent_id > users.id

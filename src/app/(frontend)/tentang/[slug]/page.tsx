@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import TentangSidebar from '@/components/sections/tentang/TentangSidebar';
-import DetailBackButton from '@/components/ui/DetailBackButton';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 
@@ -85,7 +84,7 @@ export default async function TentangSlugPage({
         title={title}
         subtitle={subtitle}
         breadcrumbs={[
-          { label: 'Tentang', href: '/tentang' },
+          { label: 'Tentang' },
           { label: section.breadcrumb || title },
         ]}
       />
@@ -94,9 +93,6 @@ export default async function TentangSlugPage({
           <TentangSidebar pathname={`/tentang/${slug}`} title={sidebarTitle} links={sidebarLinks} />
           <div className="flex-1 min-w-0">
             <SectionContent />
-            <div className="mt-10 border-t border-gray-100 pt-8">
-              <DetailBackButton href="/tentang" label="Kembali ke Tentang" />
-            </div>
           </div>
         </div>
       </div>

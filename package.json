@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "payload": "payload",
+    "dbdiagram": "BUILD_SKIP_DB=1 node --import tsx scripts/generate-dbdiagram.mjs",
     "seed": "tsx scripts/seed.ts",
     "backup:db": "bash scripts/backup-postgres.sh"
   },

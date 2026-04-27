@@ -30,7 +30,7 @@ const fallbackNavItems: NavItem[] = [
   { label: 'Beranda', href: '/' },
   {
     label: 'Tentang',
-    href: '/tentang',
+    href: '#',
     children: [
       { label: 'Sejarah & Profil', href: '/tentang/sejarah' },
       { label: 'Visi, Misi & Nilai', href: '/tentang/visi-misi' },
@@ -52,7 +52,7 @@ const fallbackNavItems: NavItem[] = [
   },
   {
     label: 'Kemahasiswaan',
-    href: '/kemahasiswaan',
+    href: '#',
     children: [
       { label: 'Organisasi Mahasiswa', href: '/kemahasiswaan/organisasi' },
       { label: 'Unit Kegiatan Mahasiswa', href: '/kemahasiswaan/ukm' },
@@ -63,7 +63,7 @@ const fallbackNavItems: NavItem[] = [
   },
   {
     label: 'Penelitian',
-    href: '/penelitian',
+    href: '#',
     children: [
       { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
       { label: 'Database Publikasi', href: '/penelitian/publikasi' },

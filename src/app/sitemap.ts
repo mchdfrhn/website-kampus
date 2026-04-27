@@ -13,13 +13,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes = [
     '',
-    '/tentang',
     '/akademik/program-studi',
     '/akademik/dosen',
     '/akademik/kalender',
     '/akademik/beasiswa',
-    '/kemahasiswaan',
-    '/penelitian',
     '/berita',
     '/galeri',
     '/kontak',
