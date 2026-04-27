@@ -70,8 +70,13 @@ async function fetchHomePageData() {
 
     const mappedBerita = beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
     
-    // Inject top 2 latest news into hero slides
-    const newsSlides = mappedBerita.slice(0, 2).map((artikel) => ({
+    // Pastikan berita diurutkan dari yang terbaru (descending)
+    const sortedBerita = [...mappedBerita].sort((a, b) => 
+      new Date(b.tanggalTerbit).getTime() - new Date(a.tanggalTerbit).getTime()
+    )
+
+    // Ambil 2 berita terbaru untuk carousel
+    const newsSlides = sortedBerita.slice(0, 2).map((artikel) => ({
       badge: `BERITA TERKINI — ${getArtikelKategoriLabel(artikel.kategori).toUpperCase() || 'WARTA'}`,
       judul: artikel.judul,
       subjudul: artikel.ringkasan,
@@ -84,13 +89,13 @@ async function fetchHomePageData() {
     
     const baseHalamanUtama = halamanUtama ? { ...defaultHomePageData, ...halamanUtama } : defaultHomePageData
     
-    // Prepend news slides to existing slides from Payload
+    // Susun urutan: 2 Berita Terbaru -> Input dari Payload (Manual)
     baseHalamanUtama.heroSlides = [...newsSlides, ...(baseHalamanUtama.heroSlides || [])]
 
     return {
       halamanUtama: baseHalamanUtama,
       siteSettings,
-      berita: mappedBerita
+      berita: sortedBerita
     }
   } catch (error) {
     console.error('Error in fetchHomePageData:', error)

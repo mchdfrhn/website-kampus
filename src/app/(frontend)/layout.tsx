@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RouteProgressProvider from "@/components/providers/RouteProgressProvider";
@@ -157,6 +158,9 @@ export default async function FrontendLayout({
 
   return (
     <RouteProgressProvider>
+      {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID} />
+      )}
       <ScrollProvider>
         <div className="flex flex-col min-h-screen">
           <script
