@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
+import { sendContactAutoReply, sendContactNotification, type ContactEmailData } from "@/lib/email";
 import { getPayloadClient } from "@/lib/payload";
 
 // ---------------------------------------------------------------------------
@@ -153,6 +154,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 500 },
     );
   }
+
+  // --- Send emails (fire-and-forget style; failures are non-blocking) ---
+  const emailData: ContactEmailData = { nama, email, telepon, unit, subjek, pesan };
+  await Promise.allSettled([
+    sendContactNotification(emailData),
+    sendContactAutoReply(emailData),
+  ]);
 
   // --- Update rate-limit timestamp after successful save ---
   rateLimitMap.set(clientIp, now);
