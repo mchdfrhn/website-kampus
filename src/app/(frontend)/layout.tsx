@@ -13,7 +13,7 @@ import {
   toAbsoluteUrl,
 } from "@/lib/seo";
 
-export const revalidate = 300;
+export const revalidate = 60;
 
 type MediaValue = {
   url?: string | null;

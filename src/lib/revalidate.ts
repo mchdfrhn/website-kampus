@@ -73,12 +73,15 @@ const collectionRoutePrefixes: Record<string, string> = {
   'program-studi': '/akademik/program-studi',
 }
 
-const performRevalidate = (
+export const revalidatePublicPaths = (
   paths: string[],
-  doc: Record<string, unknown>,
-  sourceCollection?: string,
-  previousDoc?: Record<string, unknown>,
+  options: {
+    doc?: Record<string, unknown>
+    sourceCollection?: string
+    previousDoc?: Record<string, unknown>
+  } = {},
 ) => {
+  const { doc = {}, sourceCollection, previousDoc } = options
   const pathsToRevalidate = new Set<string>()
   const routePrefix = sourceCollection ? collectionRoutePrefixes[sourceCollection] : undefined
 
@@ -124,21 +127,28 @@ const performRevalidate = (
 
 export const revalidateCollection = (paths: string[]): CollectionAfterChangeHook => {
   return ({ doc, collection, previousDoc }) => {
-    performRevalidate(paths, doc, collection.slug, previousDoc)
+    revalidatePublicPaths(paths, {
+      doc,
+      sourceCollection: collection.slug,
+      previousDoc,
+    })
     return doc
   }
 }
 
 export const revalidateDelete = (paths: string[]): CollectionAfterDeleteHook => {
   return ({ doc, collection }) => {
-    performRevalidate(paths, doc, collection.slug)
+    revalidatePublicPaths(paths, {
+      doc,
+      sourceCollection: collection.slug,
+    })
     return doc
   }
 }
 
 export const revalidateGlobal = (paths: string[]): GlobalAfterChangeHook => {
   return ({ doc }) => {
-    performRevalidate(paths, doc)
+    revalidatePublicPaths(paths, { doc })
     return doc
   }
 }
