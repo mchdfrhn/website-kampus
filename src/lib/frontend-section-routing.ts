@@ -41,6 +41,17 @@ type SectionDefinition = {
   aliases?: string[]
 };
 
+function mapDefinitionToSection(definition: SectionDefinition): ResolvedSectionConfig {
+  return {
+    key: definition.key,
+    slug: definition.defaultSlug,
+    title: definition.title,
+    subtitle: definition.subtitle,
+    breadcrumb: definition.breadcrumb,
+    component: definition.component,
+  };
+}
+
 function normalizeText(value?: string | null) {
   return (value || '')
     .trim()
@@ -54,14 +65,7 @@ function resolvePayloadSections(
   payloadSections?: PayloadSectionMeta[],
 ): ResolvedSectionConfig[] {
   if (!Array.isArray(payloadSections) || payloadSections.length === 0) {
-    return definitions.map((definition) => ({
-      key: definition.key,
-      slug: definition.defaultSlug,
-      title: definition.title,
-      subtitle: definition.subtitle,
-      breadcrumb: definition.breadcrumb,
-      component: definition.component,
-    }));
+    return definitions.map(mapDefinitionToSection);
   }
 
   const usedKeys = new Set<string>();
@@ -109,16 +113,13 @@ function resolvePayloadSections(
     })
     .filter((section): section is ResolvedSectionConfig => section !== null);
 
-  return resolved.length > 0
-    ? resolved
-    : definitions.map((definition) => ({
-        key: definition.key,
-        slug: definition.defaultSlug,
-        title: definition.title,
-        subtitle: definition.subtitle,
-        breadcrumb: definition.breadcrumb,
-        component: definition.component,
-      }));
+  if (resolved.length === 0) return definitions.map(mapDefinitionToSection);
+
+  const missingDefaults = definitions
+    .filter((definition) => !usedKeys.has(definition.key))
+    .map(mapDefinitionToSection);
+
+  return [...resolved, ...missingDefaults];
 }
 
 const tentangDefinitions: SectionDefinition[] = [
