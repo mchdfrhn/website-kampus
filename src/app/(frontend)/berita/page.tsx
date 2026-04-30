@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
+import { getBeritaPageContent } from '@/lib/data/berita-page';
 import { getPayloadClient } from '@/lib/payload';
 import {
   mapPayloadToArtikel,
@@ -10,12 +11,17 @@ import {
 } from '@/lib/data/berita';
 import { buildPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = buildPageMetadata({
-  title: 'Berita & Pengumuman | STTPU Jakarta',
-  description:
-    'Berita terkini, pengumuman resmi, dan informasi kegiatan Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta.',
-  path: '/berita',
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const pageContent = await getBeritaPageContent();
+
+  return buildPageMetadata({
+    title: `${pageContent.title || 'Berita & Pengumuman'} | STTPU Jakarta`,
+    description:
+      pageContent.description ||
+      'Berita terkini, pengumuman resmi, dan informasi kegiatan Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta.',
+    path: '/berita',
+  });
+}
 
 
 async function fetchArtikelList(): Promise<Artikel[]> {
@@ -54,22 +60,30 @@ export default async function BeritaPage({
 }: {
   searchParams?: Promise<{ kategori?: string }>;
 }) {
-  const artikelList = await fetchArtikelList();
-  const categories = await fetchKategoriBerita();
+  const [artikelList, categories, pageContent] = await Promise.all([
+    fetchArtikelList(),
+    fetchKategoriBerita(),
+    getBeritaPageContent(),
+  ]);
   const resolvedSearchParams = (await searchParams) ?? {};
   const initialFilter = resolvedSearchParams.kategori ?? 'semua';
+  const title = pageContent.title || 'Berita & Pengumuman';
+  const description =
+    pageContent.description ||
+    'Informasi resmi, berita terkini, dan pengumuman penting dari Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta.';
 
   return (
     <>
       <SectionPageHeader
-        title="Berita & Pengumuman"
-        subtitle="Informasi resmi, berita terkini, dan pengumuman penting dari Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta."
-        breadcrumbs={[{ label: 'Berita & Pengumuman', href: '/berita' }]}
+        title={title}
+        subtitle={description}
+        breadcrumbs={[{ label: title, href: '/berita' }]}
       />
       <BeritaIndexContent
         artikelList={artikelList}
         categories={categories}
         initialFilter={initialFilter}
+        pageContent={pageContent}
       />
     </>
   );

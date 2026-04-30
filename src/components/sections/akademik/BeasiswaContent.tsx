@@ -1,5 +1,6 @@
 import { ExternalLink, Calendar, CheckCircle, AlertCircle } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import type { BeasiswaPageContent } from '@/lib/data/akademik-page';
 
 type BeasiswaItem = {
   nama: string
@@ -32,7 +33,7 @@ const statusColor: Record<string, string> = {
   'buka-pmb': 'bg-blue-100 text-blue-800',
 }
 
-export default async function BeasiswaContent() {
+export default async function BeasiswaContent({ content }: { content?: BeasiswaPageContent | null }) {
   let beasiswaList: BeasiswaItem[] = []
 
   try {
@@ -120,7 +121,8 @@ export default async function BeasiswaContent() {
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Informasi Beasiswa</h2>
         <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
         <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Berbagai program beasiswa tersedia untuk mendukung mahasiswa STTPU Jakarta dalam menyelesaikan pendidikan dengan optimal.
+          {content?.infoText ||
+            'Berbagai program beasiswa tersedia untuk mendukung mahasiswa STTPU Jakarta dalam menyelesaikan pendidikan dengan optimal.'}
         </p>
       </div>
 
@@ -139,16 +141,20 @@ export default async function BeasiswaContent() {
 
       {internal.length > 0 && (
         <div>
-          <h2 className="font-bold text-brand-navy text-lg mb-1">Beasiswa Internal STTPU</h2>
-          <p className="text-gray-500 text-sm mb-6">Program beasiswa yang diselenggarakan langsung oleh STTPU Jakarta.</p>
+          <h2 className="font-bold text-brand-navy text-lg mb-1">{content?.internalTitle || 'Beasiswa Internal STTPU'}</h2>
+          <p className="text-gray-500 text-sm mb-6">
+            {content?.internalDescription || 'Program beasiswa yang diselenggarakan langsung oleh STTPU Jakarta.'}
+          </p>
           <ul className="space-y-5">{renderList(internal)}</ul>
         </div>
       )}
 
       {eksternal.length > 0 && (
         <div>
-          <h2 className="font-bold text-brand-navy text-lg mb-1">Beasiswa Eksternal</h2>
-          <p className="text-gray-500 text-sm mb-6">Beasiswa dari pemerintah dan lembaga eksternal yang dapat diakses mahasiswa STTPU.</p>
+          <h2 className="font-bold text-brand-navy text-lg mb-1">{content?.externalTitle || 'Beasiswa Eksternal'}</h2>
+          <p className="text-gray-500 text-sm mb-6">
+            {content?.externalDescription || 'Beasiswa dari pemerintah dan lembaga eksternal yang dapat diakses mahasiswa STTPU.'}
+          </p>
           <ul className="space-y-5">{renderList(eksternal)}</ul>
         </div>
       )}

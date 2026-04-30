@@ -12,6 +12,7 @@ import {
   type ArtikelKategori,
   type Artikel,
 } from '@/lib/data/berita';
+import type { BeritaPageContent } from '@/lib/data/berita-page';
 
 const semua = 'semua';
 type Filter = typeof semua | string;
@@ -20,10 +21,12 @@ export default function BeritaIndexContent({
   artikelList,
   categories,
   initialFilter = semua,
+  pageContent,
 }: {
   artikelList: Artikel[];
   categories: ArtikelKategori[];
   initialFilter?: string;
+  pageContent?: BeritaPageContent;
 }) {
   const availableCategories =
     categories.length > 0
@@ -58,6 +61,11 @@ export default function BeritaIndexContent({
         a.ringkasan.toLowerCase().includes(query.toLowerCase()),
     )
     .sort((a, b) => new Date(b.tanggalTerbit).getTime() - new Date(a.tanggalTerbit).getTime());
+
+  const showContactCta =
+    pageContent?.contactCtaTitle ||
+    pageContent?.contactCtaDescription ||
+    pageContent?.contactCtaButtonLabel;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
@@ -174,6 +182,27 @@ export default function BeritaIndexContent({
           </ul>
         )}
       </section>
+
+      {showContactCta ? (
+        <section className="rounded-2xl bg-brand-navy px-6 py-8 text-white shadow-premium sm:px-8 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:px-10">
+          <div className="max-w-2xl">
+            <h2 className="text-2xl font-bold tracking-tight">
+              {pageContent?.contactCtaTitle || 'Butuh informasi lebih lanjut?'}
+            </h2>
+            {pageContent?.contactCtaDescription ? (
+              <p className="mt-4 text-sm font-medium leading-7 text-white/70">
+                {pageContent.contactCtaDescription}
+              </p>
+            ) : null}
+          </div>
+          <Link
+            href={pageContent?.contactCtaButtonHref || '/kontak'}
+            className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-brand-gold px-6 py-4 text-[10px] font-bold uppercase tracking-wider text-brand-navy transition-all hover:bg-white lg:mt-0 lg:w-auto"
+          >
+            {pageContent?.contactCtaButtonLabel || 'Hubungi Kami'}
+          </Link>
+        </section>
+      ) : null}
     </div>
   );
 }

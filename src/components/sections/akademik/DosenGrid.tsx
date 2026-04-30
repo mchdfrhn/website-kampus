@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Dosen } from '@/lib/data/dosen';
+import type { DosenPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { BookOpen, ChevronRight, Mail, Users } from 'lucide-react';
 
@@ -177,9 +178,11 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
 export default function DosenGrid({
   dosenList,
   programOrder = [],
+  content,
 }: {
   dosenList?: Dosen[];
   programOrder?: string[];
+  content?: DosenPageContent | null;
 }) {
   const list = dosenList ?? [];
   const groupedPrograms = groupByProgramStudi(list, programOrder);
@@ -196,8 +199,8 @@ export default function DosenGrid({
         </h2>
         <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
         <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Jelajahi tenaga pengajar STTPU Jakarta berdasarkan afiliasi program studi untuk melihat
-          fokus keahlian, publikasi, dan profil akademik mereka dalam satu alur yang lebih rapi.
+          {content?.gridIntroText ||
+            'Jelajahi tenaga pengajar STTPU Jakarta berdasarkan afiliasi program studi untuk melihat fokus keahlian, publikasi, dan profil akademik mereka dalam satu alur yang lebih rapi.'}
         </p>
       </div>
 

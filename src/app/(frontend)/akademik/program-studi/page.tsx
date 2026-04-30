@@ -3,6 +3,7 @@ import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeade
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import ProgramStudiGrid from '@/components/sections/akademik/ProgramStudiGrid';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
@@ -35,7 +36,10 @@ async function fetchProdiList(): Promise<ProgramStudi[]> {
 
 export default async function ProgramStudiPage() {
   const prodiList = await fetchProdiList();
-  const { sidebarTitle, links } = await getAkademikNavigation();
+  const [{ sidebarTitle, links }, pageContent] = await Promise.all([
+    getAkademikNavigation(),
+    getAkademikPageContent(),
+  ]);
 
   return (
     <>
@@ -47,7 +51,7 @@ export default async function ProgramStudiPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <AkademikSidebar pathname="/akademik/program-studi" title={sidebarTitle} links={links} />
           <div className="flex-1 min-w-0">
-            <ProgramStudiGrid prodiList={prodiList} />
+            <ProgramStudiGrid prodiList={prodiList} content={pageContent.programStudiContent} />
           </div>
         </div>
       </div>

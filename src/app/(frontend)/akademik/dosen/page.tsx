@@ -3,6 +3,7 @@ import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeade
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import DosenGrid from '@/components/sections/akademik/DosenGrid';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
 import { getPayloadClient } from '@/lib/payload';
@@ -54,11 +55,13 @@ async function fetchProgramOrder(): Promise<string[]> {
 }
 
 export default async function DosenPage() {
-  const [fetchedDosenList, programOrder] = await Promise.all([
+  const [fetchedDosenList, programOrder, navigation, pageContent] = await Promise.all([
     fetchDosenList(),
     fetchProgramOrder(),
+    getAkademikNavigation(),
+    getAkademikPageContent(),
   ]);
-  const { sidebarTitle, links } = await getAkademikNavigation();
+  const { sidebarTitle, links } = navigation;
 
   return (
     <>
@@ -74,7 +77,11 @@ export default async function DosenPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <AkademikSidebar pathname="/akademik/dosen" title={sidebarTitle} links={links} />
           <div className="flex-1 min-w-0">
-            <DosenGrid dosenList={fetchedDosenList} programOrder={programOrder} />
+            <DosenGrid
+              dosenList={fetchedDosenList}
+              programOrder={programOrder}
+              content={pageContent.dosenContent}
+            />
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
+import type { ProgramStudiPageContent } from '@/lib/data/akademik-page';
 import {
   ShieldCheck,
   BookOpen,
@@ -48,12 +49,26 @@ export default function ProgramStudiDetailContent({
   others = [],
   sidebarTitle,
   sidebarLinks,
+  content,
 }: {
   prodi: ProgramStudi;
   others?: ProgramStudi[];
   sidebarTitle: string;
   sidebarLinks: { label: string; href: string }[];
+  content?: ProgramStudiPageContent | null;
 }) {
+  const careerTitle = content?.detailCareerTitle || 'Mulai Perjalanan Akademik Anda';
+  const careerDescription =
+    content?.detailCareerDescription ||
+    'Dapatkan informasi pendaftaran, jadwal seleksi, dan proses registrasi program studi ini.';
+  const careerButtonLabel = content?.detailCareerButtonLabel || 'Website PMB';
+  const careerButtonHref = content?.detailCareerButtonHref || 'https://pmb.sttpu.ac.id';
+  const infoTitle = content?.detailInfoTitle || 'Butuh Konsultasi?';
+  const infoDescription =
+    content?.detailInfoDescription ||
+    'Tim akademik siap membantu Anda memahami kurikulum, prospek lulusan, dan alur pendaftaran.';
+  const infoButtonLabel = content?.detailInfoButtonLabel || 'Hubungi Kami';
+  const infoButtonHref = content?.detailInfoButtonHref || '/kontak';
   const overviewStats = [
     { icon: Clock, label: 'Masa Studi', value: prodi.masaStudi || '-' },
     { icon: Hash, label: 'Total Beban', value: prodi.jumlahSKS ? `${prodi.jumlahSKS} SKS` : '-' },
@@ -246,17 +261,17 @@ export default function ProgramStudiDetailContent({
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-2xl" />
             <div className="relative z-10">
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-navy/55">Penerimaan Mahasiswa Baru</p>
-              <h3 className="mt-3 text-2xl font-bold tracking-tight">Mulai Perjalanan Akademik Anda</h3>
+              <h3 className="mt-3 text-2xl font-bold tracking-tight">{careerTitle}</h3>
               <p className="mt-4 text-sm font-medium leading-7 text-brand-navy/70">
-                Dapatkan informasi pendaftaran, jadwal seleksi, dan proses registrasi program studi ini.
+                {careerDescription}
               </p>
               <a
-                href="https://pmb.sttpu.ac.id"
+                href={careerButtonHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-brand-navy/90"
               >
-                Website PMB
+                {careerButtonLabel}
               </a>
             </div>
           </div>
@@ -269,17 +284,17 @@ export default function ProgramStudiDetailContent({
             </div>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">Layanan Informasi</p>
-              <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">Butuh Konsultasi?</p>
+              <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">{infoTitle}</p>
             </div>
           </div>
           <p className="mt-5 text-sm font-medium leading-7 text-gray-600">
-            Tim akademik siap membantu Anda memahami kurikulum, prospek lulusan, dan alur pendaftaran.
+            {infoDescription}
           </p>
           <Link
-            href="/kontak"
+            href={infoButtonHref}
             className="mt-6 inline-flex w-full items-center justify-center rounded-xl border border-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
           >
-            Hubungi Kami
+            {infoButtonLabel}
           </Link>
         </div>
 

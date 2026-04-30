@@ -4,6 +4,7 @@ import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeade
 import ProgramStudiDetailContent from '@/components/sections/akademik/ProgramStudiDetailContent';
 import DetailBackButton from '@/components/ui/DetailBackButton';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToProgramStudi, normalizeProgramStudiSlug } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import { getPayloadClient } from '@/lib/payload';
@@ -115,8 +116,12 @@ export default async function ProgramStudiDetailPage({
   const { slug } = await params;
   const prodi = await fetchProdi(normalizeProgramStudiSlug(slug));
   if (!prodi) notFound();
-  const others = await fetchRelatedProdi(slug);
-  const { sidebarTitle, links } = await getAkademikNavigation();
+  const [others, navigation, pageContent] = await Promise.all([
+    fetchRelatedProdi(slug),
+    getAkademikNavigation(),
+    getAkademikPageContent(),
+  ]);
+  const { sidebarTitle, links } = navigation;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },
     { name: 'Akademik', path: '/akademik/program-studi' },
@@ -152,6 +157,7 @@ export default async function ProgramStudiDetailPage({
           others={others}
           sidebarTitle={sidebarTitle}
           sidebarLinks={links}
+          content={pageContent.programStudiContent}
         />
         <div className="mt-10 border-t border-gray-100 pt-8">
           <DetailBackButton href="/akademik/program-studi" label="Kembali ke Program Studi" />

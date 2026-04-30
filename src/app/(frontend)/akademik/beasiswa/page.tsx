@@ -3,6 +3,7 @@ import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeade
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import BeasiswaContent from '@/components/sections/akademik/BeasiswaContent';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import { getAkademikPageContent } from '@/lib/data/akademik-page';
 
 
 export const metadata: Metadata = {
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default async function BeasiswaPage() {
-  const { sidebarTitle, links } = await getAkademikNavigation();
+  const [{ sidebarTitle, links }, pageContent] = await Promise.all([
+    getAkademikNavigation(),
+    getAkademikPageContent(),
+  ]);
 
   return (
     <>
@@ -28,7 +32,7 @@ export default async function BeasiswaPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <AkademikSidebar pathname="/akademik/beasiswa" title={sidebarTitle} links={links} />
           <div className="flex-1 min-w-0">
-            <BeasiswaContent />
+            <BeasiswaContent content={pageContent.beasiswaContent} />
           </div>
         </div>
       </div>
