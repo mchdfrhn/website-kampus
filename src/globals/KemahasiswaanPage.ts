@@ -1,12 +1,12 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateGlobal } from '../lib/revalidate'
+import { kemahasiswaanPagePaths, revalidateGlobal } from '../lib/revalidate'
 
 export const KemahasiswaanPage: GlobalConfig = {
   slug: 'kemahasiswaan-page',
   label: 'Halaman Kemahasiswaan',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/kemahasiswaan', '/kemahasiswaan/[slug]'])],
+    afterChange: [revalidateGlobal([...kemahasiswaanPagePaths])],
   },
   fields: [
     {

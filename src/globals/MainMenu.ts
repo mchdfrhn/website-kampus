@@ -1,12 +1,12 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateGlobal } from '../lib/revalidate'
+import { publicPagePaths, revalidateGlobal } from '../lib/revalidate'
 
 export const MainMenu: GlobalConfig = {
   slug: 'main-menu',
   label: 'Menu Navigasi',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/'])],
+    afterChange: [revalidateGlobal([...publicPagePaths])],
   },
   fields: [
     {

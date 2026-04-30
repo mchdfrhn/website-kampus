@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import PageHeader from '@/components/sections/kontak/PageHeader';
 import MapSection from '@/components/sections/kontak/MapSection';

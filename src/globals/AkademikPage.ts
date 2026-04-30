@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateGlobal } from '../lib/revalidate'
+import { akademikPagePaths, revalidateGlobal } from '../lib/revalidate'
 import { akademikSectionSlugOptions } from '../lib/akademik-navigation'
 
 export const AkademikPage: GlobalConfig = {
@@ -7,7 +7,7 @@ export const AkademikPage: GlobalConfig = {
   label: 'Halaman Akademik',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/akademik/program-studi', '/akademik/dosen', '/akademik/kalender', '/akademik/beasiswa'])],
+    afterChange: [revalidateGlobal([...akademikPagePaths])],
   },
   fields: [
     {

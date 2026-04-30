@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';

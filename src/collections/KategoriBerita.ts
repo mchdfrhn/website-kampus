@@ -53,7 +53,7 @@ export const KategoriBerita: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/', '/berita', '/berita/[slug]'])],
-    afterDelete: [revalidateDelete(['/', '/berita', '/berita/[slug]'])],
+    afterChange: [revalidateCollection(['/', '/berita', '/berita/[slug]', '/feed.xml'])],
+    afterDelete: [revalidateDelete(['/', '/berita', '/berita/[slug]', '/feed.xml'])],
   },
 };

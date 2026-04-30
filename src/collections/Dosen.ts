@@ -94,7 +94,7 @@ export const Dosen: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateCollection(["/akademik/dosen", "/akademik/dosen/[slug]"])],
-    afterDelete: [revalidateDelete(["/akademik/dosen", "/akademik/dosen/[slug]"])],
+    afterChange: [revalidateCollection(["/akademik/dosen", "/akademik/dosen/[slug]", "/sitemap.xml"])],
+    afterDelete: [revalidateDelete(["/akademik/dosen", "/akademik/dosen/[slug]", "/sitemap.xml"])],
   },
 };

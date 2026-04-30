@@ -173,7 +173,7 @@ export const ProgramStudi: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateCollection(["/", "/akademik/program-studi", "/akademik/program-studi/[slug]"])],
-    afterDelete: [revalidateDelete(["/", "/akademik/program-studi", "/akademik/program-studi/[slug]"])],
+    afterChange: [revalidateCollection(["/", "/akademik/program-studi", "/akademik/program-studi/[slug]", "/akademik/dosen", "/sitemap.xml"])],
+    afterDelete: [revalidateDelete(["/", "/akademik/program-studi", "/akademik/program-studi/[slug]", "/akademik/dosen", "/sitemap.xml"])],
   },
 };

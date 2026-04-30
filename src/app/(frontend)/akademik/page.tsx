@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import AkademikOverview from '@/components/sections/akademik/AkademikOverview';
 import { buildPageMetadata } from '@/lib/seo';

@@ -1,12 +1,12 @@
 import type { GlobalConfig } from 'payload'
-import { revalidateGlobal } from '../lib/revalidate'
+import { penelitianPagePaths, revalidateGlobal } from '../lib/revalidate'
 
 export const PenelitianPage: GlobalConfig = {
   slug: 'penelitian-page',
   label: 'Halaman Penelitian',
   access: { read: () => true },
   hooks: {
-    afterChange: [revalidateGlobal(['/penelitian', '/penelitian/[slug]'])],
+    afterChange: [revalidateGlobal([...penelitianPagePaths])],
   },
   fields: [
     {

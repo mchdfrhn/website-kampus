@@ -53,7 +53,7 @@ export const KategoriGaleri: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/galeri'])],
-    afterDelete: [revalidateDelete(['/galeri'])],
+    afterChange: [revalidateCollection(['/galeri', '/galeri/[slug]'])],
+    afterDelete: [revalidateDelete(['/galeri', '/galeri/[slug]'])],
   },
 };

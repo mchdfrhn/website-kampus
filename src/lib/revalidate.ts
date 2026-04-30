@@ -10,6 +10,8 @@ export const publicPagePaths = [
   '/tentang/akreditasi',
   '/tentang/struktur-organisasi',
   '/tentang/fasilitas',
+  '/tentang/kerjasama',
+  '/akademik',
   '/akademik/program-studi',
   '/akademik/dosen',
   '/akademik/kalender',
@@ -25,40 +27,111 @@ export const publicPagePaths = [
   '/penelitian/publikasi',
   '/penelitian/hibah',
   '/berita',
+  '/berita/[slug]',
   '/galeri',
+  '/galeri/[slug]',
   '/kontak',
   '/portal',
+  '/akademik/program-studi/[slug]',
+  '/akademik/dosen/[slug]',
+  '/feed.xml',
+  '/sitemap.xml',
 ] as const
 
-const performRevalidate = (paths: string[], doc: Record<string, unknown>) => {
+export const tentangPagePaths = [
+  '/tentang',
+  '/tentang/[slug]',
+  '/sitemap.xml',
+] as const
+
+export const kemahasiswaanPagePaths = [
+  '/kemahasiswaan',
+  '/kemahasiswaan/[slug]',
+  '/sitemap.xml',
+] as const
+
+export const penelitianPagePaths = [
+  '/penelitian',
+  '/penelitian/[slug]',
+  '/sitemap.xml',
+] as const
+
+export const akademikPagePaths = [
+  '/akademik',
+  '/akademik/program-studi',
+  '/akademik/program-studi/[slug]',
+  '/akademik/dosen',
+  '/akademik/dosen/[slug]',
+  '/akademik/kalender',
+  '/akademik/beasiswa',
+] as const
+
+const collectionRoutePrefixes: Record<string, string> = {
+  berita: '/berita',
+  dosen: '/akademik/dosen',
+  galeri: '/galeri',
+  'program-studi': '/akademik/program-studi',
+}
+
+const performRevalidate = (
+  paths: string[],
+  doc: Record<string, unknown>,
+  sourceCollection?: string,
+  previousDoc?: Record<string, unknown>,
+) => {
+  const pathsToRevalidate = new Set<string>()
+  const routePrefix = sourceCollection ? collectionRoutePrefixes[sourceCollection] : undefined
+
   paths.forEach((path) => {
-    // Jika path mengandung [slug], ganti dengan doc.slug
-    const finalPath = path.includes('[slug]') && typeof doc.slug === 'string'
-      ? path.replace('[slug]', doc.slug) 
-      : path
-    
-    // Next.js 15: Revalidate the specific path and also the layout to be safe
-    try {
-      revalidatePath(finalPath, 'page')
-      // Also revalidate the main layout to ensure globals like Navbar/Footer are updated
-      revalidatePath('/', 'layout')
-      console.log(`[Revalidate] Success for path: ${finalPath} and layout /`)
-    } catch (error) {
-      console.warn(`[Revalidate] Failed for path: ${finalPath}`, error)
+    pathsToRevalidate.add(path)
+
+    if (
+      routePrefix &&
+      path.startsWith(routePrefix) &&
+      path.includes('[slug]') &&
+      typeof doc.slug === 'string'
+    ) {
+      pathsToRevalidate.add(path.replace('[slug]', doc.slug))
+    }
+
+    if (
+      routePrefix &&
+      path.startsWith(routePrefix) &&
+      path.includes('[slug]') &&
+      typeof previousDoc?.slug === 'string' &&
+      previousDoc.slug !== doc.slug
+    ) {
+      pathsToRevalidate.add(path.replace('[slug]', previousDoc.slug))
     }
   })
+
+  pathsToRevalidate.forEach((path) => {
+    try {
+      revalidatePath(path, 'page')
+      console.log(`[Revalidate] Success for path: ${path}`)
+    } catch (error) {
+      console.warn(`[Revalidate] Failed for path: ${path}`, error)
+    }
+  })
+
+  try {
+    revalidatePath('/', 'layout')
+    console.log('[Revalidate] Success for frontend layout')
+  } catch (error) {
+    console.warn('[Revalidate] Failed for frontend layout', error)
+  }
 }
 
 export const revalidateCollection = (paths: string[]): CollectionAfterChangeHook => {
-  return ({ doc }) => {
-    performRevalidate(paths, doc)
+  return ({ doc, collection, previousDoc }) => {
+    performRevalidate(paths, doc, collection.slug, previousDoc)
     return doc
   }
 }
 
 export const revalidateDelete = (paths: string[]): CollectionAfterDeleteHook => {
-  return ({ doc }) => {
-    performRevalidate(paths, doc)
+  return ({ doc, collection }) => {
+    performRevalidate(paths, doc, collection.slug)
     return doc
   }
 }
@@ -69,4 +142,3 @@ export const revalidateGlobal = (paths: string[]): GlobalAfterChangeHook => {
     return doc
   }
 }
-

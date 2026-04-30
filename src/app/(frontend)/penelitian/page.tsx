@@ -1,4 +1,3 @@
-export const dynamic = 'force-dynamic';
 import type { Metadata } from 'next';
 import PenelitianOverview from '@/components/sections/penelitian/PenelitianOverview';
 import { buildPageMetadata } from '@/lib/seo';
