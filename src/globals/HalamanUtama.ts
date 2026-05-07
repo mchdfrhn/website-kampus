@@ -144,6 +144,15 @@ export const HalamanUtama: GlobalConfig = {
               maxRows: 6,
               fields: [
                 { name: 'icon', type: 'text', label: 'Icon Lucide', defaultValue: 'Building2' },
+                {
+                  name: 'background',
+                  type: 'upload',
+                  relationTo: 'media',
+                  label: 'Gambar Background Card',
+                  admin: {
+                    description: 'Opsional. Jika diisi, card memakai gambar ini sebagai background dengan overlay.',
+                  },
+                },
                 { name: 'title', type: 'text', label: 'Judul Alasan', required: true },
                 { name: 'description', type: 'textarea', label: 'Deskripsi Alasan', required: true },
               ],

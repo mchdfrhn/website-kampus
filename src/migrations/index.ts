@@ -8,6 +8,7 @@ import * as migration_20260507_000000_add_portal_technical_support from './20260
 import * as migration_20260507_010000_add_mitra_home_section from './20260507_010000_add_mitra_home_section';
 import * as migration_20260507_020000_add_portal_categories from './20260507_020000_add_portal_categories';
 import * as migration_20260507_030000_add_why_sttpu_home_section from './20260507_030000_add_why_sttpu_home_section';
+import * as migration_20260507_031000_add_why_item_backgrounds from './20260507_031000_add_why_item_backgrounds';
 
 export const migrations = [
   {
@@ -59,5 +60,10 @@ export const migrations = [
     up: migration_20260507_030000_add_why_sttpu_home_section.up,
     down: migration_20260507_030000_add_why_sttpu_home_section.down,
     name: '20260507_030000_add_why_sttpu_home_section',
+  },
+  {
+    up: migration_20260507_031000_add_why_item_backgrounds.up,
+    down: migration_20260507_031000_add_why_item_backgrounds.down,
+    name: '20260507_031000_add_why_item_backgrounds',
   },
 ];

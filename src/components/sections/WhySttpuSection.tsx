@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Reveal } from '@/components/ui/motion/Reveal';
 
 type WhyItem = {
   icon?: string | null;
+  background?: { url?: string | null; alt?: string | null } | string | null;
   title: string;
   description: string;
 };
@@ -58,10 +60,46 @@ const defaultItems: WhyItem[] = [
   },
 ];
 
+function getBackgroundUrl(background?: WhyItem['background']) {
+  if (!background) return null;
+  if (typeof background === 'string') return background;
+  if (typeof background === 'object' && typeof background.url === 'string') return background.url;
+  return null;
+}
+
 function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
   const Icon =
     (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[item.icon || 'CheckCircle2'] ||
     CheckCircle2;
+  const backgroundUrl = getBackgroundUrl(item.background);
+  const backgroundAlt =
+    typeof item.background === 'object' && item.background?.alt ? item.background.alt : '';
+
+  if (backgroundUrl) {
+    return (
+      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-brand-navy/10 bg-brand-navy p-5 text-white shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-gold/70 hover:shadow-[0_22px_46px_rgba(15,23,42,0.18)]">
+        <Image
+          src={backgroundUrl}
+          alt={backgroundAlt}
+          fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+          className="object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/72 to-brand-navy/28" />
+        <div className="absolute inset-0 bg-brand-navy/18" />
+        <div className="relative z-10 mt-auto">
+          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white/12 text-brand-gold ring-1 ring-white/20 backdrop-blur-sm">
+            <Icon size={20} aria-hidden="true" />
+          </div>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
+            Alasan {index + 1}
+          </p>
+          <h3 className="text-lg font-bold leading-snug text-white">{item.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-white/78">{item.description}</p>
+        </div>
+      </li>
+    );
+  }
 
   return (
     <li className="group flex h-full gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-gold/60 hover:shadow-[0_18px_38px_rgba(15,23,42,0.09)]">
