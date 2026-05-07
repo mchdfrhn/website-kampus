@@ -68,6 +68,7 @@ export default async function TestimonialSection() {
                       src={item.foto.url}
                       alt={item.foto.alt || item.nama}
                       fill
+                      sizes="64px"
                       className="object-cover"
                     />
                   ) : (

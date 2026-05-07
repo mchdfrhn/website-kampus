@@ -43,29 +43,34 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
         const active = isItemActive(pathname, item);
         const isHovered = hoveredItem === item.label;
 
+        const menuId = `nav-menu-${item.label.replace(/\s+/g, '-').toLowerCase()}`;
+
         return (
-          <li 
-            key={item.label} 
+          <li
+            key={item.label}
             className="relative"
             onMouseEnter={() => setHoveredItem(item.label)}
           >
             {hasChildren ? (
-              <div className="group">
+              <>
                 <button
-                  className={`relative flex min-w-[5.5rem] items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 ${
-                    active ? 'text-white' : 'text-white/70 group-hover:text-white'
+                  className={`relative flex min-w-[5.5rem] items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
                   }`}
-                  aria-haspopup="true"
-                  aria-expanded="false"
+                  aria-haspopup="menu"
+                  aria-expanded={isHovered}
+                  aria-controls={menuId}
+                  onClick={() => setHoveredItem(isHovered ? null : item.label)}
+                  onKeyDown={(e) => { if (e.key === 'Escape') setHoveredItem(null); }}
                 >
                   <span className="relative z-10">{item.label}</span>
                   <ChevronDown
                     size={14}
-                    className={`relative z-10 transition-transform duration-500 group-hover:rotate-180 ${
-                      active ? 'text-brand-gold' : 'text-white/30 group-hover:text-brand-gold'
+                    className={`relative z-10 transition-transform duration-500 ${isHovered ? 'rotate-180' : ''} ${
+                      active ? 'text-brand-gold' : isHovered ? 'text-brand-gold' : 'text-white/30'
                     }`}
                   />
-                  
+
                   {/* Shared Indicator for Hover/Active Pill */}
                   {(isHovered || active) && (
                     <motion.div
@@ -76,7 +81,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
-                  
+
                   {/* Bottom Active Line */}
                   {active && (
                     <motion.div
@@ -86,9 +91,10 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                     />
                   )}
                 </button>
-                
-                <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
+
+                <div className={`absolute top-full left-0 pt-2 transition-all duration-300 z-50 ${isHovered ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
                   <ul
+                    id={menuId}
                     className="min-w-64 bg-brand-navy/90 backdrop-blur-2xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-2xl p-2 overflow-hidden"
                     role="menu"
                   >
@@ -114,13 +120,13 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                     })}
                   </ul>
                 </div>
-              </div>
+              </>
             ) : (
               <>
                 {item.href === '/' ? (
                   <HomeNavLink
                     href={item.href}
-                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 ${
+                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >
@@ -147,7 +153,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 ${
+                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >

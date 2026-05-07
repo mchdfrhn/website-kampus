@@ -167,7 +167,7 @@ export default function ContactFormSection({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-7">
             {submitted && (
-              <div className="mb-10 bg-green-50 border border-green-100 text-green-800 text-[11px] font-bold uppercase tracking-wider px-8 py-6 rounded-2xl flex items-center gap-4">
+              <div role="alert" className="mb-10 bg-green-50 border border-green-100 text-green-800 text-[11px] font-bold uppercase tracking-wider px-8 py-6 rounded-2xl flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center flex-shrink-0">
                    <Send size={16} className="text-green-600" />
                 </div>
@@ -175,7 +175,7 @@ export default function ContactFormSection({
               </div>
             )}
             {serverError && (
-              <div className="mb-10 bg-red-50 border border-red-100 text-red-700 text-[11px] font-bold uppercase tracking-wider px-8 py-6 rounded-2xl">
+              <div role="alert" className="mb-10 bg-red-50 border border-red-100 text-red-700 text-[11px] font-bold uppercase tracking-wider px-8 py-6 rounded-2xl">
                 {serverError}
               </div>
             )}
@@ -183,39 +183,72 @@ export default function ContactFormSection({
             <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                  <label htmlFor="cf-nama" className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                     Nama Lengkap <span className="text-brand-gold">*</span>
                   </label>
-                  <input type="text" {...register('nama')} className={inputClass} placeholder="Masukkan nama Anda" />
+                  <input
+                    id="cf-nama"
+                    type="text"
+                    {...register('nama')}
+                    className={inputClass}
+                    placeholder="Masukkan nama Anda"
+                    autoComplete="name"
+                    aria-invalid={errors.nama ? true : undefined}
+                    aria-describedby={errors.nama ? 'cf-nama-error' : undefined}
+                  />
                   {errors.nama && (
-                    <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.nama.message}</p>
+                    <p id="cf-nama-error" className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.nama.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                  <label htmlFor="cf-email" className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                     Alamat Email <span className="text-brand-gold">*</span>
                   </label>
-                  <input type="email" {...register('email')} className={inputClass} placeholder="email@institusi.com" />
+                  <input
+                    id="cf-email"
+                    type="email"
+                    {...register('email')}
+                    className={inputClass}
+                    placeholder="email@institusi.com"
+                    autoComplete="email"
+                    aria-invalid={errors.email ? true : undefined}
+                    aria-describedby={errors.email ? 'cf-email-error' : undefined}
+                  />
                   {errors.email && (
-                    <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.email.message}</p>
+                    <p id="cf-email-error" className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.email.message}</p>
                   )}
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                  <label htmlFor="cf-telepon" className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                     Nomor Telepon
                   </label>
-                  <input type="tel" {...register('telepon')} className={inputClass} placeholder="08xxxxxxxxxx (opsional)" />
+                  <input
+                    id="cf-telepon"
+                    type="tel"
+                    {...register('telepon')}
+                    className={inputClass}
+                    placeholder="08xxxxxxxxxx (opsional)"
+                    inputMode="tel"
+                    autoComplete="tel"
+                  />
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                  <label htmlFor="cf-unit" className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                     Unit Tujuan <span className="text-brand-gold">*</span>
                   </label>
-                  <select {...register('unit')} className={cn(inputClass, 'appearance-none')} defaultValue="">
+                  <select
+                    id="cf-unit"
+                    {...register('unit')}
+                    className={cn(inputClass, 'appearance-none')}
+                    defaultValue=""
+                    aria-invalid={errors.unit ? true : undefined}
+                    aria-describedby={errors.unit ? 'cf-unit-error' : undefined}
+                  >
                     <option value="" disabled>
                       Pilih unit kerja tujuan
                     </option>
@@ -226,42 +259,56 @@ export default function ContactFormSection({
                     ))}
                   </select>
                   {errors.unit && (
-                    <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.unit.message}</p>
+                    <p id="cf-unit-error" className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.unit.message}</p>
                   )}
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                <label htmlFor="cf-subjek" className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                   Subjek Pesan <span className="text-brand-gold">*</span>
                 </label>
-                <input type="text" {...register('subjek')} className={inputClass} placeholder="Apa yang bisa kami bantu?" />
+                <input
+                  id="cf-subjek"
+                  type="text"
+                  {...register('subjek')}
+                  className={inputClass}
+                  placeholder="Apa yang bisa kami bantu?"
+                  aria-invalid={errors.subjek ? true : undefined}
+                  aria-describedby={errors.subjek ? 'cf-subjek-error' : undefined}
+                />
                 {errors.subjek && (
-                  <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.subjek.message}</p>
+                  <p id="cf-subjek-error" className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.subjek.message}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
+                <label htmlFor="cf-pesan" className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">
                   Detail Pesan <span className="text-brand-gold">*</span>
                 </label>
                 <textarea
+                  id="cf-pesan"
                   {...register('pesan')}
                   className={inputClass}
                   style={{ minHeight: '160px' }}
                   placeholder="Tuliskan detail pertanyaan atau aspirasi Anda di sini..."
+                  aria-invalid={errors.pesan ? true : undefined}
+                  aria-describedby={errors.pesan ? 'cf-pesan-error' : undefined}
                 />
                 {errors.pesan && (
-                  <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.pesan.message}</p>
+                  <p id="cf-pesan-error" className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-2">{errors.pesan.message}</p>
                 )}
               </div>
 
               <div className="pt-4">
-                <label className="flex items-start gap-4 cursor-pointer group">
+                <label htmlFor="cf-privasi" className="flex items-start gap-4 cursor-pointer group">
                   <input
+                    id="cf-privasi"
                     type="checkbox"
                     {...register('privasi')}
                     className="mt-1 w-5 h-5 rounded border-gray-200 text-brand-navy focus:ring-brand-navy transition-all"
+                    aria-invalid={errors.privasi ? true : undefined}
+                    aria-describedby={errors.privasi ? 'cf-privasi-error' : undefined}
                   />
                   <span className="text-xs text-gray-500 font-medium leading-relaxed">
                     Saya menyetujui{' '}
@@ -272,7 +319,7 @@ export default function ContactFormSection({
                   </span>
                 </label>
                 {errors.privasi && (
-                  <p className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-3">{errors.privasi.message}</p>
+                  <p id="cf-privasi-error" className="text-red-500 text-[10px] font-bold uppercase tracking-wider mt-3">{errors.privasi.message}</p>
                 )}
               </div>
 

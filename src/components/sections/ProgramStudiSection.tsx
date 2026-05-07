@@ -105,11 +105,12 @@ export default async function ProgramStudiSection() {
                 >
                   <div className="h-64 bg-brand-navy/[0.02] relative overflow-hidden">
                     {thumbUrl ? (
-                      <Image 
-                        src={thumbUrl} 
-                        alt={program.nama} 
-                        fill 
-                        className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out" 
+                      <Image
+                        src={thumbUrl}
+                        alt={program.nama}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
                       />
                     ) : (
                       <div className={`absolute inset-0 bg-gradient-to-br ${accent.tint} flex items-center justify-center`}>

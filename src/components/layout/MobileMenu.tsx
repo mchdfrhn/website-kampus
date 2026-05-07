@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, ChevronDown } from 'lucide-react';
@@ -26,6 +26,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const pathname = usePathname();
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -34,6 +35,39 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !sidebarRef.current) return;
+
+    // Move focus into sidebar on open
+    const focusableSelectors = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const firstFocusable = sidebarRef.current.querySelector<HTMLElement>(focusableSelectors);
+    firstFocusable?.focus();
+
+    // Trap focus inside sidebar
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
+      if (e.key !== 'Tab') return;
+
+      const focusable = Array.from(sidebarRef.current!.querySelectorAll<HTMLElement>(focusableSelectors));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
   const matchesPath = (href: string) => {
@@ -90,6 +124,10 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
 
             {/* Sidebar dengan Transparansi 95% sesuai Desktop */}
             <motion.div
+              ref={sidebarRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Menu navigasi"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
@@ -119,7 +157,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                     <div className="text-brand-gold text-[10px] font-bold uppercase tracking-widest">Navigation</div>
                   </div>
                 </HomeNavLink>
-                <button onClick={toggleMenu} className="w-10 h-10 flex items-center justify-center text-white/40 hover:text-white">
+                <button onClick={toggleMenu} aria-label="Tutup menu" className="w-10 h-10 flex items-center justify-center text-white/40 hover:text-white">
                   <X size={24} />
                 </button>
               </div>
@@ -148,6 +186,8 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                             <>
                               <button
                                 onClick={() => toggleSubmenu(item.label)}
+                                aria-expanded={isSubOpen}
+                                aria-controls={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
                                 className={cn(
                                   "w-full flex items-center justify-between px-4 py-4 rounded-2xl transition-all duration-300 text-[14px] font-bold",
                                   isSubOpen || active
@@ -156,17 +196,18 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                                 )}
                               >
                                 <span className={cn(active && "pl-2 transition-all duration-300")}>{item.label}</span>
-                                <ChevronDown 
-                                  size={16} 
+                                <ChevronDown
+                                  size={16}
                                   className={cn(
                                     "transition-transform duration-500",
                                     isSubOpen ? "rotate-180 text-brand-gold" : "text-white/20"
-                                  )} 
+                                  )}
                                 />
                               </button>
                               <AnimatePresence>
                                 {isSubOpen && (
                                   <motion.div
+                                    id={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: 'auto', opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}

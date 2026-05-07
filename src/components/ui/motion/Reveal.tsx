@@ -11,12 +11,12 @@ interface RevealProps {
   yOffset?: number;
 }
 
-export const Reveal = ({ 
-  children, 
-  width = "fit-content", 
-  delay = 0.2, 
-  duration = 0.8,
-  yOffset = 40 
+export const Reveal = ({
+  children,
+  width = "fit-content",
+  delay = 0.2,
+  duration = 0.3,
+  yOffset = 40
 }: RevealProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -85,7 +85,7 @@ export const StaggerItem = ({ children }: { children: ReactNode }) => {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 },
       }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </motion.div>

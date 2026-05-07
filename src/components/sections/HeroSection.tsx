@@ -51,6 +51,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Re-init embla when navigating back to home or resizing
   useEffect(() => {
@@ -102,10 +103,10 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   useEffect(() => {
     if (!emblaApi || !hasMultipleSlides) return;
     const interval = setInterval(() => {
-      emblaApi.scrollNext();
+      if (!isPaused) emblaApi.scrollNext();
     }, 8000);
     return () => clearInterval(interval);
-  }, [emblaApi, hasMultipleSlides]);
+  }, [emblaApi, hasMultipleSlides, isPaused]);
 
   if (!slides || slides.length === 0) {
     return (
@@ -116,7 +117,16 @@ export default function HeroSection({ data }: { data?: HeroData }) {
   }
 
   return (
-    <section className="-mt-20 relative overflow-hidden bg-brand-navy w-full">
+    <section
+      className="-mt-20 relative overflow-hidden bg-brand-navy w-full"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Hero slides"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={() => setIsPaused(false)}
+    >
       <div className="overflow-hidden w-full" ref={emblaRef}>
         <div className="flex">
           {slides.map((slide, index) => {
@@ -126,8 +136,11 @@ export default function HeroSection({ data }: { data?: HeroData }) {
             const cta2External = isExternalHref(slide.cta2Href);
 
             return (
-              <div 
-                key={index} 
+              <div
+                key={index}
+                role="group"
+                aria-roledescription="slide"
+                aria-label={`Slide ${index + 1} dari ${slides.length}`}
                 className="relative flex-none w-full min-w-full h-[85vh] sm:h-[90vh] lg:h-[95vh] min-h-[600px] flex items-center overflow-hidden transform-gpu"
               >
                 {/* Background Image with Parallax effect */}
@@ -141,7 +154,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                     >
                       <Image
                         src={bgUrl}
-                        alt={slide.judul || "Hero Background"}
+                        alt=""
+                        role="presentation"
                         fill
                         className="object-cover"
                         priority={index === 0}
@@ -256,7 +270,8 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                 className={`group relative h-1.5 transition-all duration-500 rounded-full overflow-hidden ${
                   selectedIndex === index ? 'w-12 bg-brand-gold' : 'w-6 bg-white/20 hover:bg-white/40'
                 }`}
-                aria-label={`Go to slide ${index + 1}`}
+                aria-label={`Slide ${index + 1} dari ${scrollSnaps.length}`}
+                aria-current={selectedIndex === index ? true : undefined}
               >
                 {selectedIndex === index && (
                   <motion.div 

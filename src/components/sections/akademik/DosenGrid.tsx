@@ -5,7 +5,7 @@ import Link from 'next/link';
 import type { Dosen } from '@/lib/data/dosen';
 import type { DosenPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
-import { BookOpen, ChevronRight, Mail, Users } from 'lucide-react';
+import { BookOpen, ChevronRight, Mail, Search, Users } from 'lucide-react';
 
 const jabatanLabel: Record<string, string> = {
   Profesor: 'Profesor',
@@ -187,6 +187,7 @@ export default function DosenGrid({
   const list = dosenList ?? [];
   const groupedPrograms = groupByProgramStudi(list, programOrder);
   const [activeTab, setActiveTab] = useState(groupedPrograms[0]?.program ?? '');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const activeGroup = groupedPrograms.find((group) => group.program === activeTab) ?? groupedPrograms[0];
   const activeAccent = activeGroup ? resolveProgramStudiAccentColor(activeGroup.program) : 'navy';
@@ -212,6 +213,7 @@ export default function DosenGrid({
         <div className="mt-10 space-y-6">
           <div
             className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            role="tablist"
             aria-label="Tab program studi"
           >
             {groupedPrograms.map((group) => {
@@ -221,7 +223,11 @@ export default function DosenGrid({
               <button
                   key={group.program}
                   type="button"
-                  onClick={() => setActiveTab(group.program)}
+                  role="tab"
+                  aria-selected={isActive}
+                  id={`tab-${group.program.replace(/\s+/g, '-').toLowerCase()}`}
+                  aria-controls={`panel-${group.program.replace(/\s+/g, '-').toLowerCase()}`}
+                  onClick={() => { setActiveTab(group.program); setSearchQuery(''); }}
                   className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-all duration-300 ${
                     isActive
                       ? 'border-brand-navy/10 bg-brand-navy text-white shadow-premium'
@@ -241,7 +247,13 @@ export default function DosenGrid({
             })}
           </div>
 
-          <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-premium sm:p-8">
+          <section
+            className="rounded-2xl border border-gray-100 bg-white p-5 shadow-premium sm:p-8"
+            role="tabpanel"
+            id={`panel-${activeGroup.program.replace(/\s+/g, '-').toLowerCase()}`}
+            aria-labelledby={`tab-${activeGroup.program.replace(/\s+/g, '-').toLowerCase()}`}
+            tabIndex={0}
+          >
             <div className="mb-6 flex flex-col gap-3 border-b border-slate-100 pb-5 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <div className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400">
@@ -257,14 +269,42 @@ export default function DosenGrid({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
-              {activeGroup.dosen.map((dosen) => (
-                <DosenCard
-                  key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`}
-                  dosen={dosen}
-                  accentColor={activeAccent}
-                />
-              ))}
+            <div className="relative mt-4">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+              <input
+                type="search"
+                placeholder="Cari dosen berdasarkan nama..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-navy/10 focus:border-brand-navy transition-all"
+                aria-label="Cari nama dosen"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 mt-6">
+              {(() => {
+                const displayedDosen = searchQuery.trim()
+                  ? activeGroup.dosen.filter((d) =>
+                      d.nama.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                  : activeGroup.dosen;
+                return (
+                  <>
+                    {displayedDosen.map((dosen) => (
+                      <DosenCard
+                        key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`}
+                        dosen={dosen}
+                        accentColor={activeAccent}
+                      />
+                    ))}
+                    {displayedDosen.length === 0 && (
+                      <p className="col-span-full text-center py-12 text-gray-400 text-sm font-medium">
+                        Tidak ada dosen dengan nama tersebut.
+                      </p>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </section>
         </div>

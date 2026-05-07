@@ -10,6 +10,7 @@ import {
   type PayloadSectionMeta,
 } from '@/lib/frontend-section-routing';
 import { synchronizeNavChildren } from '@/lib/section-links';
+import NavbarScrollWrapper from './NavbarScrollWrapper';
 
 type NavItem = {
   label: string;
@@ -186,8 +187,15 @@ export default async function Navbar() {
     console.error('Error fetching navigation or settings:', error);
   }
   return (
-    <header className="h-20">
-      <div className="fixed inset-x-0 top-0 z-50 bg-brand-navy/95 backdrop-blur-md border-b border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)]">
+    <>
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-200 focus:px-4 focus:py-2 focus:bg-brand-gold focus:text-brand-navy focus:font-bold focus:rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-navy"
+      >
+        Lewati ke konten utama
+      </a>
+      <header className="h-20">
+      <NavbarScrollWrapper>
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center h-20 gap-3">
             <HomeNavLink
@@ -242,7 +250,8 @@ export default async function Navbar() {
             </div>
           </div>
         </div>
-      </div>
+      </NavbarScrollWrapper>
     </header>
+    </>
   );
 }

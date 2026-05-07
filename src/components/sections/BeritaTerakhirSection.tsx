@@ -41,11 +41,12 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
               >
                 <div className="h-52 bg-gray-100 relative overflow-hidden">
                   {item.thumbnailUrl ? (
-                    <Image 
-                      src={item.thumbnailUrl} 
-                      alt={item.judul} 
-                      fill 
-                      className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out" 
+                    <Image
+                      src={item.thumbnailUrl}
+                      alt={item.judul}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-brand-navy/[0.03]">

@@ -5,9 +5,7 @@ import PersonaQuickLinks from '@/components/sections/PersonaQuickLinks';
 import BeritaTerakhirSection from '@/components/sections/BeritaTerakhirSection';
 import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
-import WhatsAppFloat from '@/components/sections/WhatsAppFloat';
 import VideoProfileSection from '@/components/sections/VideoProfileSection';
-import BackToTopControl from '@/components/sections/BackToTopControl';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -110,7 +108,6 @@ export default async function HomePage() {
   const { halamanUtama, siteSettings, berita } = await fetchHomePageData()
 
   const quickLinksTabs = (halamanUtama as unknown as { quickLinksTabs?: Tab[] })?.quickLinksTabs || []
-  const waNumber = (siteSettings as { whatsapp?: string })?.whatsapp || undefined
   const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || defaultHomePageData.statistik
 
   return (
@@ -135,9 +132,6 @@ export default async function HomePage() {
       <AkreditasiSection />
 
       <TestimonialSection />
-
-      <WhatsAppFloat waNumber={waNumber as string | undefined} />
-      <BackToTopControl />
     </>
   );
 }

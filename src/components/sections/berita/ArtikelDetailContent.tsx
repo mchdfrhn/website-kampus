@@ -9,6 +9,7 @@ import {
   getArtikelKategoriLabel,
 } from '@/lib/data/berita';
 import { cn } from '@/lib/utils';
+import DOMPurify from 'isomorphic-dompurify';
 
 function parseMarkdown(text: string): string {
   return text
@@ -93,7 +94,7 @@ export default function ArtikelDetailContent({
           <div
             className="prose prose-lg prose-slate max-w-none prose-headings:text-brand-navy prose-headings:font-bold prose-p:text-gray-600 prose-p:leading-relaxed prose-strong:text-brand-navy prose-strong:font-bold"
             dangerouslySetInnerHTML={{
-              __html: artikel.kontenHtml ?? parseMarkdown(artikel.konten),
+              __html: DOMPurify.sanitize(artikel.kontenHtml ?? parseMarkdown(artikel.konten ?? '')),
             }}
           />
 

@@ -41,6 +41,8 @@ export default function BeritaIndexContent({
     initialFilter !== semua && availableCategories.some((item) => item.slug === initialFilter);
   const [filter, setFilter] = useState<Filter>(hasInitialFilter ? initialFilter : semua);
   const [query, setQuery] = useState('');
+  const ITEMS_PER_PAGE = 9;
+  const [page, setPage] = useState(1);
   const filterOptions: { value: Filter; label: string }[] = [
     { value: semua, label: 'Semua' },
     ...availableCategories.map((item) => ({
@@ -61,6 +63,9 @@ export default function BeritaIndexContent({
         a.ringkasan.toLowerCase().includes(query.toLowerCase()),
     )
     .sort((a, b) => new Date(b.tanggalTerbit).getTime() - new Date(a.tanggalTerbit).getTime());
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
   const showContactCta =
     pageContent?.contactCtaTitle ||
@@ -105,7 +110,7 @@ export default function BeritaIndexContent({
               type="search"
               placeholder="Cari berita..."
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => { setQuery(e.target.value); setPage(1); }}
               className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-navy/10 focus:border-brand-navy transition-all"
               aria-label="Cari berita"
             />
@@ -116,7 +121,7 @@ export default function BeritaIndexContent({
           {filterOptions.map((opt) => (
             <button
               key={opt.value}
-              onClick={() => setFilter(opt.value)}
+              onClick={() => { setFilter(opt.value); setPage(1); }}
               className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all ${
                 filter === opt.value
                   ? 'bg-brand-navy text-white border-brand-navy shadow-md'
@@ -136,7 +141,7 @@ export default function BeritaIndexContent({
           </div>
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((a) => (
+            {paginated.map((a) => (
               <li key={a.slug}>
                 <Link
                   href={`/berita/${a.slug}`}
@@ -180,6 +185,29 @@ export default function BeritaIndexContent({
               </li>
             ))}
           </ul>
+        )}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-10">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="px-4 py-2 rounded-lg text-xs font-bold border border-gray-200 bg-white text-gray-600 hover:border-brand-navy hover:text-brand-navy disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              aria-label="Halaman sebelumnya"
+            >
+              ← Sebelumnya
+            </button>
+            <span className="text-xs font-bold text-gray-500 px-3">
+              {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="px-4 py-2 rounded-lg text-xs font-bold border border-gray-200 bg-white text-gray-600 hover:border-brand-navy hover:text-brand-navy disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              aria-label="Halaman berikutnya"
+            >
+              Berikutnya →
+            </button>
+          </div>
         )}
       </section>
 

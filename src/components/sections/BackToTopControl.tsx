@@ -44,7 +44,7 @@ export default function BackToTopControl() {
       aria-label="Kembali ke atas"
       onClick={scrollToTop}
       className={[
-        'fixed bottom-24 right-7 z-50',
+        'fixed bottom-32 right-7 z-50',
         'h-12 w-12 rounded-full border border-white/30',
         'bg-brand-navy/90 text-white shadow-[0_14px_32px_rgba(0,0,0,0.35)] backdrop-blur-md',
         'transition-all duration-300',

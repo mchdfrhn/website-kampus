@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { formatGaleriTanggal, type Album } from "@/lib/data/galeri";
 import { getKategoriSoftBadgeClass } from "@/lib/data/kategori";
@@ -14,6 +14,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -72,6 +73,13 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
     };
   }, [selectedIndex, closeLightbox, nextImage, prevImage, lenis]);
 
+  useEffect(() => {
+    if (selectedIndex !== null) {
+      const timer = setTimeout(() => closeButtonRef.current?.focus(), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedIndex]);
+
   const Lightbox = (
     <AnimatePresence>
       {selectedIndex !== null && album.foto && (
@@ -82,9 +90,13 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
           className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/60 backdrop-blur-3xl flex flex-col"
           onClick={closeLightbox}
           style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Preview foto: ${album.foto[selectedIndex].keterangan || album.judul}`}
         >
           {/* Mobile-Friendly Close Button (Fixed) */}
           <button
+            ref={closeButtonRef}
             onClick={closeLightbox}
             className="absolute top-4 right-4 z-[110] w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/10 transition-all active:scale-90"
             aria-label="Tutup Preview"
@@ -130,6 +142,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
             <button
               onClick={prevImage}
               className="absolute left-2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all sm:left-10"
+              aria-label="Foto sebelumnya"
             >
               <ChevronLeft size={24} />
             </button>
@@ -158,6 +171,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
             <button
               onClick={nextImage}
               className="absolute right-2 z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all sm:right-10"
+              aria-label="Foto berikutnya"
             >
               <ChevronRight size={24} />
             </button>
