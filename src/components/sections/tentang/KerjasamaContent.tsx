@@ -3,11 +3,11 @@ import { getPayloadClient } from '@/lib/payload';
 
 type KerjasamaMitra = {
   nama: string
-  kategori?: 'industri' | 'akademik' | 'pemerintah'
+  kategori?: string | null
   deskripsi?: string
   tahun?: string
-  logo?: { url?: string } | null
-  website?: string
+  logo?: { url?: string | null } | null
+  website?: string | null
 }
 
 const kategoriBadge = (kategori?: string) => {
@@ -41,6 +41,32 @@ export default async function KerjasamaContent() {
     if (data.kerjasamaIntro) kerjasamaIntro = data.kerjasamaIntro
     kerjasamaMitra = data.kerjasamaMitra || []
     if (data.kerjasamaFormUrl) kerjasamaFormUrl = data.kerjasamaFormUrl
+
+    const mitraResult = await payload.find({
+      collection: 'mitra',
+      where: { aktif: { equals: true } },
+      sort: 'urutan',
+      limit: 100,
+      depth: 1,
+    })
+
+    if (mitraResult.docs.length > 0) {
+      kerjasamaMitra = mitraResult.docs.map((item) => {
+        const mitra = item as unknown as {
+          nama: string
+          kategori?: string | null
+          url?: string | null
+          logo?: { url?: string | null } | null
+        }
+
+        return {
+          nama: mitra.nama,
+          kategori: mitra.kategori?.toLowerCase() || null,
+          logo: mitra.logo,
+          website: mitra.url,
+        }
+      })
+    }
   } catch {
     // DB unavailable
   }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -15,8 +16,15 @@ import {
   getSiteUrl,
   toAbsoluteUrl,
 } from "@/lib/seo";
+import "../globals.css";
 
 export const revalidate = 60;
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta-sans",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 type MediaValue = {
   url?: string | null;
@@ -166,33 +174,37 @@ export default async function FrontendLayout({
   const websiteJsonLd = buildWebsiteJsonLd();
 
   return (
-    <MotionProvider>
-      <RouteProgressProvider>
-        {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID} />
-        )}
-        <ScrollProvider>
-          <div className="flex flex-col min-h-screen">
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify(organizationJsonLd),
-              }}
-            />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-            />
-            <Navbar />
-            <main className="flex-1" id="main-content" tabIndex={-1}>
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-            <BackToTopControl />
-            <WhatsAppFloat waNumber={seoSettings.whatsapp ?? undefined} />
-          </div>
-        </ScrollProvider>
-      </RouteProgressProvider>
-    </MotionProvider>
+    <html lang="id">
+      <body className={`${plusJakartaSans.variable} antialiased font-sans`}>
+        <MotionProvider>
+          <RouteProgressProvider>
+            {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && (
+              <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID} />
+            )}
+            <ScrollProvider>
+              <div className="flex flex-col min-h-screen">
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(organizationJsonLd),
+                  }}
+                />
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+                />
+                <Navbar />
+                <main className="flex-1" id="main-content" tabIndex={-1}>
+                  <PageTransition>{children}</PageTransition>
+                </main>
+                <Footer />
+                <BackToTopControl />
+                <WhatsAppFloat waNumber={seoSettings.whatsapp ?? undefined} />
+              </div>
+            </ScrollProvider>
+          </RouteProgressProvider>
+        </MotionProvider>
+      </body>
+    </html>
   );
 }
