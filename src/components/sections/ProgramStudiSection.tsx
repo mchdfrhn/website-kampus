@@ -1,11 +1,11 @@
 import { getPayloadClient } from '@/lib/payload';
 import Link from 'next/link';
-import Image from 'next/image';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { ArrowRight } from 'lucide-react';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import { MotionList, MotionItem } from '@/components/ui/motion/MotionWrapper';
 import { cn } from '@/lib/utils';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type Program = {
   slug?: string;
@@ -105,7 +105,7 @@ export default async function ProgramStudiSection() {
                 >
                   <div className="h-64 bg-brand-navy/[0.02] relative overflow-hidden">
                     {thumbUrl ? (
-                      <Image
+                      <ImageWithLoading
                         src={thumbUrl}
                         alt={program.nama}
                         fill

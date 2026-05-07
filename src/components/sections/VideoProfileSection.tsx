@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, X, Info } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 import { createPortal } from 'react-dom';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 export default function VideoProfileSection({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
   const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
 
@@ -81,12 +82,18 @@ export default function VideoProfileSection({ data }: { data?: any }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/60 backdrop-blur-3xl flex items-center justify-center p-0 sm:p-4 md:p-12"
-            onClick={() => setIsOpen(false)}
+            onClick={() => {
+              setIsOpen(false);
+              setIsVideoReady(false);
+            }}
             style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
           >
             {/* Close Button - More accessible on mobile */}
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                setIsVideoReady(false);
+              }}
               className="absolute top-4 right-4 sm:top-6 sm:right-6 z-[110] w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-brand-gold hover:text-brand-navy transition-all active:scale-90"
               aria-label="Tutup Video"
             >
@@ -102,12 +109,23 @@ export default function VideoProfileSection({ data }: { data?: any }) {
               className="relative w-full max-w-6xl aspect-video sm:rounded-2xl overflow-hidden shadow-2xl bg-black max-h-screen sm:max-h-[85vh] flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
+              {!isVideoReady && (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black via-brand-navy to-black">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="h-14 w-14 rounded-full border-2 border-white/20 border-t-brand-gold animate-spin" />
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/60">
+                      Memuat Video
+                    </p>
+                  </div>
+                </div>
+              )}
               <iframe
                 src={videoUrl.includes('?') ? `${videoUrl}&autoplay=1` : `${videoUrl}?autoplay=1`}
                 title="STTPU Video Profile"
-                className="absolute inset-0 w-full h-full border-0"
+                className={`absolute inset-0 h-full w-full border-0 transition-opacity duration-500 ${isVideoReady ? 'opacity-100' : 'opacity-0'}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
+                onLoad={() => setIsVideoReady(true)}
               ></iframe>
             </motion.div>
           </motion.div>
@@ -149,11 +167,13 @@ export default function VideoProfileSection({ data }: { data?: any }) {
             onClick={() => setIsOpen(true)}
           >
             {/* Background Image */}
-            <Image
+            <ImageWithLoading
               src={thumbnailUrl}
               alt={judul}
               fill
+              sizes="(max-width: 1024px) 100vw, 1120px"
               className="object-cover transition-transform duration-1000 group-hover/thumb:scale-105"
+              skeletonClassName="bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-gold/30"
             />
             
             {/* Overlays */}

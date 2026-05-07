@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Reveal } from '@/components/ui/motion/Reveal';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type MitraItem = {
   nama: string;
@@ -19,15 +19,16 @@ function MitraLogo({ item }: { item: MitraItem }) {
   const logoAlt = typeof item.logo === 'object' ? item.logo?.alt : null;
 
   const content = (
-    <div className="group/logo flex h-32 w-56 sm:h-36 sm:w-64 items-center justify-center rounded-xl border border-gray-200 bg-white px-7 py-6 shadow-[0_10px_28px_rgba(15,23,42,0.06)] transition-all duration-500 hover:border-brand-gold/50 hover:shadow-[0_18px_36px_rgba(15,23,42,0.1)]">
+    <div className="group/logo relative flex h-32 w-56 sm:h-36 sm:w-64 items-center justify-center overflow-hidden rounded-xl border border-gray-200 bg-white px-7 py-6 shadow-[0_10px_28px_rgba(15,23,42,0.06)] transition-all duration-500 hover:border-brand-gold/50 hover:shadow-[0_18px_36px_rgba(15,23,42,0.1)]">
       {logoUrl ? (
-        <Image
+        <ImageWithLoading
           src={logoUrl}
           alt={logoAlt || item.nama}
           width={240}
           height={110}
           sizes="(max-width: 640px) 224px, 256px"
           className="max-h-20 w-auto max-w-full object-contain grayscale opacity-70 transition-all duration-500 group-hover/logo:grayscale-0 group-hover/logo:opacity-100 sm:max-h-24"
+          skeletonClassName="rounded-xl"
         />
       ) : (
         <span className="text-center text-xs font-bold uppercase tracking-[0.16em] text-brand-navy/30">

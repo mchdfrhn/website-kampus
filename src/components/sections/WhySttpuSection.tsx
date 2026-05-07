@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Reveal } from '@/components/ui/motion/Reveal';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type WhyItem = {
   icon?: string | null;
@@ -78,12 +78,13 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
   if (backgroundUrl) {
     return (
       <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-brand-navy/10 bg-brand-navy p-5 text-white shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-gold/70 hover:shadow-[0_22px_46px_rgba(15,23,42,0.18)]">
-        <Image
+        <ImageWithLoading
           src={backgroundUrl}
           alt={backgroundAlt}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
+          skeletonClassName="bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-gold/30"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/72 to-brand-navy/28" />
         <div className="absolute inset-0 bg-brand-navy/18" />

@@ -1,7 +1,7 @@
-import Image from 'next/image';
 import { getPayloadClient } from '@/lib/payload';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import MotionWrapper from '@/components/ui/motion/MotionWrapper';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type TestimonialItem = {
   teks: string;
@@ -64,7 +64,7 @@ export default async function TestimonialSection() {
               <div className="flex items-center gap-6 mt-auto relative z-10">
                 <div className="relative w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center overflow-hidden shadow-2xl shadow-brand-gold/20 group-hover:bg-white group-hover:scale-110 transition-all duration-700">
                   {item.foto?.url ? (
-                    <Image
+                    <ImageWithLoading
                       src={item.foto.url}
                       alt={item.foto.alt || item.nama}
                       fill

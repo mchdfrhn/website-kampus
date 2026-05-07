@@ -1,7 +1,7 @@
 import { getPayloadClient } from '@/lib/payload';
-import Image from 'next/image';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import MotionWrapper from '@/components/ui/motion/MotionWrapper';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type LembagaItem = {
   nama: string;
@@ -55,11 +55,13 @@ export default async function AkreditasiSection() {
                 <div className="mx-auto mb-6 sm:mb-7 flex h-24 w-24 items-center justify-center rounded-full border border-brand-navy/10 bg-gradient-to-br from-slate-50 via-white to-brand-gold/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_30px_rgba(15,23,42,0.08)] transition-all duration-700 group-hover:border-brand-gold/40 group-hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_38px_rgba(15,23,42,0.12)]">
                   <div className="relative flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border border-brand-navy/8 bg-white/90 shadow-inner">
                     {logoUrl ? (
-                      <Image
+                      <ImageWithLoading
                         src={logoUrl}
                         alt={item.nama}
                         fill
+                        sizes="72px"
                         className="object-contain p-3"
+                        skeletonClassName="rounded-full"
                       />
                     ) : (
                       <span className="px-2 text-center text-brand-navy/20 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em]">

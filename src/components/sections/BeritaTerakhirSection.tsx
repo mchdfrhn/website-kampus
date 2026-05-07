@@ -1,12 +1,12 @@
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import {
   formatTanggal,
   getArtikelKategoriLabel,
   type Artikel,
 } from '@/lib/data/berita';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 export default function BeritaTerakhirSection({ artikelList }: { artikelList: Artikel[] }) {
   return (
@@ -41,7 +41,7 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
               >
                 <div className="h-52 bg-gray-100 relative overflow-hidden">
                   {item.thumbnailUrl ? (
-                    <Image
+                    <ImageWithLoading
                       src={item.thumbnailUrl}
                       alt={item.judul}
                       fill

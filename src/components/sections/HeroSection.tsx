@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 import { usePathname } from 'next/navigation';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type Slide = {
   badge?: string | null;
@@ -152,12 +152,13 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                       transition={{ duration: 10, ease: "linear" }}
                       className="relative h-full w-full"
                     >
-                      <Image
+                      <ImageWithLoading
                         src={bgUrl}
                         alt=""
                         role="presentation"
                         fill
                         className="object-cover"
+                        skeletonClassName="bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-gold/30"
                         priority={index === 0}
                         sizes="100vw"
                         loading={index === 0 ? "eager" : "lazy"}
