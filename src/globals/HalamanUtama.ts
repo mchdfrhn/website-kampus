@@ -90,6 +90,67 @@ export const HalamanUtama: GlobalConfig = {
           ],
         },
         {
+          label: 'Mengapa STTPU',
+          fields: [
+            {
+              name: 'whyEnabled',
+              type: 'checkbox',
+              label: 'Tampilkan Section Mengapa STTPU',
+              defaultValue: true,
+            },
+            {
+              name: 'whyEyebrow',
+              type: 'text',
+              label: 'Label Kecil',
+              defaultValue: 'Alasan Memilih STTPU',
+            },
+            {
+              name: 'whyTitle',
+              type: 'text',
+              label: 'Judul Section',
+              defaultValue: 'Mengapa Harus Kuliah di STT Pekerjaan Umum Jakarta?',
+            },
+            {
+              name: 'whyDescription',
+              type: 'textarea',
+              label: 'Deskripsi Pembuka',
+              defaultValue:
+                'STTPU Jakarta dirancang untuk mahasiswa yang ingin masuk ke bidang infrastruktur, pekerjaan umum, lingkungan, dan teknologi dengan arah belajar yang jelas sejak awal.',
+            },
+            {
+              name: 'whyProof',
+              type: 'textarea',
+              label: 'Argumen Pendukung',
+              defaultValue:
+                'Kurikulum dan ekosistem kampus diarahkan untuk menghubungkan teori, kebutuhan lapangan, layanan digital, dan jejaring mitra yang relevan dengan pembangunan Indonesia.',
+            },
+            {
+              name: 'whyCtaLabel',
+              type: 'text',
+              label: 'CTA — Teks',
+              defaultValue: 'Lihat Program Studi',
+            },
+            {
+              name: 'whyCtaHref',
+              type: 'text',
+              label: 'CTA — URL',
+              defaultValue: '/akademik/program-studi',
+            },
+            {
+              name: 'whyItems',
+              type: 'array',
+              label: 'Daftar Alasan',
+              minRows: 3,
+              maxRows: 6,
+              fields: [
+                { name: 'icon', type: 'text', label: 'Icon Lucide', defaultValue: 'Building2' },
+                { name: 'title', type: 'text', label: 'Judul Alasan', required: true },
+                { name: 'description', type: 'textarea', label: 'Deskripsi Alasan', required: true },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Mitra',
           fields: [
             { name: 'mitraEnabled', type: 'checkbox', label: 'Tampilkan Section Mitra', defaultValue: true },

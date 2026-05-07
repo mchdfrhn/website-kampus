@@ -7,6 +7,7 @@ import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import VideoProfileSection from '@/components/sections/VideoProfileSection';
 import MitraSection from '@/components/sections/MitraSection';
+import WhySttpuSection from '@/components/sections/WhySttpuSection';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -25,6 +26,7 @@ export const metadata = buildPageMetadata({
 
 type TabLink = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: TabLink[] }
+type WhyItem = { icon?: string | null; title: string; description: string }
 type MitraItem = {
   nama: string;
   kategori?: string | null;
@@ -49,6 +51,41 @@ const defaultHomePageData = {
     { angka: '3.000+', label: 'Alumni' },
     { angka: '45+', label: 'Mitra Industri' },
     { angka: '1987', label: 'Tahun Berdiri' },
+  ],
+  whyEnabled: true,
+  whyEyebrow: 'Alasan Memilih STTPU',
+  whyTitle: 'Mengapa Harus Kuliah di STT Pekerjaan Umum Jakarta?',
+  whyDescription:
+    'STTPU Jakarta dirancang untuk mahasiswa yang ingin masuk ke bidang infrastruktur, pekerjaan umum, lingkungan, dan teknologi dengan arah belajar yang jelas sejak awal.',
+  whyProof:
+    'Kurikulum dan ekosistem kampus diarahkan untuk menghubungkan teori, kebutuhan lapangan, layanan digital, dan jejaring mitra yang relevan dengan pembangunan Indonesia.',
+  whyCtaLabel: 'Lihat Program Studi',
+  whyCtaHref: '/akademik/program-studi',
+  whyItems: [
+    {
+      icon: 'Building2',
+      title: 'Fokus pada infrastruktur dan pekerjaan umum',
+      description:
+        'Mahasiswa belajar dalam konteks konstruksi, lingkungan, teknologi, dan kebutuhan pembangunan yang dekat dengan dunia kerja bidang ke-PU-an.',
+    },
+    {
+      icon: 'Network',
+      title: 'Terhubung dengan ekosistem pembangunan',
+      description:
+        'Identitas kampus dibangun di sekitar isu infrastruktur, layanan publik, dan kolaborasi dengan lembaga maupun mitra yang relevan.',
+    },
+    {
+      icon: 'GraduationCap',
+      title: 'Program studi punya arah praktis',
+      description:
+        'Pilihan studi diarahkan untuk membentuk kompetensi yang bisa dipakai di lapangan, bukan hanya memahami teori di ruang kelas.',
+    },
+    {
+      icon: 'BriefcaseBusiness',
+      title: 'Membuka jalan ke pengalaman lapangan',
+      description:
+        'Kegiatan akademik, kemitraan, dan layanan kampus dapat menjadi pintu awal untuk magang, proyek, dan pengenalan dunia profesi.',
+    },
   ],
 };
 
@@ -131,12 +168,34 @@ export default async function HomePage() {
     mitraTitle?: string | null;
     mitraDescription?: string | null;
   }
+  const whySettings = halamanUtama as {
+    whyEnabled?: boolean | null;
+    whyEyebrow?: string | null;
+    whyTitle?: string | null;
+    whyDescription?: string | null;
+    whyProof?: string | null;
+    whyCtaLabel?: string | null;
+    whyCtaHref?: string | null;
+    whyItems?: WhyItem[] | null;
+  }
 
   return (
     <>
       <HeroSection data={halamanUtama as Parameters<typeof HeroSection>[0]['data']} />
       
       <StatsBar items={stats as { angka: string; label: string }[]} />
+
+      {whySettings.whyEnabled !== false && (
+        <WhySttpuSection
+          eyebrow={whySettings.whyEyebrow}
+          title={whySettings.whyTitle}
+          description={whySettings.whyDescription}
+          proof={whySettings.whyProof}
+          ctaLabel={whySettings.whyCtaLabel}
+          ctaHref={whySettings.whyCtaHref}
+          items={whySettings.whyItems}
+        />
+      )}
 
       <BeritaTerakhirSection artikelList={berita} />
 
