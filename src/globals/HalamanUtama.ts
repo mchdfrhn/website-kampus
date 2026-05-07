@@ -89,6 +89,20 @@ export const HalamanUtama: GlobalConfig = {
             { name: 'videoThumbnail', type: 'upload', relationTo: 'media', label: 'Thumbnail Video' },
           ],
         },
+        {
+          label: 'Mitra',
+          fields: [
+            { name: 'mitraEnabled', type: 'checkbox', label: 'Tampilkan Section Mitra', defaultValue: true },
+            { name: 'mitraTitle', type: 'text', label: 'Judul Section', defaultValue: 'Mitra & Kerja Sama' },
+            {
+              name: 'mitraDescription',
+              type: 'textarea',
+              label: 'Deskripsi Section',
+              defaultValue:
+                'STTPU berkolaborasi dengan berbagai institusi, industri, dan lembaga untuk mendukung pendidikan vokasi dan pengembangan karier mahasiswa.',
+            },
+          ],
+        },
       ],
     },
   ],

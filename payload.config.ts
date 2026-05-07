@@ -26,6 +26,7 @@ import { Organisasi } from "./src/collections/Organisasi";
 import { Prestasi } from "./src/collections/Prestasi";
 import { Publikasi } from "./src/collections/Publikasi";
 import { Layanan } from "./src/collections/Layanan";
+import { Mitra } from "./src/collections/Mitra";
 
 import { SiteSettings } from "./src/globals/SiteSettings";
 import { HalamanUtama } from "./src/globals/HalamanUtama";
@@ -75,6 +76,7 @@ export default buildConfig({
     Prestasi,
     Publikasi,
     Layanan,
+    Mitra,
   ],
   globals: [
     SiteSettings,

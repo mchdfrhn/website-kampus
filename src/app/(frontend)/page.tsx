@@ -6,6 +6,7 @@ import BeritaTerakhirSection from '@/components/sections/BeritaTerakhirSection';
 import AkreditasiSection from '@/components/sections/AkreditasiSection';
 import TestimonialSection from '@/components/sections/TestimonialSection';
 import VideoProfileSection from '@/components/sections/VideoProfileSection';
+import MitraSection from '@/components/sections/MitraSection';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -24,6 +25,12 @@ export const metadata = buildPageMetadata({
 
 type TabLink = { icon: string; label: string; href: string; external?: boolean }
 type Tab = { id: string; label: string; links: TabLink[] }
+type MitraItem = {
+  nama: string;
+  kategori?: string | null;
+  url?: string | null;
+  logo?: { url?: string | null; alt?: string | null } | null;
+}
 
 const defaultHomePageData = {
   heroSlides: [
@@ -49,7 +56,7 @@ async function fetchHomePageData() {
   try {
     const payload = await getPayloadClient()
     
-    const [halamanUtamaRes, siteSettingsRes, beritaRes] = await Promise.allSettled([
+    const [halamanUtamaRes, siteSettingsRes, beritaRes, mitraRes] = await Promise.allSettled([
       payload.findGlobal({ slug: 'halaman-utama', depth: 1 }),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }),
       payload.find({
@@ -58,12 +65,20 @@ async function fetchHomePageData() {
         limit: 4,
         sort: '-tanggalTerbit',
         depth: 1,
-      })
+      }),
+      payload.find({
+        collection: 'mitra',
+        where: { aktif: { equals: true } },
+        limit: 40,
+        sort: 'urutan',
+        depth: 1,
+      }),
     ])
 
     const halamanUtama = halamanUtamaRes.status === 'fulfilled' ? halamanUtamaRes.value : null
     const siteSettings = siteSettingsRes.status === 'fulfilled' ? siteSettingsRes.value : null
     const beritaDocs = beritaRes.status === 'fulfilled' ? beritaRes.value.docs : []
+    const mitraDocs = mitraRes.status === 'fulfilled' ? mitraRes.value.docs : []
 
     const mappedBerita = beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
     
@@ -92,23 +107,30 @@ async function fetchHomePageData() {
     return {
       halamanUtama: baseHalamanUtama,
       siteSettings,
-      berita: sortedBerita
+      berita: sortedBerita,
+      mitra: mitraDocs as unknown as MitraItem[],
     }
   } catch (error) {
     console.error('Error in fetchHomePageData:', error)
     return {
       halamanUtama: defaultHomePageData,
       siteSettings: null,
-      berita: artikelStatic.slice(0, 4)
+      berita: artikelStatic.slice(0, 4),
+      mitra: [],
     }
   }
 }
 
 export default async function HomePage() {
-  const { halamanUtama, siteSettings, berita } = await fetchHomePageData()
+  const { halamanUtama, siteSettings, berita, mitra } = await fetchHomePageData()
 
   const quickLinksTabs = (halamanUtama as unknown as { quickLinksTabs?: Tab[] })?.quickLinksTabs || []
   const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || defaultHomePageData.statistik
+  const mitraSettings = halamanUtama as {
+    mitraEnabled?: boolean | null;
+    mitraTitle?: string | null;
+    mitraDescription?: string | null;
+  }
 
   return (
     <>
@@ -130,6 +152,14 @@ export default async function HomePage() {
       <PersonaQuickLinks tabs={quickLinksTabs} />
 
       <AkreditasiSection />
+
+      {mitraSettings.mitraEnabled !== false && (
+        <MitraSection
+          title={mitraSettings.mitraTitle}
+          description={mitraSettings.mitraDescription}
+          items={mitra}
+        />
+      )}
 
       <TestimonialSection />
     </>
