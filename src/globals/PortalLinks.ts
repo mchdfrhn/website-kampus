@@ -15,6 +15,22 @@ export const PortalLinks: GlobalConfig = {
       label: 'Daftar Portal',
       fields: [
         { name: 'nama', type: 'text', label: 'Nama Portal', required: true },
+        {
+          name: 'kategori',
+          type: 'select',
+          label: 'Kategori',
+          defaultValue: 'layanan',
+          required: true,
+          options: [
+            { label: 'Penerimaan Mahasiswa Baru', value: 'penerimaan' },
+            { label: 'Akademik', value: 'akademik' },
+            { label: 'Pembelajaran', value: 'pembelajaran' },
+            { label: 'Layanan Referensi', value: 'referensi' },
+            { label: 'Portal Nasional', value: 'nasional' },
+            { label: 'Layanan Kampus', value: 'layanan' },
+          ],
+          admin: { width: '50%' },
+        },
         { name: 'url', type: 'text', label: 'URL Portal', required: true },
         { name: 'deskripsi', type: 'text', label: 'Deskripsi Singkat' },
         { name: 'icon', type: 'text', label: 'Icon (Lucide name)' },

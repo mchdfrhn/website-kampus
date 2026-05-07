@@ -6,6 +6,7 @@ import * as migration_20260423_113500_add_accent_color_to_program_studi from './
 import * as migration_20260423_154500_add_managed_categories from './20260423_154500_add_managed_categories';
 import * as migration_20260507_000000_add_portal_technical_support from './20260507_000000_add_portal_technical_support';
 import * as migration_20260507_010000_add_mitra_home_section from './20260507_010000_add_mitra_home_section';
+import * as migration_20260507_020000_add_portal_categories from './20260507_020000_add_portal_categories';
 
 export const migrations = [
   {
@@ -47,5 +48,10 @@ export const migrations = [
     up: migration_20260507_010000_add_mitra_home_section.up,
     down: migration_20260507_010000_add_mitra_home_section.down,
     name: '20260507_010000_add_mitra_home_section',
+  },
+  {
+    up: migration_20260507_020000_add_portal_categories.up,
+    down: migration_20260507_020000_add_portal_categories.down,
+    name: '20260507_020000_add_portal_categories',
   },
 ];
