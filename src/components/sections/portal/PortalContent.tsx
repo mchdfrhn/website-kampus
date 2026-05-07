@@ -10,6 +10,18 @@ import {
   GraduationCap
 } from 'lucide-react';
 
+type PortalData = {
+  portals?: { nama: string; url: string; deskripsi?: string | null; icon?: string | null }[] | null;
+  bantuanTeknis?: {
+    judul?: string | null;
+    deskripsi?: string | null;
+    email?: string | null;
+    emailLabel?: string | null;
+    whatsappLabel?: string | null;
+    whatsappUrl?: string | null;
+  } | null;
+};
+
 function LinkCard({
   icon: iconName,
   label,
@@ -71,18 +83,28 @@ function LinkCard({
 }
 
 export default async function PortalContent() {
-  let portalData: { portals?: { nama: string; url: string; deskripsi?: string; icon?: string }[] } | null = null;
+  let portalData: PortalData | null = null;
 
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'portal-links' });
-    portalData = global as unknown as { portals?: { nama: string; url: string; deskripsi?: string; icon?: string }[] } | null;
+    portalData = global as unknown as PortalData;
   } catch (error) {
     console.error('Error fetching portal links:', error);
   }
 
   // Fallback data for safety
   const portals = portalData?.portals || [];
+  const bantuanTeknis = {
+    judul: portalData?.bantuanTeknis?.judul || 'Butuh Bantuan Teknis?',
+    deskripsi:
+      portalData?.bantuanTeknis?.deskripsi ||
+      'Jika mengalami kendala akses atau lupa kata sandi, hubungi UPT Teknologi Informasi STTPU.',
+    email: portalData?.bantuanTeknis?.email || 'it@sttpu.ac.id',
+    emailLabel: portalData?.bantuanTeknis?.emailLabel || portalData?.bantuanTeknis?.email || 'it@sttpu.ac.id',
+    whatsappLabel: portalData?.bantuanTeknis?.whatsappLabel || 'Chat WhatsApp Bantuan',
+    whatsappUrl: portalData?.bantuanTeknis?.whatsappUrl || '#',
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">
@@ -122,24 +144,26 @@ export default async function PortalContent() {
         </section>
 
         <section className="bg-brand-navy rounded-2xl p-6 text-white self-start">
-          <h2 className="font-bold text-base mb-2">Butuh Bantuan Teknis?</h2>
+          <h2 className="font-bold text-base mb-2">{bantuanTeknis.judul}</h2>
           <p className="text-white/75 text-sm mb-5 leading-relaxed">
-            Jika mengalami kendala akses atau lupa kata sandi, hubungi UPT Teknologi Informasi STTPU.
+            {bantuanTeknis.deskripsi}
           </p>
           <div className="flex flex-col gap-3">
             <a
-              href="mailto:it@sttpu.ac.id"
+              href={`mailto:${bantuanTeknis.email}`}
               className="inline-flex items-center gap-2 bg-brand-gold text-brand-navy font-bold text-sm px-4 py-2.5 rounded-lg hover:bg-brand-gold-dark transition-colors"
             >
               <Mail size={15} aria-hidden="true" />
-              it@sttpu.ac.id
+              {bantuanTeknis.emailLabel}
             </a>
             <a
-              href="#"
+              href={bantuanTeknis.whatsappUrl}
+              target={bantuanTeknis.whatsappUrl.startsWith('http') ? '_blank' : undefined}
+              rel={bantuanTeknis.whatsappUrl.startsWith('http') ? 'noopener noreferrer' : undefined}
               className="inline-flex items-center gap-2 bg-white/10 border border-white/30 text-white font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-white/20 transition-colors"
             >
               <MessageSquare size={15} aria-hidden="true" />
-              Chat WhatsApp Bantuan
+              {bantuanTeknis.whatsappLabel}
             </a>
           </div>
         </section>

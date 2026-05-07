@@ -29,5 +29,51 @@ export const PortalLinks: GlobalConfig = {
         { name: 'url', type: 'text', label: 'URL', required: true },
       ],
     },
+    {
+      name: 'bantuanTeknis',
+      type: 'group',
+      label: 'Bantuan Teknis',
+      fields: [
+        {
+          name: 'judul',
+          type: 'text',
+          label: 'Judul',
+          defaultValue: 'Butuh Bantuan Teknis?',
+        },
+        {
+          name: 'deskripsi',
+          type: 'textarea',
+          label: 'Deskripsi',
+          defaultValue:
+            'Jika mengalami kendala akses atau lupa kata sandi, hubungi UPT Teknologi Informasi STTPU.',
+        },
+        {
+          name: 'email',
+          type: 'email',
+          label: 'Email Bantuan',
+          defaultValue: 'it@sttpu.ac.id',
+        },
+        {
+          name: 'emailLabel',
+          type: 'text',
+          label: 'Label Tombol Email',
+          defaultValue: 'it@sttpu.ac.id',
+        },
+        {
+          name: 'whatsappLabel',
+          type: 'text',
+          label: 'Label Tombol WhatsApp',
+          defaultValue: 'Chat WhatsApp Bantuan',
+        },
+        {
+          name: 'whatsappUrl',
+          type: 'text',
+          label: 'Link WhatsApp',
+          admin: {
+            description: 'Contoh: https://wa.me/6281234567890',
+          },
+        },
+      ],
+    },
   ],
 }
