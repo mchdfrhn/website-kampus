@@ -24,36 +24,60 @@ type WhySttpuSectionProps = {
 const defaultItems: WhyItem[] = [
   {
     icon: 'Building2',
+    background: {
+      url: '/images/why-sttpu/01-infrastruktur.webp',
+      alt: 'Mahasiswa teknik meninjau rencana infrastruktur',
+    },
     title: 'Fokus pada infrastruktur dan pekerjaan umum',
     description:
       'Mahasiswa belajar dalam konteks konstruksi, lingkungan, teknologi, dan kebutuhan pembangunan yang dekat dengan dunia kerja bidang ke-PU-an.',
   },
   {
     icon: 'Network',
+    background: {
+      url: '/images/why-sttpu/02-ekosistem.webp',
+      alt: 'Visual ekosistem pembangunan dan jaringan infrastruktur',
+    },
     title: 'Terhubung dengan ekosistem pembangunan',
     description:
       'Identitas kampus dibangun di sekitar isu infrastruktur, layanan publik, dan kolaborasi dengan lembaga maupun mitra yang relevan.',
   },
   {
     icon: 'GraduationCap',
+    background: {
+      url: '/images/why-sttpu/03-praktis.webp',
+      alt: 'Pembelajaran praktis di ruang kelas dan laboratorium teknik',
+    },
     title: 'Program studi punya arah praktis',
     description:
       'Pilihan studi diarahkan untuk membentuk kompetensi yang bisa dipakai di lapangan, bukan hanya memahami teori di ruang kelas.',
   },
   {
     icon: 'BriefcaseBusiness',
+    background: {
+      url: '/images/why-sttpu/04-lapangan.webp',
+      alt: 'Kegiatan lapangan dengan perlengkapan survei infrastruktur',
+    },
     title: 'Membuka jalan ke pengalaman lapangan',
     description:
       'Kegiatan akademik, kemitraan, dan layanan kampus dapat menjadi pintu awal untuk magang, proyek, dan pengenalan dunia profesi.',
   },
   {
     icon: 'Rocket',
+    background: {
+      url: '/images/why-sttpu/05-digital.webp',
+      alt: 'Layanan kampus digital dan ruang belajar modern',
+    },
     title: 'Kampus sedang tumbuh secara digital',
     description:
       'Portal akademik, LMS, layanan pengajuan, dan kanal informasi kampus membantu mahasiswa mengakses proses belajar dengan lebih tertata.',
   },
   {
     icon: 'MapPinned',
+    background: {
+      url: '/images/why-sttpu/06-arah-karier.webp',
+      alt: 'Mahasiswa dengan arah karier di bidang infrastruktur',
+    },
     title: 'Cocok untuk mahasiswa yang ingin arah jelas',
     description:
       'STTPU menjadi pilihan bagi calon mahasiswa yang ingin membangun karier di bidang infrastruktur, lingkungan, dan teknologi terapan.',
@@ -77,19 +101,19 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
 
   if (backgroundUrl) {
     return (
-      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-brand-navy/10 bg-brand-navy p-5 text-white shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-brand-gold/70 hover:shadow-[0_22px_46px_rgba(15,23,42,0.18)]">
+      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-brand-navy/10 bg-brand-navy p-5 text-white shadow-[0_14px_30px_rgba(15,23,42,0.1)] transition-[border-color,box-shadow,transform] duration-500 ease-out hover:-translate-y-px hover:border-brand-gold/45 hover:shadow-[0_18px_38px_rgba(15,23,42,0.14)]">
         <ImageWithLoading
           src={backgroundUrl}
           alt={backgroundAlt}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
           skeletonClassName="bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-gold/30"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/72 to-brand-navy/28" />
-        <div className="absolute inset-0 bg-brand-navy/18" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/74 to-brand-navy/32 transition-opacity duration-700 ease-out group-hover:opacity-95" />
+        <div className="absolute inset-0 bg-brand-navy/20 transition-opacity duration-700 ease-out group-hover:bg-brand-navy/16" />
         <div className="relative z-10 mt-auto">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white/12 text-brand-gold ring-1 ring-white/20 backdrop-blur-sm">
+          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white/12 text-brand-gold ring-1 ring-white/20 backdrop-blur-sm transition-colors duration-500 group-hover:bg-white/14">
             <Icon size={20} aria-hidden="true" />
           </div>
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
@@ -127,7 +151,13 @@ export default function WhySttpuSection({
   ctaHref,
   items,
 }: WhySttpuSectionProps) {
-  const reasons = items && items.length > 0 ? items : defaultItems;
+  const reasons =
+    items && items.length > 0
+      ? items.map((item, index) => ({
+          ...item,
+          background: item.background || defaultItems[index % defaultItems.length].background,
+        }))
+      : defaultItems;
   const resolvedCtaHref = ctaHref || '/akademik/program-studi';
 
   return (
