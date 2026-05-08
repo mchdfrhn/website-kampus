@@ -14,7 +14,9 @@ export type SambutanKetuaData = {
 const defaultSambutan =
   'STTPU Jakarta hadir untuk menghubungkan ilmu, praktik, dan kebutuhan nyata dunia infrastruktur. Kami berkomitmen menyiapkan lulusan yang adaptif, berintegritas, dan siap berkontribusi bagi pembangunan Indonesia.';
 const defaultKetuaPhoto = '/images/pimpinan/ketua-sttpu-arie-setiadi.webp';
-const campusStagePhoto = '/images/pimpinan/sttpu-campus-stage.webp';
+
+const portraitStageClassName =
+  'relative mx-auto flex min-h-[460px] w-full max-w-sm items-end justify-center overflow-hidden rounded-xl border border-brand-navy/10 bg-[linear-gradient(180deg,#f8fafc_0%,#eef6f8_100%)] shadow-[0_22px_60px_rgba(15,23,42,0.12)] sm:min-h-[540px] lg:max-w-md';
 
 export default function SambutanKetuaSection({
   ketua,
@@ -31,32 +33,22 @@ export default function SambutanKetuaSection({
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-navy/10 to-transparent" />
       <div className="mx-auto grid max-w-7xl items-end gap-10 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:px-8">
         <Reveal width="100%" yOffset={24}>
-          <div className="relative mx-auto flex min-h-[360px] w-full max-w-md items-end justify-center overflow-hidden rounded-xl bg-brand-navy shadow-[0_22px_60px_rgba(15,23,42,0.16)] lg:max-w-none">
-            <ImageWithLoading
-              src={campusStagePhoto}
-              alt=""
-              fill
-              sizes="(max-width: 1024px) 90vw, 540px"
-              className="object-cover object-left"
-              skeletonClassName="bg-brand-navy"
-              aria-hidden="true"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/58 to-brand-navy/16" />
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/36 via-transparent to-brand-gold/12" />
-            <div className="absolute left-5 top-5 h-20 w-20 rounded-full border border-brand-gold/25 bg-brand-gold/14 backdrop-blur-[1px]" />
-            <div className="absolute right-5 top-8 h-14 w-14 rounded-full border border-white/20 bg-white/10 backdrop-blur-[1px]" />
-            <div className="absolute -bottom-10 left-0 h-40 w-40 rounded-t-full bg-brand-gold/70 mix-blend-screen" />
-            <div className="absolute bottom-16 left-28 h-24 w-24 rounded-tl-full bg-brand-gold/60 mix-blend-screen" />
-            <div className="absolute bottom-16 left-28 h-24 w-24 rounded-br-full bg-brand-navy/72" />
-            <div className="absolute inset-x-8 bottom-0 h-28 rounded-[50%] bg-black/30 blur-2xl" />
+          <div className={portraitStageClassName}>
+            <div className="absolute inset-x-6 bottom-0 h-[86%] rounded-t-[2rem] bg-[radial-gradient(circle_at_28%_18%,rgba(252,182,3,0.18),transparent_26%),linear-gradient(155deg,#08245c_0%,#061a45_58%,#041334_100%)]" />
+            <div className="absolute inset-x-6 bottom-0 h-[86%] rounded-t-[2rem] bg-[linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:44px_44px] opacity-25" />
+            <div className="absolute left-6 top-7 h-24 w-24 rounded-full border border-brand-gold/20 bg-brand-gold/10" />
+            <div className="absolute right-7 top-12 h-16 w-16 rounded-full border border-white/20 bg-white/10" />
+            <div className="absolute -bottom-10 -left-8 h-44 w-44 rounded-full bg-brand-gold/20" />
+            <div className="absolute bottom-16 right-8 h-28 w-28 rounded-full border border-white/10 bg-white/[0.03]" />
+            <div className="absolute inset-x-10 bottom-0 h-16 rounded-[50%] bg-black/24 blur-2xl" />
 
-            <div className="relative z-10 h-[380px] w-full sm:h-[455px]">
+            <div className="relative z-10 h-[455px] w-full sm:h-[540px]">
               <ImageWithLoading
                 src={fotoUrl}
                 alt={nama}
                 fill
-                sizes="(max-width: 1024px) 80vw, 520px"
-                className="object-contain object-bottom drop-shadow-[0_24px_28px_rgba(0,0,0,0.22)] [transform:translateX(-2rem)_translateY(0.5rem)_scaleX(-1)] sm:[transform:translateX(-3rem)_translateY(0.75rem)_scaleX(-1)_scale(1.08)] lg:[transform:translateX(-3.5rem)_translateY(0.75rem)_scaleX(-1)_scale(1.08)]"
+                sizes="(max-width: 1024px) 82vw, 440px"
+                className="object-contain object-bottom drop-shadow-[0_24px_28px_rgba(0,0,0,0.22)] [transform:scaleX(-1)]"
                 skeletonClassName="bg-brand-navy/15"
                 priority
               />
