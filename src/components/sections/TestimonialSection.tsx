@@ -62,7 +62,7 @@ export default async function TestimonialSection() {
               </div>
 
               <div className="flex items-center gap-6 mt-auto relative z-10">
-                <div className="relative w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center overflow-hidden shadow-2xl shadow-brand-gold/20 group-hover:bg-white group-hover:scale-110 transition-all duration-700">
+                <div className="relative w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center overflow-hidden shadow-2xl shadow-brand-gold/20 transition-[background-color,transform] duration-500 ease-out group-hover:bg-white group-hover:scale-105">
                   {item.foto?.url ? (
                     <ImageWithLoading
                       src={item.foto.url}

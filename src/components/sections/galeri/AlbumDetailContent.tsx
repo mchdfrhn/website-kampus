@@ -240,7 +240,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
               src={foto.url}
               alt={foto.keterangan || album.judul}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500 flex items-center justify-center">
                <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-90 group-hover:scale-100 transition-all duration-500">

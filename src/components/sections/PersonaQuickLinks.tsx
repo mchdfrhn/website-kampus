@@ -217,7 +217,7 @@ export default function PersonaQuickLinks({ tabs }: Props) {
                       <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/[0.03] rounded-2xl flex items-center justify-center mb-6 sm:mb-8 group-hover:bg-brand-gold transition-all duration-500 border border-white/5 shadow-2xl shadow-brand-navy/20">
                         {(() => {
                           const Icon = getIcon(link.icon, link.label)
-                          return <Icon size={28} strokeWidth={1.5} className="text-brand-gold group-hover:text-brand-navy group-hover:scale-110 transition-all duration-500" />
+                          return <Icon size={28} strokeWidth={1.5} className="text-brand-gold transition-[color,transform] duration-500 ease-out group-hover:text-brand-navy group-hover:scale-105" />
                         })()}
                       </div>
                       <h3 className="text-white text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-brand-gold transition-colors leading-relaxed">

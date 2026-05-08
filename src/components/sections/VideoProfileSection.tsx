@@ -172,7 +172,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
               alt={judul}
               fill
               sizes="(max-width: 1024px) 100vw, 1120px"
-              className="object-cover transition-transform duration-1000 group-hover/thumb:scale-105"
+              className="object-cover transition-transform duration-700 ease-out group-hover/thumb:scale-105"
               skeletonClassName="bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-gold/30"
             />
             
@@ -184,7 +184,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-brand-gold/20 animate-ping scale-125" />
                 
-                <button className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center shadow-lg transition-transform duration-500 group-hover/thumb:scale-110">
+                <button className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center shadow-lg transition-transform duration-500 ease-out group-hover/thumb:scale-105">
                   <Play size={32} fill="currentColor" className="ml-1" />
                 </button>
               </div>

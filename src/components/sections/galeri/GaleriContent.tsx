@@ -85,7 +85,7 @@ export default function GaleriContent({
                       src={album.coverFotoUrl}
                       alt={album.judul}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">

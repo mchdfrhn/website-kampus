@@ -99,7 +99,7 @@ export default async function ProgramStudiSection() {
               <MotionItem key={program.nama}>
                 <div
                   className={cn(
-                    'group rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-[0.99] transition-all duration-700 ease-in-out flex flex-col h-full border',
+                    'group rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-1 active:scale-[0.99] transition-all duration-500 ease-out flex flex-col h-full border',
                     accent.card,
                   )}
                 >
@@ -110,7 +110,7 @@ export default async function ProgramStudiSection() {
                         alt={program.nama}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                        className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-in-out"
+                        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                     ) : (
                       <div className={`absolute inset-0 bg-gradient-to-br ${accent.tint} flex items-center justify-center`}>

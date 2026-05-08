@@ -150,7 +150,7 @@ export default function ArtikelDetailContent({
                       className="flex items-start gap-4 p-6 hover:bg-gray-50 transition-all group"
                     >
                       <div
-                        className="w-16 h-16 bg-gray-100 rounded-xl flex-shrink-0 group-hover:scale-105 transition-transform overflow-hidden relative"
+                        className="w-16 h-16 bg-gray-100 rounded-xl flex-shrink-0 overflow-hidden relative transition-transform duration-500 ease-out group-hover:scale-105"
                       >
                          {a.thumbnailUrl && <Image src={a.thumbnailUrl} alt={a.judul} fill className="object-cover" />}
                       </div>

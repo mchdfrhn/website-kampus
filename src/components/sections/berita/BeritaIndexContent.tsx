@@ -149,7 +149,7 @@ export default function BeritaIndexContent({
                 >
                   <div className="h-48 bg-gray-50 border-b border-gray-50 relative overflow-hidden">
                     {a.thumbnailUrl ? (
-                      <Image src={a.thumbnailUrl} alt={a.judul} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                      <Image src={a.thumbnailUrl} alt={a.judul} fill className="object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
                     ) : (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <p className="text-gray-300 text-[10px] font-bold uppercase tracking-widest italic">STTPU News</p>

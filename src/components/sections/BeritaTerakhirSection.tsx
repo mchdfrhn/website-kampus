@@ -46,7 +46,7 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
                       alt={item.judul}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-brand-navy/[0.03]">

@@ -16,6 +16,8 @@ export default function ImageWithLoading({
   ...props
 }: ImageWithLoadingProps) {
   const [isReady, setIsReady] = useState(false);
+  const hasCustomTransition =
+    typeof className === "string" && className.includes("transition");
 
   return (
     <>
@@ -30,7 +32,11 @@ export default function ImageWithLoading({
       />
       <Image
         {...props}
-        className={cn(className, "transition-opacity duration-500", isReady ? "opacity-100" : "opacity-0")}
+        className={cn(
+          className,
+          hasCustomTransition ? null : "transition-opacity duration-500",
+          isReady ? "opacity-100" : "opacity-0",
+        )}
         onLoad={(event) => {
           setIsReady(true);
           onLoad?.(event);

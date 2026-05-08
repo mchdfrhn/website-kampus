@@ -358,7 +358,7 @@ export default function ContactFormSection({
                         rel={ch.external ? 'noopener noreferrer' : undefined}
                         className="flex items-center gap-5 p-5 bg-white border border-gray-100 rounded-2xl hover:border-brand-gold hover:shadow-premium-hover hover:-translate-x-1.5 transition-all duration-300 group"
                       >
-                        <div className={`${style.bg} ${style.color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                        <div className={`${style.bg} ${style.color} w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform duration-500 ease-out group-hover:scale-105`}>
                           {style.icon}
                         </div>
                         <div>

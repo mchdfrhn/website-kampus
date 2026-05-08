@@ -154,7 +154,7 @@ export default async function Footer() {
           <div className="lg:pr-12 text-left">
             <Link href="/" className="inline-flex items-center justify-start gap-4 sm:gap-5 mb-8 sm:mb-10 group" aria-label="STTPU — Beranda">
               {(contact as typeof defaultContact & { logoUrl?: string | null }).logoUrl ? (
-                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-700 group-hover:scale-110">
+                <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-500 ease-out group-hover:scale-105">
                   <div className="relative h-full w-full overflow-hidden rounded-lg">
                     <Image
                       src={(contact as typeof defaultContact & { logoUrl?: string | null }).logoUrl || ''}
@@ -166,7 +166,7 @@ export default async function Footer() {
                 </div>
               ) : (
                 <div
-                  className="w-14 h-14 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-sm leading-tight text-center flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-700"
+                  className="w-14 h-14 bg-brand-gold rounded-xl flex items-center justify-center font-bold text-brand-navy text-sm leading-tight text-center flex-shrink-0 shadow-lg transition-transform duration-500 ease-out group-hover:scale-105"
                   aria-hidden="true"
                 >
                   STTPU
@@ -192,7 +192,7 @@ export default async function Footer() {
                     aria-label={s.handle || s.platform}
                     className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center hover:bg-brand-gold hover:text-brand-navy hover:border-brand-gold transition-all duration-500 group/social"
                   >
-                    <Icon className="w-4.5 h-4.5 group-hover/social:scale-110 transition-all duration-500" />
+                    <Icon className="w-4.5 h-4.5 transition-transform duration-500 ease-out group-hover/social:scale-105" />
                   </a>
                 )
               })}

@@ -92,7 +92,7 @@ export default async function SocialMediaSection() {
                 className="group bg-gray-50 border border-gray-100 rounded-2xl p-8 text-center hover:bg-brand-navy hover:border-brand-navy hover:shadow-2xl transition-all duration-500 no-underline"
               >
                 <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm group-hover:bg-brand-gold transition-colors duration-500">
-                  <Icon className="w-8 h-8 text-brand-navy group-hover:scale-110 transition-transform duration-500" />
+                  <Icon className="w-8 h-8 text-brand-navy transition-transform duration-500 ease-out group-hover:scale-105" />
                 </div>
                 <p className="font-bold text-brand-navy text-lg group-hover:text-white transition-colors duration-500">{platformLabel[s.platform] ?? s.platform}</p>
                 {s.handle && <p className="text-gray-500 text-sm mt-1 group-hover:text-white/60 transition-colors duration-500 font-medium">{s.handle}</p>}
