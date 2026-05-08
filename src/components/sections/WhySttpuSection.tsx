@@ -1,8 +1,8 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Reveal } from '@/components/ui/motion/Reveal';
-import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 type WhyItem = {
   icon?: string | null;
@@ -101,26 +101,29 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
 
   if (backgroundUrl) {
     return (
-      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-brand-navy/10 bg-brand-navy p-5 text-white shadow-[0_14px_30px_rgba(15,23,42,0.1)] transition-[border-color,box-shadow,transform] duration-500 ease-out hover:-translate-y-px hover:border-brand-gold/45 hover:shadow-[0_18px_38px_rgba(15,23,42,0.14)]">
-        <ImageWithLoading
+      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-brand-navy shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-500 ease-out hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]">
+        <Image
           src={backgroundUrl}
           alt={backgroundAlt}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-          className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
-          skeletonClassName="bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-gold/30"
+          className="object-cover opacity-0 transition-[opacity,transform] duration-700 ease-out group-hover:scale-105 group-hover:opacity-100"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/74 to-brand-navy/32 transition-opacity duration-700 ease-out group-hover:opacity-95" />
-        <div className="absolute inset-0 bg-brand-navy/20 transition-opacity duration-700 ease-out group-hover:bg-brand-navy/16" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/72 to-brand-navy/28 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-brand-navy/12 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100" />
         <div className="relative z-10 mt-auto">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-white/12 text-brand-gold ring-1 ring-white/20 backdrop-blur-sm transition-colors duration-500 group-hover:bg-white/14">
+          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-mist text-brand-navy ring-1 ring-brand-navy/5 transition-colors duration-500 group-hover:bg-white/12 group-hover:text-brand-gold group-hover:ring-white/20 group-hover:backdrop-blur-sm">
             <Icon size={20} aria-hidden="true" />
           </div>
           <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
             Alasan {index + 1}
           </p>
-          <h3 className="text-lg font-bold leading-snug text-white">{item.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-white/78">{item.description}</p>
+          <h3 className="text-lg font-bold leading-snug text-brand-navy transition-colors duration-500 group-hover:text-white">
+            {item.title}
+          </h3>
+          <p className="mt-2 text-sm leading-relaxed text-gray-500 transition-colors duration-500 group-hover:text-white/78">
+            {item.description}
+          </p>
         </div>
       </li>
     );

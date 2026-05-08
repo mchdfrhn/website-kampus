@@ -8,6 +8,9 @@ import TestimonialSection from '@/components/sections/TestimonialSection';
 import VideoProfileSection from '@/components/sections/VideoProfileSection';
 import MitraSection from '@/components/sections/MitraSection';
 import WhySttpuSection from '@/components/sections/WhySttpuSection';
+import SambutanKetuaSection, {
+  type SambutanKetuaData,
+} from '@/components/sections/SambutanKetuaSection';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -33,6 +36,7 @@ type MitraItem = {
   url?: string | null;
   logo?: { url?: string | null; alt?: string | null } | null;
 }
+type PimpinanDoc = SambutanKetuaData & { urutan?: number | null }
 
 const defaultHomePageData = {
   heroSlides: [
@@ -93,7 +97,7 @@ async function fetchHomePageData() {
   try {
     const payload = await getPayloadClient()
     
-    const [halamanUtamaRes, siteSettingsRes, beritaRes, mitraRes] = await Promise.allSettled([
+    const [halamanUtamaRes, siteSettingsRes, beritaRes, mitraRes, pimpinanRes] = await Promise.allSettled([
       payload.findGlobal({ slug: 'halaman-utama', depth: 1 }),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }),
       payload.find({
@@ -110,12 +114,24 @@ async function fetchHomePageData() {
         sort: 'urutan',
         depth: 1,
       }),
+      payload.find({
+        collection: 'pimpinan',
+        limit: 20,
+        sort: 'urutan',
+        depth: 1,
+      }),
     ])
 
     const halamanUtama = halamanUtamaRes.status === 'fulfilled' ? halamanUtamaRes.value : null
     const siteSettings = siteSettingsRes.status === 'fulfilled' ? siteSettingsRes.value : null
     const beritaDocs = beritaRes.status === 'fulfilled' ? beritaRes.value.docs : []
     const mitraDocs = mitraRes.status === 'fulfilled' ? mitraRes.value.docs : []
+    const pimpinanDocs =
+      pimpinanRes.status === 'fulfilled' ? (pimpinanRes.value.docs as unknown as PimpinanDoc[]) : []
+    const ketua =
+      pimpinanDocs.find((person) => person.jabatan?.toLowerCase().includes('ketua')) ||
+      pimpinanDocs[0] ||
+      null
 
     const mappedBerita = beritaDocs.length > 0 ? beritaDocs.map(mapPayloadToArtikel) : artikelStatic.slice(0, 4)
     
@@ -146,6 +162,7 @@ async function fetchHomePageData() {
       siteSettings,
       berita: sortedBerita,
       mitra: mitraDocs as unknown as MitraItem[],
+      ketua,
     }
   } catch (error) {
     console.error('Error in fetchHomePageData:', error)
@@ -154,12 +171,13 @@ async function fetchHomePageData() {
       siteSettings: null,
       berita: artikelStatic.slice(0, 4),
       mitra: [],
+      ketua: null,
     }
   }
 }
 
 export default async function HomePage() {
-  const { halamanUtama, siteSettings, berita, mitra } = await fetchHomePageData()
+  const { halamanUtama, siteSettings, berita, mitra, ketua } = await fetchHomePageData()
 
   const quickLinksTabs = (halamanUtama as unknown as { quickLinksTabs?: Tab[] })?.quickLinksTabs || []
   const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || defaultHomePageData.statistik
@@ -196,6 +214,8 @@ export default async function HomePage() {
           items={whySettings.whyItems}
         />
       )}
+
+      <SambutanKetuaSection ketua={ketua} />
 
       <BeritaTerakhirSection artikelList={berita} />
 

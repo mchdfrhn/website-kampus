@@ -1,12 +1,12 @@
 import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import {
   formatTanggal,
   getArtikelKategoriLabel,
   type Artikel,
 } from '@/lib/data/berita';
-import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 export default function BeritaTerakhirSection({ artikelList }: { artikelList: Artikel[] }) {
   return (
@@ -37,16 +37,16 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
           {artikelList.map((item) => (
             <StaggerItem key={item.slug}>
               <article
-                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-[0.99] transition-all duration-700 flex flex-col h-full"
+                className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium transition-all duration-500 hover:-translate-y-1 hover:shadow-premium-hover active:scale-[0.99]"
               >
                 <div className="h-52 bg-gray-100 relative overflow-hidden">
                   {item.thumbnailUrl ? (
-                    <ImageWithLoading
+                    <Image
                       src={item.thumbnailUrl}
                       alt={item.judul}
                       fill
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                      className="object-cover group-hover:scale-110 transition-transform duration-1000 ease-out"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-brand-navy/[0.03]">
