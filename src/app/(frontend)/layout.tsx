@@ -11,8 +11,10 @@ import BackToTopControl from "@/components/sections/BackToTopControl";
 import WhatsAppFloat from "@/components/sections/WhatsAppFloat";
 import { getPayloadClient } from "@/lib/payload";
 import {
+  buildOgImageUrl,
   buildOrganizationJsonLd,
   buildWebsiteJsonLd,
+  getDefaultSocialImageUrl,
   getSiteUrl,
   toAbsoluteUrl,
 } from "@/lib/seo";
@@ -48,9 +50,25 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "STTPU Jakarta",
       locale: "id_ID",
       type: "website",
+      title: "STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
+      description:
+        "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",
+      url: getSiteUrl(),
+      images: [
+        {
+          url: getDefaultSocialImageUrl(),
+          alt: "STTPU Jakarta",
+          width: 1200,
+          height: 630,
+        },
+      ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
+      title: "STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
+      description:
+        "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",
+      images: [getDefaultSocialImageUrl()],
     },
   };
 
@@ -63,15 +81,17 @@ export async function generateMetadata(): Promise<Metadata> {
     const favicon = (
       typeof siteSettings.favicon === "object" ? siteSettings.favicon : null
     ) as MediaValue;
-    const logo = (
-      typeof siteSettings.logo === "object" ? siteSettings.logo : null
-    ) as MediaValue;
     const socialMedia = Array.isArray(siteSettings.socialMedia)
       ? siteSettings.socialMedia
           .map((item) => (typeof item?.url === "string" ? item.url : ""))
           .filter(Boolean)
       : [];
-    const socialImage = toAbsoluteUrl(logo?.url || favicon?.url);
+    const socialImage = toAbsoluteUrl(
+      buildOgImageUrl({
+        title: siteSettings.namaInstitusi || "STTPU Jakarta",
+        description: "Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
+      })
+    );
 
     return {
       ...baseMetadata,
@@ -96,13 +116,15 @@ export async function generateMetadata(): Promise<Metadata> {
                 {
                   url: socialImage,
                   alt: siteSettings.namaInstitusi || "STTPU Jakarta",
+                  width: 1200,
+                  height: 630,
                 },
               ],
             }
           : {}),
       },
       twitter: {
-        card: socialImage ? "summary_large_image" : "summary",
+        card: "summary_large_image",
         title: "STTPU — Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta",
         description:
           "Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta — pendidikan tinggi teknologi untuk infrastruktur dan pekerjaan umum Indonesia.",

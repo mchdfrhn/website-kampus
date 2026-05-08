@@ -13,6 +13,10 @@ type BreadcrumbItem = {
   path: string;
 };
 
+const DEFAULT_SOCIAL_TITLE = 'STTPU Jakarta';
+const DEFAULT_SOCIAL_DESCRIPTION =
+  'Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta';
+
 export function getSiteUrl(): string {
   return process.env.NEXT_PUBLIC_SITE_URL || 'https://sttpu.ac.id';
 }
@@ -27,6 +31,25 @@ export function toAbsoluteUrl(pathOrUrl?: string | null): string | undefined {
   }
 }
 
+export function buildOgImageUrl({
+  title = DEFAULT_SOCIAL_TITLE,
+  description = DEFAULT_SOCIAL_DESCRIPTION,
+}: {
+  title?: string | null;
+  description?: string | null;
+} = {}): string {
+  const params = new URLSearchParams({
+    title: title || DEFAULT_SOCIAL_TITLE,
+    description: description || DEFAULT_SOCIAL_DESCRIPTION,
+  });
+
+  return `/api/og?${params.toString()}`;
+}
+
+export function getDefaultSocialImageUrl(): string {
+  return toAbsoluteUrl(buildOgImageUrl()) || `${getSiteUrl()}/api/og`;
+}
+
 export function buildPageMetadata({
   title,
   description,
@@ -35,7 +58,8 @@ export function buildPageMetadata({
   type = 'website',
 }: SeoMetadataOptions): Metadata {
   const absoluteUrl = toAbsoluteUrl(path);
-  const absoluteImage = toAbsoluteUrl(image);
+  const fallbackImage = buildOgImageUrl({ title, description });
+  const absoluteImage = toAbsoluteUrl(image || fallbackImage);
 
   return {
     title,
@@ -50,19 +74,19 @@ export function buildPageMetadata({
       siteName: 'STTPU Jakarta',
       locale: 'id_ID',
       type,
-      ...(absoluteImage
-        ? {
-            images: [
-              {
-                url: absoluteImage,
-                alt: title,
-              },
-            ],
-          }
-        : {}),
+      images: absoluteImage
+        ? [
+            {
+              url: absoluteImage,
+              alt: title,
+              width: 1200,
+              height: 630,
+            },
+          ]
+        : [],
     },
     twitter: {
-      card: absoluteImage ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
       ...(absoluteImage ? { images: [absoluteImage] } : {}),
