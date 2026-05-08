@@ -57,18 +57,23 @@ export function buildPageMetadata({
   image,
   type = 'website',
 }: SeoMetadataOptions): Metadata {
+  const documentTitle = title.toLowerCase().includes('sttpu')
+    ? title
+    : `${title} | STTPU Jakarta`;
   const absoluteUrl = toAbsoluteUrl(path);
-  const fallbackImage = buildOgImageUrl({ title, description });
+  const fallbackImage = buildOgImageUrl({ title: documentTitle, description });
   const absoluteImage = toAbsoluteUrl(image || fallbackImage);
 
   return {
-    title,
+    title: {
+      absolute: documentTitle,
+    },
     description,
     alternates: {
       canonical: path,
     },
     openGraph: {
-      title,
+      title: documentTitle,
       description,
       url: absoluteUrl,
       siteName: 'STTPU Jakarta',
@@ -78,7 +83,7 @@ export function buildPageMetadata({
         ? [
             {
               url: absoluteImage,
-              alt: title,
+              alt: documentTitle,
               width: 1200,
               height: 630,
             },
@@ -87,7 +92,7 @@ export function buildPageMetadata({
     },
     twitter: {
       card: 'summary_large_image',
-      title,
+      title: documentTitle,
       description,
       ...(absoluteImage ? { images: [absoluteImage] } : {}),
     },

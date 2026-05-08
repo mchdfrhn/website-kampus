@@ -8,6 +8,12 @@ import {
   type PayloadSectionMeta,
 } from '@/lib/frontend-section-routing';
 
+type SitemapEntry = MetadataRoute.Sitemap[number];
+
+function dedupeRoutes(routes: SitemapEntry[]): SitemapEntry[] {
+  return Array.from(new Map(routes.map((route) => [route.url, route])).values());
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://sttpu.ac.id';
 
@@ -23,10 +29,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/akademik/beasiswa',
     '/berita',
     '/galeri',
+    '/portal',
     '/kontak',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    lastModified: new Date(),
     changeFrequency: 'monthly' as const,
     priority: route === '' ? 1 : 0.8,
   }));
@@ -34,7 +40,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {
     const payload = await getPayloadClient();
 
-    const [berita, programStudi, dosen, tentangGlobal, kemahasiswaanGlobal, penelitianGlobal] = await Promise.all([
+    const [
+      berita,
+      programStudi,
+      dosen,
+      galeri,
+      tentangGlobal,
+      kemahasiswaanGlobal,
+      penelitianGlobal,
+    ] = await Promise.all([
       payload.find({
         collection: 'berita',
         where: { status: { equals: 'terbit' } },
@@ -50,6 +64,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       payload.find({
         collection: 'dosen',
         limit: 500,
+        select: { slug: true, updatedAt: true },
+      }),
+      payload.find({
+        collection: 'galeri',
+        limit: 1000,
         select: { slug: true, updatedAt: true },
       }),
       payload.findGlobal({ slug: 'tentang-kami' }),
@@ -69,7 +88,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const beritaRoutes = berita.docs.map((doc) => ({
       url: `${baseUrl}/berita/${doc.slug}`,
-      lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : new Date(),
+      lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : undefined,
       changeFrequency: 'weekly' as const,
       priority: 0.6,
     }));
@@ -78,7 +97,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((doc) => doc.slug)
       .map((doc) => ({
         url: `${baseUrl}/akademik/program-studi/${doc.slug}`,
-        lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : new Date(),
+        lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : undefined,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
       }));
@@ -87,40 +106,45 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .filter((doc) => doc.slug)
       .map((doc) => ({
         url: `${baseUrl}/akademik/dosen/${doc.slug}`,
-        lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : new Date(),
+        lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : undefined,
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }));
+
+    const galeriRoutes = galeri.docs
+      .filter((doc) => doc.slug)
+      .map((doc) => ({
+        url: `${baseUrl}/galeri/${doc.slug}`,
+        lastModified: doc.updatedAt ? new Date(doc.updatedAt as string) : undefined,
         changeFrequency: 'monthly' as const,
         priority: 0.6,
       }));
 
     const tentangRoutes = tentangSections.map((section) => ({
       url: `${baseUrl}/tentang/${section.slug}`,
-      lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }));
 
     const kemahasiswaanRoutes = kemahasiswaanSections.map((section) => ({
       url: `${baseUrl}/kemahasiswaan/${section.slug}`,
-      lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }));
 
     const penelitianRoutes = penelitianSections.map((section) => ({
       url: `${baseUrl}/penelitian/${section.slug}`,
-      lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }));
 
     const akademikRoutes = defaultSections.map((section) => ({
       url: `${baseUrl}/akademik/${section.slug}`,
-      lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }));
 
-    return [
+    return dedupeRoutes([
       ...staticRoutes,
       ...akademikRoutes,
       ...tentangRoutes,
@@ -128,10 +152,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...penelitianRoutes,
       ...programStudiRoutes,
       ...dosenRoutes,
+      ...galeriRoutes,
       ...beritaRoutes,
-    ];
+    ]);
   } catch (error) {
     console.error('Sitemap generation error:', error);
-    return staticRoutes;
+    return dedupeRoutes(staticRoutes);
   }
 }

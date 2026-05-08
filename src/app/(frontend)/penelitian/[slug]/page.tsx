@@ -4,7 +4,7 @@ import PenelitianPageHeader from '@/components/sections/penelitian/PenelitianPag
 import PenelitianSidebar from '@/components/sections/penelitian/PenelitianSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolvePenelitianSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
-import { buildBreadcrumbJsonLd } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
 
 
 export async function generateStaticParams() {
@@ -34,7 +34,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   const s = resolvedSections.find((item) => item.slug === slug);
   if (!s) return {};
-  return { title: `${s.title} | STTPU Jakarta`, description: s.subtitle };
+  return buildPageMetadata({
+    title: `${s.title} | STTPU Jakarta`,
+    description: s.subtitle || `Informasi ${s.title} STTPU Jakarta.`,
+    path: `/penelitian/${s.slug}`,
+  });
 }
 
 export default async function PenelitianSlugPage({ params }: { params: Promise<{ slug: string }> }) {

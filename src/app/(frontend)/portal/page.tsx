@@ -1,13 +1,14 @@
-import type { Metadata } from 'next';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import PortalContent from '@/components/sections/portal/PortalContent';
+import { buildPageMetadata } from '@/lib/seo';
 
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: 'Portal | STTPU Jakarta',
   description:
     'Akses terpusat ke seluruh sistem digital STTPU Jakarta — SIAKAD, e-learning, email kampus, perpustakaan digital, dan layanan administrasi lainnya.',
-};
+  path: '/portal',
+});
 
 export default function PortalPage() {
   return (

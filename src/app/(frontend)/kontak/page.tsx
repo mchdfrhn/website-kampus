@@ -6,14 +6,15 @@ import ContactFormSection from '@/components/sections/kontak/ContactFormSection'
 import SocialMediaSection from '@/components/sections/kontak/SocialMediaSection';
 import DirectionsSection from '@/components/sections/kontak/DirectionsSection';
 import { getPayloadClient } from '@/lib/payload';
-import { buildBreadcrumbJsonLd, getSiteUrl } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildPageMetadata, getSiteUrl } from '@/lib/seo';
 
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPageMetadata({
   title: 'Kontak',
   description:
     'Hubungi STTPU Jakarta — temukan kontak unit, kirim pesan, atau kunjungi kampus kami.',
-};
+  path: '/kontak',
+});
 
 type ContactGlobal = {
   heroTitle?: string
@@ -24,18 +25,28 @@ type ContactGlobal = {
   directions?: { icon?: string; emoji?: string; heading: string; steps?: { text: string }[] }[]
 }
 
+type SiteSettingsContact = {
+  namaInstitusi?: string | null
+  emailUtama?: string | null
+  teleponUtama?: string | null
+  alamat?: string | null
+}
+
 export default async function KontakPage() {
   let pageContent: ContactGlobal = {}
   let unitOptions: { label: string; value: string }[] = []
+  let siteSettings: SiteSettingsContact = {}
 
   try {
     const payload = await getPayloadClient()
-    const [contactGlobal, unitResult] = await Promise.all([
+    const [contactGlobal, unitResult, settingsGlobal] = await Promise.all([
       payload.findGlobal({ slug: 'kontak-page' as never }),
       payload.find({ collection: 'unit-kontak', sort: 'urutan', limit: 50 }),
+      payload.findGlobal({ slug: 'site-settings' }),
     ])
 
     pageContent = contactGlobal as ContactGlobal
+    siteSettings = settingsGlobal as SiteSettingsContact
     unitOptions = unitResult.docs.map((doc) => {
       const unit = doc as { unit?: string }
       return {
@@ -59,13 +70,18 @@ export default async function KontakPage() {
     url: `${getSiteUrl()}/kontak`,
     mainEntity: {
       '@type': 'CollegeOrUniversity',
-      name: 'STTPU Jakarta',
-      telephone: '+62-21-0000000',
-      email: 'info@sttpu.ac.id',
-      address: {
-        '@type': 'PostalAddress',
-        addressCountry: 'ID',
-      },
+      name: siteSettings.namaInstitusi || 'STTPU Jakarta',
+      ...(siteSettings.teleponUtama ? { telephone: siteSettings.teleponUtama } : {}),
+      ...(siteSettings.emailUtama ? { email: siteSettings.emailUtama } : {}),
+      ...(siteSettings.alamat
+        ? {
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: siteSettings.alamat,
+              addressCountry: 'ID',
+            },
+          }
+        : {}),
     },
   };
 

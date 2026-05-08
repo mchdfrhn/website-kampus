@@ -1,16 +1,17 @@
-import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import BeasiswaContent from '@/components/sections/akademik/BeasiswaContent';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { getAkademikPageContent } from '@/lib/data/akademik-page';
+import { buildPageMetadata } from '@/lib/seo';
 
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: 'Beasiswa | STTPU Jakarta',
   description:
     'Informasi beasiswa internal dan eksternal yang tersedia untuk mahasiswa STTPU Jakarta — KIP Kuliah, LPDP, beasiswa prestasi, dan lainnya.',
-};
+  path: '/akademik/beasiswa',
+});
 
 export default async function BeasiswaPage() {
   const [{ sidebarTitle, links }, pageContent] = await Promise.all([

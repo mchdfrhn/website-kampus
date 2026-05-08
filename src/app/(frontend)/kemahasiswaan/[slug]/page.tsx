@@ -4,7 +4,7 @@ import KemahasiswaanPageHeader from '@/components/sections/kemahasiswaan/Kemahas
 import KemahasiswaanSidebar from '@/components/sections/kemahasiswaan/KemahasiswaanSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveKemahasiswaanSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
-import { buildBreadcrumbJsonLd } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
 
 
 export async function generateStaticParams() {
@@ -34,7 +34,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   const s = resolvedSections.find((item) => item.slug === slug);
   if (!s) return {};
-  return { title: `${s.title} | STTPU Jakarta`, description: s.subtitle };
+  return buildPageMetadata({
+    title: `${s.title} | STTPU Jakarta`,
+    description: s.subtitle || `Informasi ${s.title} STTPU Jakarta.`,
+    path: `/kemahasiswaan/${s.slug}`,
+  });
 }
 
 export default async function KemahasiswaanSlugPage({ params }: { params: Promise<{ slug: string }> }) {

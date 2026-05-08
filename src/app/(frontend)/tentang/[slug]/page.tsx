@@ -4,7 +4,7 @@ import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import TentangSidebar from '@/components/sections/tentang/TentangSidebar';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
-import { buildBreadcrumbJsonLd } from '@/lib/seo';
+import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
 
 
 export async function generateStaticParams() {
@@ -37,10 +37,11 @@ export async function generateMetadata({
   }
   const section = resolvedSections.find((item) => item.slug === slug);
   if (!section) return {};
-  return {
+  return buildPageMetadata({
     title: `${section.title} | STTPU Jakarta`,
-    description: section.subtitle,
-  };
+    description: section.subtitle || `Informasi ${section.title} STTPU Jakarta.`,
+    path: `/tentang/${section.slug}`,
+  });
 }
 
 export default async function TentangSlugPage({

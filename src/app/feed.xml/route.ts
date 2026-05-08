@@ -1,6 +1,6 @@
 import { getPayloadClient } from '@/lib/payload';
 import { mapPayloadToArtikel } from '@/lib/data/berita';
-import { getSiteUrl } from '@/lib/seo';
+import { getSiteUrl, toAbsoluteUrl } from '@/lib/seo';
 import type { Artikel } from '@/lib/data/berita';
 
 export const dynamic = 'force-dynamic';
@@ -19,10 +19,21 @@ function toRFC822(dateStr: string): string {
   return new Date(dateStr).toUTCString();
 }
 
+function inferImageMimeType(url: string): string {
+  const pathname = new URL(url).pathname.toLowerCase();
+
+  if (pathname.endsWith('.png')) return 'image/png';
+  if (pathname.endsWith('.webp')) return 'image/webp';
+  if (pathname.endsWith('.gif')) return 'image/gif';
+
+  return 'image/jpeg';
+}
+
 function buildItem(artikel: Artikel, siteUrl: string): string {
   const link = `${siteUrl}/berita/${artikel.slug}`;
-  const enclosure = artikel.thumbnailUrl
-    ? `\n    <enclosure url="${escapeXml(artikel.thumbnailUrl)}" type="image/jpeg" length="0"/>`
+  const thumbnailUrl = toAbsoluteUrl(artikel.thumbnailUrl);
+  const enclosure = thumbnailUrl
+    ? `\n    <enclosure url="${escapeXml(thumbnailUrl)}" type="${inferImageMimeType(thumbnailUrl)}" length="0"/>`
     : '';
 
   return `  <item>

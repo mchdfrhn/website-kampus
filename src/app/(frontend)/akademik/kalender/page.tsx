@@ -1,15 +1,16 @@
-import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import KalenderContent from '@/components/sections/akademik/KalenderContent';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import { buildPageMetadata } from '@/lib/seo';
 
 
-export const metadata: Metadata = {
+export const metadata = buildPageMetadata({
   title: 'Kalender Akademik | STTPU Jakarta',
   description:
     'Kalender akademik STTPU Jakarta Tahun Akademik 2025/2026 — jadwal perkuliahan, UTS, UAS, libur, dan wisuda.',
-};
+  path: '/akademik/kalender',
+});
 
 export default async function KalenderPage() {
   const { sidebarTitle, links } = await getAkademikNavigation();
