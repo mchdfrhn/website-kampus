@@ -6,6 +6,7 @@ import type { Dosen } from '@/lib/data/dosen';
 import type { DosenPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { BookOpen, ChevronRight, Mail, Search, Users } from 'lucide-react';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
 const jabatanLabel: Record<string, string> = {
   Profesor: 'Profesor',
@@ -161,7 +162,7 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
     return (
       <Link
         href={`/akademik/dosen/${dosen.slug}`}
-        className={`group flex h-full flex-col rounded-[1.5rem] border bg-white p-5 shadow-[0_16px_40px_rgba(10,31,68,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_24px_50px_rgba(10,31,68,0.08)] sm:p-6 ${accent.card}`}
+        className={`group flex h-full flex-col rounded-2xl border bg-white p-5 shadow-[0_16px_40px_rgba(10,31,68,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_24px_50px_rgba(10,31,68,0.08)] sm:p-8 ${accent.card}`}
       >
         {content}
       </Link>
@@ -169,7 +170,7 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
   }
 
   return (
-    <div className={`flex h-full flex-col rounded-[1.5rem] border bg-white p-5 opacity-85 shadow-[0_16px_40px_rgba(10,31,68,0.04)] sm:p-6 ${accent.card}`}>
+    <div className={`flex h-full flex-col rounded-2xl border bg-white p-5 opacity-85 shadow-[0_16px_40px_rgba(10,31,68,0.04)] sm:p-8 ${accent.card}`}>
       {content}
     </div>
   );
@@ -193,7 +194,7 @@ export default function DosenGrid({
   const activeAccent = activeGroup ? resolveProgramStudiAccentColor(activeGroup.program) : 'navy';
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+    <section className="py-10 sm:py-12">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
           Temukan Dosen Berdasarkan Program Studi
@@ -281,7 +282,7 @@ export default function DosenGrid({
               />
             </div>
 
-            <div className="grid grid-cols-1 gap-4 mt-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
               {(() => {
                 const displayedDosen = searchQuery.trim()
                   ? activeGroup.dosen.filter((d) =>
@@ -309,6 +310,34 @@ export default function DosenGrid({
           </section>
         </div>
       ) : null}
+
+      <div className="mt-12 bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
+        <BlueAbstractBackground />
+        <div className="relative z-10 flex flex-col items-start gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+          <div className="max-w-2xl text-center lg:text-left">
+            <h3 className="font-bold text-2xl md:text-3xl mb-4 tracking-tight">
+              {content?.ctaTitle || 'Konsultasi Akademik'}
+            </h3>
+            <p className="text-white/60 text-base md:text-lg font-medium leading-relaxed">
+              {content?.ctaDescription || 'Tim akademik kami siap membantu Anda menemukan dosen pembimbing, informasi program studi, dan jalur karir yang paling sesuai.'}
+            </p>
+          </div>
+          <div className="flex w-full flex-col sm:w-auto sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
+            <Link
+              href={content?.ctaPrimaryHref || '/kontak'}
+              className="w-full sm:w-auto text-center bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
+            >
+              {content?.ctaPrimaryLabel || 'Hubungi Kami'}
+            </Link>
+            <Link
+              href={content?.ctaSecondaryHref || '/akademik/program-studi'}
+              className="w-full sm:w-auto text-center border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
+            >
+              {content?.ctaSecondaryLabel || 'Program Studi'}
+            </Link>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }

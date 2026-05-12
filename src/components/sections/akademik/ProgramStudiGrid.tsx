@@ -8,9 +8,9 @@ import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 import { cn } from '@/lib/utils';
 
 const akreditasiColor: Record<string, string> = {
-  Unggul: 'bg-green-50 text-green-700 border-green-100',
+  Unggul: 'bg-green-50 text-green-700 border-green-200',
   'Baik Sekali': 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
-  Baik: 'bg-yellow-50 text-yellow-700 border-yellow-100',
+  Baik: 'bg-yellow-50 text-yellow-700 border-yellow-200',
 };
 
 const accentTheme: Record<string, {
@@ -62,7 +62,7 @@ export default function ProgramStudiGrid({
   const secondaryHref = content?.consultationSecondaryHref || '/akademik/beasiswa';
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+    <section className="py-10 sm:py-12">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">{gridTitle}</h2>
         <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
@@ -91,13 +91,13 @@ export default function ProgramStudiGrid({
               >
                 <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8">
                   <span className={cn(
-                    "text-[10px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider",
+                    "text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider",
                     accent.badge,
                   )}>
                     {prodi.jenjang}
                   </span>
                   <span className={cn(
-                    "text-[10px] font-bold px-3 py-1.5 rounded-lg border uppercase tracking-wider flex items-center gap-2",
+                    "text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider flex items-center gap-2",
                     akreditasiColor[prodi.akreditasi] ?? 'bg-gray-50 text-gray-500 border-gray-100'
                   )}>
                     <ShieldCheck size={12} aria-hidden="true" />

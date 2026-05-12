@@ -41,7 +41,7 @@ function SectionCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm shadow-brand-navy/[0.04] sm:p-8">
+    <section className="rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm shadow-brand-navy/[0.04] sm:p-8 lg:p-10">
       {eyebrow ? (
         <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
       ) : null}

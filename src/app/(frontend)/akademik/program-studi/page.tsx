@@ -46,6 +46,10 @@ export default async function ProgramStudiPage() {
       <AkademikPageHeader
         title="Program Studi"
         subtitle="Empat program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum dan infrastruktur nasional."
+        breadcrumbs={[
+          { label: 'Akademik' },
+          { label: 'Program Studi' },
+        ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex flex-col lg:flex-row gap-8">

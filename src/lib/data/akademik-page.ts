@@ -21,6 +21,12 @@ export type ProgramStudiPageContent = {
 
 export type DosenPageContent = {
   gridIntroText?: string | null;
+  ctaTitle?: string | null;
+  ctaDescription?: string | null;
+  ctaPrimaryLabel?: string | null;
+  ctaPrimaryHref?: string | null;
+  ctaSecondaryLabel?: string | null;
+  ctaSecondaryHref?: string | null;
 };
 
 export type BeasiswaPageContent = {
