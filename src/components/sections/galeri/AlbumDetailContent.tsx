@@ -5,14 +5,16 @@ import Image from "next/image";
 import { formatGaleriTanggal, type Album } from "@/lib/data/galeri";
 import { getKategoriSoftBadgeClass } from "@/lib/data/kategori";
 import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Image as ImageIcon, X, ChevronLeft, ChevronRight, Download } from 'lucide-react';
+import { Calendar, Image as ImageIcon, X, ChevronLeft, ChevronRight, Download, Play, Video } from 'lucide-react';
 import { useLenis } from 'lenis/react';
 
 import { createPortal } from 'react-dom';
 
 export default function AlbumDetailContent({ album }: { album: Album }) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+  const closeVideoRef = useRef<HTMLButtonElement>(null);
   const lenis = useLenis();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -31,6 +33,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
   }, [selectedIndex, album.foto]);
 
   const closeLightbox = useCallback(() => setSelectedIndex(null), []);
+  const closeVideoLightbox = useCallback(() => setSelectedVideoIndex(null), []);
 
   const handleDownload = async (url: string, index: number) => {
     try {
@@ -57,7 +60,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
       if (e.key === 'ArrowLeft') prevImage();
     };
     window.addEventListener('keydown', handleKeyDown);
-    
+
     if (selectedIndex !== null) {
       document.body.style.overflow = 'hidden';
       lenis?.stop();
@@ -65,7 +68,7 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
       document.body.style.overflow = 'unset';
       lenis?.start();
     }
-    
+
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
@@ -74,11 +77,40 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
   }, [selectedIndex, closeLightbox, nextImage, prevImage, lenis]);
 
   useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedVideoIndex === null) return;
+      if (e.key === 'Escape') closeVideoLightbox();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    if (selectedVideoIndex !== null) {
+      document.body.style.overflow = 'hidden';
+      lenis?.stop();
+    } else {
+      document.body.style.overflow = 'unset';
+      lenis?.start();
+    }
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+      lenis?.start();
+    };
+  }, [selectedVideoIndex, closeVideoLightbox, lenis]);
+
+  useEffect(() => {
     if (selectedIndex !== null) {
       const timer = setTimeout(() => closeButtonRef.current?.focus(), 50);
       return () => clearTimeout(timer);
     }
   }, [selectedIndex]);
+
+  useEffect(() => {
+    if (selectedVideoIndex !== null) {
+      const timer = setTimeout(() => closeVideoRef.current?.focus(), 50);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedVideoIndex]);
 
   const Lightbox = (
     <AnimatePresence>
@@ -190,6 +222,54 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
     </AnimatePresence>
   );
 
+  const VideoLightbox = (
+    <AnimatePresence>
+      {selectedVideoIndex !== null && album.video && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed top-0 left-0 w-full h-full z-9999 bg-black/90 backdrop-blur-2xl flex flex-col"
+          onClick={closeVideoLightbox}
+          style={{ position: 'fixed', left: 0, top: 0, width: '100vw', height: '100vh' }}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Putar video: ${album.video[selectedVideoIndex].judul || album.judul}`}
+        >
+          <button
+            ref={closeVideoRef}
+            onClick={closeVideoLightbox}
+            className="absolute top-4 right-4 z-110 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all active:scale-90"
+            aria-label="Tutup Video"
+          >
+            <X size={24} />
+          </button>
+
+          <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8" onClick={(e) => e.stopPropagation()}>
+            <video
+              key={selectedVideoIndex}
+              src={album.video[selectedVideoIndex].url}
+              controls
+              autoPlay
+              className="max-h-[75vh] max-w-full w-full rounded-2xl shadow-2xl"
+              aria-label={album.video[selectedVideoIndex].judul || album.judul}
+            />
+            {(album.video[selectedVideoIndex].judul || album.video[selectedVideoIndex].keterangan) && (
+              <div className="mt-6 text-center">
+                {album.video[selectedVideoIndex].judul && (
+                  <p className="text-white font-bold text-base mb-1">{album.video[selectedVideoIndex].judul}</p>
+                )}
+                {album.video[selectedVideoIndex].keterangan && (
+                  <p className="text-white/60 text-sm">{album.video[selectedVideoIndex].keterangan}</p>
+                )}
+              </div>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Header Section */}
@@ -212,6 +292,12 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
             <ImageIcon size={14} className="text-brand-gold" />
             <span>{album.jumlahFoto} Foto</span>
           </div>
+          {album.jumlahVideo > 0 && (
+            <div className="flex items-center gap-2 text-gray-400 text-xs font-medium">
+              <Video size={14} className="text-brand-gold" />
+              <span>{album.jumlahVideo} Video</span>
+            </div>
+          )}
         </div>
 
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-brand-navy mb-6 leading-tight">
@@ -258,15 +344,56 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
         ))}
       </div>
 
-      {album.foto?.length === 0 && (
+      {album.foto?.length === 0 && !album.video?.length && (
         <div className="text-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
           <ImageIcon size={48} className="mx-auto text-gray-200 mb-4" />
           <p className="text-gray-400 font-bold">Belum ada foto di album ini</p>
         </div>
       )}
 
-      {/* Portal for Lightbox */}
+      {/* Video Section */}
+      {album.video && album.video.length > 0 && (
+        <div className="mt-16">
+          <div className="flex items-center gap-3 mb-8">
+            <Video size={20} className="text-brand-gold" />
+            <h2 className="text-xl font-bold text-brand-navy">Video</h2>
+            <span className="text-xs font-bold text-gray-400 bg-gray-100 px-2.5 py-1 rounded-full">{album.video.length}</span>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {album.video.map((vid, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: index * 0.05 }}
+                onClick={() => setSelectedVideoIndex(index)}
+                className="group relative aspect-video bg-gray-900 rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover transition-all duration-500 cursor-pointer"
+              >
+                <video
+                  src={vid.url}
+                  preload="metadata"
+                  className="w-full h-full object-cover opacity-70 group-hover:opacity-50 transition-opacity duration-500"
+                  tabIndex={-1}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+                  <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <Play size={24} className="text-white translate-x-0.5" />
+                  </div>
+                  {vid.judul && (
+                    <p className="text-white text-xs font-bold text-center px-4 leading-snug drop-shadow">
+                      {vid.judul}
+                    </p>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Portals */}
       {mounted && createPortal(Lightbox, document.body)}
+      {mounted && createPortal(VideoLightbox, document.body)}
     </div>
   );
 }

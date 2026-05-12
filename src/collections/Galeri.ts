@@ -53,11 +53,37 @@ export const Galeri: CollectionConfig = {
           relationTo: "media",
           label: "Gambar",
           required: true,
+          filterOptions: { mimeType: { contains: "image" } },
         },
         {
           name: "keterangan",
           type: "text",
           label: "Keterangan Foto",
+        },
+      ],
+    },
+    {
+      name: "video",
+      type: "array",
+      label: "Koleksi Video",
+      fields: [
+        {
+          name: "file",
+          type: "upload",
+          relationTo: "media",
+          label: "File Video",
+          required: true,
+          filterOptions: { mimeType: { contains: "video" } },
+        },
+        {
+          name: "judul",
+          type: "text",
+          label: "Judul Video",
+        },
+        {
+          name: "keterangan",
+          type: "text",
+          label: "Keterangan Video",
         },
       ],
     },

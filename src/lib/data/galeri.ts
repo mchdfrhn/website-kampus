@@ -3,6 +3,17 @@ import { mapPayloadToManagedKategori } from './kategori';
 
 export type AlbumKategori = ManagedKategori;
 
+export type AlbumFoto = {
+  url: string;
+  keterangan?: string;
+};
+
+export type AlbumVideo = {
+  url: string;
+  judul?: string;
+  keterangan?: string;
+};
+
 export type Album = {
   id: string;
   judul: string;
@@ -11,11 +22,10 @@ export type Album = {
   deskripsi?: string;
   coverFotoUrl?: string;
   jumlahFoto: number;
+  jumlahVideo: number;
   tanggal?: string;
-  foto?: {
-    url: string;
-    keterangan?: string;
-  }[];
+  foto?: AlbumFoto[];
+  video?: AlbumVideo[];
 };
 
 const galeriKategoriDefaults: Record<string, Omit<AlbumKategori, 'id' | 'urutan'>> = {
@@ -77,6 +87,16 @@ export function mapPayloadToAlbum(doc: any): Album {
         .filter((f: any) => f.url !== null)
     : undefined;
 
+  const video = Array.isArray(doc.video)
+    ? doc.video
+        .map((v: any) => ({
+          url: v.file && typeof v.file === 'object' ? v.file.url : null,
+          judul: v.judul || undefined,
+          keterangan: v.keterangan || undefined,
+        }))
+        .filter((v: any) => v.url !== null)
+    : undefined;
+
   return {
     id: String(doc.id),
     judul: doc.judul ?? '',
@@ -85,7 +105,9 @@ export function mapPayloadToAlbum(doc: any): Album {
     deskripsi: doc.deskripsi ?? undefined,
     coverFotoUrl,
     jumlahFoto: doc.foto?.length ?? 0,
+    jumlahVideo: doc.video?.length ?? 0,
     tanggal: doc.tanggal ?? undefined,
     foto,
+    video,
   };
 }
