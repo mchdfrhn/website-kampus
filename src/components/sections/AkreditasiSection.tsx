@@ -70,9 +70,9 @@ export default async function AkreditasiSection() {
                     )}
                   </div>
                 </div>
-                <h3 className="mx-auto mb-5 line-clamp-2 max-w-[14rem] text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.14em] leading-relaxed group-hover:text-brand-gold transition-colors">
+                <p className="mx-auto mb-5 line-clamp-2 max-w-[14rem] text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.14em] leading-relaxed group-hover:text-brand-gold transition-colors">
                   {item.nama}
-                </h3>
+                </p>
                 <div className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-green-100 bg-green-50 px-4 py-2 sm:px-5">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
                   <p className="text-green-700 font-bold text-[9px] sm:text-[10px] uppercase tracking-[0.16em] leading-relaxed break-words">

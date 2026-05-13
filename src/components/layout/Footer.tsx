@@ -200,7 +200,7 @@ export default async function Footer() {
           </div>
 
           <div className="text-left">
-            <h3 className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Navigasi</h3>
+            <p className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Navigasi</p>
             <ul className="space-y-4" role="list">
               {links.map((link) => (
                 <li key={link.label}>
@@ -221,7 +221,7 @@ export default async function Footer() {
           </div>
 
           <div className="text-left">
-            <h3 className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Akademik</h3>
+            <p className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Akademik</p>
             <ul className="space-y-4" role="list">
               {prodis.map((program) => (
                 <li key={program.label}>
@@ -235,7 +235,7 @@ export default async function Footer() {
           </div>
 
           <div className="text-left">
-            <h3 className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Hubungi</h3>
+            <p className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Hubungi</p>
             <ul className="space-y-6" role="list">
               <li className="flex items-start justify-start gap-4 sm:gap-5 text-sm text-white/40 font-medium group">
                 <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-gold/20 transition-all duration-500">

@@ -220,9 +220,9 @@ export default function PersonaQuickLinks({ tabs }: Props) {
                           return <Icon size={28} strokeWidth={1.5} className="text-brand-gold transition-[color,transform] duration-500 ease-out group-hover:text-brand-navy group-hover:scale-105" />
                         })()}
                       </div>
-                      <h3 className="text-white text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-brand-gold transition-colors leading-relaxed">
+                      <p className="text-white text-[10px] font-bold uppercase tracking-[0.2em] group-hover:text-brand-gold transition-colors leading-relaxed">
                         {stripEmojis(link.label)}
-                      </h3>
+                      </p>
                       <div className="mt-6 w-6 h-0.5 bg-white/10 group-hover:w-12 group-hover:bg-brand-gold rounded-full transition-all duration-500" />
                     </a>
                   </StaggerItem>
