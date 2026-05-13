@@ -33,8 +33,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/kontak',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
-    changeFrequency: 'monthly' as const,
+    changeFrequency: (route === '' ? 'weekly' : 'monthly') as SitemapEntry['changeFrequency'],
     priority: route === '' ? 1 : 0.8,
+    ...(route === '' ? { lastModified: new Date() } : {}),
   }));
 
   try {

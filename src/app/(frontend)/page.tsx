@@ -21,7 +21,7 @@ import {
 
 
 export const metadata = buildPageMetadata({
-  title: 'Beranda | STTPU Jakarta',
+  title: 'STTPU Jakarta — Sekolah Tinggi Teknologi Pekerjaan Umum',
   description:
     'Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta — Pendidikan vokasi teknologi konstruksi, arsitektur, dan teknologi informasi terbaik sejak 1987.',
   path: '/',

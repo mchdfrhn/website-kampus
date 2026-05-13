@@ -193,7 +193,10 @@ export default async function FrontendLayout({
     address: seoSettings.alamat,
     sameAs: seoSettings.socialMedia,
   });
-  const websiteJsonLd = buildWebsiteJsonLd();
+  const websiteJsonLd = {
+    ...buildWebsiteJsonLd(),
+    publisher: { '@id': `${getSiteUrl()}/#organization` },
+  };
 
   return (
     <html lang="id">

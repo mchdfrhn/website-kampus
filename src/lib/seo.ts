@@ -129,13 +129,36 @@ export function buildOrganizationJsonLd({
   address?: string | null;
   sameAs?: string[];
 }) {
+  const siteUrl = getSiteUrl();
+  const fallbackSameAs = [
+    'https://www.instagram.com/sttpu.jakarta',
+    'https://www.youtube.com/@sttpujakarta',
+    'https://www.facebook.com/sttpu.jakarta',
+  ];
+  const resolvedSameAs = sameAs.length > 0 ? sameAs : fallbackSameAs;
+  const logoUrl = toAbsoluteUrl(logo);
+
   return {
     '@context': 'https://schema.org',
     '@type': 'CollegeOrUniversity',
+    '@id': `${siteUrl}/#organization`,
     name,
-    url: getSiteUrl(),
+    alternateName: 'STTPU',
+    url: siteUrl,
+    foundingDate: '1987',
     ...(description ? { description } : {}),
-    ...(logo ? { logo: toAbsoluteUrl(logo) } : {}),
+    ...(logoUrl
+      ? {
+          logo: {
+            '@type': 'ImageObject',
+            '@id': `${siteUrl}/#logo`,
+            url: logoUrl,
+            contentUrl: logoUrl,
+            caption: name,
+          },
+          image: logoUrl,
+        }
+      : {}),
     ...(email ? { email } : {}),
     ...(telephone ? { telephone } : {}),
     ...(address
@@ -143,21 +166,35 @@ export function buildOrganizationJsonLd({
           address: {
             '@type': 'PostalAddress',
             streetAddress: address,
+            addressLocality: 'Jakarta Selatan',
+            addressRegion: 'DKI Jakarta',
+            postalCode: '12110',
             addressCountry: 'ID',
           },
         }
       : {}),
-    ...(sameAs.length > 0 ? { sameAs } : {}),
+    sameAs: resolvedSameAs,
   };
 }
 
 export function buildWebsiteJsonLd() {
+  const siteUrl = getSiteUrl();
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
+    '@id': `${siteUrl}/#website`,
     name: 'STTPU Jakarta',
-    url: getSiteUrl(),
+    alternateName: 'Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta',
+    url: siteUrl,
     inLanguage: 'id-ID',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteUrl}/berita?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
   };
 }
 
