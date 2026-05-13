@@ -88,14 +88,16 @@ function ScrollSync() {
 
 export default function ScrollProvider({ children }: { children: ReactNode }) {
   return (
-    <ReactLenis 
-      root 
-      options={{ 
-        lerp: 0.1, 
-        duration: 0.75, 
+    <ReactLenis
+      root
+      options={{
+        lerp: 0.1,
+        duration: 0.75,
         smoothWheel: true,
+        syncTouch: true,
+        syncTouchLerp: 0.075,
         wheelMultiplier: 1,
-        touchMultiplier: 2,
+        touchMultiplier: 1,
         infinite: false,
       }}
     >
