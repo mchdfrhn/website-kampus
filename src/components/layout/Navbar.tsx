@@ -201,7 +201,7 @@ export default async function Navbar() {
             <HomeNavLink
               href="/"
               className="group flex min-w-0 flex-1 items-center gap-3 xl:mr-8 xl:flex-none xl:min-w-max"
-              ariaLabel={`STTPU — Beranda`}
+              ariaLabel={`STTPU ${settings.namaInstitusi} — Beranda`}
             >
               {settings.logoUrl ? (
                 <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105 sm:h-12 sm:w-12 sm:p-2">

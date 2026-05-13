@@ -152,7 +152,7 @@ export default async function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-20 lg:pt-24 pb-12 sm:pb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 lg:gap-12">
           <div className="lg:pr-12 text-left">
-            <Link href="/" className="inline-flex items-center justify-start gap-4 sm:gap-5 mb-8 sm:mb-10 group" aria-label="STTPU — Beranda">
+            <Link href="/" className="inline-flex items-center justify-start gap-4 sm:gap-5 mb-8 sm:mb-10 group" aria-label="STTPU Jakarta — Beranda">
               {(contact as typeof defaultContact & { logoUrl?: string | null }).logoUrl ? (
                 <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-white p-2 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-500 ease-out group-hover:scale-105">
                   <div className="relative h-full w-full overflow-hidden rounded-lg">
@@ -174,10 +174,10 @@ export default async function Footer() {
               )}
             <div className="text-white">
                 <div className="font-bold text-xl leading-tight tracking-tight">STTPU</div>
-                <div className="text-white/40 text-[10px] leading-tight font-bold uppercase tracking-wider mt-1">Jakarta</div>
+                <div className="text-white/60 text-[10px] leading-tight font-bold uppercase tracking-wider mt-1">Jakarta</div>
               </div>
             </Link>
-            <p className="text-white/30 text-sm leading-relaxed mb-8 sm:mb-10 font-medium italic">
+            <p className="text-white/60 text-sm leading-relaxed mb-8 sm:mb-10 font-medium italic">
               &ldquo;{contact.deskripsiFooter || defaultContact.deskripsiFooter}&rdquo;
             </p>
             <div className="flex items-center justify-start gap-3 sm:gap-4">
@@ -205,12 +205,12 @@ export default async function Footer() {
               {links.map((link) => (
                 <li key={link.label}>
                   {link.href === '/' ? (
-                    <HomeNavLink href={link.href} className="text-white/40 text-sm font-medium hover:text-white transition-all inline-flex items-center gap-4 group">
+                    <HomeNavLink href={link.href} className="text-white/60 text-sm font-medium hover:text-white transition-all inline-flex items-center gap-4 group">
                       <div className="w-1 h-1 rounded-full bg-brand-gold/20 group-hover:bg-brand-gold transition-all" aria-hidden="true" />
                       {link.label}
                     </HomeNavLink>
                   ) : (
-                    <Link href={link.href} className="text-white/40 text-sm font-medium hover:text-white transition-all inline-flex items-center gap-4 group">
+                    <Link href={link.href} className="text-white/60 text-sm font-medium hover:text-white transition-all inline-flex items-center gap-4 group">
                       <div className="w-1 h-1 rounded-full bg-brand-gold/20 group-hover:bg-brand-gold transition-all" aria-hidden="true" />
                       {link.label}
                     </Link>
@@ -225,7 +225,7 @@ export default async function Footer() {
             <ul className="space-y-4" role="list">
               {prodis.map((program) => (
                 <li key={program.label}>
-                  <Link href={program.href} className="text-white/40 text-sm font-medium hover:text-white transition-all inline-flex items-center gap-4 group">
+                  <Link href={program.href} className="text-white/60 text-sm font-medium hover:text-white transition-all inline-flex items-center gap-4 group">
                     <div className="w-1 h-1 rounded-full bg-brand-gold/20 group-hover:bg-brand-gold transition-all" aria-hidden="true" />
                     {program.label}
                   </Link>
@@ -237,7 +237,7 @@ export default async function Footer() {
           <div className="text-left">
             <p className="font-bold text-[11px] mb-6 sm:mb-8 text-brand-gold uppercase tracking-wider">Hubungi</p>
             <ul className="space-y-6" role="list">
-              <li className="flex items-start justify-start gap-4 sm:gap-5 text-sm text-white/40 font-medium group">
+              <li className="flex items-start justify-start gap-4 sm:gap-5 text-sm text-white/60 font-medium group">
                 <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-gold/20 transition-all duration-500">
                   <Building2 size={18} className="text-brand-gold" aria-hidden="true" />
                 </div>
@@ -247,8 +247,8 @@ export default async function Footer() {
                 <li>
                   <a
                     href={contact.teleponUtamaHref ? `tel:${contact.teleponUtamaHref}` : '#'}
-                    className="flex items-center justify-start gap-5 text-sm text-white/40 hover:text-white transition-all group"
-                    aria-label="Telepon STTPU"
+                    className="flex items-center justify-start gap-5 text-sm text-white/60 hover:text-white transition-all group"
+                    aria-label={`Telepon STTPU: ${contact.teleponUtama || defaultContact.teleponUtama}`}
                   >
                     <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-gold/20 transition-all duration-500">
                       <PhoneCall size={18} className="text-brand-gold" aria-hidden="true" />
@@ -265,15 +265,15 @@ export default async function Footer() {
       <div className="border-t border-white/5 bg-black/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="flex flex-col gap-6">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 text-[10px] font-semibold uppercase tracking-widest text-white/40">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 text-[10px] font-semibold uppercase tracking-widest text-white/60">
               <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
                 {(contact.teleponUtamaHref || contact.teleponUtama) && (
                   <a
                     href={contact.teleponUtamaHref ? `tel:${contact.teleponUtamaHref}` : '#'}
                     className="flex items-center justify-start gap-2 hover:text-brand-gold transition-colors group"
-                    aria-label="Telepon STTPU"
+                    aria-label={`Telepon STTPU: ${contact.teleponUtama || defaultContact.teleponUtama}`}
                   >
-                    <Phone size={10} className="text-brand-gold/50 group-hover:text-brand-gold transition-colors" />
+                    <Phone size={10} className="text-brand-gold/50 group-hover:text-brand-gold transition-colors" aria-hidden="true" />
                     <span>{contact.teleponUtama}</span>
                   </a>
                 )}
@@ -281,9 +281,9 @@ export default async function Footer() {
                   <a
                     href={`mailto:${contact.emailUtama || defaultContact.emailUtama}`}
                     className="flex items-center justify-start gap-2 hover:text-brand-gold transition-colors group"
-                    aria-label="Email STTPU"
+                    aria-label={`Email STTPU: ${contact.emailUtama || defaultContact.emailUtama}`}
                   >
-                    <Mail size={10} className="text-brand-gold/50 group-hover:text-brand-gold transition-colors" />
+                    <Mail size={10} className="text-brand-gold/50 group-hover:text-brand-gold transition-colors" aria-hidden="true" />
                     <span className="break-all">{contact.emailUtama || defaultContact.emailUtama}</span>
                   </a>
                 )}

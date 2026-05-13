@@ -42,19 +42,19 @@ export const Reveal = ({
   );
 };
 
-export const StaggerContainer = ({ 
-  children, 
+export const StaggerContainer = ({
+  children,
   className,
-  delayChildren = 0, 
-  staggerChildren = 0.1 
-}: { 
-  children: ReactNode; 
+  delayChildren = 0,
+  staggerChildren = 0.08
+}: {
+  children: ReactNode;
   className?: string;
-  delayChildren?: number; 
-  staggerChildren?: number; 
+  delayChildren?: number;
+  staggerChildren?: number;
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "0px" });
 
   return (
     <motion.div

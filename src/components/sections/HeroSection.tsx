@@ -147,9 +147,9 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                 <div className="absolute inset-0 z-0">
                   {bgUrl ? (
                     <motion.div
-                      initial={{ scale: 1.1 }}
-                      animate={{ scale: isActive ? 1 : 1.1 }}
-                      transition={{ duration: 10, ease: "linear" }}
+                      initial={{ scale: 1 }}
+                      animate={{ scale: isActive ? 1 : 1.06 }}
+                      transition={{ duration: 20, ease: "linear" }}
                       className="relative h-full w-full"
                     >
                       <ImageWithLoading

@@ -184,8 +184,11 @@ export default function VideoProfileSection({ data }: { data?: any }) {
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-brand-gold/20 animate-ping scale-125" />
                 
-                <button className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center shadow-lg transition-transform duration-500 ease-out group-hover/thumb:scale-105">
-                  <Play size={32} fill="currentColor" className="ml-1" />
+                <button
+                  aria-label={`Putar video: ${judul}`}
+                  className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-brand-gold text-brand-navy flex items-center justify-center shadow-lg transition-transform duration-500 ease-out group-hover/thumb:scale-105"
+                >
+                  <Play size={32} fill="currentColor" className="ml-1" aria-hidden="true" />
                 </button>
               </div>
             </div>
