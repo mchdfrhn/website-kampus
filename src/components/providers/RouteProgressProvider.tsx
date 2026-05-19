@@ -4,13 +4,13 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
-const SHOW_DELAY = 0;
+const SHOW_DELAY = 90;
 const REDUCED_MOTION_SHOW_DELAY = 0;
-const MIN_VISIBLE_DURATION = 260;
-const REDUCED_MOTION_MIN_VISIBLE_DURATION = 140;
-const PROGRESS_DURATION = 520;
+const MIN_VISIBLE_DURATION = 120;
+const REDUCED_MOTION_MIN_VISIBLE_DURATION = 80;
+const PROGRESS_DURATION = 360;
 const REDUCED_MOTION_PROGRESS_DURATION = 240;
-const HIDE_DELAY = 80;
+const HIDE_DELAY = 40;
 const REDUCED_MOTION_HIDE_DELAY = 40;
 
 function RouteProgressLogic() {
@@ -75,7 +75,7 @@ function RouteProgressLogic() {
           );
 
           setProgress((current) => (current >= nextProgress ? current : nextProgress));
-        }, shouldReduceMotion ? 32 : 16);
+        }, shouldReduceMotion ? 32 : 32);
       }, showDelay);
     };
 

@@ -94,7 +94,10 @@ export default function ScrollProvider({ children }: { children: ReactNode }) {
         lerp: 0.1,
         duration: 0.75,
         smoothWheel: true,
-        syncTouch: true,
+        // Native touch scrolling is smoother and more reliable on mobile.
+        // Lenis syncTouch can feel stuttery on iOS/Android because it replaces
+        // browser momentum with simulated inertia.
+        syncTouch: false,
         syncTouchLerp: 0.075,
         wheelMultiplier: 1,
         touchMultiplier: 1,
