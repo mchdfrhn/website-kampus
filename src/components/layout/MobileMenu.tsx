@@ -7,7 +7,7 @@ import { Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import HomeNavLink from './HomeNavLink';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 type NavItem = {
   label: string;
@@ -26,8 +26,10 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const sidebarRef = useRef<HTMLDivElement>(null);
   const scrollYRef = useRef(0);
+  const isNavigatingRef = useRef(false);
   const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -46,9 +48,40 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
       document.body.style.left = '';
       document.body.style.right = '';
       document.body.style.width = '';
-      window.scrollTo({ top: scrollYRef.current, behavior: 'auto' });
+      if (!isNavigatingRef.current) {
+        window.scrollTo({ top: scrollYRef.current, behavior: 'auto' });
+      }
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    isNavigatingRef.current = false;
+    setIsOpen(false);
+    setOpenSubmenu(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const hrefs = new Set<string>(['/', '/portal']);
+    navItems.forEach((item) => {
+      if (item.href) hrefs.add(item.href);
+      item.children?.forEach((child) => {
+        if (child.href) hrefs.add(child.href);
+      });
+    });
+
+    hrefs.forEach((href) => {
+      if (
+        href.startsWith('/') &&
+        !href.startsWith('//') &&
+        !href.includes('#') &&
+        href !== pathname
+      ) {
+        router.prefetch(href);
+      }
+    });
+  }, [isOpen, navItems, pathname, router]);
 
   useEffect(() => {
     if (!isOpen || !sidebarRef.current) return;
@@ -103,6 +136,12 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
     setOpenSubmenu((prev) => (prev === label ? null : label));
   };
 
+  const handleNavigate = () => {
+    isNavigatingRef.current = true;
+    setIsOpen(false);
+    setOpenSubmenu(null);
+  };
+
   const iconMotion = shouldReduceMotion
     ? { duration: 0 }
     : { duration: 0.14, ease: [0.22, 1, 0.36, 1] as const };
@@ -111,7 +150,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
     : { duration: 0.16, ease: [0.22, 1, 0.36, 1] as const };
   const panelMotion = shouldReduceMotion
     ? { duration: 0 }
-    : { type: 'tween' as const, duration: 0.24, ease: [0.22, 1, 0.36, 1] as const };
+    : { type: 'tween' as const, duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
   const submenuMotion = shouldReduceMotion
     ? { duration: 0 }
     : { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
@@ -172,7 +211,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
               className="absolute top-0 left-0 h-[100dvh] w-[min(20rem,86vw)] bg-brand-navy shadow-[16px_0_60px_rgba(0,0,0,0.36)] sm:bg-brand-navy/95 sm:backdrop-blur-md flex flex-col border-r border-white/10 overflow-hidden"
             >
               <div className="flex items-center justify-between px-6 h-20 border-b border-white/10 bg-brand-navy/40 flex-shrink-0">
-                <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3">
+                <HomeNavLink href="/" onClick={handleNavigate} className="flex items-center gap-3">
                   {logoUrl ? (
                     <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5">
                       <div className="relative h-full w-full overflow-hidden rounded-lg">
@@ -257,7 +296,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                                         <Link
                                           key={child.label}
                                           href={child.href}
-                                          onClick={toggleMenu}
+                                          onClick={handleNavigate}
                                           className={cn(
                                             "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 text-[13px] font-bold",
                                             matchesPath(child.href)
@@ -280,7 +319,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                           ) : (
                             <Link
                               href={item.href}
-                              onClick={toggleMenu}
+                              onClick={handleNavigate}
                               className={cn(
                                 "flex items-center px-4 py-4 rounded-2xl transition-all duration-300 text-[14px] font-bold",
                                 active
@@ -308,7 +347,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
               <div className="p-6 border-t border-white/10 bg-brand-navy/40 mt-auto">
                 <Link
                   href="/portal"
-                  onClick={toggleMenu}
+                  onClick={handleNavigate}
                   className="flex items-center justify-center w-full py-4 bg-brand-gold text-brand-navy font-bold text-sm uppercase tracking-widest rounded-2xl shadow-xl active:scale-95 transition-all"
                 >
                   Portal

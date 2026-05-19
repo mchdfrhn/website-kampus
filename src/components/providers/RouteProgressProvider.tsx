@@ -4,12 +4,12 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
-const SHOW_DELAY = 90;
+const SHOW_DELAY = 20;
 const REDUCED_MOTION_SHOW_DELAY = 0;
-const MIN_VISIBLE_DURATION = 120;
-const REDUCED_MOTION_MIN_VISIBLE_DURATION = 80;
-const PROGRESS_DURATION = 360;
-const REDUCED_MOTION_PROGRESS_DURATION = 240;
+const MIN_VISIBLE_DURATION = 80;
+const REDUCED_MOTION_MIN_VISIBLE_DURATION = 60;
+const PROGRESS_DURATION = 260;
+const REDUCED_MOTION_PROGRESS_DURATION = 180;
 const HIDE_DELAY = 40;
 const REDUCED_MOTION_HIDE_DELAY = 40;
 
@@ -180,7 +180,7 @@ function RouteProgressLogic() {
           transition={{ duration: shouldReduceMotion ? 0.1 : 0.2 }}
           className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-1"
         >
-          <div className="absolute inset-0 bg-brand-navy/10 backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-brand-navy/10" />
           <motion.div
             className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-brand-gold-soft to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)]"
             animate={{ width: `${progress}%` }}
