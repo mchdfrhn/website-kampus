@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import HomeNavLink from './HomeNavLink';
 import { usePathname } from 'next/navigation';
@@ -27,14 +27,27 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const pathname = usePathname();
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const scrollYRef = useRef(0);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => { document.body.style.overflow = 'unset'; };
+    if (!isOpen) return;
+
+    scrollYRef.current = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollYRef.current}px`;
+    document.body.style.left = '0';
+    document.body.style.right = '0';
+    document.body.style.width = '100%';
+
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo({ top: scrollYRef.current, behavior: 'auto' });
+    };
   }, [isOpen]);
 
   useEffect(() => {
@@ -90,6 +103,19 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
     setOpenSubmenu((prev) => (prev === label ? null : label));
   };
 
+  const iconMotion = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.14, ease: [0.22, 1, 0.36, 1] as const };
+  const backdropMotion = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.16, ease: [0.22, 1, 0.36, 1] as const };
+  const panelMotion = shouldReduceMotion
+    ? { duration: 0 }
+    : { type: 'tween' as const, duration: 0.24, ease: [0.22, 1, 0.36, 1] as const };
+  const submenuMotion = shouldReduceMotion
+    ? { duration: 0 }
+    : { duration: 0.18, ease: [0.22, 1, 0.36, 1] as const };
+
   return (
     <div className="xl:hidden">
       <button
@@ -99,11 +125,23 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
       >
         <AnimatePresence mode="wait">
           {isOpen ? (
-            <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }}>
+            <motion.div
+              key="close"
+              initial={shouldReduceMotion ? { opacity: 0 } : { rotate: -45, opacity: 0, scale: 0.92 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { rotate: 0, opacity: 1, scale: 1 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { rotate: 45, opacity: 0, scale: 0.92 }}
+              transition={iconMotion}
+            >
               <X size={28} />
             </motion.div>
           ) : (
-            <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }}>
+            <motion.div
+              key="menu"
+              initial={shouldReduceMotion ? { opacity: 0 } : { rotate: 45, opacity: 0, scale: 0.92 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { rotate: 0, opacity: 1, scale: 1 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { rotate: -45, opacity: 0, scale: 0.92 }}
+              transition={iconMotion}
+            >
               <Menu size={28} />
             </motion.div>
           )}
@@ -113,16 +151,15 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
       <AnimatePresence>
         {isOpen && (
           <div className="fixed inset-0 z-[110]">
-            {/* Backdrop dengan Blur yang lebih kuat */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/40 backdrop-blur-md"
+              transition={backdropMotion}
+              className="absolute inset-0 bg-brand-navy/50 sm:bg-black/40 sm:backdrop-blur-sm"
               onClick={toggleMenu}
             />
 
-            {/* Sidebar dengan Transparansi 95% sesuai Desktop */}
             <motion.div
               ref={sidebarRef}
               role="dialog"
@@ -131,8 +168,8 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="absolute top-0 left-0 h-[100dvh] w-[300px] bg-brand-navy/95 backdrop-blur-md shadow-[20px_0_100px_rgba(0,0,0,0.5)] flex flex-col border-r border-white/10 overflow-hidden"
+              transition={panelMotion}
+              className="absolute top-0 left-0 h-[100dvh] w-[min(20rem,86vw)] bg-brand-navy shadow-[16px_0_60px_rgba(0,0,0,0.36)] sm:bg-brand-navy/95 sm:backdrop-blur-md flex flex-col border-r border-white/10 overflow-hidden"
             >
               <div className="flex items-center justify-between px-6 h-20 border-b border-white/10 bg-brand-navy/40 flex-shrink-0">
                 <HomeNavLink href="/" onClick={toggleMenu} className="flex items-center gap-3">
@@ -162,7 +199,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                 </button>
               </div>
 
-              <nav className="flex-1 overflow-y-auto py-6 px-4">
+              <nav className="flex-1 overflow-y-auto overscroll-contain py-6 px-4 [-webkit-overflow-scrolling:touch]">
                 <div className="space-y-2">
                   {navItems && navItems.length > 0 ? (
                     navItems.map((item) => {
@@ -177,8 +214,9 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                             <motion.div
                               layoutId="active-nav-mobile"
                               className="absolute left-0 top-2 bottom-2 w-1.5 bg-brand-gold rounded-full z-10"
-                              initial={{ opacity: 0, x: -5 }}
+                              initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -5 }}
                               animate={{ opacity: 1, x: 0 }}
+                              transition={iconMotion}
                             />
                           )}
 
@@ -208,9 +246,10 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                                 {isSubOpen && (
                                   <motion.div
                                     id={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
-                                    initial={{ height: 0, opacity: 0 }}
-                                    animate={{ height: 'auto', opacity: 1 }}
-                                    exit={{ height: 0, opacity: 0 }}
+                                    initial={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0, y: -4 }}
+                                    animate={shouldReduceMotion ? { opacity: 1 } : { height: 'auto', opacity: 1, y: 0 }}
+                                    exit={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0, y: -4 }}
+                                    transition={submenuMotion}
                                     className="overflow-hidden"
                                   >
                                     <div className="bg-black/20 rounded-2xl p-2 mt-2 ml-4 space-y-1 border border-white/5">

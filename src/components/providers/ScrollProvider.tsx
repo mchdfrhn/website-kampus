@@ -2,9 +2,26 @@
 
 import { ReactLenis, useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 const NAVBAR_OFFSET = 96;
+const TOUCH_SCROLL_QUERY = "(max-width: 767px), (pointer: coarse)";
+
+function usePrefersNativeScroll() {
+  const [prefersNativeScroll, setPrefersNativeScroll] = useState(true);
+
+  useEffect(() => {
+    const media = window.matchMedia(TOUCH_SCROLL_QUERY);
+    const update = () => setPrefersNativeScroll(media.matches);
+
+    update();
+    media.addEventListener("change", update);
+
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  return prefersNativeScroll;
+}
 
 function ScrollSync() {
   const lenis = useLenis();
@@ -87,6 +104,17 @@ function ScrollSync() {
 }
 
 export default function ScrollProvider({ children }: { children: ReactNode }) {
+  const prefersNativeScroll = usePrefersNativeScroll();
+
+  if (prefersNativeScroll) {
+    return (
+      <>
+        <ScrollSync />
+        {children}
+      </>
+    );
+  }
+
   return (
     <ReactLenis
       root
