@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import TentangSidebar from '@/components/sections/tentang/TentangSidebar';
 import { getPayloadClient } from '@/lib/payload';
@@ -26,6 +26,13 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
+  if (slug === 'lpmi') {
+    return buildPageMetadata({
+      title: 'LPMI | STTPU Jakarta',
+      description: 'Informasi penjaminan mutu internal, akreditasi, dan legalitas STTPU Jakarta.',
+      path: '/tentang/lpmi',
+    });
+  }
   let resolvedSections = resolveTentangSections();
   try {
     const payload = await getPayloadClient();
@@ -50,6 +57,8 @@ export default async function TentangSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  if (slug === 'lpmi') redirect('/tentang/akreditasi');
+
   let resolvedSections = resolveTentangSections();
 
   let sidebarTitle = 'Navigasi Institusi'

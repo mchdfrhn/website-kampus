@@ -76,7 +76,10 @@ export default function ProgramStudiGrid({
           Data program studi belum tersedia.
         </div>
       ) : (
-      <ul className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-10" aria-label="Daftar program studi STTPU">
+      <ul
+        className="mt-10 mb-8 grid grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] gap-6 sm:mb-10 lg:mb-12"
+        aria-label="Daftar program studi STTPU"
+      >
         {list.map((prodi) => {
           const accent = accentTheme[resolveProgramStudiAccentColor(prodi.nama, prodi.accentColor)] ?? accentTheme.navy;
 
@@ -85,11 +88,11 @@ export default function ProgramStudiGrid({
               <Link
                 href={`/akademik/program-studi/${prodi.slug}`}
                 className={cn(
-                  "group flex flex-col h-full rounded-2xl p-5 sm:p-8 lg:p-10 hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500",
+                  "group flex flex-col h-full rounded-3xl p-6 sm:p-8 lg:p-8 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500",
                   accent.card,
                 )}
               >
-                <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6 sm:mb-8">
+                <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6">
                   <span className={cn(
                     "text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider",
                     accent.badge,
@@ -105,19 +108,19 @@ export default function ProgramStudiGrid({
                   </span>
                 </div>
 
-                <h3 className="font-bold text-xl md:text-2xl text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
+                <h3 className="font-bold text-xl 2xl:text-lg text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
                   {prodi.nama}
                 </h3>
-                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-8 sm:mb-10 font-medium">
+                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-8 font-medium">
                   {prodi.deskripsiSingkat}
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 sm:mb-10">
-                  <div className={cn("rounded-xl p-4 sm:p-5 border", accent.stat)}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-1 gap-4 mb-8">
+                  <div className={cn("rounded-xl p-4 sm:p-5 2xl:p-4 border", accent.stat)}>
                     <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
                     <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
                   </div>
-                  <div className={cn("rounded-xl p-4 sm:p-5 border", accent.stat)}>
+                  <div className={cn("rounded-xl p-4 sm:p-5 2xl:p-4 border", accent.stat)}>
                     <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Beban SKS</p>
                     <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.jumlahSKS} SKS</p>
                   </div>
