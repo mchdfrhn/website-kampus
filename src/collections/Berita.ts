@@ -11,7 +11,7 @@ export const Berita: CollectionConfig = {
   },
   admin: {
     useAsTitle: "judul",
-    defaultColumns: ["judul", "kategori", "status", "tanggalTerbit"],
+    defaultColumns: ["judul", "kategori", "status", "showInHeroCarousel", "heroCarouselUrutan", "tanggalTerbit"],
   },
   fields: [
     {
@@ -73,6 +73,27 @@ export const Berita: CollectionConfig = {
       label: "Pin di atas (pengumuman penting)",
       defaultValue: false,
       admin: { position: "sidebar" },
+    },
+    {
+      name: "showInHeroCarousel",
+      type: "checkbox",
+      label: "Jadikan slide carousel halaman utama",
+      defaultValue: false,
+      admin: {
+        position: "sidebar",
+        description: "Jika aktif, berita ini akan masuk ke Hero Carousel halaman utama.",
+      },
+    },
+    {
+      name: "heroCarouselUrutan",
+      type: "number",
+      label: "Urutan carousel",
+      defaultValue: 10,
+      admin: {
+        position: "sidebar",
+        condition: (_data, siblingData) => Boolean(siblingData?.showInHeroCarousel),
+        description: "Angka kecil tampil lebih dulu. Bisa dipakai bersama slide manual.",
+      },
     },
     {
       name: "tags",

@@ -22,6 +22,15 @@ export const HalamanUtama: GlobalConfig = {
               minRows: 1,
               maxRows: 5,
               fields: [
+                {
+                  name: 'urutan',
+                  type: 'number',
+                  label: 'Urutan carousel',
+                  defaultValue: 10,
+                  admin: {
+                    description: 'Angka kecil tampil lebih dulu. Urutan ini digabung dengan slide dari berita.',
+                  },
+                },
                 { name: 'badge', type: 'text', label: 'Teks Badge', defaultValue: 'Sekolah Tinggi Teknologi' },
                 { name: 'judul', type: 'text', label: 'Judul Utama', required: true },
                 { name: 'subjudul', type: 'textarea', label: 'Deskripsi / Subjudul' },

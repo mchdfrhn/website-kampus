@@ -37,6 +37,17 @@ type MitraItem = {
   logo?: { url?: string | null; alt?: string | null } | null;
 }
 type PimpinanDoc = SambutanKetuaData & { urutan?: number | null }
+type HeroSlide = {
+  urutan?: number | null;
+  badge?: string | null;
+  judul?: string | null;
+  subjudul?: string | null;
+  cta1Teks?: string | null;
+  cta1Href?: string | null;
+  cta2Teks?: string | null;
+  cta2Href?: string | null;
+  background?: { url: string } | string | null;
+}
 
 const defaultHomePageData = {
   heroSlides: [
@@ -97,7 +108,7 @@ async function fetchHomePageData() {
   try {
     const payload = await getPayloadClient()
     
-    const [halamanUtamaRes, siteSettingsRes, beritaRes, mitraRes, pimpinanRes] = await Promise.allSettled([
+    const [halamanUtamaRes, siteSettingsRes, beritaRes, carouselBeritaRes, mitraRes, pimpinanRes] = await Promise.allSettled([
       payload.findGlobal({ slug: 'halaman-utama', depth: 1 }),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }),
       payload.find({
@@ -105,6 +116,18 @@ async function fetchHomePageData() {
         where: { status: { equals: 'terbit' } },
         limit: 4,
         sort: '-tanggalTerbit',
+        depth: 1,
+      }),
+      payload.find({
+        collection: 'berita',
+        where: {
+          and: [
+            { status: { equals: 'terbit' } },
+            { showInHeroCarousel: { equals: true } },
+          ],
+        },
+        limit: 10,
+        sort: 'heroCarouselUrutan,-tanggalTerbit',
         depth: 1,
       }),
       payload.find({
@@ -125,6 +148,7 @@ async function fetchHomePageData() {
     const halamanUtama = halamanUtamaRes.status === 'fulfilled' ? halamanUtamaRes.value : null
     const siteSettings = siteSettingsRes.status === 'fulfilled' ? siteSettingsRes.value : null
     const beritaDocs = beritaRes.status === 'fulfilled' ? beritaRes.value.docs : []
+    const carouselBeritaDocs = carouselBeritaRes.status === 'fulfilled' ? carouselBeritaRes.value.docs : []
     const mitraDocs = mitraRes.status === 'fulfilled' ? mitraRes.value.docs : []
     const pimpinanDocs =
       pimpinanRes.status === 'fulfilled' ? (pimpinanRes.value.docs as unknown as PimpinanDoc[]) : []
@@ -140,8 +164,26 @@ async function fetchHomePageData() {
       new Date(b.tanggalTerbit).getTime() - new Date(a.tanggalTerbit).getTime()
     )
 
-    // Ambil 2 berita terbaru untuk carousel
-    const newsSlides = sortedBerita.slice(0, 2).map((artikel) => ({
+    const selectedCarouselBerita = carouselBeritaDocs.length > 0 ? carouselBeritaDocs : []
+
+    const newsSlides = selectedCarouselBerita.map((doc) => {
+      const artikel = mapPayloadToArtikel(doc)
+
+      return {
+        urutan: typeof doc.heroCarouselUrutan === 'number' ? doc.heroCarouselUrutan : 10,
+        badge: `BERITA TERKINI — ${getArtikelKategoriLabel(artikel.kategori).toUpperCase() || 'WARTA'}`,
+        judul: artikel.judul,
+        subjudul: artikel.ringkasan,
+        cta1Teks: 'Baca Selengkapnya',
+        cta1Href: `/berita/${artikel.slug}`,
+        cta2Teks: 'Semua Berita',
+        cta2Href: '/berita',
+        background: artikel.thumbnailUrl ? { url: artikel.thumbnailUrl } : undefined
+      }
+    })
+
+    const fallbackNewsSlides = carouselBeritaDocs.length === 0 ? sortedBerita.slice(0, 2).map((artikel, index) => ({
+      urutan: index + 1,
       badge: `BERITA TERKINI — ${getArtikelKategoriLabel(artikel.kategori).toUpperCase() || 'WARTA'}`,
       judul: artikel.judul,
       subjudul: artikel.ringkasan,
@@ -150,12 +192,22 @@ async function fetchHomePageData() {
       cta2Teks: 'Semua Berita',
       cta2Href: '/berita',
       background: artikel.thumbnailUrl ? { url: artikel.thumbnailUrl } : undefined
-    }))
+    })) : []
     
     const baseHalamanUtama = halamanUtama ? { ...defaultHomePageData, ...halamanUtama } : defaultHomePageData
     
-    // Susun urutan: 2 Berita Terbaru -> Input dari Payload (Manual)
-    baseHalamanUtama.heroSlides = [...newsSlides, ...(baseHalamanUtama.heroSlides || [])]
+    const manualSlides: HeroSlide[] = ((baseHalamanUtama.heroSlides || []) as HeroSlide[])
+      .filter((slide) => typeof slide.judul === 'string' && slide.judul.length > 0)
+      .map((slide, index) => ({
+        ...slide,
+        urutan: typeof slide.urutan === 'number' ? slide.urutan : index + 100,
+      }))
+
+    const combinedHeroSlides = [...newsSlides, ...fallbackNewsSlides, ...manualSlides]
+      .sort((a, b) => (a.urutan ?? 999) - (b.urutan ?? 999))
+      .slice(0, 5)
+    const typedBaseHalamanUtama = baseHalamanUtama as { heroSlides?: HeroSlide[] }
+    typedBaseHalamanUtama.heroSlides = combinedHeroSlides
 
     return {
       halamanUtama: baseHalamanUtama,

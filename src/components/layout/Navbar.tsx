@@ -224,7 +224,7 @@ export default async function Navbar() {
               )}
               <div className="min-w-0 text-white">
                 <div className="truncate text-base font-bold leading-tight tracking-tight uppercase sm:text-lg">STTPU</div>
-                <div className="mt-0.5 hidden truncate text-[10px] font-bold leading-tight tracking-wider text-white/40 uppercase sm:block">
+                <div className="mt-0.5 hidden truncate text-[10px] font-bold leading-tight tracking-wider text-white/40 uppercase xl:block">
                   {settings.namaInstitusi}
                 </div>
               </div>

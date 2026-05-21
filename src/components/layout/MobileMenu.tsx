@@ -230,7 +230,6 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                   )}
                   <div className="text-white">
                     <div className="font-bold text-base leading-tight tracking-tight uppercase">STTPU</div>
-                    <div className="text-brand-gold text-[10px] font-bold uppercase tracking-widest">Navigation</div>
                   </div>
                 </HomeNavLink>
                 <button onClick={toggleMenu} aria-label="Tutup menu" className="w-10 h-10 flex items-center justify-center text-white/40 hover:text-white">
