@@ -30,6 +30,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/berita',
     '/galeri',
     '/portal',
+    '/lpmi',
+    '/lpmi/kebijakan',
+    '/lpmi/pedoman',
+    '/lpmi/standar-pendidikan',
+    '/lpmi/standar-penelitian',
+    '/lpmi/standar-pkm',
     '/kontak',
   ].map((route) => ({
     url: `${baseUrl}${route}`,

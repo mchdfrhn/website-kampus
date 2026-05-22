@@ -29,8 +29,8 @@ export async function generateMetadata({
   if (slug === 'lpmi') {
     return buildPageMetadata({
       title: 'LPMI | STTPU Jakarta',
-      description: 'Informasi penjaminan mutu internal, akreditasi, dan legalitas STTPU Jakarta.',
-      path: '/tentang/lpmi',
+      description: 'Informasi penjaminan mutu internal STTPU Jakarta.',
+      path: '/lpmi/kebijakan',
     });
   }
   let resolvedSections = resolveTentangSections();
@@ -57,7 +57,7 @@ export default async function TentangSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  if (slug === 'lpmi') redirect('/tentang/akreditasi');
+  if (slug === 'lpmi') redirect('/lpmi/kebijakan');
 
   let resolvedSections = resolveTentangSections();
 
