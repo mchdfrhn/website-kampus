@@ -5,13 +5,16 @@ import {
   Award,
   BookOpenCheck,
   ClipboardCheck,
+  Download,
   FileCheck2,
+  FileText,
   GraduationCap,
   Handshake,
   Microscope,
   ShieldCheck,
 } from 'lucide-react';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
+import { getPayloadClient } from '@/lib/payload';
 import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
 
 type LpmiSection = {
@@ -23,6 +26,18 @@ type LpmiSection = {
   highlights: { title: string; description: string }[];
   standards: string[];
   documents: string[];
+};
+
+type LpmiDocument = {
+  id?: string | number;
+  judul?: string | null;
+  deskripsi?: string | null;
+  file?: {
+    url?: string | null;
+    filename?: string | null;
+    filesize?: number | null;
+    mimeType?: string | null;
+  } | string | number | null;
 };
 
 const lpmiSections: LpmiSection[] = [
@@ -237,6 +252,35 @@ const sidebarLinks = lpmiSections.map((section) => ({
 
 const iconMap = [ShieldCheck, ClipboardCheck, GraduationCap, Microscope, Handshake];
 
+async function fetchLpmiDocuments(sectionSlug: string): Promise<LpmiDocument[]> {
+  try {
+    const payload = await getPayloadClient();
+    const result = await payload.find({
+      collection: 'lpmi-dokumen' as never,
+      where: {
+        and: [
+          { section: { equals: sectionSlug } },
+          { status: { equals: 'terbit' } },
+        ],
+      },
+      sort: 'urutan,-updatedAt',
+      depth: 1,
+      limit: 50,
+    });
+
+    return result.docs as unknown as LpmiDocument[];
+  } catch (error) {
+    console.error('Error fetching LPMI documents:', error);
+    return [];
+  }
+}
+
+function formatFileSize(value?: number | null) {
+  if (!value || value <= 0) return null;
+  if (value < 1024 * 1024) return `${Math.ceil(value / 1024)} KB`;
+  return `${(value / 1024 / 1024).toFixed(1)} MB`;
+}
+
 export function generateStaticParams() {
   return lpmiSections.map((section) => ({ slug: section.slug }));
 }
@@ -300,6 +344,7 @@ export default async function LpmiSlugPage({
   const { slug } = await params;
   const section = lpmiSections.find((item) => item.slug === slug);
   if (!section) notFound();
+  const documents = await fetchLpmiDocuments(section.slug);
 
   const sectionIndex = lpmiSections.findIndex((item) => item.slug === slug);
   const HeroIcon = iconMap[sectionIndex] || Award;
@@ -401,6 +446,71 @@ export default async function LpmiSlugPage({
                   ))}
                 </ul>
               </div>
+            </section>
+
+            <section className="mt-8 rounded-[1.75rem] border border-gray-100 bg-white p-6 shadow-premium sm:p-8">
+              <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.12em] text-brand-navy/50">
+                    Unduhan
+                  </p>
+                  <h2 className="mt-2 text-xl font-black text-brand-navy">Dokumen LPMI</h2>
+                </div>
+                <p className="max-w-xl text-sm font-medium leading-7 text-gray-500">
+                  Dokumen yang diunggah melalui admin Payload akan tampil di sini sesuai halaman LPMI yang dipilih.
+                </p>
+              </div>
+
+              {documents.length > 0 ? (
+                <div className="grid gap-4">
+                  {documents.map((document) => {
+                    const file = typeof document.file === 'object' ? document.file : null;
+                    const fileSize = formatFileSize(file?.filesize);
+                    return (
+                      <article
+                        key={document.id ?? document.judul}
+                        className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-brand-mist p-5 sm:flex-row sm:items-center sm:justify-between"
+                      >
+                        <div className="flex min-w-0 gap-4">
+                          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-white text-brand-navy shadow-sm">
+                            <FileText size={22} />
+                          </div>
+                          <div className="min-w-0">
+                            <h3 className="text-base font-black text-brand-navy">{document.judul}</h3>
+                            {document.deskripsi && (
+                              <p className="mt-1 text-sm font-medium leading-6 text-gray-500">
+                                {document.deskripsi}
+                              </p>
+                            )}
+                            {(file?.filename || fileSize) && (
+                              <p className="mt-2 text-xs font-bold uppercase tracking-[0.08em] text-brand-navy/40">
+                                {[file?.filename, fileSize].filter(Boolean).join(' - ')}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {file?.url && (
+                          <Link
+                            href={file.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-gold px-5 py-3 text-sm font-black text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
+                          >
+                            <Download size={18} />
+                            Download
+                          </Link>
+                        )}
+                      </article>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-6 text-sm font-semibold leading-7 text-gray-500">
+                  Belum ada dokumen yang dipublikasikan untuk halaman ini. Admin dapat menambahkan dokumen melalui
+                  collection Dokumen LPMI di Payload.
+                </div>
+              )}
             </section>
           </div>
         </div>

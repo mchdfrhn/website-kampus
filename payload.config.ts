@@ -27,6 +27,7 @@ import { Prestasi } from "./src/collections/Prestasi";
 import { Publikasi } from "./src/collections/Publikasi";
 import { Layanan } from "./src/collections/Layanan";
 import { Mitra } from "./src/collections/Mitra";
+import { LpmiDokumen } from "./src/collections/LpmiDokumen";
 
 import { SiteSettings } from "./src/globals/SiteSettings";
 import { HalamanUtama } from "./src/globals/HalamanUtama";
@@ -77,6 +78,7 @@ export default buildConfig({
     Publikasi,
     Layanan,
     Mitra,
+    LpmiDokumen,
   ],
   globals: [
     SiteSettings,

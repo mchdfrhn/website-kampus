@@ -10,6 +10,7 @@ import * as migration_20260507_020000_add_portal_categories from './20260507_020
 import * as migration_20260507_030000_add_why_sttpu_home_section from './20260507_030000_add_why_sttpu_home_section';
 import * as migration_20260507_031000_add_why_item_backgrounds from './20260507_031000_add_why_item_backgrounds';
 import * as migration_20260521_000000_add_home_carousel_order from './20260521_000000_add_home_carousel_order';
+import * as migration_20260522_000000_add_lpmi_documents from './20260522_000000_add_lpmi_documents';
 
 export const migrations = [
   {
@@ -71,5 +72,10 @@ export const migrations = [
     up: migration_20260521_000000_add_home_carousel_order.up,
     down: migration_20260521_000000_add_home_carousel_order.down,
     name: '20260521_000000_add_home_carousel_order',
+  },
+  {
+    up: migration_20260522_000000_add_lpmi_documents.up,
+    down: migration_20260522_000000_add_lpmi_documents.down,
+    name: '20260522_000000_add_lpmi_documents',
   },
 ];
