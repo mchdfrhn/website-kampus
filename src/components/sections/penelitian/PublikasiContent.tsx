@@ -19,7 +19,7 @@ export default async function PublikasiContent() {
     const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'publikasi',
-      sort: '-tahun,urutan',
+      sort: ['-tahun', 'urutan'],
       limit: 100,
     })
     if (result.docs.length > 0) {

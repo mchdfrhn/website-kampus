@@ -60,7 +60,7 @@ export default async function PrestasiContent() {
     const payload = await getPayloadClient()
     const result = await payload.find({
       collection: 'prestasi',
-      sort: '-tahun,urutan',
+      sort: ['-tahun', 'urutan'],
       limit: 50,
     })
     if (result.docs.length > 0) {

@@ -123,6 +123,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
   };
 
   const isItemActive = (item: NavItem) => {
+    if (pathname.startsWith('/lpmi') && item.label.trim().toLowerCase() === 'tentang') return true;
     if (matchesPath(item.href)) return true;
     return Array.isArray(item.children) ? item.children.some((child) => matchesPath(child.href)) : false;
   };

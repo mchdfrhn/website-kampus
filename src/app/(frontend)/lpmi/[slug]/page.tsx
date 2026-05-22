@@ -264,7 +264,7 @@ const fetchLpmiDocuments = unstable_cache(async (sectionSlug: string): Promise<L
           { status: { equals: 'terbit' } },
         ],
       },
-      sort: 'urutan,-updatedAt',
+      sort: ['urutan', '-updatedAt'],
       depth: 1,
       limit: 50,
     });
@@ -351,7 +351,8 @@ export default async function LpmiSlugPage({
   const HeroIcon = iconMap[sectionIndex] || Award;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },
-    { name: 'LPMI', path: '/lpmi' },
+    { name: 'Tentang', path: '/tentang' },
+    { name: 'LPMI', path: '/lpmi/kebijakan' },
     { name: section.breadcrumb, path: `/lpmi/${section.slug}` },
   ]);
 
@@ -365,16 +366,27 @@ export default async function LpmiSlugPage({
         title={section.title}
         subtitle={section.subtitle}
         breadcrumbs={[
-          { label: 'LPMI', href: '/lpmi' },
-          { label: section.breadcrumb, href: `/lpmi/${section.slug}` },
+          { label: 'Tentang', href: '/tentang' },
+          { label: 'LPMI', href: '/lpmi/kebijakan' },
+          { label: section.breadcrumb },
         ]}
       />
 
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="flex flex-col lg:flex-row gap-8">
           <LpmiSidebar pathname={`/lpmi/${section.slug}`} />
 
-          <div className="min-w-0 flex-1">
+          <div className="flex-1 min-w-0">
+            <div className="mb-12 text-center lg:mb-16 lg:text-left">
+              <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
+                {section.title}
+              </h2>
+              <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
+              <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
+                {section.subtitle}
+              </p>
+            </div>
+
             <section className="overflow-hidden rounded-[1.75rem] border border-gray-100 bg-white shadow-premium sm:rounded-[2rem]">
               <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="p-6 sm:p-8 lg:p-10">
@@ -458,7 +470,7 @@ export default async function LpmiSlugPage({
                   <h2 className="mt-2 text-xl font-black text-brand-navy">Dokumen LPMI</h2>
                 </div>
                 <p className="max-w-xl text-sm font-medium leading-7 text-gray-500">
-                  Dokumen yang diunggah melalui admin Payload akan tampil di sini sesuai halaman LPMI yang dipilih.
+                  Akses pedoman, standar, dan arsip mutu yang menjadi acuan pelaksanaan penjaminan mutu internal.
                 </p>
               </div>
 

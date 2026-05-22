@@ -21,6 +21,7 @@ function matchesPath(pathname: string, href: string) {
 }
 
 function isItemActive(pathname: string, item: NavItem) {
+  if (pathname.startsWith('/lpmi') && item.label.trim().toLowerCase() === 'tentang') return true;
   if (matchesPath(pathname, item.href)) return true;
   if (Array.isArray(item.children)) {
     return item.children.some((child) => matchesPath(pathname, child.href));

@@ -127,7 +127,7 @@ async function fetchHomePageData() {
           ],
         },
         limit: 10,
-        sort: 'heroCarouselUrutan,-tanggalTerbit',
+        sort: ['heroCarouselUrutan', '-tanggalTerbit'],
         depth: 1,
       }),
       payload.find({

@@ -40,6 +40,7 @@ const fallbackNavItems: NavItem[] = [
       { label: 'Akreditasi & Legalitas', href: '/tentang/akreditasi' },
       { label: 'Struktur Organisasi', href: '/tentang/struktur-organisasi' },
       { label: 'Fasilitas Kampus', href: '/tentang/fasilitas' },
+      { label: 'LPMI', href: '/lpmi/kebijakan' },
     ],
   },
   {
