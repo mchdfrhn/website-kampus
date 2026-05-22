@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import BeritaIndexContent from '@/components/sections/berita/BeritaIndexContent';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getBeritaPageContent } from '@/lib/data/berita-page';
@@ -24,7 +25,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 
-async function fetchArtikelList(): Promise<Artikel[]> {
+const fetchArtikelList = unstable_cache(async (): Promise<Artikel[]> => {
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
@@ -38,9 +39,9 @@ async function fetchArtikelList(): Promise<Artikel[]> {
   } catch {
     return [];
   }
-}
+}, ['berita-index-artikel-list'], { revalidate: 60 });
 
-async function fetchKategoriBerita(): Promise<ArtikelKategori[]> {
+const fetchKategoriBerita = unstable_cache(async (): Promise<ArtikelKategori[]> => {
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
@@ -53,7 +54,7 @@ async function fetchKategoriBerita(): Promise<ArtikelKategori[]> {
   } catch {
     return [];
   }
-}
+}, ['berita-index-kategori-list'], { revalidate: 60 });
 
 export default async function BeritaPage({
   searchParams,

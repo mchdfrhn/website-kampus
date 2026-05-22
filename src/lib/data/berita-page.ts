@@ -1,4 +1,5 @@
 import { getPayloadClient } from '@/lib/payload';
+import { unstable_cache } from 'next/cache';
 
 export type BeritaPageContent = {
   title?: string | null;
@@ -9,7 +10,7 @@ export type BeritaPageContent = {
   contactCtaButtonHref?: string | null;
 };
 
-export async function getBeritaPageContent(): Promise<BeritaPageContent> {
+async function resolveBeritaPageContent(): Promise<BeritaPageContent> {
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'berita-page' as never });
@@ -18,3 +19,9 @@ export async function getBeritaPageContent(): Promise<BeritaPageContent> {
     return {};
   }
 }
+
+export const getBeritaPageContent = unstable_cache(
+  resolveBeritaPageContent,
+  ['berita-page-content'],
+  { revalidate: 60 },
+);

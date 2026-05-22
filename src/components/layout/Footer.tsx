@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { unstable_cache } from 'next/cache';
 import { MapPin, Phone, Mail, Globe, Accessibility, Building2, PhoneCall } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 import HomeNavLink from './HomeNavLink';
@@ -82,21 +83,8 @@ type MediaValue = {
   url?: string | null;
 } | null;
 
-export default async function Footer() {
-  const currentYear = new Date().getFullYear()
-  const developerPortfolioUrl = process.env.NEXT_PUBLIC_DEVELOPER_PORTFOLIO_URL || '#'
-  const developerPortfolioLabel = developerPortfolioUrl === '#'
-    ? 'frhn.dev'
-    : developerPortfolioUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
-  const watermarkStyle = (() => {
-    const style = (process.env.NEXT_PUBLIC_DEVELOPER_WATERMARK_STYLE || 'signature-badge').toLowerCase()
-
-    if (style === 'glass-pill' || style === 'engraved-line' || style === 'marquee-soft' || style === 'signature-badge') {
-      return style
-    }
-
-    return 'signature-badge'
-  })()
+const getFooterData = unstable_cache(
+  async () => {
   let contact = defaultContact
   let prodis: { label: string; href: string }[] = studyPrograms
   let links = quickLinks
@@ -140,6 +128,28 @@ export default async function Footer() {
     // DB unavailable — use defaults
   }
 
+  return { contact, prodis, links }
+  },
+  ['frontend-footer-data'],
+  { revalidate: 60 },
+)
+
+export default async function Footer() {
+  const currentYear = new Date().getFullYear()
+  const developerPortfolioUrl = process.env.NEXT_PUBLIC_DEVELOPER_PORTFOLIO_URL || '#'
+  const developerPortfolioLabel = developerPortfolioUrl === '#'
+    ? 'frhn.dev'
+    : developerPortfolioUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')
+  const watermarkStyle = (() => {
+    const style = (process.env.NEXT_PUBLIC_DEVELOPER_WATERMARK_STYLE || 'signature-badge').toLowerCase()
+
+    if (style === 'glass-pill' || style === 'engraved-line' || style === 'marquee-soft' || style === 'signature-badge') {
+      return style
+    }
+
+    return 'signature-badge'
+  })()
+  const { contact, prodis, links } = await getFooterData()
   const socials = contact.socialMedia ?? defaultContact.socialMedia
 
   return (

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { unstable_cache } from 'next/cache';
 import { notFound } from 'next/navigation';
 import {
   Award,
@@ -252,7 +253,7 @@ const sidebarLinks = lpmiSections.map((section) => ({
 
 const iconMap = [ShieldCheck, ClipboardCheck, GraduationCap, Microscope, Handshake];
 
-async function fetchLpmiDocuments(sectionSlug: string): Promise<LpmiDocument[]> {
+const fetchLpmiDocuments = unstable_cache(async (sectionSlug: string): Promise<LpmiDocument[]> => {
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
@@ -273,7 +274,7 @@ async function fetchLpmiDocuments(sectionSlug: string): Promise<LpmiDocument[]> 
     console.error('Error fetching LPMI documents:', error);
     return [];
   }
-}
+}, ['lpmi-documents-by-section'], { revalidate: 60 });
 
 function formatFileSize(value?: number | null) {
   if (!value || value <= 0) return null;

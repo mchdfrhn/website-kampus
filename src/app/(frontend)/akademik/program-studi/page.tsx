@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import ProgramStudiGrid from '@/components/sections/akademik/ProgramStudiGrid';
@@ -17,7 +18,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/akademik/program-studi',
 });
 
-async function fetchProdiList(): Promise<ProgramStudi[]> {
+const fetchProdiList = unstable_cache(async (): Promise<ProgramStudi[]> => {
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
@@ -32,7 +33,7 @@ async function fetchProdiList(): Promise<ProgramStudi[]> {
   } catch {
     return [];
   }
-}
+}, ['program-studi-list'], { revalidate: 60 });
 
 export default async function ProgramStudiPage() {
   const prodiList = await fetchProdiList();

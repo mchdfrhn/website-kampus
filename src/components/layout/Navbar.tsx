@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import {
@@ -109,7 +110,8 @@ function synchronizeNavItems(
   });
 }
 
-export default async function Navbar() {
+const getNavbarData = unstable_cache(
+  async () => {
   let navItems: NavItem[] = fallbackNavItems;
   let settings = {
     teleponUtama: '(021) 2938-2938',
@@ -186,6 +188,16 @@ export default async function Navbar() {
   } catch (error) {
     console.error('Error fetching navigation or settings:', error);
   }
+
+  return { navItems, settings };
+  },
+  ['frontend-navbar-data'],
+  { revalidate: 60 },
+);
+
+export default async function Navbar() {
+  const { navItems, settings } = await getNavbarData();
+
   return (
     <>
       <a

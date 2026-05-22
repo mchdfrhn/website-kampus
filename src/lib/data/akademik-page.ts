@@ -1,4 +1,5 @@
 import { getPayloadClient } from '@/lib/payload';
+import { unstable_cache } from 'next/cache';
 
 export type ProgramStudiPageContent = {
   gridTitle?: string | null;
@@ -43,7 +44,7 @@ export type AkademikPageContent = {
   beasiswaContent?: BeasiswaPageContent | null;
 };
 
-export async function getAkademikPageContent(): Promise<AkademikPageContent> {
+async function resolveAkademikPageContent(): Promise<AkademikPageContent> {
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'akademik-page' as never });
@@ -57,3 +58,9 @@ export async function getAkademikPageContent(): Promise<AkademikPageContent> {
     return {};
   }
 }
+
+export const getAkademikPageContent = unstable_cache(
+  resolveAkademikPageContent,
+  ['akademik-page-content'],
+  { revalidate: 60 },
+);

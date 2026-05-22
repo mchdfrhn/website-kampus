@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -128,7 +129,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-async function fetchSeoSettings() {
+async function resolveSeoSettings() {
   try {
     const payload = await getPayloadClient();
     const siteSettings = await payload.findGlobal({
@@ -169,6 +170,12 @@ async function fetchSeoSettings() {
     };
   }
 }
+
+const fetchSeoSettings = unstable_cache(
+  resolveSeoSettings,
+  ['frontend-seo-settings'],
+  { revalidate: 60 },
+);
 
 export default async function FrontendLayout({
   children,

@@ -1,4 +1,5 @@
 import { getPayloadClient } from '@/lib/payload';
+import { unstable_cache } from 'next/cache';
 
 export type AkademikSectionMeta = {
   slug: string
@@ -47,7 +48,7 @@ export const defaultSections: AkademikSectionMeta[] = [
   },
 ];
 
-export async function getAkademikNavigation() {
+async function resolveAkademikNavigation() {
   let sidebarTitle = 'Navigasi Akademik';
   let sections = defaultSections;
 
@@ -87,3 +88,9 @@ export async function getAkademikNavigation() {
     })),
   };
 }
+
+export const getAkademikNavigation = unstable_cache(
+  resolveAkademikNavigation,
+  ['akademik-navigation'],
+  { revalidate: 60 },
+);
