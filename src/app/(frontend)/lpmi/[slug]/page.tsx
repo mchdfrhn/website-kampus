@@ -22,6 +22,8 @@ type LpmiSection = {
   slug: string;
   title: string;
   subtitle: string;
+  contentTitle: string;
+  contentSubtitle: string;
   breadcrumb: string;
   intro: string;
   highlights: { title: string; description: string }[];
@@ -47,6 +49,9 @@ const lpmiSections: LpmiSection[] = [
     title: 'Kebijakan LPMI',
     subtitle:
       'Arah penjaminan mutu internal STTPU untuk memastikan pendidikan, penelitian, dan pengabdian berjalan terukur serta berkelanjutan.',
+    contentTitle: 'Arah Kerja Mutu',
+    contentSubtitle:
+      'Ikhtisar prinsip, ruang lingkup, dan dokumen pendukung yang dipakai unit kerja dalam menjalankan budaya mutu secara konsisten.',
     breadcrumb: 'Kebijakan',
     intro:
       'Kebijakan LPMI menjadi rujukan institusi dalam membangun budaya mutu. Dokumen ini menempatkan siklus penetapan, pelaksanaan, evaluasi, pengendalian, dan peningkatan sebagai cara kerja bersama di tingkat institusi, program studi, unit, dosen, tenaga kependidikan, dan mahasiswa.',
@@ -85,6 +90,9 @@ const lpmiSections: LpmiSection[] = [
     title: 'Pedoman LPMI',
     subtitle:
       'Panduan kerja penjaminan mutu untuk pelaksanaan monitoring, evaluasi, audit mutu internal, dan pengendalian dokumen.',
+    contentTitle: 'Panduan Pelaksanaan Mutu',
+    contentSubtitle:
+      'Rangkuman alur monev, audit, pengendalian dokumen, dan tindak lanjut agar proses mutu mudah dijalankan oleh setiap unit.',
     breadcrumb: 'Pedoman',
     intro:
       'Pedoman LPMI membantu setiap unit menjalankan proses mutu secara konsisten. Fokusnya adalah memastikan kegiatan terencana dengan jelas, bukti pelaksanaan tersedia, capaian dievaluasi, dan rekomendasi perbaikan ditindaklanjuti.',
@@ -123,6 +131,9 @@ const lpmiSections: LpmiSection[] = [
     title: 'Standar Pendidikan',
     subtitle:
       'Standar mutu penyelenggaraan pendidikan untuk mendukung proses pembelajaran yang relevan, terukur, dan berorientasi kompetensi.',
+    contentTitle: 'Mutu Pembelajaran',
+    contentSubtitle:
+      'Fokus standar pendidikan dari kurikulum, proses belajar, penilaian, dosen, sarana, pengelolaan, hingga pembiayaan pembelajaran.',
     breadcrumb: 'Standar Pendidikan',
     intro:
       'Standar pendidikan mengatur mutu pembelajaran mulai dari profil lulusan, kurikulum, proses belajar, penilaian, dosen, sarana, pengelolaan, sampai pembiayaan. Standar ini menjadi acuan program studi dalam menjaga kesesuaian pembelajaran dengan kebutuhan dunia kerja dan perkembangan ilmu.',
@@ -165,6 +176,9 @@ const lpmiSections: LpmiSection[] = [
     title: 'Standar Penelitian',
     subtitle:
       'Standar mutu penelitian untuk memperkuat riset terapan, publikasi ilmiah, dan kontribusi akademik STTPU.',
+    contentTitle: 'Tata Kelola Riset',
+    contentSubtitle:
+      'Kerangka mutu untuk memastikan penelitian memiliki rencana, integritas ilmiah, luaran, dokumentasi, dan peluang pemanfaatan hasil.',
     breadcrumb: 'Standar Penelitian',
     intro:
       'Standar penelitian memastikan kegiatan riset berjalan sesuai kaidah ilmiah, etika, kebutuhan institusi, dan arah pengembangan teknologi pekerjaan umum. Setiap penelitian didorong memiliki rencana, luaran, dokumentasi, serta peluang pemanfaatan hasil.',
@@ -207,6 +221,9 @@ const lpmiSections: LpmiSection[] = [
     title: 'Standar PKM',
     subtitle:
       'Standar mutu pengabdian kepada masyarakat untuk memastikan program berdampak, relevan, dan terdokumentasi.',
+    contentTitle: 'Dampak Pengabdian',
+    contentSubtitle:
+      'Acuan mutu kegiatan PKM agar kebutuhan mitra, metode pelaksanaan, hasil, umpan balik, dan keberlanjutan program tercatat jelas.',
     breadcrumb: 'Standar PKM',
     intro:
       'Standar PKM menjadi acuan kegiatan pengabdian kepada masyarakat agar program yang dilakukan dosen dan mahasiswa memiliki kebutuhan mitra yang jelas, metode pelaksanaan yang tepat, serta hasil yang dapat dievaluasi dan dikembangkan.',
@@ -295,8 +312,10 @@ export async function generateMetadata({
   const section = lpmiSections.find((item) => item.slug === slug);
   if (!section) return {};
 
+  const pageTitle = section.title.includes('LPMI') ? section.title : `${section.title} LPMI`;
+
   return buildPageMetadata({
-    title: `${section.title} LPMI | STTPU Jakarta`,
+    title: `${pageTitle} | STTPU Jakarta`,
     description: section.subtitle,
     path: `/lpmi/${section.slug}`,
   });
@@ -376,14 +395,14 @@ export default async function LpmiSlugPage({
         <div className="flex flex-col lg:flex-row gap-8">
           <LpmiSidebar pathname={`/lpmi/${section.slug}`} />
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 pt-10 sm:pt-12 lg:pt-10">
             <div className="mb-12 text-center lg:mb-16 lg:text-left">
               <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-                {section.title}
+                {section.contentTitle}
               </h2>
               <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
               <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-                {section.subtitle}
+                {section.contentSubtitle}
               </p>
             </div>
 
