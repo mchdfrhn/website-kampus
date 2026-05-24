@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { unstable_cache } from 'next/cache';
 import { MapPin, Phone, Mail, Globe, Accessibility, Building2, PhoneCall } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import { getMediaUrl } from '@/lib/media';
 import HomeNavLink from './HomeNavLink';
 
 const quickLinks = [
@@ -81,6 +82,7 @@ const defaultContact = {
 
 type MediaValue = {
   url?: string | null;
+  sizes?: Record<string, { url?: string | null } | null> | null;
 } | null;
 
 const getFooterData = unstable_cache(
@@ -107,7 +109,7 @@ const getFooterData = unstable_cache(
       const favicon = (typeof settings.favicon === 'object' ? settings.favicon : null) as MediaValue
       contact = {
         ...contact,
-        logoUrl: logo?.url || favicon?.url || null,
+        logoUrl: getMediaUrl(logo, 'logo') || getMediaUrl(favicon, 'thumbnail'),
       } as typeof defaultContact & { logoUrl?: string | null }
       const dynamicLinks = (settings as unknown as { footerQuickLinks?: { label: string; href: string }[] }).footerQuickLinks
       if (dynamicLinks && dynamicLinks.length > 0) {

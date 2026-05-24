@@ -1,12 +1,13 @@
 import { ImageOff } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import { getMediaUrl } from '@/lib/media';
 
 type FasilitasItem = {
   nama: string
   deskripsi?: string
   kapasitas?: string
   items?: { nama: string }[]
-  foto?: { url?: string } | null
+  foto?: { url?: string; sizes?: Record<string, { url?: string | null } | null> | null } | null
   kategori?: string
 }
 
@@ -68,8 +69,8 @@ export default async function FasilitasContent() {
             key={idx}
             className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium transition-all duration-300 hover:-translate-y-1 hover:shadow-premium-hover"
           >
-            {item.foto?.url ? (
-              <img src={item.foto.url} alt={item.nama} className="h-36 w-full object-cover" />
+            {getMediaUrl(item.foto, 'card') ? (
+              <img src={getMediaUrl(item.foto, 'card') || ''} alt={item.nama} className="h-36 w-full object-cover" />
             ) : (
               <div className="flex h-36 items-center justify-center border-b border-gray-100 bg-gray-50">
                 <ImageOff size={28} className="text-gray-400" aria-hidden="true" />

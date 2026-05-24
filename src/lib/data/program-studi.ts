@@ -1,3 +1,5 @@
+import { getMediaUrl } from '@/lib/media';
+
 export type ProgramStudi = {
   slug: string;
   nama: string;
@@ -358,10 +360,7 @@ export function mapPayloadToProgramStudi(doc: any): ProgramStudi {
     }
   }
 
-  const thumbnailUrl: string | undefined =
-    doc.thumbnail && typeof doc.thumbnail === 'object' && doc.thumbnail.url
-      ? (doc.thumbnail.url as string)
-      : undefined;
+  const thumbnailUrl = getMediaUrl(doc.thumbnail, 'card') ?? undefined;
 
   const misi: string[] = Array.isArray(doc.misi)
     ? doc.misi.map((m: { poin: string }) => m.poin ?? '')

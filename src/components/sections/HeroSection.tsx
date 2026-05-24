@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 import { usePathname } from 'next/navigation';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
+import { getMediaUrl, type MediaLike } from '@/lib/media';
 
 type Slide = {
   badge?: string | null;
@@ -16,7 +17,7 @@ type Slide = {
   cta1Href?: string | null;
   cta2Teks?: string | null;
   cta2Href?: string | null;
-  background?: { url: string } | string | null;
+  background?: MediaLike | string | null;
 };
 
 type HeroData = {
@@ -29,10 +30,7 @@ function isExternalHref(href?: string | null) {
 }
 
 function getBackgroundUrl(background?: Slide['background']) {
-  if (!background) return null;
-  if (typeof background === 'string') return background;
-  if (typeof background === 'object' && typeof background.url === 'string') return background.url;
-  return null;
+  return getMediaUrl(background, 'hero');
 }
 
 export default function HeroSection({ data }: { data?: HeroData }) {

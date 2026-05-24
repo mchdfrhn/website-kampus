@@ -1,5 +1,6 @@
 import { Reveal } from '@/components/ui/motion/Reveal';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
+import { getMediaUrl } from '@/lib/media';
 
 type MitraItem = {
   nama: string;
@@ -15,7 +16,7 @@ type MitraSectionProps = {
 };
 
 function MitraLogo({ item }: { item: MitraItem }) {
-  const logoUrl = typeof item.logo === 'object' ? item.logo?.url : null;
+  const logoUrl = getMediaUrl(item.logo, 'logo');
   const logoAlt = typeof item.logo === 'object' ? item.logo?.alt : null;
 
   const content = (
@@ -56,7 +57,7 @@ function MitraLogo({ item }: { item: MitraItem }) {
 }
 
 export default function MitraSection({ title, description, items }: MitraSectionProps) {
-  const mitra = items.filter((item) => item.logo && typeof item.logo === 'object' && item.logo.url);
+  const mitra = items.filter((item) => getMediaUrl(item.logo, 'logo'));
 
   if (mitra.length === 0) return null;
 

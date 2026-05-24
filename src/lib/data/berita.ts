@@ -4,6 +4,7 @@ import {
   mapPayloadToManagedKategori,
   type ManagedKategori,
 } from './kategori';
+import { getMediaUrl } from '@/lib/media';
 
 export type ArtikelKategori = ManagedKategori;
 
@@ -418,10 +419,7 @@ export function mapPayloadToArtikel(doc: any): Artikel {
     }
   }
 
-  const thumbnailUrl: string | undefined =
-    doc.thumbnail && typeof doc.thumbnail === 'object' && doc.thumbnail.url
-      ? (doc.thumbnail.url as string)
-      : undefined;
+  const thumbnailUrl = getMediaUrl(doc.thumbnail, 'card') ?? undefined;
 
   return {
     slug: doc.slug ?? '',

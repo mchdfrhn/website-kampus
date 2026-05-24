@@ -2,6 +2,7 @@ import { getPayloadClient } from '@/lib/payload';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
+import { getMediaUrl } from '@/lib/media';
 
 type TestimonialItem = {
   teks: string;
@@ -10,6 +11,7 @@ type TestimonialItem = {
   foto?: {
     url?: string;
     alt?: string;
+    sizes?: Record<string, { url?: string | null } | null> | null;
   } | null;
 }
 
@@ -63,10 +65,10 @@ export default async function TestimonialSection() {
 
               <div className="flex items-center gap-6 mt-auto relative z-10">
                 <div className="relative w-16 h-16 rounded-2xl bg-brand-gold flex-shrink-0 flex items-center justify-center overflow-hidden shadow-2xl shadow-brand-gold/20 transition-[background-color,transform] duration-500 ease-out group-hover:bg-white group-hover:scale-105">
-                  {item.foto?.url ? (
+                  {getMediaUrl(item.foto, 'thumbnail') ? (
                     <ImageWithLoading
-                      src={item.foto.url}
-                      alt={item.foto.alt || item.nama}
+                      src={getMediaUrl(item.foto, 'thumbnail') || ''}
+                      alt={item.foto?.alt || item.nama}
                       fill
                       sizes="64px"
                       className="object-cover"

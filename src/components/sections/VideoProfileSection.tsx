@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Play, X, Info } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
+import { getMediaUrl } from '@/lib/media';
 
 export default function VideoProfileSection({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -52,7 +53,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
   };
 
   const videoUrl = getEmbedUrl(data?.videoUrl);
-  const thumbnailUrl = data?.videoThumbnail?.url || "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop";
+  const thumbnailUrl = getMediaUrl(data?.videoThumbnail, 'hero') || "https://images.unsplash.com/photo-1541339907198-e08756ebafe3?q=80&w=2070&auto=format&fit=crop";
   const judul = data?.videoJudul || "Jelajahi Kampus Kami";
   const deskripsi = data?.videoDeskripsi || "Saksikan sekilas kehidupan akademik dan fasilitas unggulan di Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta.";
 

@@ -1,5 +1,6 @@
 import { GraduationCap, Award, BookOpen, User } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import { getMediaUrl } from '@/lib/media';
 
 type PimpinanItem = {
   jabatan: string
@@ -10,7 +11,7 @@ type PimpinanItem = {
   pengalaman?: string
   sambutan?: string
   urutan?: number
-  foto?: { url?: string } | null
+  foto?: { url?: string; sizes?: Record<string, { url?: string | null } | null> | null } | null
 }
 
 export default async function PimpinanContent() {
@@ -62,8 +63,8 @@ export default async function PimpinanContent() {
           <div className="p-6">
             <div className="flex flex-col sm:flex-row gap-6">
               <div className="flex-shrink-0">
-                {person.foto?.url ? (
-                  <img src={person.foto.url} alt={person.nama} className="h-28 w-24 rounded-xl border border-gray-100 object-cover object-top" />
+                {getMediaUrl(person.foto, 'thumbnail') ? (
+                  <img src={getMediaUrl(person.foto, 'thumbnail') || ''} alt={person.nama} className="h-28 w-24 rounded-xl border border-gray-100 object-cover object-top" />
                 ) : (
                   <div
                     className="flex h-28 w-24 items-center justify-center rounded-xl border border-gray-100 bg-gray-50"

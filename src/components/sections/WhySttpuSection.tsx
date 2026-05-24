@@ -3,6 +3,7 @@ import Image from 'next/image';
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Reveal } from '@/components/ui/motion/Reveal';
+import { getMediaUrl } from '@/lib/media';
 
 type WhyItem = {
   icon?: string | null;
@@ -85,10 +86,7 @@ const defaultItems: WhyItem[] = [
 ];
 
 function getBackgroundUrl(background?: WhyItem['background']) {
-  if (!background) return null;
-  if (typeof background === 'string') return background;
-  if (typeof background === 'object' && typeof background.url === 'string') return background.url;
-  return null;
+  return getMediaUrl(background, 'card');
 }
 
 function ReasonCard({ item, index }: { item: WhyItem; index: number }) {

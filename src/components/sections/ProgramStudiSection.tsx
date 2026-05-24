@@ -6,6 +6,7 @@ import { Reveal } from '@/components/ui/motion/Reveal';
 import { MotionList, MotionItem } from '@/components/ui/motion/MotionWrapper';
 import { cn } from '@/lib/utils';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
+import { getMediaUrl } from '@/lib/media';
 
 type Program = {
   slug?: string;
@@ -92,7 +93,7 @@ export default async function ProgramStudiSection() {
 
         <MotionList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {programs.map((program) => {
-            const thumbUrl = typeof program.thumbnail === 'object' ? program.thumbnail?.url : null;
+            const thumbUrl = getMediaUrl(program.thumbnail, 'card');
             const accent = accentTheme[resolveProgramStudiAccentColor(program.nama, program.accentColor)] ?? accentTheme.navy;
             
             return (
