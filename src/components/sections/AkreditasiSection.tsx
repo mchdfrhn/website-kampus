@@ -41,7 +41,7 @@ export default async function AkreditasiSection() {
         </Reveal>
 
         <MotionWrapper 
-          className="grid grid-cols-1 justify-items-center min-[420px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6 lg:gap-8"
+          className="grid grid-cols-1 gap-5 min-[420px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
           staggerChildren={0.1}
         >
           {lembaga.map((item) => {
@@ -50,32 +50,32 @@ export default async function AkreditasiSection() {
             return (
               <div
                 key={item.nama}
-                className="group w-full max-w-[18rem] bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 lg:p-10 text-center shadow-premium hover:shadow-premium-hover hover:-translate-y-2 active:scale-95 transition-all duration-700"
+                className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 text-center shadow-premium transition-all duration-500 hover:-translate-y-1 hover:border-brand-navy/15 hover:shadow-premium-hover active:scale-[0.99] sm:p-6"
               >
-                <div className="mx-auto mb-6 sm:mb-7 flex h-24 w-24 items-center justify-center rounded-full border border-brand-navy/10 bg-gradient-to-br from-slate-50 via-white to-brand-gold/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_14px_30px_rgba(15,23,42,0.08)] transition-all duration-700 group-hover:border-brand-gold/40 group-hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.9),0_18px_38px_rgba(15,23,42,0.12)]">
-                  <div className="relative flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full border border-brand-navy/8 bg-white/90 shadow-inner">
-                    {logoUrl ? (
+                <span className="absolute inset-x-0 top-0 h-1 bg-brand-navy" aria-hidden="true" />
+                <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-xl border border-gray-100 bg-gray-50">
+                  {logoUrl ? (
+                    <div className="relative h-14 w-14">
                       <ImageWithLoading
                         src={logoUrl}
                         alt={item.nama}
                         fill
-                        sizes="72px"
-                        className="object-contain p-3"
-                        skeletonClassName="rounded-full"
+                        sizes="56px"
+                        className="object-contain"
                       />
-                    ) : (
-                      <span className="px-2 text-center text-brand-navy/20 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.18em]">
-                        {item.nama.split(' ')[0]}
-                      </span>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <span className="px-2 text-center text-[10px] font-bold uppercase tracking-wider text-brand-navy/35">
+                      {item.nama.split(' ')[0]}
+                    </span>
+                  )}
                 </div>
-                <p className="mx-auto mb-5 line-clamp-2 max-w-[14rem] text-brand-navy font-bold text-xs sm:text-[11px] uppercase tracking-[0.14em] leading-relaxed group-hover:text-brand-gold transition-colors">
+                <p className="mx-auto mb-4 line-clamp-2 max-w-[14rem] text-xs font-bold uppercase leading-relaxed tracking-wider text-brand-navy transition-colors group-hover:text-brand-gold">
                   {item.nama}
                 </p>
-                <div className="inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-green-100 bg-green-50 px-4 py-2 sm:px-5">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
-                  <p className="text-green-700 font-bold text-[9px] sm:text-[10px] uppercase tracking-[0.16em] leading-relaxed break-words">
+                <div className="mt-auto inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-green-100 bg-green-50 px-3 py-1.5">
+                  <div className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-green-500" />
+                  <p className="break-words text-[10px] font-bold uppercase leading-none tracking-wider text-green-700">
                     {item.status}
                   </p>
                 </div>
