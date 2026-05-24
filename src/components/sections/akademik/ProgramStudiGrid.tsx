@@ -14,29 +14,29 @@ const akreditasiColor: Record<string, string> = {
 };
 
 const accentTheme: Record<string, {
-  card: string;
+  accent: string;
   badge: string;
-  stat: string;
+  icon: string;
 }> = {
   navy: {
-    card: 'border-brand-navy/8 bg-gradient-to-br from-white via-brand-mist/25 to-white',
+    accent: 'bg-brand-navy',
     badge: 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
-    stat: 'bg-brand-navy/[0.03] border-brand-navy/10',
+    icon: 'bg-brand-navy text-white',
   },
   blue: {
-    card: 'border-sky-100 bg-gradient-to-br from-white via-sky-50/80 to-white',
+    accent: 'bg-sky-700',
     badge: 'bg-sky-50 text-sky-800 border-sky-200',
-    stat: 'bg-sky-50/70 border-sky-100',
+    icon: 'bg-sky-700 text-white',
   },
   green: {
-    card: 'border-emerald-100 bg-gradient-to-br from-white via-emerald-50/80 to-white',
+    accent: 'bg-emerald-700',
     badge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    stat: 'bg-emerald-50/70 border-emerald-100',
+    icon: 'bg-emerald-700 text-white',
   },
   orange: {
-    card: 'border-orange-100 bg-gradient-to-br from-white via-orange-50/80 to-white',
+    accent: 'bg-orange-700',
     badge: 'bg-orange-50 text-orange-800 border-orange-200',
-    stat: 'bg-orange-50/70 border-orange-100',
+    icon: 'bg-orange-700 text-white',
   },
 };
 
@@ -77,7 +77,7 @@ export default function ProgramStudiGrid({
         </div>
       ) : (
       <ul
-        className="mt-10 mb-8 grid grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] gap-6 sm:mb-10 lg:mb-12"
+        className="mt-10 mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 sm:mb-10 lg:mb-12"
         aria-label="Daftar program studi STTPU"
       >
         {list.map((prodi) => {
@@ -88,45 +88,51 @@ export default function ProgramStudiGrid({
               <Link
                 href={`/akademik/program-studi/${prodi.slug}`}
                 className={cn(
-                  "group flex flex-col h-full rounded-3xl p-6 sm:p-8 lg:p-8 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500",
-                  accent.card,
+                  "group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-premium transition-all duration-500 hover:-translate-y-1 hover:border-brand-navy/15 hover:shadow-premium-hover active:scale-[0.99] sm:p-8",
                 )}
               >
-                <div className="flex flex-wrap gap-2.5 sm:gap-3 mb-6">
+                <span className={cn("absolute inset-x-0 top-0 h-1", accent.accent)} aria-hidden="true" />
+
+                <div className="mb-6 flex items-start justify-between gap-4">
+                  <div className={cn("flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl", accent.icon)}>
+                    <ShieldCheck size={20} aria-hidden="true" />
+                  </div>
                   <span className={cn(
-                    "text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider",
-                    accent.badge,
-                  )}>
-                    {prodi.jenjang}
-                  </span>
-                  <span className={cn(
-                    "text-[10px] font-bold px-3 py-1.5 rounded-full border uppercase tracking-wider flex items-center gap-2",
+                    "inline-flex min-h-8 items-center rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
                     akreditasiColor[prodi.akreditasi] ?? 'bg-gray-50 text-gray-500 border-gray-100'
                   )}>
-                    <ShieldCheck size={12} aria-hidden="true" />
                     Akreditasi {prodi.akreditasi}
                   </span>
                 </div>
 
-                <h3 className="font-bold text-xl 2xl:text-lg text-brand-navy mb-4 group-hover:text-brand-gold transition-colors tracking-tight leading-tight">
+                <div className="mb-4">
+                  <span className={cn(
+                    "inline-flex min-h-8 items-center rounded-lg border px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
+                    accent.badge,
+                  )}>
+                    {prodi.jenjang}
+                  </span>
+                </div>
+
+                <h3 className="mb-4 text-xl font-bold leading-tight tracking-tight text-brand-navy transition-colors group-hover:text-brand-gold">
                   {prodi.nama}
                 </h3>
-                <p className="text-gray-500 text-sm leading-relaxed flex-1 mb-8 font-medium">
+                <p className="mb-8 flex-1 text-sm font-medium leading-relaxed text-gray-500">
                   {prodi.deskripsiSingkat}
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-1 gap-4 mb-8">
-                  <div className={cn("rounded-xl p-4 sm:p-5 2xl:p-4 border", accent.stat)}>
+                <div className="mb-8 grid grid-cols-2 gap-3">
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
                     <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Masa Studi</p>
                     <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.masaStudi}</p>
                   </div>
-                  <div className={cn("rounded-xl p-4 sm:p-5 2xl:p-4 border", accent.stat)}>
+                  <div className="rounded-xl border border-gray-100 bg-gray-50 p-4">
                     <p className="text-gray-400 text-[9px] font-bold uppercase tracking-wider mb-1">Beban SKS</p>
                     <p className="font-bold text-brand-navy text-sm tracking-tight">{prodi.jumlahSKS} SKS</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-brand-navy text-[10px] font-bold uppercase tracking-wider group-hover:gap-4 transition-all">
+                <div className="flex items-center gap-2 border-t border-gray-100 pt-5 text-[10px] font-bold uppercase tracking-wider text-brand-navy transition-all group-hover:gap-4">
                   Detail Kurikulum & Prospek
                   <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </div>

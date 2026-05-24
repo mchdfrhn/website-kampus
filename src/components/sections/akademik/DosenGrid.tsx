@@ -23,28 +23,28 @@ const jabatanColor: Record<string, string> = {
 };
 
 const accentTheme: Record<string, {
-  card: string;
+  accent: string;
   avatar: string;
   chip: string;
 }> = {
   navy: {
-    card: 'border-brand-navy/8 bg-gradient-to-br from-white via-brand-mist/20 to-white',
-    avatar: 'border-brand-navy/10 bg-[linear-gradient(155deg,#eef4ff_0%,#f8fafc_42%,#fff5d9_100%)] text-brand-navy/55',
-    chip: 'border-brand-navy/8 bg-brand-navy/[0.03] text-brand-navy',
+    accent: 'bg-brand-navy',
+    avatar: 'bg-brand-navy text-white',
+    chip: 'border-brand-navy/10 bg-brand-navy/[0.03] text-brand-navy',
   },
   blue: {
-    card: 'border-sky-100 bg-gradient-to-br from-white via-sky-50/70 to-white',
-    avatar: 'border-sky-100 bg-[linear-gradient(155deg,#eff6ff_0%,#f8fbff_45%,#ffffff_100%)] text-sky-700/55',
+    accent: 'bg-sky-700',
+    avatar: 'bg-sky-700 text-white',
     chip: 'border-sky-100 bg-sky-50 text-sky-800',
   },
   green: {
-    card: 'border-emerald-100 bg-gradient-to-br from-white via-emerald-50/70 to-white',
-    avatar: 'border-emerald-100 bg-[linear-gradient(155deg,#ecfdf5_0%,#f7fee7_45%,#ffffff_100%)] text-emerald-700/55',
+    accent: 'bg-emerald-700',
+    avatar: 'bg-emerald-700 text-white',
     chip: 'border-emerald-100 bg-emerald-50 text-emerald-800',
   },
   orange: {
-    card: 'border-orange-100 bg-gradient-to-br from-white via-orange-50/70 to-white',
-    avatar: 'border-orange-100 bg-[linear-gradient(155deg,#fff7ed_0%,#fffbeb_45%,#ffffff_100%)] text-orange-700/55',
+    accent: 'bg-orange-700',
+    avatar: 'bg-orange-700 text-white',
     chip: 'border-orange-100 bg-orange-50 text-orange-800',
   },
 };
@@ -101,8 +101,10 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
   const accent = accentTheme[accentColor || 'navy'] ?? accentTheme.navy;
   const content = (
     <>
+      <span className={`absolute inset-x-0 top-0 h-1 ${accent.accent}`} aria-hidden="true" />
+
       <div className="flex items-start gap-4 sm:gap-5">
-        <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl border text-base font-bold tracking-[0.16em] shadow-inner sm:h-16 sm:w-16 sm:text-lg ${accent.avatar}`}>
+        <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl text-base font-bold tracking-[0.16em] sm:h-16 sm:w-16 sm:text-lg ${accent.avatar}`}>
           {initials}
         </div>
 
@@ -140,7 +142,7 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
         ) : null}
       </div>
 
-      <div className="mt-5 flex flex-col gap-2.5 border-t border-slate-100 pt-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-5 flex flex-col gap-2.5 border-t border-gray-100 pt-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <BookOpen size={13} />
           <span>{dosen.publikasi.length} publikasi terdata</span>
@@ -162,7 +164,7 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
     return (
       <Link
         href={`/akademik/dosen/${dosen.slug}`}
-        className={`group flex h-full flex-col rounded-2xl border bg-white p-5 shadow-[0_16px_40px_rgba(10,31,68,0.04)] transition-all duration-500 hover:-translate-y-1 hover:border-brand-gold/30 hover:shadow-[0_24px_50px_rgba(10,31,68,0.08)] sm:p-8 ${accent.card}`}
+        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-premium transition-all duration-500 hover:-translate-y-1 hover:border-brand-navy/15 hover:shadow-premium-hover active:scale-[0.99] sm:p-8"
       >
         {content}
       </Link>
@@ -170,7 +172,7 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
   }
 
   return (
-    <div className={`flex h-full flex-col rounded-2xl border bg-white p-5 opacity-85 shadow-[0_16px_40px_rgba(10,31,68,0.04)] sm:p-8 ${accent.card}`}>
+    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 opacity-85 shadow-premium sm:p-8">
       {content}
     </div>
   );
