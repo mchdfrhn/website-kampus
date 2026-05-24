@@ -44,7 +44,7 @@ export default async function StrukturOrganisasiContent() {
   const [ketua, ...wakilKetua] = pimpinan
 
   return (
-    <article className="space-y-10 pt-10 sm:pt-12">
+    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
           Struktur Organisasi
@@ -56,18 +56,18 @@ export default async function StrukturOrganisasiContent() {
       </div>
 
       {strukturGambar?.url && (
-        <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium">
+        <div className="rounded-xl overflow-hidden border border-gray-200">
           <img src={strukturGambar.url} alt="Struktur Organisasi STTPU Jakarta" className="w-full h-auto" />
         </div>
       )}
 
       {!ketua && upt.length === 0 && bagian.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
           Struktur organisasi belum tersedia.
         </div>
       ) : null}
       <section>
-        <div className="mb-6 rounded-2xl bg-brand-navy p-5 text-center text-white shadow-premium">
+        <div className="bg-brand-navy rounded-xl p-5 text-center text-white mb-6">
           <p className="text-white/70 text-xs uppercase tracking-widest mb-1">Pimpinan Tertinggi</p>
           <p className="font-bold text-lg">{ketua?.jabatan}</p>
           <p className="text-brand-gold font-medium text-sm mt-0.5">{ketua?.nama}</p>
@@ -75,12 +75,12 @@ export default async function StrukturOrganisasiContent() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {wakilKetua.map((item, idx) => (
-            <div key={idx} className="rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-premium">
+            <div key={idx} className="border border-gray-200 rounded-xl p-4 text-center bg-white">
               <p className="text-brand-navy font-semibold text-xs uppercase tracking-wide mb-2">{item.jabatan}</p>
               <p className="text-gray-800 text-sm font-medium leading-snug">{item.nama}</p>
             </div>
           ))}
-          <div className="rounded-2xl border border-gray-100 bg-white p-4 text-center shadow-premium">
+          <div className="border border-gray-200 rounded-xl p-4 text-center bg-white">
             <p className="text-gray-600 font-semibold text-xs uppercase tracking-wide mb-2">{senat.jabatan}</p>
             <p className="text-gray-700 text-sm font-medium leading-snug">{senat.nama}</p>
           </div>
@@ -92,7 +92,7 @@ export default async function StrukturOrganisasiContent() {
         <p className="text-gray-500 text-sm mb-4">Unit-unit fungsional yang mendukung operasional akademik dan layanan kampus.</p>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {upt.map((item, idx) => (
-            <li key={idx} className="flex items-start gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4 shadow-sm">
+            <li key={idx} className="flex items-start gap-3 p-4 bg-brand-mist border border-gray-200 rounded-xl">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-gold flex-shrink-0 mt-2" aria-hidden="true" />
               <div>
                 <p className="font-medium text-gray-900 text-sm">{item.unit}</p>
@@ -108,7 +108,7 @@ export default async function StrukturOrganisasiContent() {
         <p className="text-gray-500 text-sm mb-4">Bagian-bagian yang mengelola administrasi, keuangan, dan layanan umum institusi.</p>
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {bagian.map((item, idx) => (
-            <li key={idx} className="flex items-start gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+            <li key={idx} className="flex items-start gap-3 p-4 bg-white border border-gray-200 rounded-xl">
               <span className="w-1.5 h-1.5 rounded-full bg-brand-navy flex-shrink-0 mt-2" aria-hidden="true" />
               <div>
                 <p className="font-medium text-gray-900 text-sm">{item.bagian}</p>

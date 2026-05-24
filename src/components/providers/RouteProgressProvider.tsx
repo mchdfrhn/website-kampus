@@ -1,16 +1,22 @@
 "use client";
 
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ReactNode, useEffect, useRef, useState, Suspense } from "react";
 
 const SHOW_DELAY = 20;
+const REDUCED_MOTION_SHOW_DELAY = 0;
 const MIN_VISIBLE_DURATION = 80;
+const REDUCED_MOTION_MIN_VISIBLE_DURATION = 60;
 const PROGRESS_DURATION = 260;
+const REDUCED_MOTION_PROGRESS_DURATION = 180;
 const HIDE_DELAY = 40;
+const REDUCED_MOTION_HIDE_DELAY = 40;
 
 function RouteProgressLogic() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const shouldReduceMotion = useReducedMotion();
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const showTimeoutRef = useRef<number | null>(null);
@@ -47,25 +53,30 @@ function RouteProgressLogic() {
       setIsLoading(false);
       setProgress(0);
 
+      const showDelay = shouldReduceMotion ? REDUCED_MOTION_SHOW_DELAY : SHOW_DELAY;
+
       showTimeoutRef.current = window.setTimeout(() => {
         const visibleAt = performance.now();
-        const targetBeforeFinish = 96;
+        const progressDuration = shouldReduceMotion
+          ? REDUCED_MOTION_PROGRESS_DURATION
+          : PROGRESS_DURATION;
+        const targetBeforeFinish = shouldReduceMotion ? 94 : 96;
 
         progressVisibleAtRef.current = visibleAt;
         setIsLoading(true);
-        setProgress(12);
+        setProgress(shouldReduceMotion ? 28 : 12);
 
         intervalRef.current = window.setInterval(() => {
           const elapsed = performance.now() - visibleAt;
-          const ratio = Math.min(elapsed / PROGRESS_DURATION, 1);
+          const ratio = Math.min(elapsed / progressDuration, 1);
           const nextProgress = Math.min(
             targetBeforeFinish,
             12 + ratio * (targetBeforeFinish - 12)
           );
 
           setProgress((current) => (current >= nextProgress ? current : nextProgress));
-        }, 32);
-      }, SHOW_DELAY);
+        }, shouldReduceMotion ? 32 : 32);
+      }, showDelay);
     };
 
     const handleClick = (event: MouseEvent) => {
@@ -112,7 +123,7 @@ function RouteProgressLogic() {
       window.removeEventListener("popstate", handlePopState);
       clearTimers();
     };
-  }, []);
+  }, [shouldReduceMotion]);
 
   useEffect(() => {
     if (!loadingStartedAtRef.current) return;
@@ -137,8 +148,11 @@ function RouteProgressLogic() {
       return;
     }
 
+    const minVisibleDuration = shouldReduceMotion
+      ? REDUCED_MOTION_MIN_VISIBLE_DURATION
+      : MIN_VISIBLE_DURATION;
     const elapsedVisible = performance.now() - progressVisibleAtRef.current;
-    const remaining = Math.max(0, MIN_VISIBLE_DURATION - elapsedVisible);
+    const remaining = Math.max(0, minVisibleDuration - elapsedVisible);
 
     finishTimeoutRef.current = window.setTimeout(() => {
       if (intervalRef.current) {
@@ -151,25 +165,32 @@ function RouteProgressLogic() {
         setProgress(0);
         loadingStartedAtRef.current = null;
         progressVisibleAtRef.current = null;
-      }, HIDE_DELAY);
+      }, shouldReduceMotion ? REDUCED_MOTION_HIDE_DELAY : HIDE_DELAY);
     }, remaining);
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams, shouldReduceMotion]);
 
   return (
-    <div
-      className={`pointer-events-none fixed inset-x-0 top-0 z-[70] h-1 transition-opacity duration-150 ${
-        isLoading ? "opacity-100" : "opacity-0"
-      }`}
-      aria-hidden="true"
-    >
-      <div className="absolute inset-0 bg-brand-navy/10" />
-      <div
-        className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-brand-gold-soft to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)] transition-[width] duration-200 ease-out"
-        style={{ width: `${progress}%` }}
-      >
-        <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-white/0 via-white/70 to-white/0 opacity-80" />
-      </div>
-    </div>
+    <AnimatePresence>
+      {isLoading && (
+        <motion.div
+          key="route-progress"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: shouldReduceMotion ? 0.1 : 0.2 }}
+          className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-1"
+        >
+          <div className="absolute inset-0 bg-brand-navy/10" />
+          <motion.div
+            className="relative h-full overflow-hidden bg-gradient-to-r from-brand-gold via-brand-gold-soft to-brand-gold shadow-[0_0_18px_rgba(252,182,3,0.45)]"
+            animate={{ width: `${progress}%` }}
+            transition={{ ease: [0.22, 1, 0.36, 1], duration: shouldReduceMotion ? 0.12 : 0.24 }}
+          >
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-white/0 via-white/70 to-white/0 opacity-80" />
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 

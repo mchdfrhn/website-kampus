@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Play, X, Info } from 'lucide-react';
+import { useLenis } from 'lenis/react';
 import { createPortal } from 'react-dom';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
@@ -9,6 +11,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const lenis = useLenis();
 
   useEffect(() => {
     setMounted(true);
@@ -56,22 +59,28 @@ export default function VideoProfileSection({ data }: { data?: any }) {
   const judul = data?.videoJudul || "Jelajahi Kampus Kami";
   const deskripsi = data?.videoDeskripsi || "Saksikan sekilas kehidupan akademik dan fasilitas unggulan di Sekolah Tinggi Teknologi Pekerjaan Umum Jakarta.";
 
-  // Lock scroll when video is open.
+  // Lock scroll when video is open (including Lenis control)
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      lenis?.stop();
     } else {
       document.body.style.overflow = 'unset';
+      lenis?.start();
     }
     return () => {
       document.body.style.overflow = 'unset';
+      lenis?.start();
     };
-  }, [isOpen]);
+  }, [isOpen, lenis]);
 
   const Lightbox = (
-    <>
+    <AnimatePresence>
       {isOpen && (
-          <div
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             className="fixed top-0 left-0 w-full h-full z-[9999] bg-brand-navy/60 backdrop-blur-3xl flex items-center justify-center p-0 sm:p-4 md:p-12"
             onClick={() => {
               setIsOpen(false);
@@ -92,7 +101,11 @@ export default function VideoProfileSection({ data }: { data?: any }) {
             </button>
 
             {/* Video Player Container - Optimized for all screens */}
-            <div 
+            <motion.div 
+              initial={{ scale: 0.98, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.98, opacity: 0, y: 10 }}
+              transition={{ type: "spring", damping: 30, stiffness: 400 }}
               className="relative w-full max-w-6xl aspect-video sm:rounded-2xl overflow-hidden shadow-2xl bg-black max-h-screen sm:max-h-[85vh] flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
@@ -114,10 +127,10 @@ export default function VideoProfileSection({ data }: { data?: any }) {
                 allowFullScreen
                 onLoad={() => setIsVideoReady(true)}
               ></iframe>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
       )}
-    </>
+    </AnimatePresence>
   );
 
   return (
@@ -126,18 +139,30 @@ export default function VideoProfileSection({ data }: { data?: any }) {
         <div className="relative group">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-brand-navy mb-4"
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl sm:text-4xl font-bold text-brand-navy mb-4"
             >
               {judul}
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto text-lg"
+            </motion.h2>
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-gray-600 max-w-2xl mx-auto text-lg"
             >
               {deskripsi}
-            </p>
+            </motion.p>
           </div>
 
           {/* Video Thumbnail Container */}
-          <div 
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
             className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl cursor-pointer group/thumb"
             onClick={() => setIsOpen(true)}
           >
@@ -180,7 +205,7 @@ export default function VideoProfileSection({ data }: { data?: any }) {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 

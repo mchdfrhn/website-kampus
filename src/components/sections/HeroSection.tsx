@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
@@ -145,7 +146,12 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                 {/* Background Image with Parallax effect */}
                 <div className="absolute inset-0 z-0">
                   {bgUrl ? (
-                    <div className={`relative h-full w-full transition-transform duration-[20000ms] ease-linear ${isActive ? 'scale-100' : 'scale-[1.06]'}`}>
+                    <motion.div
+                      initial={{ scale: 1 }}
+                      animate={{ scale: isActive ? 1 : 1.06 }}
+                      transition={{ duration: 20, ease: "linear" }}
+                      className="relative h-full w-full"
+                    >
                       <ImageWithLoading
                         src={bgUrl}
                         alt=""
@@ -158,7 +164,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                         loading={index === 0 ? "eager" : "lazy"}
                         onLoad={() => emblaApi?.reInit()}
                       />
-                    </div>
+                    </motion.div>
                   ) : (
                     <div className="absolute inset-0 bg-brand-navy" />
                   )}
@@ -169,36 +175,52 @@ export default function HeroSection({ data }: { data?: HeroData }) {
 
                 <div className="relative z-20 flex h-full w-full items-center">
                   <div className="w-full max-w-7xl mx-auto px-6 py-24 sm:py-28 md:px-6 md:py-0 lg:px-8">
+                    <AnimatePresence mode="wait">
                       {isActive && (
                         <StaggerContainer className="max-w-3xl">
                         <StaggerItem>
                           {slide.badge && (
-                            <div className="inline-flex items-center gap-3 bg-brand-gold/10 backdrop-blur-md border border-brand-gold/20 px-4 py-2 rounded-full mb-8 shadow-xl"
+                            <motion.div 
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="inline-flex items-center gap-3 bg-brand-gold/10 backdrop-blur-md border border-brand-gold/20 px-4 py-2 rounded-full mb-8 shadow-xl"
                             >
                               <div className="w-2 h-2 bg-brand-gold rounded-full animate-pulse" />
                               <span className="text-brand-gold font-bold text-[10px] uppercase tracking-wider">
                                 {slide.badge}
                               </span>
-                            </div>
+                            </motion.div>
                           )}
                         </StaggerItem>
 
                         <StaggerItem>
-                          <h1 className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6 md:mb-8 tracking-tight"
+                          <motion.h1 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1, duration: 0.8 }}
+                            className="text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6 md:mb-8 tracking-tight"
                           >
                             {slide.judul}
-                          </h1>
+                          </motion.h1>
                         </StaggerItem>
 
                         <StaggerItem>
-                          <p className="text-white/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl font-medium"
+                          <motion.p 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2, duration: 0.8 }}
+                            className="text-white/80 text-lg md:text-xl leading-relaxed mb-12 max-w-2xl font-medium"
                           >
                             {slide.subjudul}
-                          </p>
+                          </motion.p>
                         </StaggerItem>
 
                         <StaggerItem>
-                          <div className="flex flex-col sm:flex-row gap-4"
+                          <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3, duration: 0.8 }}
+                            className="flex flex-col sm:flex-row gap-4"
                           >
                             {slide.cta1Teks && (
                               <Link
@@ -224,10 +246,11 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                                 {slide.cta2Teks}
                               </Link>
                             )}
-                          </div>
+                          </motion.div>
                         </StaggerItem>
                         </StaggerContainer>
                       )}
+                    </AnimatePresence>
                   </div>
                 </div>
               </div>
@@ -252,8 +275,11 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                 aria-current={selectedIndex === index ? true : undefined}
               >
                 {selectedIndex === index && (
-                  <div 
-                    className="absolute inset-0 bg-white/40 animate-[hero-progress_8s_linear]"
+                  <motion.div 
+                    initial={{ x: '-100%' }}
+                    animate={{ x: '0%' }}
+                    transition={{ duration: 8, ease: 'linear' }}
+                    className="absolute inset-0 bg-white/40"
                   />
                 )}
               </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   UserPlus,
   GraduationCap, 
@@ -197,8 +198,13 @@ export default function PersonaQuickLinks({ tabs }: Props) {
         </div>
 
         <div className="min-h-[320px] sm:min-h-[400px]">
-            <div
+          <AnimatePresence mode="wait">
+            <motion.div
               key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
               <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {current.links.map((link) => (
@@ -222,7 +228,8 @@ export default function PersonaQuickLinks({ tabs }: Props) {
                   </StaggerItem>
                 ))}
               </StaggerContainer>
-            </div>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>
