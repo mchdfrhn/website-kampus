@@ -37,15 +37,19 @@ export default function AlbumDetailContent({ album }: { album: Album }) {
 
   const handleDownload = async (url: string, index: number) => {
     try {
-      const response = await fetch(url);
+      // Validate protocol to prevent malicious URLs (e.g. javascript: or data:)
+      const parsedUrl = new URL(url, window.location.origin);
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+        throw new Error('Invalid protocol');
+      }
+
+      const response = await fetch(parsedUrl.toString());
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
       link.download = `${album.slug}-${index + 1}.jpg`;
-      document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error('Download failed:', error);
