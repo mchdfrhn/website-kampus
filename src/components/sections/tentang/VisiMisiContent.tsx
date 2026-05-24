@@ -26,7 +26,7 @@ export default async function VisiMisiContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+    <article className="space-y-10 pt-10 sm:pt-12">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
           Visi, Misi &amp; Nilai
@@ -37,7 +37,7 @@ export default async function VisiMisiContent() {
         </p>
       </div>
 
-      <section className="bg-brand-navy rounded-xl p-7 text-white">
+      <section className="rounded-2xl bg-brand-navy p-6 text-white shadow-premium sm:p-7">
         <div className="flex items-start gap-4">
           <div className="w-10 h-10 bg-brand-gold rounded-lg flex items-center justify-center flex-shrink-0">
             <Eye size={18} className="text-brand-navy" aria-hidden="true" />
@@ -52,7 +52,7 @@ export default async function VisiMisiContent() {
       <section>
         <h3 className="text-xl font-bold text-brand-navy mb-1">Misi</h3>
         <p className="text-gray-500 text-sm mb-5">Langkah-langkah strategis STTPU Jakarta dalam mewujudkan visi institusi.</p>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6">
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-premium sm:p-6">
           <ol className="space-y-3" aria-label="Misi STTPU">
             {misi.map((item, idx) => (
               <li key={idx} className="flex items-start gap-3.5 text-sm text-gray-700 leading-relaxed">
@@ -72,7 +72,7 @@ export default async function VisiMisiContent() {
       <section>
         <h3 className="text-xl font-bold text-brand-navy mb-1">Tujuan</h3>
         <p className="text-gray-500 text-sm mb-5">Sasaran spesifik yang ingin dicapai STTPU Jakarta melalui proses pendidikan.</p>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6">
+        <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-premium sm:p-6">
           <ul className="space-y-3" aria-label="Tujuan STTPU">
             {tujuan.map((item, idx) => (
               <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
@@ -94,7 +94,7 @@ export default async function VisiMisiContent() {
           {nilaiNilai.map(({ nama, deskripsi }) => (
             <li
               key={nama}
-              className="flex items-start gap-3 p-4 bg-brand-mist rounded-xl border border-gray-200"
+              className="flex items-start gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4 shadow-sm"
             >
               <div
                 className="w-9 h-9 bg-brand-navy rounded-lg flex items-center justify-center flex-shrink-0 text-brand-gold font-black text-sm"

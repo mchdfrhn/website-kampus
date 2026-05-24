@@ -1,7 +1,6 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
-import { useRef, ReactNode } from "react";
+import { useEffect, useRef, useState, ReactNode } from "react";
 
 interface RevealProps {
   children: ReactNode;
@@ -18,26 +17,38 @@ export const Reveal = ({
   duration = 0.3,
   yOffset = 40
 }: RevealProps) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const ref = useRef<HTMLDivElement>(null);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -100px" },
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div ref={ref} style={{ position: "relative", width, overflow: "visible" }}>
-      <motion.div
-        variants={{
-          hidden: { opacity: 0, y: yOffset },
-          visible: { opacity: 1, y: 0 },
-        }}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        transition={{ 
-          duration, 
-          delay, 
-          ease: [0.16, 1, 0.3, 1] // Custom institutional easing
+      <div
+        style={{
+          opacity: isInView ? 1 : 0,
+          transform: isInView ? "translateY(0)" : `translateY(${yOffset}px)`,
+          transition: `opacity ${duration}s ease ${delay}s, transform ${duration}s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
         }}
       >
         {children}
-      </motion.div>
+      </div>
     </div>
   );
 };
@@ -53,41 +64,23 @@ export const StaggerContainer = ({
   delayChildren?: number;
   staggerChildren?: number;
 }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "0px" });
-
   return (
-    <motion.div
-      ref={ref}
+    <div
       className={className}
-      initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
-      variants={{
-        hidden: { opacity: 0 },
-        visible: {
-          opacity: 1,
-          transition: {
-            delayChildren,
-            staggerChildren,
-          },
-        },
+      style={{
+        transitionDelay: `${delayChildren}s`,
+        transitionDuration: `${Math.max(staggerChildren, 0.01)}s`,
       }}
     >
       {children}
-    </motion.div>
+    </div>
   );
 };
 
 export const StaggerItem = ({ children }: { children: ReactNode }) => {
   return (
-    <motion.div
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 },
-      }}
-      transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div>
       {children}
-    </motion.div>
+    </div>
   );
 };

@@ -1,14 +1,12 @@
 'use client';
 
 import { ChevronUp } from 'lucide-react';
-import { useLenis } from 'lenis/react';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 const SHOW_AFTER_SCROLL_Y = 500;
 
 export default function BackToTopControl() {
-  const lenis = useLenis();
   const [isVisible, setIsVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -28,11 +26,6 @@ export default function BackToTopControl() {
   }, []);
 
   const scrollToTop = () => {
-    if (lenis) {
-      lenis.scrollTo(0, { duration: 0.7 });
-      return;
-    }
-
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

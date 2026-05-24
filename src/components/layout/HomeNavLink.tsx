@@ -1,7 +1,6 @@
 "use client";
 
 import Link, { type LinkProps } from "next/link";
-import { useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
 import { type MouseEvent, type ReactNode } from "react";
 
@@ -20,7 +19,6 @@ export default function HomeNavLink({
   ...props
 }: HomeNavLinkProps) {
   const pathname = usePathname();
-  const lenis = useLenis();
 
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.();
@@ -28,12 +26,6 @@ export default function HomeNavLink({
     if (pathname !== "/" || props.href !== "/") return;
 
     event.preventDefault();
-
-    if (lenis) {
-      lenis.scrollTo(0, { duration: 0.65 });
-      return;
-    }
-
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

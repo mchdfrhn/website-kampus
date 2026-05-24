@@ -30,7 +30,7 @@ export default async function PimpinanContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+    <article className="space-y-10 pt-10 sm:pt-12">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
           Pimpinan Institusi
@@ -42,14 +42,14 @@ export default async function PimpinanContent() {
       </div>
 
       {pimpinan.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-2xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
           Data pimpinan belum tersedia.
         </div>
       ) : null}
       {pimpinan.map((person, idx) => (
         <section
           key={idx}
-          className="border border-gray-200 rounded-xl overflow-hidden"
+          className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium transition-all duration-300 hover:-translate-y-1 hover:shadow-premium-hover"
         >
           <div className={`${idx === 0 ? 'bg-brand-navy' : 'bg-brand-mist'} px-6 py-3`}>
             <p
@@ -63,10 +63,10 @@ export default async function PimpinanContent() {
             <div className="flex flex-col sm:flex-row gap-6">
               <div className="flex-shrink-0">
                 {person.foto?.url ? (
-                  <img src={person.foto.url} alt={person.nama} className="w-24 h-28 object-cover rounded-lg border border-gray-200" />
+                  <img src={person.foto.url} alt={person.nama} className="h-28 w-24 rounded-xl border border-gray-100 object-cover object-top" />
                 ) : (
                   <div
-                    className="w-24 h-28 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center"
+                    className="flex h-28 w-24 items-center justify-center rounded-xl border border-gray-100 bg-gray-50"
                     aria-hidden="true"
                   >
                     <User size={32} className="text-gray-400" />
@@ -83,7 +83,7 @@ export default async function PimpinanContent() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-brand-mist/40 rounded-xl p-4 border border-gray-100">
+                <div className="grid grid-cols-1 gap-4 rounded-2xl border border-gray-100 bg-gray-50 p-4 md:grid-cols-2">
                   {person.pendidikan && person.pendidikan.length > 0 && (
                     <div>
                       <div className="flex items-center gap-2 mb-2">
@@ -113,7 +113,7 @@ export default async function PimpinanContent() {
                 </div>
 
                 {person.sambutan && (
-                  <div className="bg-brand-mist rounded-lg p-4 border-l-4 border-brand-gold">
+                  <div className="rounded-xl border-l-4 border-brand-gold bg-gray-50 p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <BookOpen size={14} className="text-brand-navy" aria-hidden="true" />
                       <h3 className="font-semibold text-brand-navy text-sm">Sambutan {person.jabatan}</h3>

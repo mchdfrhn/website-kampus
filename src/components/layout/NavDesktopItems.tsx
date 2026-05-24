@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { ChevronDown } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { motion } from 'framer-motion';
 import { useState } from 'react';
 import HomeNavLink from './HomeNavLink';
 
@@ -74,21 +73,17 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
 
                   {/* Shared Indicator for Hover/Active Pill */}
                   {(isHovered || active) && (
-                    <motion.div
-                      layoutId="nav-pill"
+                    <div
                       className={`absolute inset-0 rounded-xl z-0 ${
                         active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
                       }`}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
 
                   {/* Bottom Active Line */}
                   {active && (
-                    <motion.div
-                      layoutId="nav-line"
+                    <div
                       className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
                 </button>
@@ -132,20 +127,16 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                     }`}
                   >
                     {(isHovered || active) && (
-                      <motion.div
-                        layoutId="nav-pill"
+                      <div
                         className={`absolute inset-0 rounded-xl z-0 ${
                           active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
                         }`}
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
 
                     {active && (
-                      <motion.div
-                        layoutId="nav-line"
+                      <div
                         className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
 
@@ -159,20 +150,16 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                     }`}
                   >
                     {(isHovered || active) && (
-                      <motion.div
-                        layoutId="nav-pill"
+                      <div
                         className={`absolute inset-0 rounded-xl z-0 ${
                           active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
                         }`}
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
 
                     {active && (
-                      <motion.div
-                        layoutId="nav-line"
+                      <div
                         className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                       />
                     )}
 

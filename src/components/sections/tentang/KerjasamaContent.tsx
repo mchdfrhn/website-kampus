@@ -72,7 +72,7 @@ export default async function KerjasamaContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+    <article className="space-y-10 pt-10 sm:pt-12">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
           Kerjasama &amp; Mitra
@@ -84,7 +84,7 @@ export default async function KerjasamaContent() {
       </div>
 
       {kerjasamaMitra.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-14 text-center">
+        <div className="rounded-2xl border border-dashed border-gray-200 p-14 text-center">
           <Handshake size={40} className="text-gray-300 mx-auto mb-4" aria-hidden="true" />
           <p className="text-gray-500 font-medium text-sm">Data kerjasama segera dipublikasikan</p>
           <p className="text-gray-400 text-xs mt-1">
@@ -99,10 +99,10 @@ export default async function KerjasamaContent() {
           {kerjasamaMitra.map((mitra, idx) => (
             <li
               key={idx}
-              className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-md transition-shadow flex flex-col gap-3"
+              className="flex flex-col gap-3 rounded-2xl border border-gray-100 bg-white p-5 shadow-premium transition-all duration-300 hover:-translate-y-1 hover:shadow-premium-hover"
             >
               <div className="flex items-start gap-3">
-                <div className="w-12 h-12 rounded-lg bg-brand-mist border border-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
                   {mitra.logo?.url ? (
                     <img
                       src={mitra.logo.url}
@@ -148,7 +148,7 @@ export default async function KerjasamaContent() {
         </ul>
       )}
 
-      <div className="bg-brand-navy rounded-2xl p-6 sm:p-8 text-white">
+      <div className="rounded-2xl bg-brand-navy p-6 text-white shadow-premium sm:p-8">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <p className="font-bold text-base sm:text-lg mb-1">Tertarik Bermitra dengan STTPU?</p>

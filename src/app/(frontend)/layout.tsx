@@ -5,7 +5,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import RouteProgressProvider from "@/components/providers/RouteProgressProvider";
 import ScrollProvider from "@/components/providers/ScrollProvider";
-import MotionProvider from "@/components/providers/MotionProvider";
 import PageTransition from "@/components/ui/motion/PageTransition";
 import BackToTopControl from "@/components/sections/BackToTopControl";
 import WhatsAppFloat from "@/components/sections/WhatsAppFloat";
@@ -198,33 +197,31 @@ export default async function FrontendLayout({
   };
 
   return (
-    <MotionProvider>
-      <RouteProgressProvider>
-        {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && (
-          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID} />
-        )}
-        <ScrollProvider>
-          <div className="flex flex-col min-h-screen">
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{
-                __html: JSON.stringify(organizationJsonLd),
-              }}
-            />
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-            />
-            <Navbar />
-            <main className="flex-1" id="main-content" tabIndex={-1}>
-              <PageTransition>{children}</PageTransition>
-            </main>
-            <Footer />
-            <BackToTopControl />
-            <WhatsAppFloat waNumber={seoSettings.whatsapp ?? undefined} />
-          </div>
-        </ScrollProvider>
-      </RouteProgressProvider>
-    </MotionProvider>
+    <RouteProgressProvider>
+      {process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID && (
+        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID} />
+      )}
+      <ScrollProvider>
+        <div className="flex flex-col min-h-screen">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(organizationJsonLd),
+            }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+          />
+          <Navbar />
+          <main className="flex-1" id="main-content" tabIndex={-1}>
+            <PageTransition>{children}</PageTransition>
+          </main>
+          <Footer />
+          <BackToTopControl />
+          <WhatsAppFloat waNumber={seoSettings.whatsapp ?? undefined} />
+        </div>
+      </ScrollProvider>
+    </RouteProgressProvider>
   );
 }

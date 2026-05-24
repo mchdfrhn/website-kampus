@@ -40,7 +40,7 @@ export default async function FasilitasContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
+    <article className="space-y-10 pt-10 sm:pt-12">
       <div className="mb-12 text-center lg:mb-16 lg:text-left">
         <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
           Fasilitas Kampus
@@ -52,13 +52,13 @@ export default async function FasilitasContent() {
       </div>
 
       {intro ? (
-        <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
+        <div className="rounded-2xl border border-gray-100 bg-gray-50 p-5 shadow-premium">
           <p className="text-gray-700 text-sm leading-relaxed">{intro}</p>
         </div>
       ) : null}
 
       {fasilitas.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-2xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
           Data fasilitas belum tersedia.
         </div>
       ) : (
@@ -66,12 +66,12 @@ export default async function FasilitasContent() {
         {fasilitas.map((item, idx) => (
           <li
             key={idx}
-            className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
+            className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium transition-all duration-300 hover:-translate-y-1 hover:shadow-premium-hover"
           >
             {item.foto?.url ? (
               <img src={item.foto.url} alt={item.nama} className="h-36 w-full object-cover" />
             ) : (
-              <div className="h-36 bg-brand-mist flex items-center justify-center border-b border-gray-200">
+              <div className="flex h-36 items-center justify-center border-b border-gray-100 bg-gray-50">
                 <ImageOff size={28} className="text-gray-400" aria-hidden="true" />
               </div>
             )}
@@ -87,7 +87,7 @@ export default async function FasilitasContent() {
                   <div className="flex items-center gap-2 flex-wrap">
                     <h3 className="font-bold text-gray-900 text-sm leading-tight">{item.nama}</h3>
                     {item.kategori && (
-                      <span className="bg-brand-mist text-brand-navy text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                      <span className="rounded-full border border-gray-100 bg-gray-50 px-2 py-0.5 text-[10px] font-semibold text-brand-navy">
                         {item.kategori}
                       </span>
                     )}
@@ -105,7 +105,7 @@ export default async function FasilitasContent() {
                   {item.items.map((f, i) => (
                     <li
                       key={i}
-                      className="inline-block bg-brand-mist text-brand-navy text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200"
+                      className="inline-block rounded border border-gray-100 bg-gray-50 px-2 py-0.5 text-[10px] font-medium text-brand-navy"
                     >
                       {f.nama}
                     </li>
@@ -119,7 +119,7 @@ export default async function FasilitasContent() {
       )}
 
       {ctaTitle || ctaDescription || ctaButtonLabel ? (
-        <div className="bg-brand-navy rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
+        <div className="relative overflow-hidden rounded-2xl bg-brand-navy p-6 text-white shadow-premium sm:p-8">
           <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               {ctaTitle ? <p className="font-bold text-base sm:text-lg mb-1">{ctaTitle}</p> : null}
