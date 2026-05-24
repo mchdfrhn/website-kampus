@@ -4,7 +4,6 @@ import path from "path";
 import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
 import { s3Storage } from "@payloadcms/storage-s3";
-import sharp from "sharp";
 
 import { Berita } from "./src/collections/Berita";
 import { Dosen } from "./src/collections/Dosen";
@@ -98,7 +97,6 @@ export default buildConfig({
   editor: lexicalEditor(),
   debug: process.env.NODE_ENV !== 'production',
   secret: process.env.PAYLOAD_SECRET as string,
-  sharp,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },

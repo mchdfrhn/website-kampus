@@ -6,11 +6,9 @@ export const isAdminOrSelf: Access = ({ req: { user } }) => {
       return true
     }
 
-    const userId = (user as typeof user & { id?: string | number }).id
-
     return {
       id: {
-        equals: userId,
+        equals: user.id,
       },
     }
   }

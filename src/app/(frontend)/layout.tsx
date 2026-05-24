@@ -17,13 +17,11 @@ import {
   getSiteUrl,
   toAbsoluteUrl,
 } from "@/lib/seo";
-import { getMediaUrl } from "@/lib/media";
 
 export const revalidate = 60;
 
 type MediaValue = {
   url?: string | null;
-  sizes?: Record<string, { url?: string | null } | null> | null;
 } | null;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -147,7 +145,7 @@ async function resolveSeoSettings() {
     return {
       namaInstitusi: siteSettings.namaInstitusi || "STTPU Jakarta",
       deskripsiFooter: siteSettings.deskripsiFooter || null,
-      logoUrl: getMediaUrl(logo, 'logo') || getMediaUrl(favicon, 'thumbnail'),
+      logoUrl: logo?.url || favicon?.url || null,
       emailUtama: siteSettings.emailUtama || null,
       teleponUtama: siteSettings.teleponUtama || null,
       alamat: siteSettings.alamat || null,

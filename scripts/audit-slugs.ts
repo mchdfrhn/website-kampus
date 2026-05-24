@@ -40,15 +40,9 @@ async function main() {
     payload.findGlobal({ slug: 'akademik-page' as never }),
   ]);
 
-  const dosenMissingSlug = dosen.docs
-    .filter((doc) => !doc.slug)
-    .map((doc) => doc.nama || `ID ${(doc as typeof doc & { id?: string | number }).id}`);
-  const programStudiMissingSlug = programStudi.docs
-    .filter((doc) => !doc.slug)
-    .map((doc) => doc.nama || `ID ${(doc as typeof doc & { id?: string | number }).id}`);
-  const beritaMissingSlug = berita.docs
-    .filter((doc) => !doc.slug)
-    .map((doc) => doc.judul || `ID ${(doc as typeof doc & { id?: string | number }).id}`);
+  const dosenMissingSlug = dosen.docs.filter((doc) => !doc.slug).map((doc) => doc.nama || `ID ${doc.id}`);
+  const programStudiMissingSlug = programStudi.docs.filter((doc) => !doc.slug).map((doc) => doc.nama || `ID ${doc.id}`);
+  const beritaMissingSlug = berita.docs.filter((doc) => !doc.slug).map((doc) => doc.judul || `ID ${doc.id}`);
 
   const tentangSections = resolveTentangSections(
     ((tentangGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],

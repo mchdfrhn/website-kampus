@@ -1,13 +1,12 @@
 import { Building2, Handshake } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
-import { getMediaUrl } from '@/lib/media';
 
 type KerjasamaMitra = {
   nama: string
   kategori?: string | null
   deskripsi?: string
   tahun?: string
-  logo?: { url?: string | null; sizes?: Record<string, { url?: string | null } | null> | null } | null
+  logo?: { url?: string | null } | null
   website?: string | null
 }
 
@@ -104,9 +103,9 @@ export default async function KerjasamaContent() {
             >
               <div className="flex items-start gap-3">
                 <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-                  {getMediaUrl(mitra.logo, 'logo') ? (
+                  {mitra.logo?.url ? (
                     <img
-                      src={getMediaUrl(mitra.logo, 'logo') || ''}
+                      src={mitra.logo.url}
                       alt={mitra.nama}
                       className="w-full h-full object-contain p-1"
                     />

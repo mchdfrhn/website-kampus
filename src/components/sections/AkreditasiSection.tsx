@@ -2,7 +2,6 @@ import { getPayloadClient } from '@/lib/payload';
 import { Reveal } from '@/components/ui/motion/Reveal';
 import MotionWrapper from '@/components/ui/motion/MotionWrapper';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
-import { getMediaUrl } from '@/lib/media';
 
 type LembagaItem = {
   nama: string;
@@ -46,7 +45,7 @@ export default async function AkreditasiSection() {
           staggerChildren={0.1}
         >
           {lembaga.map((item) => {
-            const logoUrl = getMediaUrl(item.logo, 'logo');
+            const logoUrl = typeof item.logo === 'object' ? item.logo?.url : null;
 
             return (
               <div

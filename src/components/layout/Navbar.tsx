@@ -12,7 +12,6 @@ import {
 } from '@/lib/frontend-section-routing';
 import { synchronizeNavChildren } from '@/lib/section-links';
 import NavbarScrollWrapper from './NavbarScrollWrapper';
-import { getMediaUrl } from '@/lib/media';
 
 type NavItem = {
   label: string;
@@ -27,7 +26,6 @@ const HomeNavLink = dynamic(() => import('./HomeNavLink'), { ssr: true });
 
 type MediaValue = {
   url?: string | null;
-  sizes?: Record<string, { url?: string | null } | null> | null;
 } | null;
 
 const fallbackNavItems: NavItem[] = [
@@ -185,7 +183,7 @@ const getNavbarData = unstable_cache(
         teleponUtamaHref: siteSettings.teleponUtamaHref || settings.teleponUtamaHref,
         emailUtama: siteSettings.emailUtama || settings.emailUtama,
         namaInstitusi: siteSettings.namaInstitusi || settings.namaInstitusi,
-        logoUrl: getMediaUrl(logo, 'logo') || getMediaUrl(favicon, 'thumbnail')
+        logoUrl: logo?.url || favicon?.url || null
       };
     }
   } catch (error) {

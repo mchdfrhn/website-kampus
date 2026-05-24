@@ -1,5 +1,3 @@
-import { getMediaUrl } from '@/lib/media';
-
 export type Dosen = {
   slug: string;
   nama: string;
@@ -145,7 +143,10 @@ export function getDosenBySlug(slug: string): Dosen | undefined {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapPayloadToDosen(doc: any): Dosen {
-  const fotoUrl = getMediaUrl(doc.foto, 'thumbnail') ?? undefined;
+  const fotoUrl: string | undefined =
+    doc.foto && typeof doc.foto === 'object' && doc.foto.url
+      ? (doc.foto.url as string)
+      : undefined;
 
   const bidangKeahlian: string[] = Array.isArray(doc.bidangKeahlian)
     ? doc.bidangKeahlian.map((b: { keahlian: string }) => b.keahlian ?? '')

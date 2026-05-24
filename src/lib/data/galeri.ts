@@ -1,6 +1,5 @@
 import type { ManagedKategori } from './kategori';
 import { mapPayloadToManagedKategori } from './kategori';
-import { getMediaUrl } from '@/lib/media';
 
 export type AlbumKategori = ManagedKategori;
 
@@ -74,12 +73,15 @@ export function formatGaleriTanggal(iso: string): string {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function mapPayloadToAlbum(doc: any): Album {
-  const coverFotoUrl = getMediaUrl(doc.coverFoto, 'card') ?? undefined;
+  const coverFotoUrl: string | undefined =
+    doc.coverFoto && typeof doc.coverFoto === 'object' && doc.coverFoto.url
+      ? (doc.coverFoto.url as string)
+      : undefined;
 
   const foto = Array.isArray(doc.foto)
     ? doc.foto
         .map((f: any) => ({
-          url: getMediaUrl(f.gambar, 'hero'),
+          url: f.gambar && typeof f.gambar === 'object' ? f.gambar.url : null,
           keterangan: f.keterangan || undefined,
         }))
         .filter((f: any) => f.url !== null)

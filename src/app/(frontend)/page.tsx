@@ -18,7 +18,6 @@ import {
   getArtikelKategoriLabel,
   mapPayloadToArtikel,
 } from '@/lib/data/berita';
-import type { MediaLike } from '@/lib/media';
 
 
 export const metadata = buildPageMetadata({
@@ -47,7 +46,7 @@ type HeroSlide = {
   cta1Href?: string | null;
   cta2Teks?: string | null;
   cta2Href?: string | null;
-  background?: MediaLike | string | null;
+  background?: { url: string } | string | null;
 }
 
 const defaultHomePageData = {
@@ -179,12 +178,7 @@ async function fetchHomePageData() {
         cta1Href: `/berita/${artikel.slug}`,
         cta2Teks: 'Semua Berita',
         cta2Href: '/berita',
-        background:
-          doc.thumbnail && typeof doc.thumbnail === 'object'
-            ? doc.thumbnail
-            : artikel.thumbnailUrl
-              ? { url: artikel.thumbnailUrl }
-              : undefined
+        background: artikel.thumbnailUrl ? { url: artikel.thumbnailUrl } : undefined
       }
     })
 
@@ -197,8 +191,7 @@ async function fetchHomePageData() {
       cta1Href: `/berita/${artikel.slug}`,
       cta2Teks: 'Semua Berita',
       cta2Href: '/berita',
-      background:
-        artikel.thumbnailUrl ? { url: artikel.thumbnailUrl } : undefined
+      background: artikel.thumbnailUrl ? { url: artikel.thumbnailUrl } : undefined
     })) : []
     
     const baseHalamanUtama = halamanUtama ? { ...defaultHomePageData, ...halamanUtama } : defaultHomePageData

@@ -1,5 +1,4 @@
 import { getPayloadClient } from '@/lib/payload';
-import { getMediaUrl } from '@/lib/media';
 
 type PimpinanItem = { jabatan: string; nama: string; urutan?: number }
 type UnitItem = { unit: string; kepala?: string }
@@ -11,7 +10,7 @@ export default async function StrukturOrganisasiContent() {
   let upt: UnitItem[] = []
   let bagian: BagianItem[] = []
   let catatan = ''
-  let strukturGambar: { url?: string; sizes?: Record<string, { url?: string | null } | null> | null } | null = null
+  let strukturGambar: { url?: string } | null = null
 
   try {
     const payload = await getPayloadClient()
@@ -56,9 +55,9 @@ export default async function StrukturOrganisasiContent() {
         </p>
       </div>
 
-      {getMediaUrl(strukturGambar, 'hero') && (
+      {strukturGambar?.url && (
         <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium">
-          <img src={getMediaUrl(strukturGambar, 'hero') || ''} alt="Struktur Organisasi STTPU Jakarta" className="w-full h-auto" />
+          <img src={strukturGambar.url} alt="Struktur Organisasi STTPU Jakarta" className="w-full h-auto" />
         </div>
       )}
 

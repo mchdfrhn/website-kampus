@@ -25,64 +25,7 @@ export const Media: CollectionConfig = {
       label: "Keterangan",
     },
   ],
-  upload: {
-    adminThumbnail: "thumbnail",
-    imageSizes: [
-      {
-        name: "thumbnail",
-        width: 400,
-        height: 300,
-        position: "centre",
-        withoutEnlargement: true,
-        formatOptions: {
-          format: "webp",
-          options: { quality: 78 },
-        },
-      },
-      {
-        name: "card",
-        width: 900,
-        height: 600,
-        position: "centre",
-        withoutEnlargement: true,
-        formatOptions: {
-          format: "webp",
-          options: { quality: 78 },
-        },
-      },
-      {
-        name: "hero",
-        width: 1920,
-        height: 1080,
-        position: "centre",
-        withoutEnlargement: true,
-        formatOptions: {
-          format: "webp",
-          options: { quality: 82 },
-        },
-      },
-      {
-        name: "logo",
-        width: 512,
-        withoutEnlargement: true,
-        formatOptions: {
-          format: "webp",
-          options: { quality: 86 },
-        },
-      },
-      {
-        name: "og",
-        width: 1200,
-        height: 630,
-        position: "centre",
-        withoutEnlargement: true,
-        formatOptions: {
-          format: "webp",
-          options: { quality: 82 },
-        },
-      },
-    ],
-  },
+  upload: true,
   hooks: {
     afterChange: [revalidateCollection([...publicPagePaths])],
     afterDelete: [revalidateDelete([...publicPagePaths])],
