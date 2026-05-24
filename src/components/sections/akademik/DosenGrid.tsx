@@ -7,6 +7,7 @@ import type { DosenPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { BookOpen, ChevronRight, Mail, Search, Users } from 'lucide-react';
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
+import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 const jabatanLabel: Record<string, string> = {
   Profesor: 'Profesor',
@@ -99,28 +100,44 @@ function groupByProgramStudi(list: Dosen[], programOrder: string[] = []) {
 function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string }) {
   const initials = getInitials(dosen.nama);
   const accent = accentTheme[accentColor || 'navy'] ?? accentTheme.navy;
+  const [imageFailed, setImageFailed] = useState(false);
+  const showPhoto = Boolean(dosen.fotoUrl && !imageFailed);
+  const jabatanText = jabatanLabel[dosen.jabatanFungsional] ?? dosen.jabatanFungsional;
   const content = (
     <>
       <span className={`absolute inset-x-0 top-0 h-1 ${accent.accent}`} aria-hidden="true" />
 
       <div className="flex items-start gap-4 sm:gap-5">
-        <div className={`flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl text-base font-bold tracking-[0.16em] sm:h-16 sm:w-16 sm:text-lg ${accent.avatar}`}>
-          {initials}
+        <div className={`relative flex h-20 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-xl text-sm font-bold tracking-[0.12em] sm:h-24 sm:w-20 sm:text-base ${showPhoto ? 'border border-gray-100 bg-gray-50' : accent.avatar}`}>
+          {showPhoto ? (
+            <ImageWithLoading
+              src={dosen.fotoUrl as string}
+              alt={dosen.nama}
+              fill
+              sizes="(max-width: 640px) 64px, 80px"
+              className="object-cover object-top"
+              onError={() => setImageFailed(true)}
+            />
+          ) : (
+            initials
+          )}
         </div>
 
         <div className="min-w-0 flex-1">
-          <div className="mb-2.5 flex flex-wrap items-center gap-2">
-            <span
-              className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${jabatanColor[dosen.jabatanFungsional] ?? 'border-slate-200 bg-slate-100 text-slate-700'}`}
-            >
-              {jabatanLabel[dosen.jabatanFungsional] ?? dosen.jabatanFungsional}
-            </span>
-          </div>
+          {jabatanText ? (
+            <div className="mb-2.5 flex flex-wrap items-center gap-2">
+              <span
+                className={`inline-flex rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${jabatanColor[dosen.jabatanFungsional] ?? 'border-slate-200 bg-slate-100 text-slate-700'}`}
+              >
+                {jabatanText}
+              </span>
+            </div>
+          ) : null}
 
-          <h3 className="text-base font-bold leading-snug tracking-tight text-brand-navy transition-colors group-hover:text-brand-gold">
+          <h3 className="truncate text-[15px] font-bold leading-snug tracking-tight text-brand-navy transition-colors group-hover:text-brand-gold sm:text-base">
             {dosen.nama}
           </h3>
-          <p className="mt-1 text-xs font-medium uppercase tracking-[0.16em] text-slate-400">
+          <p className="mt-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
             NIDN {dosen.nidn || '-'}
           </p>
         </div>
@@ -130,30 +147,32 @@ function DosenCard({ dosen, accentColor }: { dosen: Dosen; accentColor?: string 
         {dosen.bidangKeahlian.slice(0, 3).map((keahlian) => (
           <span
             key={keahlian}
-            className={`rounded-full border px-3 py-1.5 text-[11px] font-semibold ${accent.chip}`}
+            className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold leading-5 ${accent.chip}`}
           >
             {keahlian}
           </span>
         ))}
         {dosen.bidangKeahlian.length > 3 ? (
-          <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-[11px] font-semibold text-slate-500">
+          <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[11px] font-semibold leading-5 text-slate-500">
             +{dosen.bidangKeahlian.length - 3} lainnya
           </span>
         ) : null}
       </div>
 
-      <div className="mt-5 flex flex-col gap-2.5 border-t border-gray-100 pt-4 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-5 flex flex-col gap-2.5 border-t border-gray-100 pt-4 text-[11px] font-medium text-slate-500 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <BookOpen size={13} />
           <span>{dosen.publikasi.length} publikasi terdata</span>
         </div>
-        <div className="flex min-w-0 items-center gap-2">
-          <Mail size={13} />
-          <span className="truncate sm:max-w-[20rem]">{dosen.email}</span>
-        </div>
+        {dosen.email ? (
+          <div className="flex min-w-0 items-center gap-2">
+            <Mail size={13} />
+            <span className="truncate sm:max-w-[20rem]">{dosen.email}</span>
+          </div>
+        ) : null}
       </div>
 
-      <div className="mt-4 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-navy transition-colors group-hover:text-brand-gold">
+      <div className="mt-4 inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-brand-navy transition-colors group-hover:text-brand-gold">
         Lihat Profil
         <ChevronRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
       </div>

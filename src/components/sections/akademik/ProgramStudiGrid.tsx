@@ -16,27 +16,22 @@ const akreditasiColor: Record<string, string> = {
 const accentTheme: Record<string, {
   accent: string;
   badge: string;
-  icon: string;
 }> = {
   navy: {
     accent: 'bg-brand-navy',
     badge: 'bg-brand-navy/5 text-brand-navy border-brand-navy/10',
-    icon: 'bg-brand-navy text-white',
   },
   blue: {
     accent: 'bg-sky-700',
     badge: 'bg-sky-50 text-sky-800 border-sky-200',
-    icon: 'bg-sky-700 text-white',
   },
   green: {
     accent: 'bg-emerald-700',
     badge: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    icon: 'bg-emerald-700 text-white',
   },
   orange: {
     accent: 'bg-orange-700',
     badge: 'bg-orange-50 text-orange-800 border-orange-200',
-    icon: 'bg-orange-700 text-white',
   },
 };
 
@@ -94,23 +89,17 @@ export default function ProgramStudiGrid({
                 <span className={cn("absolute inset-x-0 top-0 h-1", accent.accent)} aria-hidden="true" />
 
                 <div className="mb-6 flex items-start justify-between gap-4">
-                  <div className={cn("flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl", accent.icon)}>
-                    <ShieldCheck size={20} aria-hidden="true" />
-                  </div>
+                  <span className={cn(
+                    "inline-flex min-h-8 flex-shrink-0 items-center rounded-lg border px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
+                    accent.badge,
+                  )}>
+                    {prodi.jenjang}
+                  </span>
                   <span className={cn(
                     "inline-flex min-h-8 items-center rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
                     akreditasiColor[prodi.akreditasi] ?? 'bg-gray-50 text-gray-500 border-gray-100'
                   )}>
                     Akreditasi {prodi.akreditasi}
-                  </span>
-                </div>
-
-                <div className="mb-4">
-                  <span className={cn(
-                    "inline-flex min-h-8 items-center rounded-lg border px-3 py-1 text-[10px] font-bold uppercase tracking-wider",
-                    accent.badge,
-                  )}>
-                    {prodi.jenjang}
                   </span>
                 </div>
 

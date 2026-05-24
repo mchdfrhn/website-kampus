@@ -23,6 +23,15 @@ const akreditasiColor: Record<string, string> = {
   Baik: 'bg-yellow-50 text-yellow-700 border-yellow-200',
 };
 
+function toTitleCase(value: string) {
+  return value
+    .toLowerCase()
+    .split(' ')
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function SectionCard({
   title,
   eyebrow,
@@ -57,6 +66,7 @@ export default function ProgramStudiDetailContent({
   sidebarLinks: { label: string; href: string }[];
   content?: ProgramStudiPageContent | null;
 }) {
+  const akreditasiLabel = prodi.akreditasi ? toTitleCase(prodi.akreditasi) : '-';
   const careerTitle = content?.detailCareerTitle || 'Mulai Perjalanan Akademik Anda';
   const careerDescription =
     content?.detailCareerDescription ||
@@ -76,7 +86,7 @@ export default function ProgramStudiDetailContent({
     {
       icon: ShieldCheck,
       label: 'Akreditasi',
-      value: prodi.akreditasi || '-',
+      value: akreditasiLabel,
     },
   ];
 
@@ -86,41 +96,39 @@ export default function ProgramStudiDetailContent({
         <AkademikSidebar pathname="/akademik/program-studi" title={sidebarTitle} links={sidebarLinks} />
       </div>
 
-      <section className="relative overflow-hidden rounded-[2rem] border border-brand-navy/10 bg-gradient-to-br from-white via-brand-mist/50 to-white p-6 shadow-sm shadow-brand-navy/[0.05] sm:p-8 lg:p-10 xl:col-start-2 xl:row-start-1">
-          <div className="absolute inset-0 opacity-70 pointer-events-none">
-            <BlueAbstractBackground accentClassName="right-[8%]" />
+      <section className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-premium sm:p-8 xl:col-start-2 xl:row-start-1">
+        <span className="absolute inset-x-0 top-0 h-1 bg-brand-navy" aria-hidden="true" />
+        <div>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="inline-flex items-center rounded-md border border-brand-navy/10 bg-brand-navy/5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider leading-none text-brand-navy">
+              Jenjang {prodi.jenjang}
+            </span>
+            <span
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider leading-none',
+                akreditasiColor[akreditasiLabel] ?? 'border-gray-200 bg-gray-50 text-gray-600',
+              )}
+            >
+              <ShieldCheck size={11} aria-hidden="true" />
+              Akreditasi {akreditasiLabel}
+            </span>
           </div>
-          <div className="relative z-10">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full border border-brand-navy/10 bg-brand-navy/5 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em] text-brand-navy">
-                Jenjang {prodi.jenjang}
-              </span>
-              <span
-                className={cn(
-                  'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.22em]',
-                  akreditasiColor[prodi.akreditasi] ?? 'border-gray-200 bg-gray-50 text-gray-600',
-                )}
-              >
-                <ShieldCheck size={12} aria-hidden="true" />
-                Akreditasi {prodi.akreditasi}
-              </span>
-            </div>
 
-            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              {overviewStats.map(({ icon: Icon, label, value }) => (
-                <div
-                  key={label}
-                  className="rounded-2xl border border-white/70 bg-white/90 p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-navy/[0.06]"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gold/10">
-                    <Icon size={18} className="text-brand-gold" aria-hidden="true" />
-                  </div>
-                  <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">{label}</p>
-                  <p className="mt-2 text-sm font-bold leading-relaxed tracking-tight text-brand-navy">{value}</p>
+          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {overviewStats.map(({ icon: Icon, label, value }) => (
+              <div
+                key={label}
+                className="rounded-xl border border-gray-100 bg-gray-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-brand-navy/15 hover:bg-white hover:shadow-premium"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-navy text-white">
+                  <Icon size={17} aria-hidden="true" />
                 </div>
-              ))}
-            </div>
+                <p className="mt-4 whitespace-nowrap text-[9px] font-bold uppercase tracking-wide text-gray-400">{label}</p>
+                <p className="mt-2 text-sm font-bold leading-relaxed tracking-tight text-brand-navy">{value}</p>
+              </div>
+            ))}
           </div>
+        </div>
       </section>
 
       <article className="min-w-0 space-y-8 sm:space-y-10 xl:col-start-1 xl:col-span-2 xl:row-start-2">
