@@ -11,6 +11,7 @@ import * as migration_20260507_030000_add_why_sttpu_home_section from './2026050
 import * as migration_20260507_031000_add_why_item_backgrounds from './20260507_031000_add_why_item_backgrounds';
 import * as migration_20260521_000000_add_home_carousel_order from './20260521_000000_add_home_carousel_order';
 import * as migration_20260522_000000_add_lpmi_documents from './20260522_000000_add_lpmi_documents';
+import * as migration_20260525_000000_add_promo_cards_to_site_settings from './20260525_000000_add_promo_cards_to_site_settings';
 
 export const migrations = [
   {
@@ -77,5 +78,10 @@ export const migrations = [
     up: migration_20260522_000000_add_lpmi_documents.up,
     down: migration_20260522_000000_add_lpmi_documents.down,
     name: '20260522_000000_add_lpmi_documents',
+  },
+  {
+    up: migration_20260525_000000_add_promo_cards_to_site_settings.up,
+    down: migration_20260525_000000_add_promo_cards_to_site_settings.down,
+    name: '20260525_000000_add_promo_cards_to_site_settings',
   },
 ];

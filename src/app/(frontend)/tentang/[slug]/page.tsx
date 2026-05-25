@@ -6,6 +6,7 @@ import TentangPageHeader from '@/components/sections/tentang/TentangPageHeader';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
+import { getPromoCards, defaultPromoCards } from '@/lib/data/promo-cards';
 
 
 export async function generateStaticParams() {
@@ -68,9 +69,15 @@ export default async function TentangSlugPage({
     href: `/tentang/${section.slug}`,
   }))
 
+  let promo = defaultPromoCards;
+
   try {
     const payload = await getPayloadClient();
-    const global = await payload.findGlobal({ slug: 'tentang-kami' });
+    const [global, promoData] = await Promise.all([
+      payload.findGlobal({ slug: 'tentang-kami' }),
+      getPromoCards(),
+    ]);
+    promo = promoData;
     const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string };
     resolvedSections = resolveTentangSections(data.subpages || []);
     sidebarTitle = data.sidebarTitle || sidebarTitle
@@ -159,18 +166,18 @@ export default async function TentangSlugPage({
                 <div className="relative z-10 flex flex-col h-full justify-between">
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-navy/55">Penerimaan Mahasiswa Baru</p>
-                    <h3 className="mt-3 text-xl font-bold tracking-tight leading-snug">Mulai Karir Anda di Bidang Infrastruktur</h3>
+                    <h3 className="mt-3 text-xl font-bold tracking-tight leading-snug">{promo.pmbTitle}</h3>
                     <p className="mt-4 text-xs font-medium leading-relaxed text-brand-navy/70">
-                      Pendaftaran Mahasiswa Baru STTPU Jakarta telah dibuka. Bergabunglah bersama kami dan jadilah tenaga ahli profesional.
+                      {promo.pmbDescription}
                     </p>
                   </div>
                   <a
-                    href="https://siakadat.sttpu.ac.id/spmb"
+                    href={promo.pmbButtonUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-brand-navy/90"
                   >
-                    Daftar Sekarang
+                    {promo.pmbButtonText}
                   </a>
                 </div>
               </div>
@@ -187,18 +194,18 @@ export default async function TentangSlugPage({
                   </div>
                   <div>
                     <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">Layanan Informasi</p>
-                    <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">Hubungi Kami</p>
+                    <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">{promo.infoTitle}</p>
                   </div>
                 </div>
                 <p className="mt-5 text-xs font-medium leading-relaxed text-gray-600">
-                  Butuh informasi lebih lanjut mengenai perkuliahan, biaya kuliah, akreditasi, atau fasilitas kampus?
+                  {promo.infoDescription}
                 </p>
               </div>
               <Link
-                href="/kontak"
+                href={promo.infoButtonUrl}
                 className="mt-8 inline-flex w-full items-center justify-center rounded-xl border border-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
               >
-                Hubungi Humas
+                {promo.infoButtonText}
               </Link>
             </div>
           </aside>

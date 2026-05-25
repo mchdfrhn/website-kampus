@@ -1,9 +1,15 @@
 import Link from 'next/link';
 import { ChevronRight, User } from 'lucide-react';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import { getPromoCards } from '@/lib/data/promo-cards';
 
 export default async function AkademikSidebar({ currentPath }: { currentPath: string }) {
-  const { sidebarTitle, links } = await getAkademikNavigation();
+  const [navigation, promo] = await Promise.all([
+    getAkademikNavigation(),
+    getPromoCards(),
+  ]);
+
+  const { sidebarTitle, links } = navigation;
 
   return (
     <aside className="space-y-6 lg:sticky lg:top-28 self-start">
@@ -53,18 +59,18 @@ export default async function AkademikSidebar({ currentPath }: { currentPath: st
           <div className="relative z-10 flex flex-col h-full justify-between">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-navy/55">Penerimaan Mahasiswa Baru</p>
-              <h3 className="mt-3 text-xl font-bold tracking-tight leading-snug">Mulai Karir Anda di Bidang Infrastruktur</h3>
+              <h3 className="mt-3 text-xl font-bold tracking-tight leading-snug">{promo.pmbTitle}</h3>
               <p className="mt-4 text-xs font-medium leading-relaxed text-brand-navy/70">
-                Pendaftaran Mahasiswa Baru STTPU Jakarta telah dibuka. Bergabunglah bersama kami dan jadilah tenaga ahli profesional.
+                {promo.pmbDescription}
               </p>
             </div>
             <a
-              href="https://siakadat.sttpu.ac.id/spmb"
+              href={promo.pmbButtonUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-brand-navy/90"
             >
-              Daftar Sekarang
+              {promo.pmbButtonText}
             </a>
           </div>
         </div>
@@ -79,18 +85,18 @@ export default async function AkademikSidebar({ currentPath }: { currentPath: st
             </div>
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">Layanan Informasi</p>
-              <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">Hubungi Kami</p>
+              <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">{promo.infoTitle}</p>
             </div>
           </div>
           <p className="mt-5 text-xs font-medium leading-relaxed text-gray-600">
-            Butuh informasi lebih lanjut mengenai perkuliahan, biaya kuliah, akreditasi, atau fasilitas kampus?
+            {promo.infoDescription}
           </p>
         </div>
         <Link
-          href="/kontak"
+          href={promo.infoButtonUrl}
           className="mt-8 inline-flex w-full items-center justify-center rounded-xl border border-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
         >
-          Hubungi Humas
+          {promo.infoButtonText}
         </Link>
       </div>
     </aside>
