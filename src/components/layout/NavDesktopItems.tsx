@@ -35,7 +35,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
 
   return (
     <ul 
-      className="hidden xl:flex items-center xl:gap-1 2xl:gap-2 mx-auto" 
+      className="hidden xl:flex items-center xl:gap-0.5 2xl:gap-2" 
       role="list"
       onMouseLeave={() => setHoveredItem(null)}
     >
@@ -57,7 +57,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 {item.href && item.href !== '#' ? (
                   <Link
                     href={item.href}
-                    className={`relative flex min-w-max xl:min-w-[5rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1.5 px-4 xl:px-3 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    className={`relative flex min-w-max xl:min-w-[4rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1 px-4 xl:px-2 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] xl:text-[11.5px] 2xl:text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
                     }`}
                     aria-haspopup="menu"
@@ -95,7 +95,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                   </Link>
                 ) : (
                   <button
-                    className={`relative flex min-w-max xl:min-w-[5rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1.5 px-4 xl:px-3 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    className={`relative flex min-w-max xl:min-w-[4rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1 px-4 xl:px-2 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] xl:text-[11.5px] 2xl:text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
                     }`}
                     aria-haspopup="menu"
@@ -168,7 +168,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 {item.href === '/' ? (
                   <HomeNavLink
                     href={item.href}
-                    className={`relative flex min-w-max xl:min-w-[5rem] 2xl:min-w-[5.5rem] items-center justify-center px-4 xl:px-3 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    className={`relative flex min-w-max xl:min-w-[4rem] 2xl:min-w-[5.5rem] items-center justify-center px-4 xl:px-2 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] xl:text-[11.5px] 2xl:text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >
@@ -195,7 +195,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`relative flex min-w-max xl:min-w-[5rem] 2xl:min-w-[5.5rem] items-center justify-center px-4 xl:px-3 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    className={`relative flex min-w-max xl:min-w-[4rem] 2xl:min-w-[5.5rem] items-center justify-center px-4 xl:px-2 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] xl:text-[11.5px] 2xl:text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >

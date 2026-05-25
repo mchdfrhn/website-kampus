@@ -251,52 +251,56 @@ export default async function Navbar() {
       </a>
       <header className="h-20">
       <NavbarScrollWrapper>
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
+        <div className="relative max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10">
           <div className="flex items-center h-20 gap-3">
-            <HomeNavLink
-              href="/"
-              className="group flex min-w-0 flex-1 items-center gap-3 xl:mr-4 2xl:mr-8 xl:flex-none xl:min-w-max"
-              ariaLabel={`STTPU ${settings.namaInstitusi} — Beranda`}
-            >
-              {settings.logoUrl ? (
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105 sm:h-12 sm:w-12 sm:p-2">
-                  <div className="relative h-full w-full overflow-hidden rounded-lg">
-                  <Image
-                    src={settings.logoUrl}
-                    alt={settings.namaInstitusi}
-                    fill
-                    className="object-contain"
-                  />
+            {/* Logo Wrapper */}
+            <div className="flex-grow flex-1 flex items-center justify-start min-w-max">
+              <HomeNavLink
+                href="/"
+                className="group flex min-w-0 items-center gap-3 xl:min-w-max"
+                ariaLabel={`STTPU ${settings.namaInstitusi} — Beranda`}
+              >
+                {settings.logoUrl ? (
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-lg shadow-black/20 ring-1 ring-black/5 transition-transform duration-500 group-hover:scale-105 sm:h-12 sm:w-12 sm:p-2">
+                    <div className="relative h-full w-full overflow-hidden rounded-lg">
+                    <Image
+                      src={settings.logoUrl}
+                      alt={settings.namaInstitusi}
+                      fill
+                      className="object-contain"
+                    />
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-gold text-center text-[10px] font-bold leading-tight text-brand-navy shadow-lg shadow-brand-gold/20 transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:text-[12px]"
+                    aria-hidden="true"
+                  >
+                    STTPU
+                  </div>
+                )}
+                <div className="min-w-0 text-white">
+                  <div className="truncate text-base font-bold leading-tight tracking-tight uppercase sm:text-lg">STTPU</div>
+                  <div className="mt-0.5 hidden truncate text-[10px] font-bold leading-tight tracking-wider text-white/40 uppercase 2xl:block">
+                    {settings.namaInstitusi}
                   </div>
                 </div>
-              ) : (
-                <div
-                  className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-gold text-center text-[10px] font-bold leading-tight text-brand-navy shadow-lg shadow-brand-gold/20 transition-transform duration-500 group-hover:scale-105 sm:h-11 sm:w-11 sm:text-[12px]"
-                  aria-hidden="true"
-                >
-                  STTPU
-                </div>
-              )}
-              <div className="min-w-0 text-white">
-                <div className="truncate text-base font-bold leading-tight tracking-tight uppercase sm:text-lg">STTPU</div>
-                <div className="mt-0.5 hidden truncate text-[10px] font-bold leading-tight tracking-wider text-white/40 uppercase xl:block">
-                  {settings.namaInstitusi}
-                </div>
-              </div>
-            </HomeNavLink>
+              </HomeNavLink>
+            </div>
 
             <NavDesktopItems navItems={navItems} />
 
-            <div className="hidden flex-shrink-0 xl:block">
+            {/* Portal Wrapper */}
+            <div className="hidden xl:flex flex-grow flex-1 items-center justify-end min-w-max">
               <Link
                 href="/portal"
-                className="inline-flex items-center px-6 py-2.5 bg-brand-gold text-brand-navy font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-white hover:text-brand-navy hover:shadow-2xl hover:shadow-brand-gold/20 transition-all duration-500 shadow-xl shadow-brand-gold/10"
+                className="inline-flex items-center px-4 py-2 xl:px-4 xl:py-2 2xl:px-6 2xl:py-2.5 bg-brand-gold text-brand-navy font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-white hover:text-brand-navy hover:shadow-2xl hover:shadow-brand-gold/20 transition-all duration-500 shadow-xl shadow-brand-gold/10"
               >
                 Portal
               </Link>
             </div>
 
-            <div className="ml-auto flex-shrink-0 xl:hidden">
+            <div className="flex-shrink-0 xl:hidden">
               <MobileMenu
                 navItems={navItems}
                 logoUrl={settings.logoUrl}
