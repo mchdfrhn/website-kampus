@@ -60,11 +60,11 @@ export default async function PimpinanContent() {
         <div className="space-y-8 sm:space-y-10">
           {pimpinan.map((person, idx) => (
             <SectionCard key={idx} title={person.nama} eyebrow={person.jabatan}>
-              <div className="flex flex-col md:flex-row gap-8">
+              <div className="flex flex-col md:flex-row gap-8 items-start">
                 {/* Photo Profile block */}
-                <div className="flex-shrink-0 flex justify-center md:justify-start">
+                <div className="flex-shrink-0 flex justify-center md:justify-start self-start">
                   {person.foto?.url ? (
-                    <div className="relative group">
+                    <div className="relative group h-fit">
                       <div className="absolute inset-0 rounded-2xl bg-brand-gold/10 blur-md group-hover:bg-brand-gold/25 transition-colors duration-300" />
                       <img
                         src={person.foto.url}
