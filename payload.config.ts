@@ -41,6 +41,9 @@ import { PenelitianPage } from "./src/globals/PenelitianPage";
 import { KontakPage } from "./src/globals/KontakPage";
 import { AkademikPage } from "./src/globals/AkademikPage";
 import { BeritaPage } from "./src/globals/BeritaPage";
+import { LpmiPage } from "./src/globals/LpmiPage";
+import { LppmPage } from "./src/globals/LppmPage";
+
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
@@ -93,6 +96,8 @@ export default buildConfig({
     KontakPage,
     AkademikPage,
     BeritaPage,
+    LpmiPage,
+    LppmPage,
   ],
   editor: lexicalEditor(),
   debug: process.env.NODE_ENV !== 'production',

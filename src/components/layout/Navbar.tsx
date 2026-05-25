@@ -8,6 +8,7 @@ import {
   resolveKemahasiswaanSections,
   resolvePenelitianSections,
   resolveTentangSections,
+  resolveLppmSections,
   type PayloadSectionMeta,
 } from '@/lib/frontend-section-routing';
 import { synchronizeNavChildren } from '@/lib/section-links';
@@ -68,6 +69,7 @@ const fallbackNavItems: NavItem[] = [
     label: 'Penelitian',
     href: '#',
     children: [
+      { label: 'LPPM', href: '/lppm/unit-penelitian' },
       { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
       { label: 'Database Publikasi', href: '/penelitian/publikasi' },
       { label: 'Hibah & Pendanaan', href: '/penelitian/hibah' },
@@ -85,29 +87,45 @@ function synchronizeNavItems(
     akademikChildren: NavItem['children'];
     kemahasiswaanChildren: NavItem['children'];
     penelitianChildren: NavItem['children'];
+    lpmiHref: string;
+    lppmHref: string;
   },
 ) {
   return navItems.map((item) => {
     const normalizedHref = item.href.toLowerCase();
     const normalizedLabel = item.label.trim().toLowerCase();
 
+    let href = item.href;
+    if (href.startsWith('/lpmi')) {
+      href = options.lpmiHref;
+    } else if (href.startsWith('/lppm')) {
+      href = options.lppmHref;
+    }
+
+    let children = item.children;
     if (normalizedHref === '/tentang' || normalizedLabel === 'tentang') {
-      return { ...item, children: options.tentangChildren };
+      children = options.tentangChildren;
+    } else if (normalizedLabel === 'akademik') {
+      children = options.akademikChildren;
+    } else if (normalizedHref === '/kemahasiswaan' || normalizedLabel === 'kemahasiswaan') {
+      children = options.kemahasiswaanChildren;
+    } else if (normalizedHref === '/penelitian' || normalizedLabel === 'penelitian') {
+      children = options.penelitianChildren;
     }
 
-    if (normalizedLabel === 'akademik') {
-      return { ...item, children: options.akademikChildren };
+    if (children) {
+      children = children.map((child) => {
+        let childHref = child.href;
+        if (childHref.startsWith('/lpmi')) {
+          childHref = options.lpmiHref;
+        } else if (childHref.startsWith('/lppm')) {
+          childHref = options.lppmHref;
+        }
+        return { ...child, href: childHref };
+      });
     }
 
-    if (normalizedHref === '/kemahasiswaan' || normalizedLabel === 'kemahasiswaan') {
-      return { ...item, children: options.kemahasiswaanChildren };
-    }
-
-    if (normalizedHref === '/penelitian' || normalizedLabel === 'penelitian') {
-      return { ...item, children: options.penelitianChildren };
-    }
-
-    return item;
+    return { ...item, href, children };
   });
 }
 
@@ -125,12 +143,22 @@ const getNavbarData = unstable_cache(
   try {
     const payload = await getPayloadClient();
 
-    const [menu, siteSettings, tentangGlobal, kemahasiswaanGlobal, penelitianGlobal] = await Promise.all([
+    const [
+      menu,
+      siteSettings,
+      tentangGlobal,
+      kemahasiswaanGlobal,
+      penelitianGlobal,
+      lppmGlobal,
+      lpmiGlobal,
+    ] = await Promise.all([
       payload.findGlobal({ slug: 'main-menu' }),
       payload.findGlobal({ slug: 'site-settings', depth: 1 }),
       payload.findGlobal({ slug: 'tentang-kami' }),
       payload.findGlobal({ slug: 'kemahasiswaan-page' as never }),
       payload.findGlobal({ slug: 'penelitian-page' as never }),
+      payload.findGlobal({ slug: 'lppm-page' as never }),
+      payload.findGlobal({ slug: 'lpmi-page' as never }),
     ]);
 
     const tentangSections = resolveTentangSections(
@@ -142,6 +170,16 @@ const getNavbarData = unstable_cache(
     const penelitianSections = resolvePenelitianSections(
       ((penelitianGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
     );
+    const lppmSections = resolveLppmSections(
+      ((lppmGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
+    );
+
+    const activeLpmiSlug = ((lpmiGlobal as { subpages?: { slug: string }[] })?.subpages)?.[0]?.slug || 'kebijakan';
+    const lpmiHref = `/lpmi/${activeLpmiSlug}`;
+
+    const activeLppmSlug = lppmSections[0]?.slug || 'unit-penelitian';
+    const lppmHref = `/lppm/${activeLppmSlug}`;
+
     const akademikNavigation = await getAkademikNavigation();
 
     const syncedFallbackNavItems = synchronizeNavItems(fallbackNavItems, {
@@ -149,6 +187,8 @@ const getNavbarData = unstable_cache(
       akademikChildren: akademikNavigation.links.map((link) => ({ label: link.label, href: link.href })),
       kemahasiswaanChildren: synchronizeNavChildren('/kemahasiswaan', kemahasiswaanSections, fallbackNavItems[3].children || []),
       penelitianChildren: synchronizeNavChildren('/penelitian', penelitianSections, fallbackNavItems[4].children || []),
+      lpmiHref,
+      lppmHref,
     });
 
     if (menu.navItems && menu.navItems.length > 0) {
@@ -169,6 +209,8 @@ const getNavbarData = unstable_cache(
           penelitianSections,
           ((menu.navItems as NavItem[]).find((item) => item.href === '/penelitian' || item.label === 'Penelitian')?.children || fallbackNavItems[4].children || []),
         ),
+        lpmiHref,
+        lppmHref,
       });
     } else {
       navItems = syncedFallbackNavItems;

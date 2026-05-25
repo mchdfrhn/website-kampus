@@ -46,19 +46,80 @@ async function seedGlobalIfEmpty(
     depth: 0,
   });
 
-  const alreadyHasContent = watchedKeys.some((key) => hasMeaningfulValue(existing?.[key]));
+  const force = process.env.FORCE_SEED === 'true';
 
-  if (alreadyHasContent) {
-    console.log(`Skipping Global "${slug}" because it already has content.`);
+  // Helper function to recursively merge existing and seed values
+  const mergeValues = (existingVal: any, seedVal: any, keyPath: string = ''): any => {
+    if (existingVal === undefined || existingVal === null || !hasMeaningfulValue(existingVal)) {
+      return seedVal;
+    }
+
+    if (Array.isArray(existingVal) && Array.isArray(seedVal)) {
+      const merged = [...existingVal];
+      for (const seedItem of seedVal) {
+        if (seedItem && typeof seedItem === 'object') {
+          // Identify matching item by one of these key fields
+          const idKey = ['slug', 'label', 'unit', 'nama', 'hari', 'platform'].find(k => k in seedItem);
+          if (idKey) {
+            const existingItemIndex = existingVal.findIndex(item => item && item[idKey] === seedItem[idKey]);
+            if (existingItemIndex > -1) {
+              merged[existingItemIndex] = mergeValues(existingVal[existingItemIndex], seedItem, `${keyPath}[${idKey}=${seedItem[idKey]}]`);
+            } else {
+              merged.push(seedItem);
+            }
+          } else {
+            const isDup = existingVal.some(item => JSON.stringify(item) === JSON.stringify(seedItem));
+            if (!isDup) {
+              merged.push(seedItem);
+            }
+          }
+        } else {
+          if (!existingVal.includes(seedItem)) {
+            merged.push(seedItem);
+          }
+        }
+      }
+      return merged;
+    }
+
+    if (existingVal && typeof existingVal === 'object' && seedVal && typeof seedVal === 'object') {
+      const merged = { ...existingVal };
+      for (const [k, v] of Object.entries(seedVal)) {
+        merged[k] = mergeValues(existingVal[k], v, `${keyPath}.${k}`);
+      }
+      return merged;
+    }
+
+    return existingVal;
+  };
+
+  if (!existing) {
+    console.log(`Creating Global "${slug}" with seed data...`);
+    await payload.updateGlobal({
+      slug,
+      data,
+    });
     return;
   }
 
-  console.log(`Creating initial data for Global "${slug}"...`);
-  await payload.updateGlobal({
-    slug,
-    data,
-  });
+  if (force) {
+    console.log(`Force-overwriting Global "${slug}" with seed data...`);
+    await payload.updateGlobal({
+      slug,
+      data,
+    });
+  } else {
+    console.log(`Merging seed data into Global "${slug}"...`);
+    const { globalType, createdAt, updatedAt, id, ...cleanExisting } = existing as any;
+    const mergedData = mergeValues(cleanExisting, data);
+    
+    await payload.updateGlobal({
+      slug,
+      data: mergedData,
+    });
+  }
 }
+
 
 async function seed() {
   console.log('--- Starting Seeding ---');
@@ -183,9 +244,43 @@ async function seed() {
     const existing = await payload.find({ collection: 'berita', where: { slug: { equals: item.slug } } });
     if (existing.docs.length === 0) {
       console.log(`Creating Berita: ${item.judul}`);
-      await payload.create({ collection: 'berita', data: { ...item, konten: plainTextToLexical(item.ringkasan) } as any });
+      
+      let categorySlug = item.kategori;
+      if (categorySlug === 'pengumuman') categorySlug = 'announce';
+      
+      const catDoc = await payload.find({
+        collection: 'kategori-berita',
+        where: { slug: { equals: categorySlug } }
+      });
+      
+      let catId: string | number;
+      if (catDoc.docs.length > 0) {
+        catId = catDoc.docs[0].id;
+      } else {
+        console.log(`Creating Kategori: ${categorySlug}`);
+        const newCat = await payload.create({
+          collection: 'kategori-berita',
+          data: {
+            nama: categorySlug === 'announce' ? 'Pengumuman' : categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1),
+            slug: categorySlug,
+            warna: categorySlug === 'announce' ? 'red' : 'blue',
+            urutan: '0',
+          }
+        });
+        catId = newCat.id;
+      }
+
+      await payload.create({
+        collection: 'berita',
+        data: {
+          ...item,
+          kategori: catId,
+          konten: plainTextToLexical(item.ringkasan)
+        } as any
+      });
     }
   }
+
 
   // 4. Seed Beasiswa
   console.log('Seeding Beasiswa...');
@@ -408,6 +503,287 @@ async function seed() {
     ['portals', 'tautanCepat'],
   );
 
+  // Akademik Page
+  console.log('Seeding Akademik Page...');
+  await seedGlobalIfEmpty(
+    payload,
+    'akademik-page',
+    {
+      sidebarTitle: 'Navigasi Akademik',
+      sections: [
+        { slug: 'program-studi', title: 'Program Studi', subtitle: 'Program studi unggulan STTPU Jakarta di bidang infrastruktur.', breadcrumb: 'Program Studi' },
+        { slug: 'dosen', title: 'Direktori Dosen', subtitle: 'Tenaga pengajar profesional dan berpengalaman di STTPU Jakarta.', breadcrumb: 'Dosen' },
+        { slug: 'kalender', title: 'Kalender Akademik', subtitle: 'Agenda dan jadwal penting kegiatan akademik STTPU Jakarta.', breadcrumb: 'Kalender' },
+        { slug: 'beasiswa', title: 'Beasiswa', subtitle: 'Informasi beasiswa internal dan eksternal untuk mahasiswa STTPU.', breadcrumb: 'Beasiswa' }
+      ],
+      programStudiContent: {
+        gridTitle: 'Program Studi Unggulan',
+        gridDescription: 'STTPU Jakarta menawarkan kurikulum vokasi berbasis teknologi yang dirancang khusus untuk menghasilkan sarjana terapan yang kompeten di sektor infrastruktur dan pekerjaan umum nasional.',
+        detailCareerTitle: 'Peluang Karir Lulusan',
+        detailCareerDescription: 'Lulusan STTPU memiliki prospek karir yang luas di instansi pemerintah, BUMN, kontraktor nasional, maupun konsultan teknik sipil.',
+        detailCareerButtonLabel: 'Informasi Pendaftaran (PMB)',
+        detailCareerButtonHref: 'https://pmb.sttpu.ac.id',
+        detailInfoTitle: 'Layanan Informasi Akademik',
+        detailInfoDescription: 'Hubungi sekretariat program studi untuk informasi detail kurikulum, mata kuliah, dan persyaratan akademik lainnya.',
+        detailInfoButtonLabel: 'Kontak Program Studi',
+        detailInfoButtonHref: '/kontak'
+      },
+      dosenContent: {
+        gridIntroText: 'Berikut adalah daftar dosen pengajar di lingkungan STTPU Jakarta yang dikelompokkan berdasarkan program studi.'
+      },
+      beasiswaContent: {
+        infoText: 'STTPU Jakarta bekerja sama dengan berbagai pihak untuk menyediakan beasiswa bagi mahasiswa berprestasi dan mahasiswa yang membutuhkan bantuan keuangan.',
+        internalTitle: 'Beasiswa Internal',
+        internalDescription: 'Beasiswa yang disediakan langsung oleh STTPU Jakarta berupa pembebasan biaya kuliah (UKT) bagi mahasiswa berprestasi.',
+        externalTitle: 'Beasiswa Eksternal',
+        externalDescription: 'Beasiswa dari instansi mitra seperti KIP Kuliah, Pemerintah Daerah, dan mitra industri.'
+      },
+      consultationCard: {
+        title: 'Konsultasi Akademik',
+        description: 'Tim akademik kami siap membantu Anda memilih program studi yang paling sesuai dengan visi karir Anda.',
+        primaryLabel: 'Hubungi Kami',
+        primaryHref: '/kontak',
+        secondaryLabel: 'Info Beasiswa',
+        secondaryHref: '/akademik/beasiswa'
+      }
+    },
+    ['sidebarTitle', 'sections', 'programStudiContent', 'dosenContent', 'beasiswaContent', 'consultationCard']
+  );
+
+  // Kemahasiswaan Page
+  console.log('Seeding Kemahasiswaan Page...');
+  await seedGlobalIfEmpty(
+    payload,
+    'kemahasiswaan-page',
+    {
+      sidebarTitle: 'Navigasi Kemahasiswaan',
+      heroTitle: 'Kemahasiswaan',
+      heroDescription: 'Kehidupan kampus STTPU yang dinamis — dari organisasi dan UKM hingga layanan mahasiswa dan rekam prestasi yang membanggakan.',
+      introText: 'STTPU percaya bahwa pendidikan terbaik tidak hanya terjadi di dalam kelas. Kehidupan kemahasiswaan yang aktif membentuk karakter, kepemimpinan, dan kompetensi lunak yang dibutuhkan di dunia kerja.',
+      stats: [
+        { value: '1.200+', label: 'Mahasiswa Aktif' },
+        { value: '12', label: 'UKM Aktif' },
+        { value: '45+', label: 'Prestasi/Tahun' },
+        { value: '4', label: 'Organisasi Mahasiswa' }
+      ],
+      sections: [
+        { title: 'Organisasi Mahasiswa', desc: 'BEM dan Senat Mahasiswa sebagai wadah aspirasi dan kepemimpinan.', href: '/kemahasiswaan/organisasi' },
+        { title: 'Unit Kegiatan Mahasiswa', desc: '12 UKM aktif mencakup bidang olahraga, seni, riset, dan sosial kemasyarakatan.', href: '/kemahasiswaan/ukm' },
+        { title: 'Prestasi Mahasiswa', desc: 'Rekam jejak pencapaian mahasiswa di kompetisi nasional dan internasional.', href: '/kemahasiswaan/prestasi' },
+        { title: 'Layanan Mahasiswa', desc: 'Bimbingan konseling, career center, kesehatan, dan layanan administrasi mahasiswa.', href: '/kemahasiswaan/layanan' },
+        { title: 'Panduan Mahasiswa Baru', desc: 'Panduan lengkap orientasi, sistem akademik, dan tips sukses perkuliahan di STTPU.', href: '/kemahasiswaan/mahasiswa-baru' }
+      ],
+      subpages: [
+        { slug: 'organisasi', title: 'Organisasi Mahasiswa', subtitle: 'BEM, Senat, and himpunan profesi yang mewakili dan mengembangkan mahasiswa STTPU.', breadcrumb: 'Organisasi Mahasiswa' },
+        { slug: 'ukm', title: 'Unit Kegiatan Mahasiswa', subtitle: '12 UKM aktif yang memfasilitasi minat dan bakat mahasiswa STTPU di berbagai bidang.', breadcrumb: 'Unit Kegiatan Mahasiswa' },
+        { slug: 'prestasi', title: 'Prestasi Mahasiswa', subtitle: 'Rekam jejak pencapaian membanggakan mahasiswa STTPU di berbagai kompetisi dan ajang nasional-internasional.', breadcrumb: 'Prestasi Mahasiswa' },
+        { slug: 'layanan', title: 'Layanan Mahasiswa', subtitle: 'Berbagai layanan pendukung yang tersedia untuk memastikan kelancaran studi dan kesejahteraan mahasiswa STTPU.', breadcrumb: 'Layanan Mahasiswa' },
+        { slug: 'mahasiswa-baru', title: 'Panduan Mahasiswa Baru', subtitle: 'Semua yang perlu Anda ketahui dan lakukan di awal masa studi di STTPU Jakarta.', breadcrumb: 'Panduan Mahasiswa Baru' }
+      ]
+    },
+    ['subpages', 'heroTitle', 'heroDescription', 'stats', 'introText', 'sections', 'sidebarTitle']
+  );
+
+  // Penelitian Page
+  console.log('Seeding Penelitian Page...');
+  await seedGlobalIfEmpty(
+    payload,
+    'penelitian-page',
+    {
+      sidebarTitle: 'Navigasi Penelitian',
+      heroTitle: 'Penelitian & Pengabdian',
+      heroDescription: 'STTPU mendorong budaya riset terapan yang relevan dengan kebutuhan pembangunan infrastruktur dan pengelolaan sumber daya alam Indonesia.',
+      stats: [
+        { value: '42+', label: 'Peneliti Aktif' },
+        { value: '5', label: 'Unit Riset & Lab' },
+        { value: '120+', label: 'Publikasi (5 Tahun)' },
+        { value: '18', label: 'Hibah Diterima' }
+      ],
+      sections: [
+        { title: 'Unit Penelitian & Laboratorium', desc: 'Pusat riset terapan dan laboratorium penunjang yang mendukung kegiatan penelitian dosen dan mahasiswa STTPU.', cta: 'Lihat Unit & Lab', href: '/penelitian/unit' },
+        { title: 'Database Publikasi', desc: 'Kumpulan karya ilmiah, jurnal, prosiding, dan buku yang dihasilkan sivitas akademika STTPU.', cta: 'Lihat Publikasi', href: '/penelitian/publikasi' },
+        { title: 'Hibah & Pendanaan', desc: 'Informasi skema hibah penelitian dari Kemendikti, PUPR, dan mitra industri yang tersedia bagi dosen STTPU.', cta: 'Lihat Hibah', href: '/penelitian/hibah' }
+      ],
+      subpages: [
+        { slug: 'unit', title: 'Unit Penelitian & Laboratorium', subtitle: '5 unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.', breadcrumb: 'Unit Penelitian & Lab' },
+        { slug: 'publikasi', title: 'Database Publikasi', subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU — jurnal, prosiding, dan buku.', breadcrumb: 'Database Publikasi' },
+        { slug: 'hibah', title: 'Hibah & Pendanaan Penelitian', subtitle: 'Skema hibah dari Kemendikti, Kementerian PUPR, mitra industri, dan pendanaan internal LP3M STTPU.', breadcrumb: 'Hibah & Pendanaan' }
+      ]
+    },
+    ['subpages', 'heroTitle', 'heroDescription', 'stats', 'sections', 'sidebarTitle']
+  );
+
+  // LPPM Page
+  console.log('Seeding LPPM Page...');
+  await seedGlobalIfEmpty(
+    payload,
+    'lppm-page',
+    {
+      sidebarTitle: 'Menu LPPM',
+      subpages: [
+        { slug: 'unit-penelitian', title: 'Unit Penelitian', subtitle: 'Unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.', breadcrumb: 'Unit Penelitian' },
+        { slug: 'publikasi', title: 'Publikasi', subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU, meliputi jurnal, prosiding, dan buku.', breadcrumb: 'Publikasi' },
+        { slug: 'pedoman', title: 'Pedoman', subtitle: 'Acuan kegiatan penelitian, pengabdian kepada masyarakat, publikasi, dan etika riset LPPM STTPU.', breadcrumb: 'Pedoman' }
+      ]
+    },
+    ['sidebarTitle', 'subpages']
+  );
+
+  // LPMI Page
+  console.log('Seeding LPMI Page...');
+  await seedGlobalIfEmpty(
+    payload,
+    'lpmi-page',
+    {
+      sidebarTitle: 'Menu LPMI',
+      subpages: [
+        {
+          slug: 'kebijakan',
+          title: 'Kebijakan LPMI',
+          subtitle: 'Arah penjaminan mutu internal STTPU untuk memastikan pendidikan, penelitian, dan pengabdian berjalan terukur serta berkelanjutan.',
+          contentTitle: 'Arah Kerja Mutu',
+          contentSubtitle: 'Ikhtisar prinsip, ruang lingkup, dan dokumen pendukung yang dipakai unit kerja dalam menjalankan budaya mutu secara konsisten.',
+          breadcrumb: 'Kebijakan',
+          intro: 'Kebijakan LPMI menjadi rujukan institusi dalam membangun budaya mutu. Dokumen ini menempatkan siklus penetapan, pelaksanaan, evaluasi, pengendalian, dan peningkatan sebagai cara kerja bersama di tingkat institusi, program studi, unit, dosen, tenaga kependidikan, dan mahasiswa.',
+          highlights: [
+            { title: 'Budaya mutu institusi', description: 'Setiap kegiatan akademik dan layanan pendukung diarahkan agar memiliki standar, bukti pelaksanaan, evaluasi, serta tindak lanjut yang terdokumentasi.' },
+            { title: 'Kepatuhan standar nasional', description: 'Kebijakan mutu diselaraskan dengan SN Dikti, kebutuhan akreditasi, dan arah pengembangan STTPU sebagai perguruan tinggi teknologi pekerjaan umum.' },
+            { title: 'Peningkatan berkelanjutan', description: 'Hasil audit, monitoring, dan evaluasi digunakan sebagai dasar perbaikan program, layanan, kurikulum, riset, dan kegiatan PKM.' }
+          ],
+          standards: [
+            { text: 'Komitmen pimpinan terhadap sistem penjaminan mutu internal.' },
+            { text: 'Keterlibatan seluruh unit dalam siklus PPEPP.' },
+            { text: 'Pengelolaan dokumen mutu yang tertelusur dan mudah diaudit.' },
+            { text: 'Penggunaan hasil evaluasi untuk rencana tindak lanjut.' }
+          ],
+          documents: [
+            { text: 'Kebijakan SPMI STTPU' },
+            { text: 'Manual SPMI' },
+            { text: 'Peta Standar Mutu' },
+            { text: 'Rencana tindak lanjut hasil evaluasi mutu' }
+          ]
+        },
+        {
+          slug: 'pedoman',
+          title: 'Pedoman LPMI',
+          subtitle: 'Panduan kerja penjaminan mutu untuk pelaksanaan monitoring, evaluasi, audit mutu internal, dan pengendalian dokumen.',
+          contentTitle: 'Panduan Pelaksanaan Mutu',
+          contentSubtitle: 'Rangkuman alur monev, audit, pengendalian dokumen, dan tindak lanjut agar proses mutu mudah dijalankan oleh setiap unit.',
+          breadcrumb: 'Pedoman',
+          intro: 'Pedoman LPMI membantu setiap unit menjalankan proses mutu secara konsisten. Fokusnya adalah memastikan kegiatan terencana dengan jelas, bukti pelaksanaan tersedia, capaian dievaluasi, dan rekomendasi perbaikan ditindaklanjuti.',
+          highlights: [
+            { title: 'Monitoring dan evaluasi', description: 'Monev dilakukan untuk membaca capaian standar, hambatan pelaksanaan, serta kebutuhan dukungan di tingkat program studi dan unit.' },
+            { title: 'Audit mutu internal', description: 'AMI memeriksa kesesuaian pelaksanaan dengan standar, prosedur, dan bukti yang tersedia sebelum dilakukan perbaikan terarah.' },
+            { title: 'Pengendalian dokumen', description: 'Dokumen mutu dikelola melalui versi, status berlaku, penanggung jawab, dan arsip agar mudah ditelusuri saat evaluasi.' }
+          ],
+          standards: [
+            { text: 'Setiap pedoman memiliki tujuan, ruang lingkup, prosedur, pelaksana, dan bukti kerja.' },
+            { text: 'Hasil monev and AMI dicatat dalam format yang seragam.' },
+            { text: 'Rekomendasi perbaikan memiliki penanggung jawab dan target waktu.' },
+            { text: 'Dokumen lama diarsipkan tanpa menghapus jejak historis.' }
+          ],
+          documents: [
+            { text: 'Pedoman Monitoring dan Evaluasi' },
+            { text: 'Pedoman Audit Mutu Internal' },
+            { text: 'Instrumen evaluasi standar' },
+            { text: 'Formulir rencana tindak lanjut' }
+          ]
+        },
+        {
+          slug: 'standar-pendidikan',
+          title: 'Standar Pendidikan',
+          subtitle: 'Standar mutu penyelenggaraan pendidikan untuk mendukung proses pembelajaran yang relevan, terukur, dan berorientasi kompetensi.',
+          contentTitle: 'Mutu Pembelajaran',
+          contentSubtitle: 'Fokus standar pendidikan dari kurikulum, proses belajar, penilaian, dosen, sarana, pengelolaan, hingga pembiayaan pembelajaran.',
+          breadcrumb: 'Standar Pendidikan',
+          intro: 'Standar pendidikan mengatur mutu pembelajaran mulai dari profil lulusan, kurikulum, proses belajar, penilaian, dosen, sarana, pengelolaan, sampai pembiayaan. Standar ini menjadi acuan program studi dalam menjaga kesesuaian pembelajaran dengan kebutuhan dunia kerja dan perkembangan ilmu.',
+          highlights: [
+            { title: 'Kurikulum berbasis capaian', description: 'Kurikulum disusun berdasarkan profil lulusan, capaian pembelajaran, bahan kajian, metode pembelajaran, dan asesmen yang saling terhubung.' },
+            { title: 'Pembelajaran terukur', description: 'Perkuliahan, praktikum, proyek, dan kegiatan lapangan memiliki rencana pembelajaran serta mekanisme evaluasi yang jelas.' },
+            { title: 'Layanan akademik', description: 'Mahasiswa memperoleh informasi akademik, bimbingan, dan layanan pendukung agar proses studi berjalan efektif.' }
+          ],
+          standards: [
+            { text: 'Standar kompetensi lulusan.' },
+            { text: 'Standar isi pembelajaran.' },
+            { text: 'Standar proses pembelajaran.' },
+            { text: 'Standar penilaian pembelajaran.' },
+            { text: 'Standar dosen dan tenaga kependidikan.' },
+            { text: 'Standar sarana dan prasarana pembelajaran.' },
+            { text: 'Standar pengelolaan pembelajaran.' },
+            { text: 'Standar pembiayaan pembelajaran.' }
+          ],
+          documents: [
+            { text: 'Dokumen kurikulum program studi' },
+            { text: 'Rencana Pembelajaran Semester' },
+            { text: 'Rubrik penilaian dan portofolio pembelajaran' },
+            { text: 'Laporan evaluasi pembelajaran' }
+          ]
+        },
+        {
+          slug: 'standar-penelitian',
+          title: 'Standar Penelitian',
+          subtitle: 'Standar mutu penelitian untuk memperkuat riset terapan, publikasi ilmiah, dan kontribusi akademik STTPU.',
+          contentTitle: 'Tata Kelola Riset',
+          contentSubtitle: 'Kerangka mutu untuk memastikan penelitian memiliki rencana, integritas ilmiah, luaran, dokumentasi, dan peluang pemanfaatan hasil.',
+          breadcrumb: 'Standar Penelitian',
+          intro: 'Standar penelitian memastikan kegiatan riset berjalan sesuai kaidah ilmiah, etika, kebutuhan institusi, dan arah pengembangan teknologi pekerjaan umum. Setiap penelitian didorong memiliki rencana, luaran, dokumentasi, serta peluang pemanfaatan hasil.',
+          highlights: [
+            { title: 'Riset terapan', description: 'Topik penelitian diarahkan pada masalah nyata di bidang infrastruktur, lingkungan, konstruksi, teknologi, dan layanan publik.' },
+            { title: 'Etika dan integritas', description: 'Penelitian memperhatikan kejujuran akademik, sitasi yang benar, perlindungan data, dan kepatuhan terhadap prosedur etik.' },
+            { title: 'Luaran akademik', description: 'Hasil penelitian diarahkan menjadi publikasi, bahan ajar, model, prototipe, rekomendasi kebijakan, atau kekayaan intelektual.' }
+          ],
+          standards: [
+            { text: 'Standar hasil penelitian.' },
+            { text: 'Standar isi penelitian.' },
+            { text: 'Standar proses penelitian.' },
+            { text: 'Standar penilaian penelitian.' },
+            { text: 'Standar peneliti.' },
+            { text: 'Standar sarana dan prasarana penelitian.' },
+            { text: 'Standar pengelolaan penelitian.' },
+            { text: 'Standar pendanaan dan pembiayaan penelitian.' }
+          ],
+          documents: [
+            { text: 'Roadmap penelitian' },
+            { text: 'Pedoman proposal dan laporan penelitian' },
+            { text: 'Instrumen evaluasi luaran penelitian' },
+            { text: 'Daftar publikasi dan rekam jejak penelitian' }
+          ]
+        },
+        {
+          slug: 'standar-pkm',
+          title: 'Standar PKM',
+          subtitle: 'Standar mutu pengabdian kepada masyarakat untuk memastikan program berdampak, relevan, dan terdokumentasi.',
+          contentTitle: 'Dampak Pengabdian',
+          contentSubtitle: 'Acuan mutu kegiatan PKM agar kebutuhan mitra, metode pelaksanaan, hasil, umpan balik, dan keberlanjutan program tercatat jelas.',
+          breadcrumb: 'Standar PKM',
+          intro: 'Standar PKM menjadi acuan kegiatan pengabdian kepada masyarakat agar program yang dilakukan dosen dan mahasiswa memiliki kebutuhan mitra yang jelas, metode pelaksanaan yang tepat, serta hasil yang dapat dievaluasi dan dikembangkan.',
+          highlights: [
+            { title: 'Berbasis kebutuhan mitra', description: 'Program PKM dimulai dari identifikasi kebutuhan masyarakat, sekolah, industri, pemerintah, atau komunitas sasaran.' },
+            { title: 'Kolaboratif', description: 'Pelaksanaan PKM dapat melibatkan program studi, mahasiswa, alumni, mitra industri, dan lembaga pemerintah sesuai konteks kegiatan.' },
+            { title: 'Dampak terukur', description: 'Hasil kegiatan dicatat melalui indikator capaian, umpan balik mitra, dokumentasi, dan rekomendasi keberlanjutan program.' }
+          ],
+          standards: [
+            { text: 'Standar hasil PKM.' },
+            { text: 'Standar isi PKM.' },
+            { text: 'Standar proses PKM.' },
+            { text: 'Standar penilaian PKM.' },
+            { text: 'Standar pelaksana PKM.' },
+            { text: 'Standar sarana dan prasarana PKM.' },
+            { text: 'Standar pengelolaan PKM.' },
+            { text: 'Standar pendanaan dan pembiayaan PKM.' }
+          ],
+          documents: [
+            { text: 'Pedoman proposal dan laporan PKM' },
+            { text: 'Peta mitra dan wilayah binaan' },
+            { text: 'Instrumen evaluasi kepuasan mitra' },
+            { text: 'Laporan dampak dan keberlanjutan program' }
+          ]
+        }
+      ]
+    },
+    ['sidebarTitle', 'subpages']
+  );
+
   // Main Menu
   console.log('Seeding Main Menu...');
   await seedGlobalIfEmpty(
@@ -426,6 +802,7 @@ async function seed() {
             { label: 'Akreditasi & Legalitas', href: '/tentang/akreditasi' },
             { label: 'Struktur Organisasi', href: '/tentang/struktur-organisasi' },
             { label: 'Fasilitas Kampus', href: '/tentang/fasilitas' },
+            { label: 'LPMI', href: '/lpmi/kebijakan' },
           ],
         },
         {
@@ -453,6 +830,7 @@ async function seed() {
           label: 'Penelitian',
           href: '/penelitian',
           children: [
+            { label: 'LPPM', href: '/lppm/unit-penelitian' },
             { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
             { label: 'Database Publikasi', href: '/penelitian/publikasi' },
             { label: 'Hibah & Pendanaan', href: '/penelitian/hibah' },

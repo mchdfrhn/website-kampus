@@ -23,13 +23,13 @@ type LpmiSection = {
   slug: string;
   title: string;
   subtitle: string;
-  contentTitle: string;
-  contentSubtitle: string;
-  breadcrumb: string;
-  intro: string;
-  highlights: { title: string; description: string }[];
-  standards: string[];
-  documents: string[];
+  contentTitle?: string;
+  contentSubtitle?: string;
+  breadcrumb?: string;
+  intro?: string;
+  highlights?: { title: string; description: string }[];
+  standards?: { text: string }[];
+  documents?: { text: string }[];
 };
 
 type LpmiDocument = {
@@ -44,7 +44,7 @@ type LpmiDocument = {
   } | string | number | null;
 };
 
-const lpmiSections: LpmiSection[] = [
+const defaultLpmiSections: LpmiSection[] = [
   {
     slug: 'kebijakan',
     title: 'Kebijakan LPMI',
@@ -74,16 +74,16 @@ const lpmiSections: LpmiSection[] = [
       },
     ],
     standards: [
-      'Komitmen pimpinan terhadap sistem penjaminan mutu internal.',
-      'Keterlibatan seluruh unit dalam siklus PPEPP.',
-      'Pengelolaan dokumen mutu yang tertelusur dan mudah diaudit.',
-      'Penggunaan hasil evaluasi untuk rencana tindak lanjut.',
+      { text: 'Komitmen pimpinan terhadap sistem penjaminan mutu internal.' },
+      { text: 'Keterlibatan seluruh unit dalam siklus PPEPP.' },
+      { text: 'Pengelolaan dokumen mutu yang tertelusur dan mudah diaudit.' },
+      { text: 'Penggunaan hasil evaluasi untuk rencana tindak lanjut.' },
     ],
     documents: [
-      'Kebijakan SPMI STTPU',
-      'Manual SPMI',
-      'Peta Standar Mutu',
-      'Rencana tindak lanjut hasil evaluasi mutu',
+      { text: 'Kebijakan SPMI STTPU' },
+      { text: 'Manual SPMI' },
+      { text: 'Peta Standar Mutu' },
+      { text: 'Rencana tindak lanjut hasil evaluasi mutu' },
     ],
   },
   {
@@ -115,16 +115,16 @@ const lpmiSections: LpmiSection[] = [
       },
     ],
     standards: [
-      'Setiap pedoman memiliki tujuan, ruang lingkup, prosedur, pelaksana, dan bukti kerja.',
-      'Hasil monev dan AMI dicatat dalam format yang seragam.',
-      'Rekomendasi perbaikan memiliki penanggung jawab dan target waktu.',
-      'Dokumen lama diarsipkan tanpa menghapus jejak historis.',
+      { text: 'Setiap pedoman memiliki tujuan, ruang lingkup, prosedur, pelaksana, dan bukti kerja.' },
+      { text: 'Hasil monev dan AMI dicatat dalam format yang seragam.' },
+      { text: 'Rekomendasi perbaikan memiliki penanggung jawab dan target waktu.' },
+      { text: 'Dokumen lama diarsipkan tanpa menghapus jejak historis.' },
     ],
     documents: [
-      'Pedoman Monitoring dan Evaluasi',
-      'Pedoman Audit Mutu Internal',
-      'Instrumen evaluasi standar',
-      'Formulir rencana tindak lanjut',
+      { text: 'Pedoman Monitoring dan Evaluasi' },
+      { text: 'Pedoman Audit Mutu Internal' },
+      { text: 'Instrumen evaluasi standar' },
+      { text: 'Formulir rencana tindak lanjut' },
     ],
   },
   {
@@ -156,20 +156,20 @@ const lpmiSections: LpmiSection[] = [
       },
     ],
     standards: [
-      'Standar kompetensi lulusan.',
-      'Standar isi pembelajaran.',
-      'Standar proses pembelajaran.',
-      'Standar penilaian pembelajaran.',
-      'Standar dosen dan tenaga kependidikan.',
-      'Standar sarana dan prasarana pembelajaran.',
-      'Standar pengelolaan pembelajaran.',
-      'Standar pembiayaan pembelajaran.',
+      { text: 'Standar kompetensi lulusan.' },
+      { text: 'Standar isi pembelajaran.' },
+      { text: 'Standar proses pembelajaran.' },
+      { text: 'Standar penilaian pembelajaran.' },
+      { text: 'Standar dosen dan tenaga kependidikan.' },
+      { text: 'Standar sarana dan prasarana pembelajaran.' },
+      { text: 'Standar pengelolaan pembelajaran.' },
+      { text: 'Standar pembiayaan pembelajaran.' },
     ],
     documents: [
-      'Dokumen kurikulum program studi',
-      'Rencana Pembelajaran Semester',
-      'Rubrik penilaian dan portofolio pembelajaran',
-      'Laporan evaluasi pembelajaran',
+      { text: 'Dokumen kurikulum program studi' },
+      { text: 'Rencana Pembelajaran Semester' },
+      { text: 'Rubrik penilaian dan portofolio pembelajaran' },
+      { text: 'Laporan evaluasi pembelajaran' },
     ],
   },
   {
@@ -201,20 +201,20 @@ const lpmiSections: LpmiSection[] = [
       },
     ],
     standards: [
-      'Standar hasil penelitian.',
-      'Standar isi penelitian.',
-      'Standar proses penelitian.',
-      'Standar penilaian penelitian.',
-      'Standar peneliti.',
-      'Standar sarana dan prasarana penelitian.',
-      'Standar pengelolaan penelitian.',
-      'Standar pendanaan dan pembiayaan penelitian.',
+      { text: 'Standar hasil penelitian.' },
+      { text: 'Standar isi penelitian.' },
+      { text: 'Standar proses penelitian.' },
+      { text: 'Standar penilaian penelitian.' },
+      { text: 'Standar peneliti.' },
+      { text: 'Standar sarana dan prasarana penelitian.' },
+      { text: 'Standar pengelolaan penelitian.' },
+      { text: 'Standar pendanaan dan pembiayaan penelitian.' },
     ],
     documents: [
-      'Roadmap penelitian',
-      'Pedoman proposal and laporan penelitian',
-      'Instrumen evaluasi luaran penelitian',
-      'Daftar publikasi dan rekam jejak penelitian',
+      { text: 'Roadmap penelitian' },
+      { text: 'Pedoman proposal and laporan penelitian' },
+      { text: 'Instrumen evaluasi luaran penelitian' },
+      { text: 'Daftar publikasi dan rekam jejak penelitian' },
     ],
   },
   {
@@ -246,23 +246,43 @@ const lpmiSections: LpmiSection[] = [
       },
     ],
     standards: [
-      'Standar hasil PKM.',
-      'Standar isi PKM.',
-      'Standar proses PKM.',
-      'Standar penilaian PKM.',
-      'Standar pelaksana PKM.',
-      'Standar sarana dan prasarana PKM.',
-      'Standar pengelolaan PKM.',
-      'Standar pendanaan dan pembiayaan PKM.',
+      { text: 'Standar hasil PKM.' },
+      { text: 'Standar isi PKM.' },
+      { text: 'Standar proses PKM.' },
+      { text: 'Standar penilaian PKM.' },
+      { text: 'Standar pelaksana PKM.' },
+      { text: 'Standar sarana dan prasarana PKM.' },
+      { text: 'Standar pengelolaan PKM.' },
+      { text: 'Standar pendanaan dan pembiayaan PKM.' },
     ],
     documents: [
-      'Pedoman proposal dan laporan PKM',
-      'Peta mitra dan wilayah binaan',
-      'Instrumen evaluasi kepuasan mitra',
-      'Laporan dampak dan keberlanjutan program',
+      { text: 'Pedoman proposal dan laporan PKM' },
+      { text: 'Peta mitra dan wilayah binaan' },
+      { text: 'Instrumen evaluasi kepuasan mitra' },
+      { text: 'Laporan dampak dan keberlanjutan program' },
     ],
   },
 ];
+
+async function getLpmiSections(): Promise<{ subpages: LpmiSection[]; sidebarTitle: string }> {
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'lpmi-page' as never });
+    const data = global as { subpages?: LpmiSection[]; sidebarTitle?: string };
+    if (data.subpages && data.subpages.length > 0) {
+      return {
+        subpages: data.subpages,
+        sidebarTitle: data.sidebarTitle || 'Menu LPMI',
+      };
+    }
+  } catch (error) {
+    console.error('Error fetching lpmi page data:', error);
+  }
+  return {
+    subpages: defaultLpmiSections,
+    sidebarTitle: 'Menu LPMI',
+  };
+}
 
 const iconMap = [ShieldCheck, ClipboardCheck, GraduationCap, Microscope, Handshake];
 
@@ -318,8 +338,9 @@ function SectionCard({
   );
 }
 
-export function generateStaticParams() {
-  return lpmiSections.map((section) => ({ slug: section.slug }));
+export async function generateStaticParams() {
+  const { subpages } = await getLpmiSections();
+  return subpages.map((section) => ({ slug: section.slug }));
 }
 
 export async function generateMetadata({
@@ -328,7 +349,8 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const section = lpmiSections.find((item) => item.slug === slug);
+  const { subpages } = await getLpmiSections();
+  const section = subpages.find((item) => item.slug === slug);
   if (!section) return {};
 
   const pageTitle = section.title.includes('LPMI') ? section.title : `${section.title} LPMI`;
@@ -346,22 +368,22 @@ export default async function LpmiSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const section = lpmiSections.find((item) => item.slug === slug);
+  const { subpages, sidebarTitle } = await getLpmiSections();
+  const section = subpages.find((item) => item.slug === slug);
   if (!section) notFound();
   const documents = await fetchLpmiDocuments(section.slug);
 
-  const sectionIndex = lpmiSections.findIndex((item) => item.slug === slug);
+  const sectionIndex = subpages.findIndex((item) => item.slug === slug);
   const HeroIcon = iconMap[sectionIndex] || Award;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },
     { name: 'Tentang', path: '/tentang' },
     { name: 'LPMI', path: '/lpmi/kebijakan' },
-    { name: section.breadcrumb, path: `/lpmi/${section.slug}` },
+    { name: section.breadcrumb || section.title, path: `/lpmi/${section.slug}` },
   ]);
 
-  const sidebarTitle = 'Menu LPMI';
-  const sidebarLinks = lpmiSections.map((item) => ({
-    label: item.breadcrumb,
+  const sidebarLinks = subpages.map((item) => ({
+    label: item.breadcrumb || item.title,
     href: `/lpmi/${item.slug}`,
   }));
 
@@ -377,7 +399,7 @@ export default async function LpmiSlugPage({
         breadcrumbs={[
           { label: 'Tentang', href: '/tentang' },
           { label: 'LPMI', href: '/lpmi/kebijakan' },
-          { label: section.breadcrumb },
+          { label: section.breadcrumb || section.title },
         ]}
       />
 
@@ -392,9 +414,11 @@ export default async function LpmiSlugPage({
                     <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-navy">
                       <HeroIcon size={26} strokeWidth={2.4} />
                     </div>
-                    <p className="text-sm font-semibold leading-7 text-gray-600 sm:text-base">
-                      {section.intro}
-                    </p>
+                    {section.intro && (
+                      <p className="text-sm font-semibold leading-7 text-gray-600 sm:text-base">
+                        {section.intro}
+                      </p>
+                    )}
                   </div>
                   <div className="bg-brand-mist p-6 sm:p-8 lg:p-10">
                     <p className="mb-5 text-xs font-black uppercase tracking-[0.12em] text-brand-navy/60">
@@ -417,47 +441,53 @@ export default async function LpmiSlugPage({
             </div>
 
             <div className="space-y-8">
-              <section className="grid gap-4 md:grid-cols-3">
-                {section.highlights.map((item) => (
-                  <article
-                    key={item.title}
-                    className="rounded-2xl border border-gray-100 bg-white p-6 shadow-premium transition-all hover:-translate-y-1 hover:shadow-premium-hover"
-                  >
-                    <ClipboardCheck className="mb-4 h-6 w-6 text-brand-gold-dark" />
-                    <h3 className="text-lg font-black text-brand-navy">{item.title}</h3>
-                    <p className="mt-3 text-sm font-medium leading-7 text-gray-500">{item.description}</p>
-                  </article>
-                ))}
-              </section>
+              {section.highlights && section.highlights.length > 0 && (
+                <section className="grid gap-4 md:grid-cols-3">
+                  {section.highlights.map((item) => (
+                    <article
+                      key={item.title}
+                      className="rounded-2xl border border-gray-100 bg-white p-6 shadow-premium transition-all hover:-translate-y-1 hover:shadow-premium-hover"
+                    >
+                      <ClipboardCheck className="mb-4 h-6 w-6 text-brand-gold-dark" />
+                      <h3 className="text-lg font-black text-brand-navy">{item.title}</h3>
+                      <p className="mt-3 text-sm font-medium leading-7 text-gray-500">{item.description}</p>
+                    </article>
+                  ))}
+                </section>
+              )}
 
               <section className="grid gap-6 lg:grid-cols-2">
-                <SectionCard title="Ruang Lingkup Standar" eyebrow="Scope">
-                  <ul className="space-y-3">
-                    {section.standards.map((item) => (
-                      <li key={item} className="flex gap-3 text-sm font-semibold leading-7 text-gray-600">
-                        <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </SectionCard>
+                {section.standards && section.standards.length > 0 && (
+                  <SectionCard title={section.contentTitle || "Ruang Lingkup Standar"} eyebrow="Scope">
+                    <ul className="space-y-3">
+                      {section.standards.map((item) => (
+                        <li key={item.text} className="flex gap-3 text-sm font-semibold leading-7 text-gray-600">
+                          <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
+                          <span>{item.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </SectionCard>
+                )}
 
-                <section className="rounded-premium border border-gray-100 bg-brand-navy p-6 text-white shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
-                  <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-white/50">References</p>
-                  <div className="mb-5 flex items-center gap-3">
-                    <FileCheck2 className="h-6 w-6 text-brand-gold" />
-                    <h2 className="text-xl font-bold tracking-tight text-white sm:text-2xl">Dokumen Terkait</h2>
-                  </div>
-                  <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
-                  <ul className="mt-8 space-y-3">
-                    {section.documents.map((item) => (
-                      <li key={item} className="flex gap-3 text-sm font-semibold leading-7 text-white/75">
-                        <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
+                {section.documents && section.documents.length > 0 && (
+                  <section className="rounded-premium border border-gray-100 bg-brand-navy p-6 text-white shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+                    <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-white/50">References</p>
+                    <div className="mb-5 flex items-center gap-3">
+                      <FileCheck2 className="h-6 w-6 text-brand-gold" />
+                      <h2 className="text-xl font-bold tracking-tight text-white sm:text-2xl">Dokumen Terkait</h2>
+                    </div>
+                    <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+                    <ul className="mt-8 space-y-3">
+                      {section.documents.map((item) => (
+                        <li key={item.text} className="flex gap-3 text-sm font-semibold leading-7 text-white/75">
+                          <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
+                          <span>{item.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
               </section>
 
               <SectionCard title="Dokumen LPMI" eyebrow="Unduhan">

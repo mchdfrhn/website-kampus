@@ -3,42 +3,36 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
-import UnitPenelitianContent from '@/components/sections/penelitian/UnitPenelitianContent';
-import PublikasiContent from '@/components/sections/penelitian/PublikasiContent';
-import PedomanContent from '@/components/sections/penelitian/PedomanContent';
+import { getPayloadClient } from '@/lib/payload';
+import { resolveLppmSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
+import { getPromoCards, defaultPromoCards } from '@/lib/data/promo-cards';
 
-const lppmSections = [
-  {
-    slug: 'unit-penelitian',
-    title: 'Unit Penelitian',
-    subtitle: 'Unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.',
-    breadcrumb: 'Unit Penelitian',
-    component: UnitPenelitianContent,
-  },
-  {
-    slug: 'publikasi',
-    title: 'Publikasi',
-    subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU, meliputi jurnal, prosiding, dan buku.',
-    breadcrumb: 'Publikasi',
-    component: PublikasiContent,
-  },
-  {
-    slug: 'pedoman',
-    title: 'Pedoman',
-    subtitle: 'Acuan kegiatan penelitian, pengabdian kepada masyarakat, publikasi, dan etika riset LPPM STTPU.',
-    breadcrumb: 'Pedoman',
-    component: PedomanContent,
-  },
-];
-
-export function generateStaticParams() {
-  return lppmSections.map((section) => ({ slug: section.slug }));
+export async function generateStaticParams() {
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'lppm-page' as never });
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    const resolved = resolveLppmSections(subpages);
+    if (resolved.length > 0) return resolved.map((item) => ({ slug: item.slug }));
+  } catch {
+    // fallback below
+  }
+  return resolveLppmSections().map((item) => ({ slug: item.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
-  const section = lppmSections.find((item) => item.slug === slug);
+  let resolvedSections = resolveLppmSections();
+  try {
+    const payload = await getPayloadClient();
+    const global = await payload.findGlobal({ slug: 'lppm-page' as never });
+    const subpages = (global as { subpages?: PayloadSectionMeta[] }).subpages || [];
+    resolvedSections = resolveLppmSections(subpages);
+  } catch {
+    // keep defaults
+  }
+  const section = resolvedSections.find((item) => item.slug === slug);
   if (!section) return {};
 
   return buildPageMetadata({
@@ -50,21 +44,44 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function LppmSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const section = lppmSections.find((item) => item.slug === slug);
+
+  let resolvedSections = resolveLppmSections();
+  let sidebarTitle = 'Menu LPPM';
+  let sidebarLinks = resolvedSections.map((item) => ({
+    label: item.breadcrumb || item.title,
+    href: `/lppm/${item.slug}`,
+  }));
+  let promo = defaultPromoCards;
+
+  try {
+    const payload = await getPayloadClient();
+    const [global, promoData] = await Promise.all([
+      payload.findGlobal({ slug: 'lppm-page' as never }),
+      getPromoCards(),
+    ]);
+    promo = promoData;
+    const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string };
+    resolvedSections = resolveLppmSections(data.subpages || []);
+    sidebarTitle = data.sidebarTitle || sidebarTitle;
+    if (resolvedSections.length > 0) {
+      sidebarLinks = resolvedSections.map((item) => ({
+        label: item.breadcrumb || item.title,
+        href: `/lppm/${item.slug}`,
+      }));
+    }
+  } catch {
+    // keep defaults
+  }
+
+  const section = resolvedSections.find((item) => item.slug === slug);
   if (!section) notFound();
 
   const Content = section.component;
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },
     { name: 'LPPM', path: '/lppm' },
-    { name: section.breadcrumb, path: `/lppm/${section.slug}` },
+    { name: section.breadcrumb || section.title, path: `/lppm/${section.slug}` },
   ]);
-
-  const sidebarTitle = 'Menu LPPM';
-  const sidebarLinks = lppmSections.map((item) => ({
-    label: item.breadcrumb,
-    href: `/lppm/${item.slug}`,
-  }));
 
   return (
     <>
@@ -77,7 +94,7 @@ export default async function LppmSlugPage({ params }: { params: Promise<{ slug:
         subtitle={section.subtitle}
         breadcrumbs={[
           { label: 'LPPM', href: '/lppm' },
-          { label: section.breadcrumb, href: `/lppm/${section.slug}` },
+          { label: section.breadcrumb || section.title, href: `/lppm/${section.slug}` },
         ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

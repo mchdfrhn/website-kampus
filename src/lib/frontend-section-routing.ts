@@ -14,6 +14,8 @@ import MahasiswaBaruContent from '@/components/sections/kemahasiswaan/MahasiswaB
 import UnitPenelitianContent from '@/components/sections/penelitian/UnitPenelitianContent';
 import PublikasiContent from '@/components/sections/penelitian/PublikasiContent';
 import HibahContent from '@/components/sections/penelitian/HibahContent';
+import PedomanContent from '@/components/sections/penelitian/PedomanContent';
+
 
 export type PayloadSectionMeta = {
   slug: string
@@ -262,3 +264,35 @@ export function resolveKemahasiswaanSections(payloadSections?: PayloadSectionMet
 export function resolvePenelitianSections(payloadSections?: PayloadSectionMeta[]) {
   return resolvePayloadSections(penelitianDefinitions, payloadSections);
 }
+
+const lppmDefinitions: SectionDefinition[] = [
+  {
+    key: 'unit-penelitian',
+    defaultSlug: 'unit-penelitian',
+    title: 'Unit Penelitian',
+    subtitle: 'Unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.',
+    breadcrumb: 'Unit Penelitian',
+    component: UnitPenelitianContent,
+  },
+  {
+    key: 'publikasi',
+    defaultSlug: 'publikasi',
+    title: 'Publikasi',
+    subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU, meliputi jurnal, prosiding, dan buku.',
+    breadcrumb: 'Publikasi',
+    component: PublikasiContent,
+  },
+  {
+    key: 'pedoman',
+    defaultSlug: 'pedoman',
+    title: 'Pedoman',
+    subtitle: 'Acuan kegiatan penelitian, pengabdian kepada masyarakat, publikasi, dan etika riset LPPM STTPU.',
+    breadcrumb: 'Pedoman',
+    component: PedomanContent,
+  },
+];
+
+export function resolveLppmSections(payloadSections?: PayloadSectionMeta[]) {
+  return resolvePayloadSections(lppmDefinitions, payloadSections);
+}
+

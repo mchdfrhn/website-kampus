@@ -62,6 +62,19 @@ export const penelitianPagePaths = [
   '/sitemap.xml',
 ] as const
 
+export const lpmiPagePaths = [
+  '/lpmi',
+  '/lpmi/[slug]',
+  '/sitemap.xml',
+] as const
+
+export const lppmPagePaths = [
+  '/lppm',
+  '/lppm/[slug]',
+  '/sitemap.xml',
+] as const
+
+
 export const akademikPagePaths = [
   '/akademik',
   '/akademik/program-studi',
