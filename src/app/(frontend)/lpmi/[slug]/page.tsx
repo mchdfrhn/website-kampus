@@ -274,6 +274,13 @@ const defaultLpmiSections: LpmiSection[] = [
 ];
 
 async function getLpmiSections(): Promise<{ subpages: LpmiSection[]; sidebarTitle: string; stats: StatItem[] }> {
+  if (process.env.BUILD_SKIP_DB === '1') {
+    return {
+      subpages: defaultLpmiSections,
+      sidebarTitle: 'Menu LPMI',
+      stats: defaultStats,
+    };
+  }
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'lpmi-page' as never });
@@ -298,6 +305,7 @@ async function getLpmiSections(): Promise<{ subpages: LpmiSection[]; sidebarTitl
 const iconMap = [ShieldCheck, ClipboardCheck, GraduationCap, Microscope, Handshake];
 
 const fetchLpmiDocuments = unstable_cache(async (sectionSlug: string): Promise<LpmiDocument[]> => {
+  if (process.env.BUILD_SKIP_DB === '1') return [];
   try {
     const payload = await getPayloadClient();
     const result = await payload.find({
