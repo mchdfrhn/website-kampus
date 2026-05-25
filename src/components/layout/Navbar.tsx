@@ -46,7 +46,7 @@ const fallbackNavItems: NavItem[] = [
   },
   {
     label: 'Akademik',
-    href: '#',
+    href: '/akademik',
     children: [
       { label: 'Program Studi', href: '/akademik/program-studi' },
       { label: 'Dosen', href: '/akademik/dosen' },
@@ -96,7 +96,9 @@ function synchronizeNavItems(
     const normalizedLabel = item.label.trim().toLowerCase();
 
     let href = item.href;
-    if (href.startsWith('/lpmi')) {
+    if (normalizedLabel === 'akademik') {
+      href = '/akademik';
+    } else if (href.startsWith('/lpmi')) {
       href = options.lpmiHref;
     } else if (href.startsWith('/lppm')) {
       href = options.lppmHref;

@@ -22,6 +22,10 @@ type MobileMenuProps = {
   institutionName?: string;
 };
 
+function resolveItemHref(item: NavItem) {
+  return item.label.trim().toLowerCase() === 'akademik' ? '/akademik' : item.href;
+}
+
 export default function MobileMenu({ navItems = [], logoUrl, institutionName = 'STTPU Jakarta' }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -65,7 +69,8 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
 
     const hrefs = new Set<string>(['/', '/portal']);
     navItems.forEach((item) => {
-      if (item.href) hrefs.add(item.href);
+      const itemHref = resolveItemHref(item);
+      if (itemHref) hrefs.add(itemHref);
       item.children?.forEach((child) => {
         if (child.href) hrefs.add(child.href);
       });
@@ -124,7 +129,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
 
   const isItemActive = (item: NavItem) => {
     if (pathname.startsWith('/lpmi') && item.label.trim().toLowerCase() === 'tentang') return true;
-    if (matchesPath(item.href)) return true;
+    if (matchesPath(resolveItemHref(item))) return true;
     return Array.isArray(item.children) ? item.children.some((child) => matchesPath(child.href)) : false;
   };
 
@@ -245,6 +250,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                       const hasChildren = Array.isArray(item.children) && item.children.length > 0;
                       const active = isItemActive(item);
                       const isSubOpen = openSubmenu === item.label;
+                      const itemHref = resolveItemHref(item);
 
                       return (
                         <div key={item.label} className="relative">
@@ -269,9 +275,9 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                                     : "text-white hover:bg-white/5"
                                 )}
                               >
-                                {item.href && item.href !== '#' ? (
+                                {itemHref && itemHref !== '#' ? (
                                   <Link
-                                    href={item.href}
+                                    href={itemHref}
                                     onClick={handleNavigate}
                                     className="flex-1 px-4 py-4 text-left hover:text-white"
                                   >

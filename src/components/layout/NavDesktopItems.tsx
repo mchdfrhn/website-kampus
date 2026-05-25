@@ -20,9 +20,13 @@ function matchesPath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function resolveItemHref(item: NavItem) {
+  return item.label.trim().toLowerCase() === 'akademik' ? '/akademik' : item.href;
+}
+
 function isItemActive(pathname: string, item: NavItem) {
   if (pathname.startsWith('/lpmi') && item.label.trim().toLowerCase() === 'tentang') return true;
-  if (matchesPath(pathname, item.href)) return true;
+  if (matchesPath(pathname, resolveItemHref(item))) return true;
   if (Array.isArray(item.children)) {
     return item.children.some((child) => matchesPath(pathname, child.href));
   }
@@ -43,6 +47,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
         const hasChildren = Array.isArray(item.children) && item.children.length > 0;
         const active = isItemActive(pathname, item);
         const isHovered = hoveredItem === item.label;
+        const itemHref = resolveItemHref(item);
 
         const menuId = `nav-menu-${item.label.replace(/\s+/g, '-').toLowerCase()}`;
 
@@ -54,9 +59,9 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
           >
             {hasChildren ? (
               <>
-                {item.href && item.href !== '#' ? (
+                {itemHref && itemHref !== '#' ? (
                   <Link
-                    href={item.href}
+                    href={itemHref}
                     className={`relative flex min-w-max xl:min-w-[4rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1 px-4 xl:px-2 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] xl:text-[11.5px] 2xl:text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
                     }`}
