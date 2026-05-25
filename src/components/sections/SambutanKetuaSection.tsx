@@ -16,7 +16,7 @@ const defaultSambutan =
 const defaultKetuaPhoto = '/images/pimpinan/ketua-sttpu-arie-setiadi.webp';
 
 const portraitStageClassName =
-  'relative mx-auto flex min-h-[460px] w-full max-w-sm items-end justify-center overflow-hidden rounded-xl border border-brand-navy/10 bg-[linear-gradient(180deg,#f8fafc_0%,#eef6f8_100%)] shadow-[0_22px_60px_rgba(15,23,42,0.12)] sm:min-h-[540px] lg:max-w-md';
+  'relative mx-auto flex min-h-[300px] xs:min-h-[360px] sm:min-h-[540px] w-full max-w-sm items-end justify-center overflow-hidden rounded-xl border border-brand-navy/10 bg-[linear-gradient(180deg,#f8fafc_0%,#eef6f8_100%)] shadow-[0_22px_60px_rgba(15,23,42,0.12)] lg:max-w-md';
 
 export default function SambutanKetuaSection({
   ketua,
@@ -42,7 +42,7 @@ export default function SambutanKetuaSection({
             <div className="absolute bottom-16 right-8 h-28 w-28 rounded-full border border-white/10 bg-white/[0.03]" />
             <div className="absolute inset-x-10 bottom-0 h-16 rounded-[50%] bg-black/24 blur-2xl" />
 
-            <div className="relative z-10 h-[455px] w-full sm:h-[540px]">
+            <div className="relative z-10 h-[295px] xs:h-[355px] sm:h-[540px] w-full">
               <ImageWithLoading
                 src={fotoUrl}
                 alt={nama}

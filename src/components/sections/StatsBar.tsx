@@ -32,7 +32,7 @@ function StatItem({ stat, animated }: { stat: { angka: string; label: string }; 
   const { num, suffix } = parseAngka(stat.angka);
   const count = useCountUp(num, 1500, animated);
   return (
-    <div className="bg-white flex flex-col items-center py-5 sm:py-8 lg:py-9 px-2 sm:px-5 lg:px-6 group hover:bg-brand-navy/[0.02] active:scale-[0.98] transition-all duration-500 cursor-default">
+    <div className="bg-white flex flex-col items-center py-4 sm:py-8 lg:py-9 px-2 sm:px-5 lg:px-6 group hover:bg-brand-navy/[0.02] active:scale-[0.98] transition-all duration-500 cursor-default">
       <div className="relative">
         <span className="text-brand-navy text-lg sm:text-[1.75rem] lg:text-4xl font-bold tracking-tighter group-hover:text-brand-gold transition-colors duration-500">
           {count}{suffix}
@@ -65,7 +65,7 @@ export default function StatsBar({ items }: { items?: { angka: string; label: st
   if (stats.length === 0) return null;
 
   return (
-    <div className="relative z-20 -mt-10 lg:-mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="relative z-20 -mt-6 sm:-mt-10 lg:-mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <Reveal width="100%" yOffset={20}>
         <div className="bg-white rounded-2xl shadow-premium border border-brand-navy/5 overflow-hidden">
           <div ref={containerRef} className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-brand-navy/5">

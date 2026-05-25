@@ -35,9 +35,9 @@ export function MotionList({ children, className }: { children: ReactNode; class
   );
 }
 
-export function MotionItem({ children }: { children: ReactNode }) {
+export function MotionItem({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <StaggerItem>
+    <StaggerItem className={className}>
       {children}
     </StaggerItem>
   );

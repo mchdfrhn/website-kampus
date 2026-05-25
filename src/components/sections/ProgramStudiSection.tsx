@@ -90,13 +90,13 @@ export default async function ProgramStudiSection() {
           </div>
         </Reveal>
 
-        <MotionList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <MotionList className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-10 md:p-0 md:-mx-0 scrollbar-none">
           {programs.map((program) => {
             const thumbUrl = typeof program.thumbnail === 'object' ? program.thumbnail?.url : null;
             const accent = accentTheme[resolveProgramStudiAccentColor(program.nama, program.accentColor)] ?? accentTheme.navy;
             
             return (
-              <MotionItem key={program.nama}>
+              <MotionItem key={program.nama} className="snap-start flex-none w-[85vw] xs:w-[310px] md:w-auto md:flex-initial">
                 <div
                   className={cn(
                     'group rounded-2xl overflow-hidden shadow-premium hover:shadow-premium-hover hover:-translate-y-1 active:scale-[0.99] transition-all duration-500 ease-out flex flex-col h-full border',

@@ -33,9 +33,9 @@ export default function BeritaTerakhirSection({ artikelList }: { artikelList: Ar
           </div>
         </Reveal>
 
-        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <StaggerContainer className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 -mx-4 px-4 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-8 md:p-0 md:-mx-0 scrollbar-none">
           {artikelList.map((item) => (
-            <StaggerItem key={item.slug}>
+            <StaggerItem key={item.slug} className="snap-start flex-none w-[85vw] xs:w-[310px] md:w-auto md:flex-initial">
               <article
                 className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-premium transition-all duration-500 hover:-translate-y-1 hover:shadow-premium-hover active:scale-[0.99]"
               >

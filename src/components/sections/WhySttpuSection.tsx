@@ -101,7 +101,7 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
 
   if (backgroundUrl) {
     return (
-      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-brand-navy shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]">
+      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-brand-navy shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)] snap-start flex-none w-[85vw] xs:w-[310px] sm:w-auto sm:flex-initial">
         <Image
           src={backgroundUrl}
           alt={backgroundAlt}
@@ -130,7 +130,7 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
   }
 
   return (
-    <li className="group flex h-full gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]">
+    <li className="group flex h-full gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)] snap-start flex-none w-[85vw] xs:w-[310px] sm:w-auto sm:flex-initial">
       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-mist text-brand-navy transition-colors duration-500 ease-out group-hover:bg-brand-navy group-hover:text-brand-gold">
         <Icon size={20} aria-hidden="true" />
       </div>
@@ -199,7 +199,7 @@ export default function WhySttpuSection({
         </Reveal>
 
         <Reveal width="100%" yOffset={24} delay={0.1}>
-          <ul className="grid gap-4 sm:grid-cols-2" aria-label="Alasan memilih STTPU Jakarta">
+          <ul className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 sm:grid sm:grid-cols-2 sm:gap-4 sm:p-0 sm:-mx-0 scrollbar-none" aria-label="Alasan memilih STTPU Jakarta">
             {reasons.map((item, index) => (
               <ReasonCard key={`${item.title}-${index}`} item={item} index={index} />
             ))}

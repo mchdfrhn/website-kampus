@@ -117,12 +117,12 @@ export default function BeritaIndexContent({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter kategori berita">
+        <div className="flex overflow-x-auto snap-x snap-mandatory gap-2 pb-3 -mx-4 px-4 sm:flex-wrap sm:pb-0 sm:mx-0 scrollbar-none" role="group" aria-label="Filter kategori berita">
           {filterOptions.map((opt) => (
             <button
               key={opt.value}
               onClick={() => { setFilter(opt.value); setPage(1); }}
-              className={`px-4 py-2 rounded-lg text-xs font-bold border transition-all ${
+              className={`flex-shrink-0 px-4 py-2 rounded-lg text-xs font-bold border transition-all snap-start ${
                 filter === opt.value
                   ? 'bg-brand-navy text-white border-brand-navy shadow-md'
                   : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy hover:text-brand-navy'
