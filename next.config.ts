@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   // .next/standalone so the runner stage needs no node_modules.
   output: "standalone",
   poweredByHeader: false,
+  generateBuildId: async () => {
+    // Memaksa Next.js menggunakan ID Build yang konsisten di server Zeabur.
+    return process.env.ZEABUR_DEPLOYMENT_ID || 'production-build-id';
+  },
   async headers() {
     return [
       {
