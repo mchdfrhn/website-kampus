@@ -224,6 +224,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                           src={logoUrl}
                           alt={institutionName}
                           fill
+                          sizes="40px"
                           className="object-contain"
                         />
                       </div>

@@ -1,4 +1,5 @@
 import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 
 type JamItem = { hari: string; jam?: string; tutup?: boolean }
@@ -38,7 +39,7 @@ const defaultSettings = {
   googleMapsEmbed: '',
 }
 
-export default async function MapSection() {
+async function resolveMapSettings() {
   let s = defaultSettings
 
   try {
@@ -49,6 +50,18 @@ export default async function MapSection() {
   } catch {
     // DB unavailable — use defaults
   }
+
+  return s
+}
+
+const getMapSettings = unstable_cache(
+  resolveMapSettings,
+  ['kontak-map-settings'],
+  { revalidate: 60 },
+)
+
+export default async function MapSection() {
+  const s = await getMapSettings()
 
   const googleMapsEmbedSrc = resolveGoogleMapsEmbed(s.googleMapsEmbed)
 

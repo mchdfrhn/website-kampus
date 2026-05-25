@@ -1,4 +1,5 @@
 import { GraduationCap, Users, CalendarDays, Award } from 'lucide-react';
+import { unstable_cache } from 'next/cache';
 import OverviewPageLayout from '@/components/layout/OverviewPageLayout';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import { getPayloadClient } from '@/lib/payload';
@@ -23,7 +24,7 @@ const iconMap: Record<string, typeof GraduationCap> = {
 
 type StatItem = { value: string; label: string };
 
-export default async function AkademikOverview() {
+async function resolveAkademikOverviewData() {
   const { sections } = await getAkademikNavigation();
   let stats = defaultStats;
 
@@ -44,6 +45,18 @@ export default async function AkademikOverview() {
     title: section.title,
     desc: section.subtitle || '',
   }));
+
+  return { cards, stats };
+}
+
+const getAkademikOverviewData = unstable_cache(
+  resolveAkademikOverviewData,
+  ['akademik-overview-data'],
+  { revalidate: 60 },
+);
+
+export default async function AkademikOverview() {
+  const { cards, stats } = await getAkademikOverviewData();
 
   return (
     <OverviewPageLayout

@@ -76,6 +76,7 @@ export default function GaleriContent({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((album) => (
               <Link
+                key={album.slug}
                 href={`/galeri/${album.slug}`}
                 className="group bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 flex flex-col h-full"
               >
@@ -85,6 +86,7 @@ export default function GaleriContent({
                       src={album.coverFotoUrl}
                       alt={album.judul}
                       fill
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   ) : (

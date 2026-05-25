@@ -1,30 +1,11 @@
 "use client";
 
-import { ReactLenis, useLenis } from "lenis/react";
 import { usePathname } from "next/navigation";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 const NAVBAR_OFFSET = 96;
-const TOUCH_SCROLL_QUERY = "(max-width: 767px), (pointer: coarse)";
-
-function usePrefersNativeScroll() {
-  const [prefersNativeScroll, setPrefersNativeScroll] = useState(true);
-
-  useEffect(() => {
-    const media = window.matchMedia(TOUCH_SCROLL_QUERY);
-    const update = () => setPrefersNativeScroll(media.matches);
-
-    update();
-    media.addEventListener("change", update);
-
-    return () => media.removeEventListener("change", update);
-  }, []);
-
-  return prefersNativeScroll;
-}
 
 function ScrollSync() {
-  const lenis = useLenis();
   const pathname = usePathname();
   const previousPathname = useRef(pathname);
 
@@ -39,14 +20,6 @@ function ScrollSync() {
         if (attempt < 10) {
           window.setTimeout(() => scrollToHash(hash, immediate, attempt + 1), 120);
         }
-        return;
-      }
-
-      if (lenis) {
-        lenis.scrollTo(target, {
-          offset: -NAVBAR_OFFSET,
-          duration: immediate ? 0 : 0.7,
-        });
         return;
       }
 
@@ -85,11 +58,7 @@ function ScrollSync() {
     if (window.location.hash) {
       scrollToHash(window.location.hash, previousPathname.current !== pathname);
     } else if (previousPathname.current !== pathname) {
-      if (lenis) {
-        lenis.scrollTo(0, { immediate: true });
-      } else {
-        window.scrollTo({ top: 0, behavior: "auto" });
-      }
+      window.scrollTo({ top: 0, behavior: "auto" });
     }
 
     previousPathname.current = pathname;
@@ -98,42 +67,16 @@ function ScrollSync() {
       document.removeEventListener("click", handleAnchorClick);
       window.removeEventListener("hashchange", handleHashChange);
     };
-  }, [lenis, pathname]);
+  }, [pathname]);
 
   return null;
 }
 
 export default function ScrollProvider({ children }: { children: ReactNode }) {
-  const prefersNativeScroll = usePrefersNativeScroll();
-
-  if (prefersNativeScroll) {
-    return (
-      <>
-        <ScrollSync />
-        {children}
-      </>
-    );
-  }
-
   return (
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.1,
-        duration: 0.75,
-        smoothWheel: true,
-        // Native touch scrolling is smoother and more reliable on mobile.
-        // Lenis syncTouch can feel stuttery on iOS/Android because it replaces
-        // browser momentum with simulated inertia.
-        syncTouch: false,
-        syncTouchLerp: 0.075,
-        wheelMultiplier: 1,
-        touchMultiplier: 1,
-        infinite: false,
-      }}
-    >
+    <>
       <ScrollSync />
       {children}
-    </ReactLenis>
+    </>
   );
 }

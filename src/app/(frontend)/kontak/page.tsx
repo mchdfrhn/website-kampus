@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import PageHeader from '@/components/sections/kontak/PageHeader';
 import MapSection from '@/components/sections/kontak/MapSection';
 import DirectorySection from '@/components/sections/kontak/DirectorySection';
@@ -32,7 +33,7 @@ type SiteSettingsContact = {
   alamat?: string | null
 }
 
-export default async function KontakPage() {
+async function resolveKontakPageData() {
   let pageContent: ContactGlobal = {}
   let unitOptions: { label: string; value: string }[] = []
   let siteSettings: SiteSettingsContact = {}
@@ -57,6 +58,18 @@ export default async function KontakPage() {
   } catch {
     // DB unavailable — use defaults in components
   }
+
+  return { pageContent, unitOptions, siteSettings }
+}
+
+const getKontakPageData = unstable_cache(
+  resolveKontakPageData,
+  ['kontak-page-data'],
+  { revalidate: 60 },
+)
+
+export default async function KontakPage() {
+  const { pageContent, unitOptions, siteSettings } = await getKontakPageData()
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },

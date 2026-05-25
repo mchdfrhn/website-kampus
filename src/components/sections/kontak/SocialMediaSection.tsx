@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 import Link from 'next/link';
 
@@ -57,7 +58,7 @@ const platformLabel: Record<string, string> = {
   tiktok: 'TikTok',
 }
 
-export default async function SocialMediaSection() {
+async function resolveSocialMedia() {
   let socials = defaults
 
   try {
@@ -70,6 +71,18 @@ export default async function SocialMediaSection() {
   } catch {
     // DB unavailable — use defaults
   }
+
+  return socials
+}
+
+const getSocialMedia = unstable_cache(
+  resolveSocialMedia,
+  ['kontak-social-media'],
+  { revalidate: 60 },
+)
+
+export default async function SocialMediaSection() {
+  const socials = await getSocialMedia()
 
   return (
     <section className="bg-white py-20 px-6 lg:px-8">

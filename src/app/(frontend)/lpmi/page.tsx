@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import { ClipboardCheck, FileCheck2, GraduationCap, Handshake, Microscope, ShieldCheck } from 'lucide-react';
 import OverviewPageLayout from '@/components/layout/OverviewPageLayout';
 import { getPayloadClient } from '@/lib/payload';
@@ -42,7 +43,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/lpmi',
 });
 
-export default async function LpmiPage() {
+async function resolveLpmiPageData() {
   let sections = defaultSections;
   let stats = defaultStats;
 
@@ -55,6 +56,18 @@ export default async function LpmiPage() {
   } catch {
     // keep defaults
   }
+
+  return { sections, stats };
+}
+
+const getLpmiPageData = unstable_cache(
+  resolveLpmiPageData,
+  ['lpmi-page-data'],
+  { revalidate: 60 },
+);
+
+export default async function LpmiPage() {
+  const { sections, stats } = await getLpmiPageData();
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },

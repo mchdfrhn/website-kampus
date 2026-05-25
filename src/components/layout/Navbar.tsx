@@ -13,6 +13,7 @@ import {
 } from '@/lib/frontend-section-routing';
 import { synchronizeNavChildren } from '@/lib/section-links';
 import NavbarScrollWrapper from './NavbarScrollWrapper';
+import NavPrefetcher from './NavPrefetcher';
 
 type NavItem = {
   label: string;
@@ -253,6 +254,7 @@ export default async function Navbar() {
 
   return (
     <>
+      <NavPrefetcher navItems={navItems} />
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-200 focus:px-4 focus:py-2 focus:bg-brand-gold focus:text-brand-navy focus:font-bold focus:rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-navy"
@@ -277,6 +279,7 @@ export default async function Navbar() {
                       src={settings.logoUrl}
                       alt={settings.namaInstitusi}
                       fill
+                      sizes="48px"
                       className="object-contain"
                     />
                     </div>

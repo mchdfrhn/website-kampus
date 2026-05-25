@@ -1,4 +1,5 @@
 import { MessageCircle, Phone, Mail, User2, BookOpen, CreditCard, Users, Database, Globe, Megaphone } from 'lucide-react';
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 import type { ElementType } from 'react';
 
@@ -31,7 +32,7 @@ const defaults: UnitItem[] = [
   { unit: 'Humas & Marketing', kepala: 'Ibu Dewi Kartika, S.Sos., M.M.', telepon: '(021) 555-1241', telHref: '+62215551241', email: 'humas@sttpu.ac.id', tugas: 'Media, publikasi, kerjasama media, event, dokumentasi kegiatan' },
 ]
 
-export default async function DirectorySection() {
+async function resolveDirectoryUnits() {
   let units = defaults
 
   try {
@@ -47,6 +48,18 @@ export default async function DirectorySection() {
   } catch {
     // DB unavailable — use defaults
   }
+
+  return units
+}
+
+const getDirectoryUnits = unstable_cache(
+  resolveDirectoryUnits,
+  ['kontak-directory-units'],
+  { revalidate: 60 },
+)
+
+export default async function DirectorySection() {
+  const units = await getDirectoryUnits()
 
   return (
     <section className="bg-gray-50 py-20 px-6 lg:px-8">

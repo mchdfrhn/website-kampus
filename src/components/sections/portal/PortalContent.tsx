@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 import * as LucideIcons from 'lucide-react';
 import {
@@ -251,7 +252,7 @@ function LinkCard({ item }: { item: PortalItem }) {
   );
 }
 
-export default async function PortalContent() {
+async function resolvePortalData() {
   let portalData: PortalData | null = null;
 
   try {
@@ -261,6 +262,18 @@ export default async function PortalContent() {
   } catch (error) {
     console.error('Error fetching portal links:', error);
   }
+
+  return portalData;
+}
+
+const getPortalData = unstable_cache(
+  resolvePortalData,
+  ['portal-links-data'],
+  { revalidate: 60 },
+);
+
+export default async function PortalContent() {
+  const portalData = await getPortalData();
 
   const portals = (portalData?.portals || []).map(getPortal);
   const activeCount = portals.filter((item) => item.url !== '#').length;

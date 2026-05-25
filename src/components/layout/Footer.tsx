@@ -170,6 +170,7 @@ export default async function Footer() {
                       src={(contact as typeof defaultContact & { logoUrl?: string | null }).logoUrl || ''}
                       alt={contact.namaInstitusi || defaultContact.namaInstitusi}
                       fill
+                      sizes="56px"
                       className="object-contain"
                     />
                   </div>

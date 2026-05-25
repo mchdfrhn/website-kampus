@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
 import GaleriContent from '@/components/sections/galeri/GaleriContent';
@@ -35,6 +36,12 @@ async function fetchAlbumList(): Promise<Album[]> {
   return [];
 }
 
+const getAlbumList = unstable_cache(
+  fetchAlbumList,
+  ['galeri-album-list'],
+  { revalidate: 60 },
+);
+
 async function fetchKategoriGaleri(): Promise<AlbumKategori[]> {
   try {
     const payload = await getPayloadClient();
@@ -50,13 +57,21 @@ async function fetchKategoriGaleri(): Promise<AlbumKategori[]> {
   }
 }
 
+const getKategoriGaleri = unstable_cache(
+  fetchKategoriGaleri,
+  ['galeri-kategori-list'],
+  { revalidate: 60 },
+);
+
 export default async function GaleriPage({
   searchParams,
 }: {
   searchParams?: Promise<{ kategori?: string }>;
 }) {
-  const albumList = await fetchAlbumList();
-  const categories = await fetchKategoriGaleri();
+  const [albumList, categories] = await Promise.all([
+    getAlbumList(),
+    getKategoriGaleri(),
+  ]);
   const resolvedSearchParams = (await searchParams) ?? {};
   const initialFilter = resolvedSearchParams.kategori ?? 'semua';
 

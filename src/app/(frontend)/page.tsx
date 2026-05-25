@@ -11,6 +11,7 @@ import WhySttpuSection from '@/components/sections/WhySttpuSection';
 import SambutanKetuaSection, {
   type SambutanKetuaData,
 } from '@/components/sections/SambutanKetuaSection';
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 import { buildPageMetadata } from '@/lib/seo';
 import {
@@ -228,8 +229,14 @@ async function fetchHomePageData() {
   }
 }
 
+const getHomePageData = unstable_cache(
+  fetchHomePageData,
+  ['frontend-home-page-data'],
+  { revalidate: 60 },
+);
+
 export default async function HomePage() {
-  const { halamanUtama, siteSettings, berita, mitra, ketua } = await fetchHomePageData()
+  const { halamanUtama, siteSettings, berita, mitra, ketua } = await getHomePageData()
 
   const quickLinksTabs = (halamanUtama as unknown as { quickLinksTabs?: Tab[] })?.quickLinksTabs || []
   const stats = (halamanUtama as { statistik?: { angka: string; label: string }[] })?.statistik || defaultHomePageData.statistik

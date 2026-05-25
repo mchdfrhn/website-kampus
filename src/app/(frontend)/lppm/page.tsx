@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from 'next/cache';
 import { BookOpenCheck, ClipboardList, Microscope } from 'lucide-react';
 import OverviewPageLayout from '@/components/layout/OverviewPageLayout';
 import { getPayloadClient } from '@/lib/payload';
@@ -26,7 +27,7 @@ export const metadata: Metadata = buildPageMetadata({
   path: '/lppm',
 });
 
-export default async function LppmPage() {
+async function resolveLppmPageData() {
   let sections = resolveLppmSections();
   let stats = defaultStats;
 
@@ -39,6 +40,18 @@ export default async function LppmPage() {
   } catch {
     // keep defaults
   }
+
+  return { sections, stats };
+}
+
+const getLppmPageData = unstable_cache(
+  resolveLppmPageData,
+  ['lppm-page-data'],
+  { revalidate: 60 },
+);
+
+export default async function LppmPage() {
+  const { sections, stats } = await getLppmPageData();
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: 'Beranda', path: '/' },

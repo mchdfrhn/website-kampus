@@ -1,4 +1,5 @@
 import { History, Target, Users, ShieldCheck, Building2, Landmark, Handshake } from 'lucide-react';
+import { unstable_cache } from 'next/cache';
 import { getPayloadClient } from '@/lib/payload';
 import OverviewPageLayout from '@/components/layout/OverviewPageLayout';
 import { resolveTentangSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
@@ -78,7 +79,7 @@ const iconMap: Record<string, typeof History> = {
   '/tentang/kerjasama': Handshake,
 }
 
-export default async function TentangOverview() {
+async function resolveTentangOverviewData() {
   let content = defaultContent
   let sections = defaultSections.map(({ title, desc, href }) => ({ title, desc, href }))
   let stats = defaultStats
@@ -118,6 +119,18 @@ export default async function TentangOverview() {
   }
 
   sections = synchronizeOverviewSections('/tentang', resolvedSections, sections)
+
+  return { content, sections, stats }
+}
+
+const getTentangOverviewData = unstable_cache(
+  resolveTentangOverviewData,
+  ['tentang-overview-data'],
+  { revalidate: 60 },
+)
+
+export default async function TentangOverview() {
+  const { content, sections, stats } = await getTentangOverviewData()
 
   return (
     <OverviewPageLayout
