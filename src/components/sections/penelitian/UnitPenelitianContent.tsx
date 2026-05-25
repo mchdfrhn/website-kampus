@@ -1,4 +1,4 @@
-import { FlaskConical, Users, Phone, MapPin } from 'lucide-react';
+import { FlaskConical, Users, Phone, MapPin, Sparkles } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type UnitItem = {
@@ -10,6 +10,27 @@ type UnitItem = {
   kepala?: string | null;
   lokasi?: string | null;
   kontak?: string | null;
+}
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
 }
 
 export default async function UnitPenelitianContent() {
@@ -27,84 +48,81 @@ export default async function UnitPenelitianContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Unit Penelitian & Laboratorium
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Peta unit riset dan laboratorium aktif di STTPU Jakarta yang menjadi pusat pengembangan
-          keilmuan, eksperimen, dan kolaborasi dengan mahasiswa maupun mitra eksternal.
-        </p>
-      </div>
-
-      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
-        <p className="text-sm text-gray-700 leading-relaxed">
-          STTPU memiliki <strong>{units.length} unit riset dan laboratorium aktif</strong> yang mendukung tridarma
-          perguruan tinggi. Setiap unit dibina oleh dosen doktor berpengalaman dan terbuka untuk
-          kolaborasi penelitian dengan mahasiswa, industri, dan pemerintah.
-        </p>
-      </div>
+    <article className="space-y-10 sm:space-y-12">
+      <SectionCard title="Tridarma Perguruan Tinggi" eyebrow="Research Ecosystem">
+        <div className="flex items-start gap-4 p-5 rounded-2xl border border-brand-navy/10 bg-brand-navy/[0.02]">
+          <Sparkles size={24} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-gray-600 text-sm font-semibold leading-relaxed">
+            STTPU memiliki <strong className="text-brand-navy font-extrabold">{units.length} unit riset dan laboratorium aktif</strong> yang mendukung tridarma
+            perguruan tinggi. Setiap unit dibina oleh dosen doktor berpengalaman dan terbuka untuk
+            kolaborasi penelitian dengan mahasiswa, industri, dan pemerintah.
+          </p>
+        </div>
+      </SectionCard>
 
       {units.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-premium border border-dashed border-gray-200 p-10 text-center text-gray-500 font-bold">
           Data unit penelitian belum tersedia.
         </div>
       ) : (
-      <div className="space-y-5">
-        {units.map((unit) => (
-          <div key={unit.id} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-brand-navy hover:shadow-sm transition-all">
-            <div className="px-5 py-4 border-b border-gray-100 flex items-start gap-3">
-              <div className="w-9 h-9 rounded-lg bg-brand-navy flex items-center justify-center flex-shrink-0">
-                <FlaskConical size={17} className="text-white" aria-hidden="true" />
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-sm leading-snug">{unit.nama}</h3>
-                {unit.singkatan && (
-                  <span className="text-[11px] font-bold text-brand-navy bg-brand-mist px-2 py-0.5 rounded-full inline-block mt-1">{unit.singkatan}</span>
-                )}
-              </div>
-            </div>
-
-            <div className="px-5 py-4 space-y-3">
-              <p className="text-xs text-gray-600 leading-relaxed">{unit.deskripsi}</p>
-
-              {unit.fokus && unit.fokus.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Bidang Riset</p>
-                  <ul className="flex flex-wrap gap-1.5">
-                    {unit.fokus.map((f: { poin?: string | null }, idx: number) => (
-                      <li key={idx} className="text-[11px] bg-gray-100 text-gray-700 px-2.5 py-1 rounded-full">{f.poin}</li>
-                    ))}
-                  </ul>
+        <SectionCard title="Daftar Unit &amp; Lab" eyebrow="List of Centers">
+          <div className="space-y-6">
+            {units.map((unit) => (
+              <div
+                key={unit.id}
+                className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium hover:border-brand-navy/10 transition-all duration-300 group"
+              >
+                <div className="px-6 py-5 border-b border-gray-50 flex items-start gap-4">
+                  <div className="w-11 h-11 rounded-xl bg-brand-navy flex items-center justify-center flex-shrink-0 shadow-sm group-hover:bg-brand-gold transition-colors duration-300">
+                    <FlaskConical size={18} className="text-white group-hover:text-brand-navy transition-colors duration-300" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-brand-navy text-sm sm:text-base group-hover:text-brand-gold transition-colors duration-300 leading-snug">{unit.nama}</h4>
+                    {unit.singkatan && (
+                      <span className="text-[10px] font-black uppercase tracking-wider text-brand-gold bg-brand-navy px-2 py-0.5 rounded mt-1.5 inline-block">{unit.singkatan}</span>
+                    )}
+                  </div>
                 </div>
-              )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-                {unit.kepala && (
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <Users size={13} aria-hidden="true" className="text-gray-400" />
-                    <span><strong className="text-gray-700">{unit.kepala}</strong></span>
+                <div className="p-6 sm:p-8 space-y-5">
+                  <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed">{unit.deskripsi}</p>
+
+                  {unit.fokus && unit.fokus.length > 0 && (
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Fokus &amp; Bidang Riset</p>
+                      <ul className="flex flex-wrap gap-2">
+                        {unit.fokus.map((f: { poin?: string | null }, idx: number) => (
+                          <li key={idx} className="text-[10px] sm:text-xs font-bold bg-brand-navy/[0.03] text-brand-navy border border-brand-navy/5 px-3 py-1 rounded-lg">{f.poin}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-5 border-t border-gray-50 text-gray-500 font-semibold text-xs">
+                    {unit.kepala && (
+                      <div className="flex items-center gap-2">
+                        <Users size={14} aria-hidden="true" className="text-brand-navy" />
+                        <span><strong className="text-brand-navy">Ka. Lab:</strong> {unit.kepala}</span>
+                      </div>
+                    )}
+                    {unit.lokasi && (
+                      <div className="flex items-center gap-2">
+                        <MapPin size={14} aria-hidden="true" className="text-brand-navy" />
+                        <span>{unit.lokasi}</span>
+                      </div>
+                    )}
+                    {unit.kontak && (
+                      <div className="flex items-center gap-2">
+                        <Phone size={14} aria-hidden="true" className="text-brand-navy" />
+                        <span>{unit.kontak}</span>
+                      </div>
+                    )}
                   </div>
-                )}
-                {unit.lokasi && (
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <MapPin size={13} aria-hidden="true" className="text-gray-400" />
-                    {unit.lokasi}
-                  </div>
-                )}
-                {unit.kontak && (
-                  <div className="flex items-center gap-1.5 text-xs text-gray-500">
-                    <Phone size={13} aria-hidden="true" className="text-gray-400" />
-                    {unit.kontak}
-                  </div>
-                )}
+                </div>
               </div>
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </SectionCard>
       )}
     </article>
   );

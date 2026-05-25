@@ -70,9 +70,9 @@ export default function FrontendNotFound() {
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-4 rounded-[2rem] border border-brand-gold/10 -rotate-2 opacity-80 transition-all duration-700" aria-hidden="true" />
-            <div className="absolute -inset-4 rounded-[2rem] border border-white/5 rotate-1 opacity-80 transition-all duration-700" aria-hidden="true" />
-            <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 text-white shadow-[0_30px_80px_rgba(0,22,51,0.3)] backdrop-blur-2xl">
+            <div className="absolute -inset-4 rounded-premium-lg border border-brand-gold/10 -rotate-2 opacity-80 transition-all duration-700" aria-hidden="true" />
+            <div className="absolute -inset-4 rounded-premium-lg border border-white/5 rotate-1 opacity-80 transition-all duration-700" aria-hidden="true" />
+            <div className="relative overflow-hidden rounded-premium-lg border border-white/10 bg-white/[0.03] p-6 text-white shadow-[0_30px_80px_rgba(0,22,51,0.3)] backdrop-blur-2xl">
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-gold via-[#ffd76d] to-brand-navy-light" />
               <div className="absolute -right-10 top-8 h-28 w-28 rounded-full bg-white/[0.03] blur-2xl" aria-hidden="true" />
 
@@ -86,7 +86,7 @@ export default function FrontendNotFound() {
                 </div>
               </div>
 
-              <div className="mt-6 overflow-hidden rounded-[1.7rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
+              <div className="mt-6 overflow-hidden rounded-premium border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5">
                 <div className="relative rounded-[1.4rem] border border-white/8 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),rgba(255,255,255,0.02)_58%,transparent)] px-4 py-5">
                   <svg className="absolute inset-0 h-full w-full opacity-90" viewBox="0 0 360 220" fill="none" aria-hidden="true">
                     <circle cx="262" cy="68" r="58" stroke="rgba(255,255,255,0.08)" />

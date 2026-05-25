@@ -14,7 +14,7 @@ export function Skeleton({
 
 export function CardSkeleton() {
   return (
-    <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden p-8 h-full">
+    <div className="bg-white border border-gray-100 rounded-premium-lg overflow-hidden p-8 h-full">
       <Skeleton className="h-48 w-full rounded-2xl mb-6" />
       <Skeleton className="h-4 w-1/4 mb-4" />
       <Skeleton className="h-6 w-3/4 mb-4" />

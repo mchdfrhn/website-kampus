@@ -1,4 +1,4 @@
-import { GraduationCap, Award, BookOpen, User } from 'lucide-react';
+import { GraduationCap, Award, BookOpen, User, Briefcase } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type PimpinanItem = {
@@ -11,6 +11,27 @@ type PimpinanItem = {
   sambutan?: string
   urutan?: number
   foto?: { url?: string } | null
+}
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
 }
 
 export default async function PimpinanContent() {
@@ -30,104 +51,97 @@ export default async function PimpinanContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Pimpinan Institusi
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Kenali para pemimpin STTPU Jakarta yang mengarahkan visi dan strategi institusi dalam mencetak lulusan berkualitas di bidang teknologi dan ilmu pengetahuan terapan.
-        </p>
-      </div>
-
+    <article className="space-y-10 sm:space-y-12">
       {pimpinan.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-premium border border-dashed border-gray-200 p-12 text-center text-gray-400 font-semibold text-sm">
           Data pimpinan belum tersedia.
         </div>
-      ) : null}
-      {pimpinan.map((person, idx) => (
-        <section
-          key={idx}
-          className="border border-gray-200 rounded-xl overflow-hidden"
-        >
-          <div className={`${idx === 0 ? 'bg-brand-navy' : 'bg-brand-mist'} px-6 py-3`}>
-            <p
-              className={`font-bold text-xs uppercase tracking-wide ${idx === 0 ? 'text-brand-gold' : 'text-brand-navy'}`}
-            >
-              {person.jabatan}
-            </p>
-          </div>
-
-          <div className="p-6">
-            <div className="flex flex-col sm:flex-row gap-6">
-              <div className="flex-shrink-0">
-                {person.foto?.url ? (
-                  <img src={person.foto.url} alt={person.nama} className="w-24 h-28 object-cover rounded-lg border border-gray-200" />
-                ) : (
-                  <div
-                    className="w-24 h-28 bg-gray-100 border border-gray-200 rounded-lg flex items-center justify-center"
-                    aria-hidden="true"
-                  >
-                    <User size={32} className="text-gray-400" />
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1 space-y-4">
-                <div>
-                  <h3 className="font-bold text-lg text-gray-900 leading-tight">{person.nama}</h3>
-                  {person.nip && <p className="text-gray-500 text-xs mt-0.5">{person.nip}</p>}
-                  {person.keahlian && (
-                    <p className="text-brand-navy text-sm font-medium mt-1">{person.keahlian}</p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-brand-mist/40 rounded-xl p-4 border border-gray-100">
-                  {person.pendidikan && person.pendidikan.length > 0 && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <GraduationCap size={15} className="text-brand-gold" aria-hidden="true" />
-                        <h3 className="font-semibold text-gray-800 text-sm">Riwayat Pendidikan</h3>
-                      </div>
-                      <ul className="space-y-1">
-                        {person.pendidikan.map((edu, i) => (
-                          <li key={i} className="text-gray-600 text-xs leading-relaxed flex items-start gap-2">
-                            <span className="text-brand-gold mt-1" aria-hidden="true">•</span>
-                            {edu.jenjang}
-                          </li>
-                        ))}
-                      </ul>
+      ) : (
+        <div className="space-y-8 sm:space-y-10">
+          {pimpinan.map((person, idx) => (
+            <SectionCard key={idx} title={person.nama} eyebrow={person.jabatan}>
+              <div className="flex flex-col md:flex-row gap-8">
+                {/* Photo Profile block */}
+                <div className="flex-shrink-0 flex justify-center md:justify-start">
+                  {person.foto?.url ? (
+                    <div className="relative group">
+                      <div className="absolute inset-0 rounded-2xl bg-brand-gold/10 blur-md group-hover:bg-brand-gold/25 transition-colors duration-300" />
+                      <img
+                        src={person.foto.url}
+                        alt={person.nama}
+                        className="relative w-36 h-48 sm:w-40 sm:h-52 object-cover rounded-2xl border-2 border-white shadow-md z-10"
+                      />
                     </div>
-                  )}
-
-                  {person.pengalaman && (
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Award size={15} className="text-brand-gold" aria-hidden="true" />
-                        <h3 className="font-semibold text-gray-800 text-sm">Pengalaman</h3>
-                      </div>
-                      <p className="text-gray-600 text-xs leading-relaxed">{person.pengalaman}</p>
+                  ) : (
+                    <div
+                      className="w-36 h-48 sm:w-40 sm:h-52 bg-gray-50 border border-gray-100 rounded-2xl flex flex-col items-center justify-center text-gray-400 gap-2 shadow-inner"
+                      aria-hidden="true"
+                    >
+                      <User size={36} className="text-gray-300" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-300">No Photo</span>
                     </div>
                   )}
                 </div>
 
-                {person.sambutan && (
-                  <div className="bg-brand-mist rounded-lg p-4 border-l-4 border-brand-gold">
-                    <div className="flex items-center gap-2 mb-2">
-                      <BookOpen size={14} className="text-brand-navy" aria-hidden="true" />
-                      <h3 className="font-semibold text-brand-navy text-sm">Sambutan {person.jabatan}</h3>
-                    </div>
-                    <p className="text-gray-700 text-sm leading-relaxed italic">
-                      &ldquo;{person.sambutan}&rdquo;
-                    </p>
+                {/* Profile Metadata Details */}
+                <div className="flex-1 space-y-6">
+                  <div>
+                    {person.nip && (
+                      <p className="text-gray-400 text-xs sm:text-sm font-semibold">NIP: {person.nip}</p>
+                    )}
+                    {person.keahlian && (
+                      <span className="inline-block bg-brand-navy/5 text-brand-navy font-bold text-xs px-2.5 py-1 rounded-md mt-3">
+                        {person.keahlian}
+                      </span>
+                    )}
                   </div>
-                )}
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-5 rounded-2xl border border-gray-100 bg-gray-50/50">
+                    {person.pendidikan && person.pendidikan.length > 0 && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-brand-navy">
+                          <GraduationCap size={16} className="text-brand-gold" aria-hidden="true" />
+                          <h4 className="font-bold text-xs sm:text-sm uppercase tracking-wider">Riwayat Pendidikan</h4>
+                        </div>
+                        <ul className="space-y-2">
+                          {person.pendidikan.map((edu, i) => (
+                            <li key={i} className="text-gray-600 text-xs sm:text-sm font-semibold flex items-start gap-2 leading-relaxed">
+                              <span className="text-brand-gold mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-gold" aria-hidden="true" />
+                              <span>{edu.jenjang}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {person.pengalaman && (
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2 text-brand-navy">
+                          <Briefcase size={16} className="text-brand-gold" aria-hidden="true" />
+                          <h4 className="font-bold text-xs sm:text-sm uppercase tracking-wider">Pengalaman</h4>
+                        </div>
+                        <p className="text-gray-600 text-xs sm:text-sm leading-relaxed font-semibold">{person.pengalaman}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {person.sambutan && (
+                    <div className="relative bg-brand-mist/20 rounded-2xl p-5 sm:p-6 border-l-4 border-brand-gold shadow-sm">
+                      <div className="flex items-center gap-2 mb-3 text-brand-navy">
+                        <BookOpen size={16} aria-hidden="true" />
+                        <h4 className="font-bold text-xs sm:text-sm uppercase tracking-wider">Sambutan Pimpinan</h4>
+                      </div>
+                      <p className="text-gray-600 text-sm leading-relaxed font-semibold italic">
+                        &ldquo;{person.sambutan}&rdquo;
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-        </section>
-      ))}
+            </SectionCard>
+          ))}
+        </div>
+      )}
     </article>
   );
 }

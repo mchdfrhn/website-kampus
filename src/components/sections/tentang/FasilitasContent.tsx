@@ -1,5 +1,6 @@
-import { ImageOff } from 'lucide-react';
+import { ImageOff, Sparkles, Building2, MapPin } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 
 type FasilitasItem = {
   nama: string
@@ -8,6 +9,27 @@ type FasilitasItem = {
   items?: { nama: string }[]
   foto?: { url?: string } | null
   kategori?: string
+}
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
 }
 
 export default async function FasilitasContent() {
@@ -40,98 +62,103 @@ export default async function FasilitasContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Fasilitas Kampus
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Dukung proses belajar dan pengembangan diri dengan fasilitas lengkap yang tersedia di kampus STTPU Jakarta, dirancang untuk menciptakan lingkungan akademik yang kondusif.
-        </p>
-      </div>
-
+    <article className="space-y-10 sm:space-y-12">
       {intro ? (
-        <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
-          <p className="text-gray-700 text-sm leading-relaxed">{intro}</p>
-        </div>
+        <SectionCard title="Sarana &amp; Prasarana" eyebrow="Environment">
+          <div className="flex items-start gap-4 p-5 rounded-2xl border border-brand-gold/15 bg-brand-gold/[0.03]">
+            <Building2 size={24} className="text-brand-navy flex-shrink-0" aria-hidden="true" />
+            <p className="text-gray-600 text-sm font-semibold leading-relaxed">{intro}</p>
+          </div>
+        </SectionCard>
       ) : null}
 
-      {fasilitas.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
-          Data fasilitas belum tersedia.
-        </div>
-      ) : (
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-5" aria-label="Daftar fasilitas STTPU">
-        {fasilitas.map((item, idx) => (
-          <li
-            key={idx}
-            className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-md transition-shadow"
-          >
-            {item.foto?.url ? (
-              <img src={item.foto.url} alt={item.nama} className="h-36 w-full object-cover" />
-            ) : (
-              <div className="h-36 bg-brand-mist flex items-center justify-center border-b border-gray-200">
-                <ImageOff size={28} className="text-gray-400" aria-hidden="true" />
-              </div>
-            )}
-            <div className="p-4">
-              <div className="flex items-start gap-3 mb-3">
-                <div
-                  className="w-9 h-9 bg-brand-navy rounded-lg flex items-center justify-center flex-shrink-0 text-brand-gold font-black text-sm"
-                  aria-hidden="true"
-                >
-                  {idx + 1}
-                </div>
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="font-bold text-gray-900 text-sm leading-tight">{item.nama}</h3>
-                    {item.kategori && (
-                      <span className="bg-brand-mist text-brand-navy text-[10px] font-semibold px-2 py-0.5 rounded-full">
-                        {item.kategori}
-                      </span>
-                    )}
-                  </div>
-                  {item.kapasitas && (
-                    <p className="text-gray-500 text-xs mt-0.5">Kapasitas: {item.kapasitas}</p>
+      <SectionCard title="Daftar Fasilitas" eyebrow="Directory">
+        {fasilitas.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-gray-200 p-10 text-center text-gray-400 font-semibold text-sm">
+            Data fasilitas belum tersedia.
+          </div>
+        ) : (
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-6" aria-label="Daftar fasilitas STTPU">
+            {fasilitas.map((item, idx) => (
+              <li
+                key={idx}
+                className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium hover:border-brand-navy/10 transition-all duration-300 flex flex-col group"
+              >
+                <div className="relative overflow-hidden h-40 bg-gray-50 flex items-center justify-center">
+                  {item.foto?.url ? (
+                    <img
+                      src={item.foto.url}
+                      alt={item.nama}
+                      className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center text-gray-300 gap-2">
+                      <ImageOff size={28} aria-hidden="true" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider">No Photo</span>
+                    </div>
+                  )}
+                  {item.kategori && (
+                    <span className="absolute top-4 left-4 bg-brand-navy/90 text-brand-gold text-[9px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md shadow-sm z-10">
+                      {item.kategori}
+                    </span>
                   )}
                 </div>
-              </div>
-              {item.deskripsi && (
-                <p className="text-gray-600 text-xs leading-relaxed mb-3">{item.deskripsi}</p>
-              )}
-              {item.items && item.items.length > 0 && (
-                <ul className="flex flex-wrap gap-1.5">
-                  {item.items.map((f, i) => (
-                    <li
-                      key={i}
-                      className="inline-block bg-brand-mist text-brand-navy text-[10px] px-2 py-0.5 rounded font-medium border border-gray-200"
-                    >
-                      {f.nama}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
-      )}
+                
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h4 className="font-bold text-brand-navy text-sm sm:text-base leading-tight">{item.nama}</h4>
+                      {item.kapasitas && (
+                        <span className="shrink-0 text-gray-400 text-[10px] font-bold uppercase tracking-wider bg-gray-50 px-2 py-0.5 rounded border border-gray-100">
+                          Cap: {item.kapasitas}
+                        </span>
+                      )}
+                    </div>
+                    {item.deskripsi && (
+                      <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed mb-4">{item.deskripsi}</p>
+                    )}
+                  </div>
+
+                  {item.items && item.items.length > 0 && (
+                    <ul className="flex flex-wrap gap-1.5 pt-3 border-t border-gray-50">
+                      {item.items.map((f, i) => (
+                        <li
+                          key={i}
+                          className="inline-block bg-brand-navy/5 text-brand-navy text-[10px] px-2 py-1 rounded-md font-bold"
+                        >
+                          {f.nama}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </SectionCard>
 
       {ctaTitle || ctaDescription || ctaButtonLabel ? (
-        <div className="bg-brand-navy rounded-2xl p-6 sm:p-8 text-white relative overflow-hidden">
-          <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              {ctaTitle ? <p className="font-bold text-base sm:text-lg mb-1">{ctaTitle}</p> : null}
-              {ctaDescription ? <p className="text-white/70 text-sm leading-relaxed max-w-lg">{ctaDescription}</p> : null}
+        <section className="relative overflow-hidden rounded-premium bg-brand-navy text-white shadow-2xl shadow-brand-navy/15 sm:rounded-premium-lg">
+          <BlueAbstractBackground />
+          <div className="relative z-10 px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+              <div>
+                {ctaTitle && <p className="font-bold text-lg sm:text-xl mb-2">{ctaTitle}</p>}
+                {ctaDescription && <p className="text-white/80 text-sm font-semibold leading-relaxed max-w-xl">{ctaDescription}</p>}
+              </div>
+              {ctaButtonLabel && (
+                <a
+                  href={ctaButtonHref}
+                  className="shrink-0 inline-flex items-center gap-1.5 bg-brand-gold text-brand-navy font-bold text-sm px-6 py-3.5 rounded-xl hover:bg-white hover:text-brand-navy transition-colors shadow-lg"
+                >
+                  <Sparkles size={16} />
+                  {ctaButtonLabel}
+                </a>
+              )}
             </div>
-            {ctaButtonLabel ? (
-              <a href={ctaButtonHref} className="shrink-0 inline-block bg-brand-gold text-brand-navy font-bold text-sm px-6 py-3 rounded-xl hover:bg-white transition-colors">
-                {ctaButtonLabel}
-              </a>
-            ) : null}
           </div>
-        </div>
+        </section>
       ) : null}
     </article>
   );

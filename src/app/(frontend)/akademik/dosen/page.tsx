@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
-import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import DosenGrid from '@/components/sections/akademik/DosenGrid';
-import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
@@ -55,13 +54,11 @@ async function fetchProgramOrder(): Promise<string[]> {
 }
 
 export default async function DosenPage() {
-  const [fetchedDosenList, programOrder, navigation, pageContent] = await Promise.all([
+  const [fetchedDosenList, programOrder, pageContent] = await Promise.all([
     fetchDosenList(),
     fetchProgramOrder(),
-    getAkademikNavigation(),
     getAkademikPageContent(),
   ]);
-  const { sidebarTitle, links } = navigation;
 
   return (
     <>
@@ -69,20 +66,20 @@ export default async function DosenPage() {
         title="Direktori Dosen"
         subtitle="Tenaga pengajar STTPU Jakarta yang berpengalaman, berkualifikasi tinggi, dan aktif dalam penelitian serta pengabdian masyarakat."
         breadcrumbs={[
-          { label: 'Akademik' },
-          { label: 'Dosen' },
+          { label: 'Akademik', href: '/akademik' },
+          { label: 'Dosen', href: '/akademik/dosen' },
         ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <AkademikSidebar pathname="/akademik/dosen" title={sidebarTitle} links={links} />
-          <div className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
+          <div className="min-w-0">
             <DosenGrid
               dosenList={fetchedDosenList}
               programOrder={programOrder}
               content={pageContent.dosenContent}
             />
           </div>
+          <AkademikSidebar currentPath="/akademik/dosen" />
         </div>
       </div>
     </>

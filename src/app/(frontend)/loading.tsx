@@ -19,31 +19,20 @@ export default function FrontendLoading() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-[18rem_1fr]">
-          <div className="hidden rounded-[1.75rem] border border-gray-100 bg-white p-5 shadow-premium lg:block">
-            <div className="h-5 w-32 animate-pulse rounded-full bg-gray-100" />
-            <div className="mt-6 space-y-3">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="h-10 animate-pulse rounded-2xl bg-gray-100" />
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <div
-                key={index}
-                className="rounded-[1.75rem] border border-gray-100 bg-white p-6 shadow-premium"
-              >
-                <div className="h-5 w-2/5 animate-pulse rounded-full bg-gray-100" />
-                <div className="mt-5 space-y-3">
-                  <div className="h-4 animate-pulse rounded-full bg-gray-100" />
-                  <div className="h-4 w-11/12 animate-pulse rounded-full bg-gray-100" />
-                  <div className="h-4 w-2/3 animate-pulse rounded-full bg-gray-100" />
-                </div>
+        <div className="space-y-4">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium"
+            >
+              <div className="h-5 w-2/5 animate-pulse rounded-full bg-gray-100" />
+              <div className="mt-5 space-y-3">
+                <div className="h-4 animate-pulse rounded-full bg-gray-100" />
+                <div className="h-4 w-11/12 animate-pulse rounded-full bg-gray-100" />
+                <div className="h-4 w-2/3 animate-pulse rounded-full bg-gray-100" />
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

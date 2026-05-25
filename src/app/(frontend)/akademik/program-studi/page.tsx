@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import { unstable_cache } from 'next/cache';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
-import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import ProgramStudiGrid from '@/components/sections/akademik/ProgramStudiGrid';
-import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
 import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
@@ -37,10 +36,7 @@ const fetchProdiList = unstable_cache(async (): Promise<ProgramStudi[]> => {
 
 export default async function ProgramStudiPage() {
   const prodiList = await fetchProdiList();
-  const [{ sidebarTitle, links }, pageContent] = await Promise.all([
-    getAkademikNavigation(),
-    getAkademikPageContent(),
-  ]);
+  const pageContent = await getAkademikPageContent();
 
   return (
     <>
@@ -48,16 +44,16 @@ export default async function ProgramStudiPage() {
         title="Program Studi"
         subtitle="Empat program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum dan infrastruktur nasional."
         breadcrumbs={[
-          { label: 'Akademik' },
-          { label: 'Program Studi' },
+          { label: 'Akademik', href: '/akademik' },
+          { label: 'Program Studi', href: '/akademik/program-studi' },
         ]}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <AkademikSidebar pathname="/akademik/program-studi" title={sidebarTitle} links={links} />
-          <div className="flex-1 min-w-0">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
+          <div className="min-w-0">
             <ProgramStudiGrid prodiList={prodiList} content={pageContent.programStudiContent} />
           </div>
+          <AkademikSidebar currentPath="/akademik/program-studi" />
         </div>
       </div>
     </>

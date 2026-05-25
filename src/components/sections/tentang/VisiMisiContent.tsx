@@ -1,5 +1,27 @@
-import { Eye } from 'lucide-react';
+import { Eye, Shield, Target, Award } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
 
 export default async function VisiMisiContent() {
   let visi = ''
@@ -26,90 +48,81 @@ export default async function VisiMisiContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Visi, Misi &amp; Nilai
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Landasan filosofis dan arah strategis STTPU Jakarta dalam menjalankan Tridharma Perguruan Tinggi serta membentuk karakter lulusan yang unggul dan berintegritas.
-        </p>
-      </div>
-
-      <section className="bg-brand-navy rounded-xl p-7 text-white">
-        <div className="flex items-start gap-4">
-          <div className="w-10 h-10 bg-brand-gold rounded-lg flex items-center justify-center flex-shrink-0">
-            <Eye size={18} className="text-brand-navy" aria-hidden="true" />
-          </div>
-          <div>
-            <h3 className="font-bold text-lg mb-3">Visi</h3>
-            <p className="text-white/90 leading-relaxed text-sm">{visi}</p>
+    <article className="space-y-10 sm:space-y-12">
+      {/* Visi Section */}
+      <section className="relative overflow-hidden rounded-premium bg-brand-navy text-white shadow-2xl shadow-brand-navy/15 sm:rounded-premium-lg">
+        <BlueAbstractBackground />
+        <div className="relative z-10 px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+          <div className="flex items-start gap-5">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-white/10 text-brand-gold">
+              <Eye size={22} strokeWidth={2.4} aria-hidden="true" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.24em] text-brand-gold">Visi Strategis</p>
+              <h3 className="mt-2 text-2xl font-bold tracking-tight">Visi Institusi</h3>
+              <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+              <p className="mt-6 text-base sm:text-lg font-medium leading-8 text-white/80 italic">
+                &ldquo;{visi}&rdquo;
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section>
-        <h3 className="text-xl font-bold text-brand-navy mb-1">Misi</h3>
-        <p className="text-gray-500 text-sm mb-5">Langkah-langkah strategis STTPU Jakarta dalam mewujudkan visi institusi.</p>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6">
-          <ol className="space-y-3" aria-label="Misi STTPU">
-            {misi.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3.5 text-sm text-gray-700 leading-relaxed">
-                <span
-                  className="flex-shrink-0 w-6 h-6 rounded-full bg-brand-gold/15 text-brand-navy font-bold text-xs flex items-center justify-center mt-0.5"
-                  aria-hidden="true"
-                >
-                  {idx + 1}
-                </span>
-                {item}
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
+      {/* Misi Section */}
+      <SectionCard title="Misi Kami" eyebrow="Mission">
+        <ol className="space-y-4" aria-label="Misi STTPU">
+          {misi.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-4">
+              <span
+                className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-navy/5 text-brand-navy font-bold text-sm"
+                aria-hidden="true"
+              >
+                {(idx + 1).toString().padStart(2, '0')}
+              </span>
+              <span className="pt-1.5 text-sm font-semibold leading-relaxed text-gray-600 sm:text-[15px]">{item}</span>
+            </li>
+          ))}
+        </ol>
+      </SectionCard>
 
-      <section>
-        <h3 className="text-xl font-bold text-brand-navy mb-1">Tujuan</h3>
-        <p className="text-gray-500 text-sm mb-5">Sasaran spesifik yang ingin dicapai STTPU Jakarta melalui proses pendidikan.</p>
-        <div className="bg-white border border-gray-200 rounded-xl p-5 sm:p-6">
-          <ul className="space-y-3" aria-label="Tujuan STTPU">
-            {tujuan.map((item, idx) => (
-              <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed">
-                <span
-                  className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-brand-gold mt-2"
-                  aria-hidden="true"
-                />
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {/* Tujuan Section */}
+      <SectionCard title="Tujuan Pendidikan" eyebrow="Objective">
+        <ul className="space-y-4" aria-label="Tujuan STTPU">
+          {tujuan.map((item, idx) => (
+            <li key={idx} className="flex items-start gap-4 text-sm font-semibold leading-relaxed text-gray-600 sm:text-[15px]">
+              <span
+                className="mt-2.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-gold"
+                aria-hidden="true"
+              />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </SectionCard>
 
-      <section>
-        <h3 className="text-xl font-bold text-brand-navy mb-1">Nilai-Nilai Kami</h3>
-        <p className="text-gray-500 text-sm mb-5">Prinsip-prinsip yang menjadi landasan perilaku dan budaya institusi.</p>
+      {/* Nilai-Nilai Section */}
+      <SectionCard title="Nilai-Nilai Utama" eyebrow="Values">
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4" aria-label="Nilai-nilai STTPU">
           {nilaiNilai.map(({ nama, deskripsi }) => (
             <li
               key={nama}
-              className="flex items-start gap-3 p-4 bg-brand-mist rounded-xl border border-gray-200"
+              className="flex items-start gap-4 p-5 rounded-2xl border border-gray-100 bg-gray-50 transition-all hover:bg-white hover:shadow-premium hover:border-brand-navy/10 duration-300"
             >
               <div
-                className="w-9 h-9 bg-brand-navy rounded-lg flex items-center justify-center flex-shrink-0 text-brand-gold font-black text-sm"
+                className="w-10 h-10 bg-brand-navy/5 rounded-xl flex items-center justify-center flex-shrink-0 text-brand-navy font-black text-base"
                 aria-hidden="true"
               >
                 {nama[0]}
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm mb-1">{nama}</p>
-                {deskripsi && <p className="text-gray-600 text-xs leading-relaxed">{deskripsi}</p>}
+                <p className="font-bold text-brand-navy text-sm sm:text-base leading-tight mb-2">{nama}</p>
+                {deskripsi && <p className="text-gray-500 text-xs sm:text-sm leading-relaxed font-semibold">{deskripsi}</p>}
               </div>
             </li>
           ))}
         </ul>
-      </section>
+      </SectionCard>
     </article>
   );
 }

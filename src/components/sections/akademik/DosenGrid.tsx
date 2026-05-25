@@ -216,17 +216,6 @@ export default function DosenGrid({
 
   return (
     <section className="py-10 sm:py-12">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Temukan Dosen Berdasarkan Program Studi
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          {content?.gridIntroText ||
-            'Jelajahi tenaga pengajar STTPU Jakarta berdasarkan afiliasi program studi untuk melihat fokus keahlian, publikasi, dan profil akademik mereka dalam satu alur yang lebih rapi.'}
-        </p>
-      </div>
-
       {list.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
           Data dosen belum tersedia.
@@ -270,7 +259,7 @@ export default function DosenGrid({
           </div>
 
           <section
-            className="rounded-2xl border border-gray-100 bg-white p-5 shadow-premium sm:p-8"
+            className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10"
             role="tabpanel"
             id={`panel-${activeGroup.program.replace(/\s+/g, '-').toLowerCase()}`}
             aria-labelledby={`tab-${activeGroup.program.replace(/\s+/g, '-').toLowerCase()}`}

@@ -14,6 +14,8 @@
   --color-brand-mist: #f0f4f8;
   --shadow-premium: 0 10px 30px -5px rgba(0, 22, 51, 0.1), 0 10px 10px -5px rgba(0, 22, 51, 0.04);
   --shadow-premium-hover: 0 20px 40px -10px rgba(0, 22, 51, 0.15), 0 15px 15px -8px rgba(0, 22, 51, 0.08);
+  --radius-premium: 1.75rem;
+  --radius-premium-lg: 2rem;
 }
 
 @layer base {

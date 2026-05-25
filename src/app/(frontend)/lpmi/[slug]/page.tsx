@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import {
   Award,
   BookOpenCheck,
+  ChevronRight,
   ClipboardCheck,
   Download,
   FileCheck2,
@@ -76,7 +77,7 @@ const lpmiSections: LpmiSection[] = [
       'Komitmen pimpinan terhadap sistem penjaminan mutu internal.',
       'Keterlibatan seluruh unit dalam siklus PPEPP.',
       'Pengelolaan dokumen mutu yang tertelusur dan mudah diaudit.',
-      'Pemanfaatan hasil evaluasi untuk rencana tindak lanjut.',
+      'Penggunaan hasil evaluasi untuk rencana tindak lanjut.',
     ],
     documents: [
       'Kebijakan SPMI STTPU',
@@ -211,7 +212,7 @@ const lpmiSections: LpmiSection[] = [
     ],
     documents: [
       'Roadmap penelitian',
-      'Pedoman proposal dan laporan penelitian',
+      'Pedoman proposal and laporan penelitian',
       'Instrumen evaluasi luaran penelitian',
       'Daftar publikasi dan rekam jejak penelitian',
     ],
@@ -263,11 +264,6 @@ const lpmiSections: LpmiSection[] = [
   },
 ];
 
-const sidebarLinks = lpmiSections.map((section) => ({
-  label: section.breadcrumb,
-  href: `/lpmi/${section.slug}`,
-}));
-
 const iconMap = [ShieldCheck, ClipboardCheck, GraduationCap, Microscope, Handshake];
 
 const fetchLpmiDocuments = unstable_cache(async (sectionSlug: string): Promise<LpmiDocument[]> => {
@@ -299,6 +295,29 @@ function formatFileSize(value?: number | null) {
   return `${(value / 1024 / 1024).toFixed(1)} MB`;
 }
 
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+  className = '',
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={`rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10 ${className}`}>
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
+
 export function generateStaticParams() {
   return lpmiSections.map((section) => ({ slug: section.slug }));
 }
@@ -321,41 +340,6 @@ export async function generateMetadata({
   });
 }
 
-function LpmiSidebar({ pathname }: { pathname: string }) {
-  return (
-    <aside className="w-full flex-shrink-0 lg:w-72 lg:self-start">
-      <div className="overflow-hidden rounded-[1.75rem] border border-gray-100 bg-white shadow-premium transition-all sm:rounded-[2rem]">
-        <div className="bg-brand-navy px-4 py-4 sm:px-6 sm:py-5">
-          <p className="text-xs font-black tracking-[0.08em] text-white">Navigasi LPMI</p>
-        </div>
-        <nav aria-label="Navigasi LPMI">
-          <ul role="list">
-            {sidebarLinks.map((link) => {
-              const active = pathname === link.href;
-              return (
-                <li key={link.href} className="border-b border-gray-50 last:border-0">
-                  <Link
-                    href={link.href}
-                    aria-current={active ? 'page' : undefined}
-                    className={`flex items-center justify-between gap-3 border-l-4 px-4 py-3.5 text-sm leading-snug transition-all duration-300 sm:px-6 sm:py-4 ${
-                      active
-                        ? 'border-brand-gold bg-brand-navy/[0.02] font-black text-brand-navy'
-                        : 'border-transparent font-bold text-gray-400 hover:bg-gray-50 hover:text-brand-navy'
-                    }`}
-                  >
-                    <span className="min-w-0">{link.label}</span>
-                    {active && <span className="h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-gold" />}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </div>
-    </aside>
-  );
-}
-
 export default async function LpmiSlugPage({
   params,
 }: {
@@ -375,6 +359,12 @@ export default async function LpmiSlugPage({
     { name: section.breadcrumb, path: `/lpmi/${section.slug}` },
   ]);
 
+  const sidebarTitle = 'Menu LPMI';
+  const sidebarLinks = lpmiSections.map((item) => ({
+    label: item.breadcrumb,
+    href: `/lpmi/${item.slug}`,
+  }));
+
   return (
     <>
       <script
@@ -392,159 +382,230 @@ export default async function LpmiSlugPage({
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
-          <LpmiSidebar pathname={`/lpmi/${section.slug}`} />
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
+          <div className="min-w-0 space-y-8">
+            <div className="space-y-8">
 
-          <div className="flex-1 min-w-0 pt-10 sm:pt-12 lg:pt-10">
-            <div className="mb-12 text-center lg:mb-16 lg:text-left">
-              <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-                {section.contentTitle}
-              </h2>
-              <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-              <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-                {section.contentSubtitle}
-              </p>
+              <section className="overflow-hidden rounded-premium border border-gray-100 bg-white shadow-premium sm:rounded-premium-lg">
+                <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
+                  <div className="p-6 sm:p-8 lg:p-10">
+                    <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-navy">
+                      <HeroIcon size={26} strokeWidth={2.4} />
+                    </div>
+                    <p className="text-sm font-semibold leading-7 text-gray-600 sm:text-base">
+                      {section.intro}
+                    </p>
+                  </div>
+                  <div className="bg-brand-mist p-6 sm:p-8 lg:p-10">
+                    <p className="mb-5 text-xs font-black uppercase tracking-[0.12em] text-brand-navy/60">
+                      Siklus Mutu
+                    </p>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-5 lg:grid-cols-1">
+                      {['Penetapan', 'Pelaksanaan', 'Evaluasi', 'Pengendalian', 'Peningkatan'].map((item) => (
+                        <div
+                          key={item}
+                          className="flex items-center gap-3 rounded-2xl border border-white bg-white px-4 py-3 shadow-sm"
+                        >
+                          <FileCheck2 className="h-4 w-4 flex-shrink-0 text-brand-gold-dark" />
+                          <span className="text-sm font-black text-brand-navy">{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </section>
             </div>
 
-            <section className="overflow-hidden rounded-[1.75rem] border border-gray-100 bg-white shadow-premium sm:rounded-[2rem]">
-              <div className="grid gap-0 lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="p-6 sm:p-8 lg:p-10">
-                  <div className="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-gold/15 text-brand-navy">
-                    <HeroIcon size={26} strokeWidth={2.4} />
-                  </div>
-                  <p className="text-sm font-semibold leading-7 text-gray-600 sm:text-base">
-                    {section.intro}
-                  </p>
-                </div>
-                <div className="bg-brand-mist p-6 sm:p-8 lg:p-10">
-                  <p className="mb-5 text-xs font-black uppercase tracking-[0.12em] text-brand-navy/60">
-                    Siklus Mutu
-                  </p>
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-5 lg:grid-cols-1">
-                    {['Penetapan', 'Pelaksanaan', 'Evaluasi', 'Pengendalian', 'Peningkatan'].map((item) => (
-                      <div
-                        key={item}
-                        className="flex items-center gap-3 rounded-2xl border border-white bg-white px-4 py-3 shadow-sm"
-                      >
-                        <FileCheck2 className="h-4 w-4 flex-shrink-0 text-brand-gold-dark" />
-                        <span className="text-sm font-black text-brand-navy">{item}</span>
-                      </div>
+            <div className="space-y-8">
+              <section className="grid gap-4 md:grid-cols-3">
+                {section.highlights.map((item) => (
+                  <article
+                    key={item.title}
+                    className="rounded-2xl border border-gray-100 bg-white p-6 shadow-premium transition-all hover:-translate-y-1 hover:shadow-premium-hover"
+                  >
+                    <ClipboardCheck className="mb-4 h-6 w-6 text-brand-gold-dark" />
+                    <h3 className="text-lg font-black text-brand-navy">{item.title}</h3>
+                    <p className="mt-3 text-sm font-medium leading-7 text-gray-500">{item.description}</p>
+                  </article>
+                ))}
+              </section>
+
+              <section className="grid gap-6 lg:grid-cols-2">
+                <SectionCard title="Ruang Lingkup Standar" eyebrow="Scope">
+                  <ul className="space-y-3">
+                    {section.standards.map((item) => (
+                      <li key={item} className="flex gap-3 text-sm font-semibold leading-7 text-gray-600">
+                        <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
+                        <span>{item}</span>
+                      </li>
                     ))}
+                  </ul>
+                </SectionCard>
+
+                <section className="rounded-premium border border-gray-100 bg-brand-navy p-6 text-white shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+                  <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-white/50">References</p>
+                  <div className="mb-5 flex items-center gap-3">
+                    <FileCheck2 className="h-6 w-6 text-brand-gold" />
+                    <h2 className="text-xl font-bold tracking-tight text-white sm:text-2xl">Dokumen Terkait</h2>
                   </div>
-                </div>
-              </div>
-            </section>
+                  <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+                  <ul className="mt-8 space-y-3">
+                    {section.documents.map((item) => (
+                      <li key={item} className="flex gap-3 text-sm font-semibold leading-7 text-white/75">
+                        <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </section>
 
-            <section className="mt-8 grid gap-4 md:grid-cols-3">
-              {section.highlights.map((item) => (
-                <article
-                  key={item.title}
-                  className="rounded-[1.5rem] border border-gray-100 bg-white p-6 shadow-premium transition-all hover:-translate-y-1 hover:shadow-premium-hover"
-                >
-                  <ClipboardCheck className="mb-4 h-6 w-6 text-brand-gold-dark" />
-                  <h2 className="text-lg font-black text-brand-navy">{item.title}</h2>
-                  <p className="mt-3 text-sm font-medium leading-7 text-gray-500">{item.description}</p>
-                </article>
-              ))}
-            </section>
-
-            <section className="mt-8 grid gap-6 lg:grid-cols-2">
-              <div className="rounded-[1.75rem] border border-gray-100 bg-white p-6 shadow-premium sm:p-8">
-                <div className="mb-5 flex items-center gap-3">
-                  <BookOpenCheck className="h-6 w-6 text-brand-gold-dark" />
-                  <h2 className="text-xl font-black text-brand-navy">Ruang Lingkup Standar</h2>
-                </div>
-                <ul className="space-y-3">
-                  {section.standards.map((item) => (
-                    <li key={item} className="flex gap-3 text-sm font-semibold leading-7 text-gray-600">
-                      <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="rounded-[1.75rem] border border-gray-100 bg-brand-navy p-6 text-white shadow-premium sm:p-8">
-                <div className="mb-5 flex items-center gap-3">
-                  <FileCheck2 className="h-6 w-6 text-brand-gold" />
-                  <h2 className="text-xl font-black">Dokumen Terkait</h2>
-                </div>
-                <ul className="space-y-3">
-                  {section.documents.map((item) => (
-                    <li key={item} className="flex gap-3 text-sm font-semibold leading-7 text-white/75">
-                      <span className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            <section className="mt-8 rounded-[1.75rem] border border-gray-100 bg-white p-6 shadow-premium sm:p-8">
-              <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-[0.12em] text-brand-navy/50">
-                    Unduhan
-                  </p>
-                  <h2 className="mt-2 text-xl font-black text-brand-navy">Dokumen LPMI</h2>
-                </div>
-                <p className="max-w-xl text-sm font-medium leading-7 text-gray-500">
+              <SectionCard title="Dokumen LPMI" eyebrow="Unduhan">
+                <p className="mb-6 text-sm font-medium leading-7 text-gray-500">
                   Akses pedoman, standar, dan arsip mutu yang menjadi acuan pelaksanaan penjaminan mutu internal.
                 </p>
-              </div>
 
-              {documents.length > 0 ? (
-                <div className="grid gap-4">
-                  {documents.map((document) => {
-                    const file = typeof document.file === 'object' ? document.file : null;
-                    const fileSize = formatFileSize(file?.filesize);
+                {documents.length > 0 ? (
+                  <div className="grid gap-4">
+                    {documents.map((document) => {
+                      const file = typeof document.file === 'object' ? document.file : null;
+                      const fileSize = formatFileSize(file?.filesize);
+                      return (
+                        <article
+                          key={document.id ?? document.judul}
+                          className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-brand-mist p-5 sm:flex-row sm:items-center sm:justify-between"
+                        >
+                          <div className="flex min-w-0 gap-4">
+                            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-white text-brand-navy shadow-sm">
+                              <FileText size={22} />
+                            </div>
+                            <div className="min-w-0">
+                              <h3 className="text-base font-black text-brand-navy">{document.judul}</h3>
+                              {document.deskripsi && (
+                                <p className="mt-1 text-sm font-medium leading-6 text-gray-500">
+                                  {document.deskripsi}
+                                </p>
+                              )}
+                              {(file?.filename || fileSize) && (
+                                <p className="mt-2 text-xs font-bold uppercase tracking-[0.08em] text-brand-navy/40">
+                                  {[file?.filename, fileSize].filter(Boolean).join(' - ')}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          {file?.url && (
+                            <Link
+                              href={file.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-gold px-5 py-3 text-sm font-black text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
+                            >
+                              <Download size={18} />
+                              Download
+                            </Link>
+                          )}
+                        </article>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-6 text-sm font-semibold leading-7 text-gray-500">
+                    Belum ada dokumen yang dipublikasikan untuk halaman ini. Admin dapat menambahkan dokumen melalui
+                    collection Dokumen LPMI di Payload.
+                  </div>
+                )}
+              </SectionCard>
+            </div>
+          </div>
+
+          <aside className="space-y-6 lg:sticky lg:top-28 self-start">
+            {/* Sidebar Navigation Links */}
+            {sidebarLinks.length > 0 && (
+              <div className="rounded-premium border border-gray-100 bg-white overflow-hidden shadow-sm shadow-brand-navy/[0.04] sm:rounded-premium-lg">
+                <div className="border-b border-gray-50 px-6 py-5">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400 font-black">Menu</p>
+                  <h3 className="mt-1 text-sm sm:text-base font-bold tracking-tight text-brand-navy">{sidebarTitle}</h3>
+                </div>
+                <ul className="divide-y divide-gray-50">
+                  {sidebarLinks.map((link) => {
+                    const isActive = link.href === `/lpmi/${slug}`;
                     return (
-                      <article
-                        key={document.id ?? document.judul}
-                        className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-brand-mist p-5 sm:flex-row sm:items-center sm:justify-between"
-                      >
-                        <div className="flex min-w-0 gap-4">
-                          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-white text-brand-navy shadow-sm">
-                            <FileText size={22} />
-                          </div>
-                          <div className="min-w-0">
-                            <h3 className="text-base font-black text-brand-navy">{document.judul}</h3>
-                            {document.deskripsi && (
-                              <p className="mt-1 text-sm font-medium leading-6 text-gray-500">
-                                {document.deskripsi}
-                              </p>
-                            )}
-                            {(file?.filename || fileSize) && (
-                              <p className="mt-2 text-xs font-bold uppercase tracking-[0.08em] text-brand-navy/40">
-                                {[file?.filename, fileSize].filter(Boolean).join(' - ')}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-
-                        {file?.url && (
-                          <Link
-                            href={file.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-gold px-5 py-3 text-sm font-black text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
-                          >
-                            <Download size={18} />
-                            Download
-                          </Link>
-                        )}
-                      </article>
+                      <li key={link.href}>
+                        <Link
+                          href={link.href}
+                          className={`group flex items-center justify-between px-6 py-4 text-xs sm:text-sm font-semibold transition-all ${
+                            isActive
+                              ? 'bg-brand-navy/[0.02] text-brand-navy font-bold'
+                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy'
+                          }`}
+                        >
+                          <span className={`pr-4 leading-relaxed font-bold ${isActive ? 'text-brand-navy font-extrabold' : ''}`}>{link.label}</span>
+                          <ChevronRight
+                            size={14}
+                            className={`flex-shrink-0 transition-all ${
+                              isActive ? 'text-brand-gold translate-x-0.5' : 'text-gray-300 group-hover:translate-x-1 group-hover:text-brand-gold'
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </li>
                     );
                   })}
+                </ul>
+              </div>
+            )}
+
+            {/* AMI Portal Card */}
+            <div className="overflow-hidden rounded-premium bg-brand-gold text-brand-navy shadow-xl shadow-brand-gold/5 sm:rounded-premium-lg">
+              <div className="relative px-6 py-8">
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/15 blur-2xl" />
+                <div className="relative z-10 flex flex-col h-full justify-between">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-brand-navy/55">Audit Mutu Internal</p>
+                    <h3 className="mt-3 text-xl font-bold tracking-tight leading-snug">Portal Penjaminan Mutu STTPU</h3>
+                    <p className="mt-4 text-xs font-medium leading-relaxed text-brand-navy/70">
+                      Akses instrumen AMI, borang evaluasi, dan laporan kinerja program studi di bawah pengawasan LPMI.
+                    </p>
+                  </div>
+                  <a
+                    href="https://siakadat.sttpu.ac.id"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-8 inline-flex w-full items-center justify-center rounded-xl bg-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-white transition-all hover:bg-brand-navy/90"
+                  >
+                    Masuk Portal
+                  </a>
                 </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-6 text-sm font-semibold leading-7 text-gray-500">
-                  Belum ada dokumen yang dipublikasikan untuk halaman ini. Admin dapat menambahkan dokumen melalui
-                  collection Dokumen LPMI di Payload.
+              </div>
+            </div>
+
+            {/* Hubungi LPMI Card */}
+            <div className="rounded-premium border border-gray-100 bg-white p-6 shadow-sm shadow-brand-navy/[0.04] sm:rounded-premium-lg flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-navy/5">
+                    <svg className="h-5 w-5 text-brand-navy" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">Layanan Mutu</p>
+                    <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">Kontak LPMI</p>
+                  </div>
                 </div>
-              )}
-            </section>
-          </div>
+                <p className="mt-5 text-xs font-medium leading-relaxed text-gray-600">
+                  Ingin mengajukan masukan atau klarifikasi terkait standar mutu institusi maupun program studi?
+                </p>
+              </div>
+              <Link
+                href="/kontak"
+                className="mt-8 inline-flex w-full items-center justify-center rounded-xl border border-brand-navy px-5 py-4 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
+              >
+                Hubungi Kami
+              </Link>
+            </div>
+          </aside>
         </div>
       </div>
     </>

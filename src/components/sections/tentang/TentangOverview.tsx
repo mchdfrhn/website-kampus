@@ -154,7 +154,7 @@ export default async function TentangOverview() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="group flex h-full flex-col items-center rounded-[2rem] border border-gray-100 bg-gray-50 p-6 text-center sm:rounded-[2.25rem] sm:p-8 lg:rounded-[2.5rem] lg:p-10 hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
+                    className="group flex h-full flex-col items-center rounded-premium border border-gray-100 bg-gray-50 p-6 text-center sm:rounded-premium-lg sm:p-8 hover:bg-brand-navy hover:shadow-premium-hover hover:-translate-y-2 transition-all duration-500"
                   >
                     <div
                       className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm transition-colors group-hover:bg-brand-gold sm:mb-8"

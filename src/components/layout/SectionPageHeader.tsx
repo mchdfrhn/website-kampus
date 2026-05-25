@@ -30,10 +30,10 @@ export default function SectionPageHeader({
         </div>
       </div>
 
-      <div className="relative overflow-hidden bg-brand-navy px-4 py-10 text-white sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+      <div className="relative overflow-hidden bg-brand-navy py-10 text-white sm:py-14 lg:py-16">
         <BlueAbstractBackground />
 
-        <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
             <h1 className="mb-5 text-3xl font-bold leading-[1.15] tracking-tight sm:mb-6 sm:text-4xl lg:text-5xl">
               {title}

@@ -25,12 +25,33 @@ const statusLabel: Record<string, string> = {
 }
 
 const statusColor: Record<string, string> = {
-  buka: 'bg-green-100 text-green-800',
-  tutup: 'bg-red-100 text-red-800',
-  tahunan: 'bg-blue-100 text-blue-800',
-  periodik: 'bg-purple-100 text-purple-800',
-  conditional: 'bg-yellow-100 text-yellow-800',
-  'buka-pmb': 'bg-blue-100 text-blue-800',
+  buka: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+  tutup: 'bg-rose-50 text-rose-800 border-rose-200',
+  tahunan: 'bg-blue-50 text-blue-800 border-blue-200',
+  periodik: 'bg-purple-50 text-purple-800 border-purple-200',
+  conditional: 'bg-yellow-50 text-yellow-800 border-yellow-200',
+  'buka-pmb': 'bg-blue-50 text-blue-800 border-blue-200',
+}
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
 }
 
 export default async function BeasiswaContent({ content }: { content?: BeasiswaPageContent | null }) {
@@ -55,57 +76,72 @@ export default async function BeasiswaContent({ content }: { content?: BeasiswaP
 
   const renderList = (list: BeasiswaItem[]) =>
     list.map((b, idx) => (
-      <li key={idx} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 bg-brand-mist/50">
+      <li
+        key={idx}
+        className="group overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 transition-all hover:bg-white hover:border-brand-navy/15 hover:shadow-premium duration-300"
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-slate-100 bg-white group-hover:bg-brand-mist/20 transition-all duration-300">
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-bold text-gray-900 text-sm">{b.nama}</h3>
+              <h4 className="font-bold text-brand-navy text-sm md:text-base leading-snug">{b.nama}</h4>
               {b.url && b.url !== '#' && (
-                <a href={b.url} target="_blank" rel="noopener noreferrer" aria-label={`Website ${b.nama}`} className="text-brand-navy hover:text-brand-gold transition-colors">
-                  <ExternalLink size={13} />
+                <a
+                  href={b.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Website ${b.nama}`}
+                  className="text-brand-navy hover:text-brand-gold transition-colors"
+                >
+                  <ExternalLink size={14} />
                 </a>
               )}
             </div>
-            <p className="text-gray-500 text-xs mt-0.5">{b.penyelenggara}</p>
+            <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider mt-1">{b.penyelenggara}</p>
           </div>
           <div className="flex flex-wrap gap-2 flex-shrink-0">
             {b.status && (
-              <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full ${statusColor[b.status] ?? 'bg-gray-100 text-gray-700'}`}>
+              <span className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${statusColor[b.status] ?? 'bg-gray-100 text-gray-700 border-gray-200'}`}>
                 {statusLabel[b.status] ?? b.status}
               </span>
             )}
             {b.jenis && (
-              <span className="bg-brand-navy/10 text-brand-navy text-xs font-semibold px-2.5 py-0.5 rounded-full">{b.jenis}</span>
+              <span className="border border-brand-navy/10 bg-brand-navy/[0.03] text-brand-navy text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full">
+                {b.jenis}
+              </span>
             )}
           </div>
         </div>
-        <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div className="space-y-3">
+        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
             {b.nilai && (
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Nilai Beasiswa</p>
-                <p className="text-brand-navy font-bold text-sm">{b.nilai}</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Nilai Beasiswa</p>
+                <p className="text-brand-navy font-bold text-sm sm:text-base">{b.nilai}</p>
               </div>
             )}
             {b.deadline && (
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                  <Calendar size={11} className="inline mr-1" aria-hidden="true" />
-                  Deadline
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                  <Calendar size={12} className="text-brand-gold" aria-hidden="true" />
+                  Batas Pendaftaran
                 </p>
-                <p className="text-gray-700 text-sm">{b.deadline}</p>
+                <p className="text-gray-700 text-xs sm:text-sm font-semibold">{b.deadline}</p>
               </div>
             )}
-            {b.deskripsi && <p className="text-gray-600 text-xs leading-relaxed">{b.deskripsi}</p>}
+            {b.deskripsi && (
+              <p className="text-gray-500 text-xs sm:text-sm leading-relaxed font-medium mt-1">
+                {b.deskripsi}
+              </p>
+            )}
           </div>
           {b.syarat && b.syarat.length > 0 && (
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Syarat Utama</p>
-              <ul className="space-y-1.5">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Persyaratan Utama</p>
+              <ul className="space-y-2">
                 {b.syarat.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-gray-700">
-                    <CheckCircle size={12} className="text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                    {s.poin}
+                  <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm font-semibold text-gray-600">
+                    <CheckCircle size={14} className="text-emerald-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                    <span>{s.poin}</span>
                   </li>
                 ))}
               </ul>
@@ -117,46 +153,45 @@ export default async function BeasiswaContent({ content }: { content?: BeasiswaP
 
   return (
     <article className="py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">Informasi Beasiswa</h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          {content?.infoText ||
-            'Berbagai program beasiswa tersedia untuk mendukung mahasiswa STTPU Jakarta dalam menyelesaikan pendidikan dengan optimal.'}
-        </p>
-      </div>
-
-      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200 flex items-start gap-3">
-        <AlertCircle size={16} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
-        <p className="text-gray-700 text-sm leading-relaxed">
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-3 shadow-sm">
+        <AlertCircle size={16} className="text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+        <p className="text-amber-800 text-xs sm:text-sm font-semibold leading-relaxed">
           Informasi beasiswa diperbarui secara berkala. Untuk informasi terkini, hubungi Bagian Kemahasiswaan STTPU Jakarta.
         </p>
       </div>
 
       {beasiswaList.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-premium border border-dashed border-gray-200 p-10 text-center text-gray-500 bg-white">
           Data beasiswa belum tersedia.
         </div>
       ) : null}
 
       {internal.length > 0 && (
-        <div>
-          <h2 className="font-bold text-brand-navy text-lg mb-1">{content?.internalTitle || 'Beasiswa Internal STTPU'}</h2>
-          <p className="text-gray-500 text-sm mb-6">
-            {content?.internalDescription || 'Program beasiswa yang diselenggarakan langsung oleh STTPU Jakarta.'}
-          </p>
-          <ul className="space-y-5">{renderList(internal)}</ul>
-        </div>
+        <SectionCard
+          title={content?.internalTitle || 'Beasiswa Internal STTPU'}
+          eyebrow="INTERNAL SCHOLARSHIP"
+        >
+          {content?.internalDescription && (
+            <p className="text-gray-500 text-sm sm:text-base font-semibold leading-relaxed mb-6">
+              {content.internalDescription}
+            </p>
+          )}
+          <ul className="space-y-6">{renderList(internal)}</ul>
+        </SectionCard>
       )}
 
       {eksternal.length > 0 && (
-        <div>
-          <h2 className="font-bold text-brand-navy text-lg mb-1">{content?.externalTitle || 'Beasiswa Eksternal'}</h2>
-          <p className="text-gray-500 text-sm mb-6">
-            {content?.externalDescription || 'Beasiswa dari pemerintah dan lembaga eksternal yang dapat diakses mahasiswa STTPU.'}
-          </p>
-          <ul className="space-y-5">{renderList(eksternal)}</ul>
-        </div>
+        <SectionCard
+          title={content?.externalTitle || 'Beasiswa Eksternal'}
+          eyebrow="EXTERNAL SCHOLARSHIP"
+        >
+          {content?.externalDescription && (
+            <p className="text-gray-500 text-sm sm:text-base font-semibold leading-relaxed mb-6">
+              {content.externalDescription}
+            </p>
+          )}
+          <ul className="space-y-6">{renderList(eksternal)}</ul>
+        </SectionCard>
       )}
     </article>
   );

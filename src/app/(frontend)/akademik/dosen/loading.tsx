@@ -4,15 +4,9 @@ export default function DosenLoading() {
       <div className="bg-gray-100 h-40 w-full" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar */}
-          <div className="lg:w-56 shrink-0 space-y-3">
-            <div className="h-5 bg-gray-200 rounded w-3/4" />
-            {[1, 2, 3, 4].map((i) => <div key={i} className="h-9 bg-gray-200 rounded-lg" />)}
-          </div>
-
+        <div className="space-y-8">
           {/* Main */}
-          <div className="flex-1 min-w-0 space-y-8">
+          <div className="space-y-8">
             {/* Title block */}
             <div className="space-y-3">
               <div className="h-7 bg-gray-200 rounded w-2/3" />

@@ -1,4 +1,4 @@
-import { Mail } from 'lucide-react';
+import { Mail, Sparkles, Trophy, Users } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type Bidang = 'Olahraga' | 'Seni & Budaya' | 'Riset & Teknologi' | 'Sosial & Keagamaan'
@@ -6,10 +6,10 @@ type Bidang = 'Olahraga' | 'Seni & Budaya' | 'Riset & Teknologi' | 'Sosial & Kea
 type UKMItem = { nama: string; bidang: Bidang; deskripsi: string; prestasi?: string; anggota?: number; kontak?: string }
 
 const bidangColor: Record<string, string> = {
-  'Olahraga': 'bg-green-100 text-green-800 border-green-200',
-  'Seni & Budaya': 'bg-purple-100 text-purple-800 border-purple-200',
-  'Riset & Teknologi': 'bg-blue-100 text-blue-800 border-blue-200',
-  'Sosial & Keagamaan': 'bg-orange-100 text-orange-800 border-orange-200',
+  'Olahraga': 'bg-emerald-50 text-emerald-700 border-emerald-100',
+  'Seni & Budaya': 'bg-purple-50 text-purple-700 border-purple-100',
+  'Riset & Teknologi': 'bg-blue-50 text-blue-700 border-blue-100',
+  'Sosial & Keagamaan': 'bg-amber-50 text-amber-700 border-amber-100',
 }
 
 const defaults: UKMItem[] = [
@@ -20,6 +20,27 @@ const defaults: UKMItem[] = [
   { nama: 'UKM Kerohanian Islam (Rohis)', bidang: 'Sosial & Keagamaan', deskripsi: 'Mengembangkan nilai-nilai keislaman melalui kajian, kegiatan Ramadan, dan bakti sosial.', anggota: 80, kontak: 'ukm.rohis@mhs.sttpu.ac.id' },
   { nama: 'UKM Pramuka', bidang: 'Sosial & Keagamaan', deskripsi: 'Gerakan pramuka tingkat penegak yang membentuk karakter, kepemimpinan, dan kepedulian sosial mahasiswa.', anggota: 35, kontak: 'ukm.pramuka@mhs.sttpu.ac.id' },
 ]
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
 
 export default async function UKMContent() {
   let ukm = defaults
@@ -39,57 +60,61 @@ export default async function UKMContent() {
   const bidangList = Array.from(new Set(ukm.map((u) => u.bidang)))
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Unit Kegiatan Mahasiswa
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          STTPU Jakarta memiliki Unit Kegiatan Mahasiswa yang aktif di bidang olahraga, seni dan
-          budaya, riset dan teknologi, serta sosial dan keagamaan sebagai ruang tumbuh di luar kelas.
-        </p>
-      </div>
-
-      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
-        <p className="text-gray-700 text-sm leading-relaxed">
-          Setiap UKM menjadi wadah eksplorasi minat, penguatan relasi antarmahasiswa, dan latihan
-          kepemimpinan yang melengkapi pengalaman akademik formal.
-        </p>
-      </div>
+    <article className="space-y-10 sm:space-y-12">
+      <SectionCard title="Kegiatan Ekstrakurikuler" eyebrow="Student Life">
+        <div className="flex items-start gap-4 p-5 rounded-2xl border border-brand-navy/10 bg-brand-navy/[0.02]">
+          <Sparkles size={24} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-gray-600 text-sm font-semibold leading-relaxed">
+            Setiap UKM menjadi wadah eksplorasi minat, penguatan relasi antarmahasiswa, dan latihan
+            kepemimpinan yang melengkapi pengalaman akademik formal.
+          </p>
+        </div>
+      </SectionCard>
 
       {bidangList.map((bidang) => (
-        <section key={bidang}>
-          <h3 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
-            <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border ${bidangColor[bidang] ?? 'bg-gray-100 text-gray-800 border-gray-200'}`}>
+        <SectionCard key={bidang} title={`Kategori: ${bidang}`} eyebrow="Community">
+          <div className="mb-6 flex justify-end">
+            <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md border ${bidangColor[bidang] ?? 'bg-gray-50 text-gray-600 border-gray-100'}`}>
               {bidang}
             </span>
-          </h3>
-          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          </div>
+
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {ukm.filter((u) => u.bidang === bidang).map((u, idx) => (
-              <li key={idx} className="bg-white border border-gray-200 rounded-xl p-4 hover:border-brand-navy hover:shadow-sm transition-all">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-bold text-gray-900 text-sm leading-snug">{u.nama}</h3>
-                  {u.anggota !== undefined && (
-                    <span className="text-xs text-gray-500 flex-shrink-0">{u.anggota} anggota</span>
+              <li
+                key={idx}
+                className="bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-premium hover:border-brand-navy/10 transition-all duration-300 flex flex-col justify-between group"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-4 mb-3">
+                    <h4 className="font-bold text-brand-navy text-sm sm:text-base leading-snug group-hover:text-brand-gold transition-colors duration-300">{u.nama}</h4>
+                    {u.anggota !== undefined && (
+                      <span className="text-[10px] font-bold text-gray-400 uppercase bg-gray-50 px-2 py-0.5 rounded border border-gray-100 flex-shrink-0">{u.anggota} Anggota</span>
+                    )}
+                  </div>
+                  <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed mb-4">{u.deskripsi}</p>
+                  
+                  {u.prestasi && (
+                    <div className="text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-2 rounded-xl mb-4 flex items-start gap-2">
+                      <Trophy size={14} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+                      <span>{u.prestasi}</span>
+                    </div>
                   )}
                 </div>
-                <p className="text-gray-600 text-xs leading-relaxed mb-3">{u.deskripsi}</p>
-                {u.prestasi && (
-                  <p className="text-xs text-brand-navy font-medium bg-brand-mist px-2.5 py-1.5 rounded-lg mb-3 flex items-start gap-1.5">
-                    <span className="text-brand-gold flex-shrink-0">★</span>
-                    {u.prestasi}
-                  </p>
-                )}
+
                 {u.kontak && (
-                  <a href={`mailto:${u.kontak}`} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-brand-navy transition-colors">
-                    <Mail size={11} aria-hidden="true" /> {u.kontak}
+                  <a
+                    href={`mailto:${u.kontak}`}
+                    className="flex items-center gap-1.5 text-xs text-gray-400 font-semibold hover:text-brand-gold transition-colors pt-3 border-t border-gray-50"
+                  >
+                    <Mail size={12} aria-hidden="true" />
+                    {u.kontak}
                   </a>
                 )}
               </li>
             ))}
           </ul>
-        </section>
+        </SectionCard>
       ))}
     </article>
   );

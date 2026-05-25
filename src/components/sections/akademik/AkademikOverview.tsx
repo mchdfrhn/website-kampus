@@ -59,7 +59,7 @@ export default async function AkademikOverview() {
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="group flex flex-col h-full rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-300"
+                  className="group flex flex-col h-full rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 shadow-premium hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-300"
                 >
                   <div
                     className="w-12 h-12 bg-gray-50 group-hover:bg-brand-navy rounded-xl flex items-center justify-center mb-6 transition-all duration-300"

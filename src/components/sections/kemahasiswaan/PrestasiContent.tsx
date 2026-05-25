@@ -1,4 +1,4 @@
-import { Trophy, Calendar } from 'lucide-react';
+import { Trophy, Calendar, Users, Award, ShieldAlert, Sparkles } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
 
 type Tingkat = 'Nasional' | 'Internasional' | 'Regional';
@@ -15,9 +15,9 @@ type PrestasiItem = {
 }
 
 const tingkatColor: Record<Tingkat, string> = {
-  Internasional: 'bg-purple-100 text-purple-800 border-purple-200',
-  Nasional: 'bg-blue-100 text-blue-800 border-blue-200',
-  Regional: 'bg-green-100 text-green-800 border-green-200',
+  Internasional: 'bg-purple-50 text-purple-700 border-purple-100',
+  Nasional: 'bg-blue-50 text-blue-700 border-blue-100',
+  Regional: 'bg-emerald-50 text-emerald-700 border-emerald-100',
 };
 
 const defaults: PrestasiItem[] = [
@@ -53,6 +53,27 @@ const defaults: PrestasiItem[] = [
   },
 ];
 
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
+
 export default async function PrestasiContent() {
   let prestasiList = defaults
 
@@ -77,61 +98,71 @@ export default async function PrestasiContent() {
   const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Prestasi Mahasiswa
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Rekam jejak pencapaian mahasiswa STTPU Jakarta dalam berbagai kompetisi, program pendanaan,
-          dan ajang akademik yang menunjukkan kualitas karya serta daya saing mereka.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-3 gap-4">
-        {(['Nasional', 'Internasional', 'Regional'] as Tingkat[]).map((t) => (
-          <div key={t} className="text-center bg-brand-mist rounded-xl p-4 border border-gray-200">
-            <p className="font-extrabold text-2xl text-brand-navy">
-              {prestasiList.filter((p) => p.tingkat === t).length}
-            </p>
-            <p className="text-gray-500 text-xs mt-1">Prestasi {t}</p>
-          </div>
-        ))}
-      </div>
+    <article className="space-y-10 sm:space-y-12">
+      <SectionCard title="Statistik Prestasi" eyebrow="Achievements Summary">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          {(['Nasional', 'Internasional', 'Regional'] as Tingkat[]).map((t) => (
+            <div key={t} className="flex items-center gap-4 p-5 rounded-2xl border border-gray-100 bg-white hover:shadow-premium transition-all duration-300">
+              <div className="w-12 h-12 rounded-xl bg-brand-navy flex items-center justify-center flex-shrink-0 shadow-sm">
+                <Trophy size={20} className="text-brand-gold" />
+              </div>
+              <div>
+                <p className="font-extrabold text-2xl text-brand-navy leading-none">
+                  {prestasiList.filter((p) => p.tingkat === t).length}
+                </p>
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mt-1">Prestasi {t}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </SectionCard>
 
       {years.map((year) => (
-        <section key={year}>
-          <h3 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
-            <Calendar size={16} className="text-brand-gold" aria-hidden="true" /> Tahun {year}
-          </h3>
-          <ul className="space-y-4">
+        <SectionCard key={year} title={`Pencapaian Tahun ${year}`} eyebrow="Timeline">
+          <div className="space-y-6">
             {byYear[year].map((p, idx) => (
-              <li key={idx} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
-                <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Trophy size={16} className="text-brand-gold flex-shrink-0" aria-hidden="true" />
-                    <h3 className="font-bold text-gray-900 text-sm">{p.judul}</h3>
+              <div
+                key={idx}
+                className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 hover:shadow-premium hover:border-brand-navy/10 transition-all duration-300 group"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-brand-navy/[0.03] border border-brand-navy/10 flex items-center justify-center flex-shrink-0 group-hover:bg-brand-navy group-hover:border-brand-navy transition-all duration-300">
+                      <Trophy size={16} className="text-brand-navy group-hover:text-brand-gold transition-colors duration-300" aria-hidden="true" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-brand-navy text-sm sm:text-base group-hover:text-brand-gold transition-colors duration-300 leading-tight">
+                        {p.judul}
+                      </h4>
+                      <p className="text-gray-400 text-xs font-semibold mt-1">{p.penyelenggara}</p>
+                    </div>
                   </div>
-                  <div className="flex gap-2 flex-wrap">
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tingkatColor[p.tingkat]}`}>
+                  <div className="flex gap-2 flex-wrap items-center">
+                    <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md border ${tingkatColor[p.tingkat]}`}>
                       {p.tingkat}
                     </span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-gold/20 text-brand-navy border border-brand-gold/30">
+                    <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md bg-brand-gold/10 text-brand-gold border border-brand-gold/20">
                       {p.peringkat}
                     </span>
                   </div>
                 </div>
-                <p className="text-gray-600 text-xs leading-relaxed mb-3">{p.deskripsi}</p>
-                <div className="flex flex-wrap gap-x-6 gap-y-1.5 text-xs text-gray-500">
-                  <span><span className="font-semibold">Tim:</span> {p.mahasiswa.map(m => m.nama).join(', ')}</span>
-                  <span><span className="font-semibold">Prodi:</span> {p.prodi}</span>
-                  <span><span className="font-semibold">Penyelenggara:</span> {p.penyelenggara}</span>
+                
+                <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed mb-6">{p.deskripsi}</p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-5 border-t border-gray-50">
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Anggota Tim</p>
+                    <p className="text-gray-600 text-xs font-semibold">{p.mahasiswa.map(m => m.nama).join(', ')}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Program Studi</p>
+                    <p className="text-gray-600 text-xs font-semibold">{p.prodi}</p>
+                  </div>
                 </div>
-              </li>
+              </div>
             ))}
-          </ul>
-        </section>
+          </div>
+        </SectionCard>
       ))}
     </article>
   );

@@ -1,5 +1,6 @@
 import { getPayloadClient } from '@/lib/payload';
 import PublikasiListClient from './PublikasiListClient';
+import { Sparkles } from 'lucide-react';
 
 type Publikasi = {
   id: string;
@@ -11,6 +12,27 @@ type Publikasi = {
   url?: string;
   prodi?: string;
 };
+
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
 
 export default async function PublikasiContent() {
   let publikasi: Publikasi[] = []
@@ -30,31 +52,25 @@ export default async function PublikasiContent() {
   }
 
   return (
-    <article className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">
-          Publikasi Ilmiah
-        </h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          Kumpulan publikasi dosen STTPU Jakarta yang mencerminkan kontribusi institusi pada
-          pengembangan ilmu terapan, inovasi, dan diseminasi hasil riset.
-        </p>
-      </div>
-
-      <div className="bg-brand-mist rounded-xl p-5 border border-gray-200">
-        <p className="text-sm text-gray-700 leading-relaxed">
-          Database publikasi ilmiah dosen STTPU. Total <strong>{publikasi.length} publikasi</strong> terdaftar
-          — mencakup artikel jurnal nasional/internasional, prosiding konferensi, dan buku teks.
-        </p>
-      </div>
+    <article className="space-y-10 sm:space-y-12">
+      <SectionCard title="Database Karya Ilmiah" eyebrow="Research Publications">
+        <div className="flex items-start gap-4 p-5 rounded-2xl border border-brand-navy/10 bg-brand-navy/[0.02]">
+          <Sparkles size={24} className="text-brand-navy flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <p className="text-gray-600 text-sm font-semibold leading-relaxed">
+            Database publikasi ilmiah dosen STTPU. Total <strong className="text-brand-navy font-extrabold">{publikasi.length} publikasi</strong> terdaftar
+            — mencakup artikel jurnal nasional/internasional, prosiding konferensi, dan buku teks.
+          </p>
+        </div>
+      </SectionCard>
 
       {publikasi.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-gray-200 p-10 text-center text-gray-500">
+        <div className="rounded-premium border border-dashed border-gray-200 p-10 text-center text-gray-500 font-bold">
           Data publikasi belum tersedia.
         </div>
       ) : (
-        <PublikasiListClient initialPublikasi={publikasi} />
+        <SectionCard title="Publikasi Dosen &amp; Peneliti" eyebrow="Search Publications">
+          <PublikasiListClient initialPublikasi={publikasi} />
+        </SectionCard>
       )}
     </article>
   );

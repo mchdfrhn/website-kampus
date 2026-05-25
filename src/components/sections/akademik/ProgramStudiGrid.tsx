@@ -58,14 +58,6 @@ export default function ProgramStudiGrid({
 
   return (
     <section className="py-10 sm:py-12">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">{gridTitle}</h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <p className="mt-8 text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">
-          {gridDescription}
-        </p>
-      </div>
-
       {list.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-gray-200 p-12 text-center text-gray-500">
           Data program studi belum tersedia.

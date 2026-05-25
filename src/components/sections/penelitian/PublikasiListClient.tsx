@@ -16,9 +16,9 @@ type Publikasi = {
 
 const jenisLabel: Record<string, string> = { jurnal: 'Jurnal', prosiding: 'Prosiding', buku: 'Buku' };
 const jenisColor: Record<string, string> = {
-  jurnal: 'bg-blue-100 text-blue-800',
-  prosiding: 'bg-purple-100 text-purple-800',
-  buku: 'bg-amber-100 text-amber-800',
+  jurnal: 'bg-blue-50 text-blue-700 border border-blue-100',
+  prosiding: 'bg-purple-50 text-purple-700 border border-purple-100',
+  buku: 'bg-amber-50 text-amber-700 border border-amber-100',
 };
 
 export default function PublikasiListClient({ initialPublikasi }: { initialPublikasi: Publikasi[] }) {
@@ -35,68 +35,77 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
   });
 
   return (
-    <>
-      <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => setFilterJenis(null)}
-          className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterJenis === null ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
-        >
-          Semua Jenis
-        </button>
-        {jenisList.map((j) => (
+    <div className="space-y-6">
+      <div className="flex flex-wrap items-center gap-3 p-4 rounded-2xl bg-gray-50 border border-gray-100">
+        <div className="flex flex-wrap gap-2">
           <button
-            key={j}
-            onClick={() => setFilterJenis(filterJenis === j ? null : j)}
-            className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterJenis === j ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
+            onClick={() => setFilterJenis(null)}
+            className={`text-xs px-4 py-2 rounded-xl font-bold uppercase tracking-wider border transition-all duration-300 ${filterJenis === null ? 'bg-brand-navy text-white border-brand-navy shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-brand-navy/30'}`}
           >
-            {jenisLabel[j]}
+            Semua Jenis
           </button>
-        ))}
-        <span className="w-px h-6 bg-gray-200 self-center mx-1" />
-        <button
-          onClick={() => setFilterTahun(null)}
-          className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterTahun === null ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
-        >
-          Semua Tahun
-        </button>
-        {tahunList.map((t) => (
+          {jenisList.map((j) => (
+            <button
+              key={j}
+              onClick={() => setFilterJenis(filterJenis === j ? null : j)}
+              className={`text-xs px-4 py-2 rounded-xl font-bold uppercase tracking-wider border transition-all duration-300 ${filterJenis === j ? 'bg-brand-navy text-white border-brand-navy shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-brand-navy/30'}`}
+            >
+              {jenisLabel[j]}
+            </button>
+          ))}
+        </div>
+        
+        <span className="hidden sm:block w-px h-6 bg-gray-200 mx-1" />
+        
+        <div className="flex flex-wrap gap-2">
           <button
-            key={t}
-            onClick={() => setFilterTahun(filterTahun === t ? null : t)}
-            className={`text-xs px-3 py-1.5 rounded-full font-medium border transition-colors ${filterTahun === t ? 'bg-brand-navy text-white border-brand-navy' : 'bg-white text-gray-600 border-gray-200 hover:border-brand-navy'}`}
+            onClick={() => setFilterTahun(null)}
+            className={`text-xs px-4 py-2 rounded-xl font-bold uppercase tracking-wider border transition-all duration-300 ${filterTahun === null ? 'bg-brand-navy text-white border-brand-navy shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-brand-navy/30'}`}
           >
-            {t}
+            Semua Tahun
           </button>
-        ))}
+          {tahunList.map((t) => (
+            <button
+              key={t}
+              onClick={() => setFilterTahun(filterTahun === t ? null : t)}
+              className={`text-xs px-4 py-2 rounded-xl font-bold uppercase tracking-wider border transition-all duration-300 ${filterTahun === t ? 'bg-brand-navy text-white border-brand-navy shadow-sm' : 'bg-white text-gray-500 border-gray-200 hover:border-brand-navy/30'}`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <p className="text-xs text-gray-500">{filtered.length} publikasi ditemukan</p>
+      <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{filtered.length} Publikasi Ditemukan</p>
 
-      <ol className="space-y-3" aria-label="Daftar publikasi">
+      <ol className="space-y-4" aria-label="Daftar publikasi">
         {filtered.map((pub, i) => (
-          <li key={pub.id} className="bg-white border border-gray-200 rounded-xl p-5 hover:border-brand-navy hover:shadow-sm transition-all">
-            <div className="flex items-start gap-3">
-              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-brand-mist text-brand-navy font-bold text-xs flex items-center justify-center" aria-hidden="true">
+          <li
+            key={pub.id}
+            className="bg-white border border-gray-100 rounded-2xl p-6 sm:p-8 hover:shadow-premium hover:border-brand-navy/10 transition-all duration-300 group"
+          >
+            <div className="flex items-start gap-4">
+              <span className="flex-shrink-0 w-8 h-8 rounded-xl bg-brand-navy/[0.03] border border-brand-navy/5 text-brand-navy font-bold text-xs flex items-center justify-center group-hover:bg-brand-navy group-hover:text-brand-gold transition-colors duration-300" aria-hidden="true">
                 {i + 1}
               </span>
               <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-start gap-2 mb-1.5">
-                  <h3 className="font-semibold text-gray-900 text-sm leading-snug">{pub.judul}</h3>
-                  <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0 ${jenisColor[pub.jenis]}`}>
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-2">
+                  <h4 className="font-bold text-brand-navy text-sm sm:text-base group-hover:text-brand-gold transition-colors duration-300 leading-snug">{pub.judul}</h4>
+                  <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md ${jenisColor[pub.jenis]}`}>
                     {jenisLabel[pub.jenis]}
                   </span>
                 </div>
-                <p className="text-xs text-gray-500 mb-0.5">{pub.penulis.map(p => p.nama).join('; ')}</p>
-                <p className="text-xs text-gray-400">{pub.penerbit} · {pub.tahun}</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-500 mb-1">{pub.penulis.map(p => p.nama).join('; ')}</p>
+                <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">{pub.penerbit} · {pub.tahun}</p>
                 {pub.url && pub.url !== '#' && (
                   <a
                     href={pub.url}
-                    className="inline-flex items-center gap-1 text-xs text-brand-navy font-semibold mt-2 hover:text-brand-gold transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs text-brand-navy font-bold uppercase tracking-wider mt-4 hover:text-brand-gold transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <BookOpen size={11} aria-hidden="true" />
-                    Lihat Publikasi <ExternalLink size={10} aria-hidden="true" />
+                    <BookOpen size={13} aria-hidden="true" />
+                    Lihat Publikasi <ExternalLink size={12} aria-hidden="true" />
                   </a>
                 )}
               </div>
@@ -104,6 +113,6 @@ export default function PublikasiListClient({ initialPublikasi }: { initialPubli
           </li>
         ))}
       </ol>
-    </>
+    </div>
   );
 }

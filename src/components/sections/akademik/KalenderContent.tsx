@@ -35,6 +35,27 @@ const defaultKegiatanPenting: KegiatanPenting[] = [
   { nama: 'Penerimaan Mahasiswa Baru 2026/2027', tanggal: 'Maret – Juli 2026', keterangan: 'Lihat website PMB' },
 ]
 
+function SectionCard({
+  title,
+  eyebrow,
+  children,
+}: {
+  title: string;
+  eyebrow?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10">
+      {eyebrow ? (
+        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.24em] text-gray-400">{eyebrow}</p>
+      ) : null}
+      <h2 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">{title}</h2>
+      <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
+      <div className="mt-8">{children}</div>
+    </section>
+  );
+}
+
 export default async function KalenderContent() {
   let tahunAkademik = 'Tahun Akademik 2025/2026'
   let deskripsi = 'Kalender akademik resmi yang telah ditetapkan oleh Bagian Akademik STTPU Jakarta.'
@@ -70,85 +91,82 @@ export default async function KalenderContent() {
   }
 
   return (
-    <section className="py-10 sm:py-12 space-y-8 sm:space-y-10">
-      <div className="mb-12 text-center lg:mb-16 lg:text-left">
-        <h2 className="text-brand-navy font-bold text-3xl md:text-4xl tracking-tight leading-[1.2]">{tahunAkademik}</h2>
-        <div className="w-12 h-1 bg-brand-gold rounded-full mt-6 mx-auto lg:mx-0" />
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-8">
-          <p className="text-gray-500 font-medium max-w-3xl leading-relaxed mx-auto lg:mx-0 text-sm md:text-base">{deskripsi}</p>
-          {pdfUrl && (
-            <a
-              href={pdfUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-brand-navy text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-brand-navy-dark transition-colors shrink-0"
-            >
-              <Download size={15} aria-hidden="true" />
-              Unduh PDF
-            </a>
-          )}
+    <article className="py-10 sm:py-12 space-y-10 sm:space-y-12">
+      {pdfUrl && (
+        <div className="flex justify-end">
+          <a
+            href={pdfUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-brand-navy text-white text-xs font-bold uppercase tracking-wider px-5 py-3.5 rounded-xl hover:bg-brand-gold hover:text-brand-navy transition-all shadow-md shrink-0"
+          >
+            <Download size={14} aria-hidden="true" />
+            Unduh PDF
+          </a>
         </div>
-      </div>
+      )}
 
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 sm:p-5 flex items-start gap-3">
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-3 shadow-sm">
         <AlertCircle size={16} className="text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-        <p className="text-amber-800 text-sm leading-relaxed">
+        <p className="text-amber-800 text-xs sm:text-sm font-semibold leading-relaxed">
           Jadwal dapat berubah sewaktu-waktu sesuai kebijakan institusi dan hari libur nasional.
           Selalu cek SIAKAD dan pengumuman resmi untuk update terkini.
         </p>
       </div>
 
       {[semesterGanjil, semesterGenap].map((sem, semIdx) => (
-        <div key={semIdx}>
-          <h3 className="font-bold text-brand-navy text-base mb-4 flex items-center gap-2">
-            <Calendar size={16} className="text-brand-gold" aria-hidden="true" />
-            {sem.label}
-          </h3>
-          <div className="overflow-x-auto rounded-xl border border-gray-200">
+        <SectionCard
+          key={semIdx}
+          title={sem.label}
+          eyebrow={semIdx === 0 ? "FALL SEMESTER" : "SPRING SEMESTER"}
+        >
+          <div className="overflow-x-auto rounded-2xl border border-gray-150 shadow-sm">
             <table className="min-w-[640px] w-full text-sm">
               <thead>
                 <tr className="bg-brand-navy text-white">
-                  <th className="text-left px-4 py-3 font-semibold w-8 rounded-tl-xl">No</th>
-                  <th className="text-left px-4 py-3 font-semibold">Kegiatan</th>
-                  <th className="text-left px-4 py-3 font-semibold whitespace-nowrap">Tanggal</th>
-                  <th className="text-left px-4 py-3 font-semibold rounded-tr-xl">Keterangan</th>
+                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider w-8 rounded-tl-2xl">No</th>
+                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Kegiatan</th>
+                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Tanggal</th>
+                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider rounded-tr-2xl">Keterangan</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-gray-100 bg-white">
                 {sem.kegiatan.map((item, idx) => (
                   <tr
                     key={idx}
-                    className={`border-b border-gray-200 last:border-0 ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/50'}`}
+                    className={`hover:bg-brand-mist/20 transition-colors duration-150 ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/10'}`}
                   >
-                    <td className="px-4 py-3 text-gray-500 text-xs">{idx + 1}</td>
-                    <td className="px-4 py-3 font-medium text-gray-900">{item.kegiatan}</td>
-                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">{item.tanggal}</td>
-                    <td className="px-4 py-3 text-gray-500 text-xs">{item.keterangan}</td>
+                    <td className="px-5 py-4 text-gray-400 font-bold text-xs">{idx + 1}</td>
+                    <td className="px-5 py-4 font-bold text-brand-navy">{item.kegiatan}</td>
+                    <td className="px-5 py-4 text-gray-500 font-semibold whitespace-nowrap">{item.tanggal}</td>
+                    <td className="px-5 py-4 text-gray-400 font-semibold text-xs">{item.keterangan || '-'}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
+        </SectionCard>
       ))}
 
-      <div>
-        <h3 className="font-bold text-brand-navy text-base mb-4">Kegiatan Penting Lainnya</h3>
+      <SectionCard title="Kegiatan Penting Lainnya" eyebrow="OTHER KEY EVENTS">
         <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {kegiatanPenting.map((item, idx) => (
-            <li key={idx} className="flex items-start gap-3 p-4 bg-white border border-gray-200 rounded-xl">
-              <div className="w-8 h-8 bg-brand-gold/15 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                <Calendar size={15} className="text-brand-navy" />
+            <li
+              key={idx}
+              className="flex items-start gap-4 p-5 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:border-brand-navy/10 hover:shadow-premium transition-all duration-300"
+            >
+              <div className="w-10 h-10 bg-brand-navy/5 rounded-xl flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                <Calendar size={18} className="text-brand-navy" />
               </div>
               <div>
-                <p className="font-semibold text-gray-900 text-sm">{item.nama}</p>
-                <p className="text-brand-navy text-xs font-medium mt-0.5">{item.tanggal}</p>
-                {item.keterangan && <p className="text-gray-500 text-xs mt-0.5">{item.keterangan}</p>}
+                <p className="font-bold text-brand-navy text-sm sm:text-base leading-snug">{item.nama}</p>
+                <p className="text-brand-gold text-xs font-bold mt-1.5 uppercase tracking-wider">{item.tanggal}</p>
+                {item.keterangan && <p className="text-gray-500 text-xs font-semibold mt-1">{item.keterangan}</p>}
               </div>
             </li>
           ))}
         </ul>
-      </div>
-    </section>
+      </SectionCard>
+    </article>
   );
 }

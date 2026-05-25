@@ -34,8 +34,8 @@ export default function SambutanKetuaSection({
       <div className="mx-auto grid max-w-7xl items-end gap-10 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-14 lg:px-8">
         <Reveal width="100%" yOffset={24}>
           <div className={portraitStageClassName}>
-            <div className="absolute inset-x-6 bottom-0 h-[86%] rounded-t-[2rem] bg-[radial-gradient(circle_at_28%_18%,rgba(252,182,3,0.18),transparent_26%),linear-gradient(155deg,#08245c_0%,#061a45_58%,#041334_100%)]" />
-            <div className="absolute inset-x-6 bottom-0 h-[86%] rounded-t-[2rem] bg-[linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:44px_44px] opacity-25" />
+            <div className="absolute inset-x-6 bottom-0 h-[86%] rounded-t-premium-lg bg-[radial-gradient(circle_at_28%_18%,rgba(252,182,3,0.18),transparent_26%),linear-gradient(155deg,#08245c_0%,#061a45_58%,#041334_100%)]" />
+            <div className="absolute inset-x-6 bottom-0 h-[86%] rounded-t-premium-lg bg-[linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:44px_44px] opacity-25" />
             <div className="absolute left-6 top-7 h-24 w-24 rounded-full border border-brand-gold/20 bg-brand-gold/10" />
             <div className="absolute right-7 top-12 h-16 w-16 rounded-full border border-white/20 bg-white/10" />
             <div className="absolute -bottom-10 -left-8 h-44 w-44 rounded-full bg-brand-gold/20" />
