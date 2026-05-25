@@ -260,27 +260,51 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                           )}
 
                           {hasChildren ? (
-                            <>
-                              <button
-                                onClick={() => toggleSubmenu(item.label)}
-                                aria-expanded={isSubOpen}
-                                aria-controls={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
+                            <div className="flex flex-col">
+                              <div
                                 className={cn(
-                                  "w-full flex items-center justify-between px-4 py-4 rounded-2xl transition-all duration-300 text-[14px] font-bold",
+                                  "flex items-center justify-between rounded-2xl transition-all duration-300 text-[14px] font-bold overflow-hidden",
                                   isSubOpen || active
                                     ? "bg-white/10 text-brand-gold"
                                     : "text-white hover:bg-white/5"
                                 )}
                               >
-                                <span className={cn(active && "pl-2 transition-all duration-300")}>{item.label}</span>
-                                <ChevronDown
-                                  size={16}
-                                  className={cn(
-                                    "transition-transform duration-500",
-                                    isSubOpen ? "rotate-180 text-brand-gold" : "text-white/20"
-                                  )}
-                                />
-                              </button>
+                                {item.href && item.href !== '#' ? (
+                                  <Link
+                                    href={item.href}
+                                    onClick={handleNavigate}
+                                    className="flex-1 px-4 py-4 text-left hover:text-white"
+                                  >
+                                    <span className={cn(active && "pl-2 transition-all duration-300")}>
+                                      {item.label}
+                                    </span>
+                                  </Link>
+                                ) : (
+                                  <button
+                                    onClick={() => toggleSubmenu(item.label)}
+                                    className="flex-1 px-4 py-4 text-left hover:text-white font-bold text-[14px]"
+                                  >
+                                    <span className={cn(active && "pl-2 transition-all duration-300")}>
+                                      {item.label}
+                                    </span>
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => toggleSubmenu(item.label)}
+                                  aria-expanded={isSubOpen}
+                                  aria-controls={`submenu-${item.label.replace(/\s+/g, '-').toLowerCase()}`}
+                                  className="px-5 py-4 border-l border-white/5 hover:bg-white/5 transition-colors flex items-center justify-center"
+                                  aria-label={`Toggle submenu ${item.label}`}
+                                >
+                                  <ChevronDown
+                                    size={16}
+                                    className={cn(
+                                      "transition-transform duration-500",
+                                      isSubOpen ? "rotate-180 text-brand-gold" : "text-white/20"
+                                    )}
+                                  />
+                                </button>
+                              </div>
                               <AnimatePresence>
                                 {isSubOpen && (
                                   <motion.div
@@ -315,7 +339,7 @@ export default function MobileMenu({ navItems = [], logoUrl, institutionName = '
                                   </motion.div>
                                 )}
                               </AnimatePresence>
-                            </>
+                            </div>
                           ) : (
                             <Link
                               href={item.href}

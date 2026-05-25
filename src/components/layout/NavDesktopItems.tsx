@@ -35,7 +35,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
 
   return (
     <ul 
-      className="hidden xl:flex items-center gap-1" 
+      className="hidden xl:flex items-center xl:gap-0.5 2xl:gap-1.5" 
       role="list"
       onMouseLeave={() => setHoveredItem(null)}
     >
@@ -54,44 +54,85 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
           >
             {hasChildren ? (
               <>
-                <button
-                  className={`relative flex min-w-[5.5rem] items-center justify-center gap-1.5 px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
-                    active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
-                  }`}
-                  aria-haspopup="menu"
-                  aria-expanded={isHovered}
-                  aria-controls={menuId}
-                  onClick={() => setHoveredItem(isHovered ? null : item.label)}
-                  onKeyDown={(e) => { if (e.key === 'Escape') setHoveredItem(null); }}
-                >
-                  <span className="relative z-10">{item.label}</span>
-                  <ChevronDown
-                    size={14}
-                    className={`relative z-10 transition-transform duration-500 ${isHovered ? 'rotate-180' : ''} ${
-                      active ? 'text-brand-gold' : isHovered ? 'text-brand-gold' : 'text-white/30'
+                {item.href && item.href !== '#' ? (
+                  <Link
+                    href={item.href}
+                    className={`relative flex min-w-max xl:min-w-[4.5rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1.5 px-3.5 xl:px-2.5 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                      active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
                     }`}
-                  />
-
-                  {/* Shared Indicator for Hover/Active Pill */}
-                  {(isHovered || active) && (
-                    <motion.div
-                      layoutId="nav-pill"
-                      className={`absolute inset-0 rounded-xl z-0 ${
-                        active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
+                    aria-haspopup="menu"
+                    aria-expanded={isHovered}
+                    aria-controls={menuId}
+                    onKeyDown={(e) => { if (e.key === 'Escape') setHoveredItem(null); }}
+                  >
+                    <span className="relative z-10">{item.label}</span>
+                    <ChevronDown
+                      size={14}
+                      className={`relative z-10 transition-transform duration-500 ${isHovered ? 'rotate-180' : ''} ${
+                        active ? 'text-brand-gold' : isHovered ? 'text-brand-gold' : 'text-white/30'
                       }`}
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
-                  )}
 
-                  {/* Bottom Active Line */}
-                  {active && (
-                    <motion.div
-                      layoutId="nav-line"
-                      className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    {/* Shared Indicator for Hover/Active Pill */}
+                    {(isHovered || active) && (
+                      <motion.div
+                        layoutId="nav-pill"
+                        className={`absolute inset-0 rounded-xl z-0 ${
+                          active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
+                        }`}
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
+                    {/* Bottom Active Line */}
+                    {active && (
+                      <motion.div
+                        layoutId="nav-line"
+                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </Link>
+                ) : (
+                  <button
+                    className={`relative flex min-w-max xl:min-w-[4.5rem] 2xl:min-w-[5.5rem] items-center justify-center gap-1.5 px-3.5 xl:px-2.5 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                      active ? 'text-white' : isHovered ? 'text-white' : 'text-white/70'
+                    }`}
+                    aria-haspopup="menu"
+                    aria-expanded={isHovered}
+                    aria-controls={menuId}
+                    onClick={() => setHoveredItem(isHovered ? null : item.label)}
+                    onKeyDown={(e) => { if (e.key === 'Escape') setHoveredItem(null); }}
+                  >
+                    <span className="relative z-10">{item.label}</span>
+                    <ChevronDown
+                      size={14}
+                      className={`relative z-10 transition-transform duration-500 ${isHovered ? 'rotate-180' : ''} ${
+                        active ? 'text-brand-gold' : isHovered ? 'text-brand-gold' : 'text-white/30'
+                      }`}
                     />
-                  )}
-                </button>
+
+                    {/* Shared Indicator for Hover/Active Pill */}
+                    {(isHovered || active) && (
+                      <motion.div
+                        layoutId="nav-pill"
+                        className={`absolute inset-0 rounded-xl z-0 ${
+                          active ? 'bg-white/10 shadow-lg' : 'bg-white/5'
+                        }`}
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+
+                    {/* Bottom Active Line */}
+                    {active && (
+                      <motion.div
+                        layoutId="nav-line"
+                        className="absolute bottom-0 left-4 right-4 h-0.5 bg-brand-gold rounded-full z-10"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </button>
+                )}
 
                 <div className={`absolute top-full left-0 pt-2 transition-all duration-300 z-50 ${isHovered ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2'}`}>
                   <ul
@@ -127,7 +168,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 {item.href === '/' ? (
                   <HomeNavLink
                     href={item.href}
-                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    className={`relative flex min-w-max xl:min-w-[4.5rem] 2xl:min-w-[5.5rem] items-center justify-center px-3.5 xl:px-2.5 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >
@@ -154,7 +195,7 @@ export default function NavDesktopItems({ navItems }: { navItems: NavItem[] }) {
                 ) : (
                   <Link
                     href={item.href}
-                    className={`relative flex min-w-[5.5rem] items-center justify-center px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
+                    className={`relative flex min-w-max xl:min-w-[4.5rem] 2xl:min-w-[5.5rem] items-center justify-center px-3.5 xl:px-2.5 2xl:px-5 py-2.5 rounded-xl transition-colors duration-300 text-[13px] font-bold h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-gold focus-visible:ring-offset-1 focus-visible:ring-offset-brand-navy/50 ${
                       active ? 'text-white' : 'text-white/70 hover:text-white'
                     }`}
                   >

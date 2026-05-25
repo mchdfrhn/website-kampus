@@ -255,7 +255,7 @@ export default async function Navbar() {
           <div className="flex items-center h-20 gap-3">
             <HomeNavLink
               href="/"
-              className="group flex min-w-0 flex-1 items-center gap-3 xl:mr-8 xl:flex-none xl:min-w-max"
+              className="group flex min-w-0 flex-1 items-center gap-3 xl:mr-4 2xl:mr-8 xl:flex-none xl:min-w-max"
               ariaLabel={`STTPU ${settings.namaInstitusi} — Beranda`}
             >
               {settings.logoUrl ? (
