@@ -1,6 +1,5 @@
-import Link from 'next/link';
-import { Users, Trophy, Heart, BookOpen, ArrowRight, Flag } from 'lucide-react';
-import SectionPageHeader from '@/components/layout/SectionPageHeader';
+import { Users, Trophy, Heart, BookOpen, Flag } from 'lucide-react';
+import OverviewPageLayout from '@/components/layout/OverviewPageLayout';
 import { getPayloadClient } from '@/lib/payload';
 import { resolveKemahasiswaanSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 import { synchronizeOverviewSections } from '@/lib/section-links';
@@ -79,53 +78,18 @@ export default async function KemahasiswaanOverview() {
   sections = synchronizeOverviewSections('/kemahasiswaan', resolvedSections, sections)
 
   return (
-    <>
-      <SectionPageHeader
-        title={content.heroTitle}
-        subtitle={content.heroDescription}
-        breadcrumbs={[{ label: 'Kemahasiswaan', href: '/kemahasiswaan' }]}
-      />
-
-      <section className="bg-white border-b border-gray-100 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
-            {stats.map((s) => (
-              <li key={s.label} className="text-center">
-                <p className="font-bold text-2xl sm:text-3xl text-brand-navy tracking-tight break-words">{s.value}</p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{s.label}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <p className="text-gray-600 text-base md:text-lg leading-relaxed max-w-2xl mb-10 sm:mb-12 font-medium">
-          {content.introText}
-        </p>
-        <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3">
-          {sections.map((item) => {
-            const Icon = iconMap[item.href] || Flag;
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="group flex flex-col h-full rounded-2xl border border-gray-100 bg-white p-6 sm:p-8 hover:border-brand-navy hover:shadow-premium-hover hover:-translate-y-1.5 transition-all duration-300"
-                >
-                  <div className="w-12 h-12 bg-gray-50 group-hover:bg-brand-navy rounded-xl flex items-center justify-center mb-6 transition-all duration-300" aria-hidden="true">
-                    <Icon size={20} className="text-brand-navy group-hover:text-brand-gold transition-colors" />
-                  </div>
-                  <h2 className="font-bold text-brand-navy text-lg mb-3 tracking-tight group-hover:text-brand-gold transition-colors">{item.title}</h2>
-                  <p className="text-gray-500 text-sm leading-relaxed flex-1 font-medium">{item.desc}</p>
-                  <div className="flex items-center gap-2 text-[10px] text-brand-navy font-bold uppercase tracking-wider mt-6 group-hover:text-brand-gold transition-all">
-                    Selengkapnya <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
-                  </div>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </section>
-    </>
+    <OverviewPageLayout
+      title={content.heroTitle}
+      subtitle={content.heroDescription}
+      breadcrumbs={[{ label: 'Kemahasiswaan', href: '/kemahasiswaan' }]}
+      stats={stats}
+      statsLabel="Statistik Kemahasiswaan"
+      intro={content.introText}
+      cards={sections.map((item) => ({
+        ...item,
+        eyebrow: 'Kemahasiswaan',
+        icon: iconMap[item.href] || Flag,
+      }))}
+    />
   );
 }
