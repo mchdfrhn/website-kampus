@@ -18,6 +18,10 @@ export default function AkademikCTA({
   const secondaryLabel = card?.secondaryLabel || 'Info Beasiswa';
   const secondaryHref = card?.secondaryHref || '/akademik/beasiswa';
 
+  const isExternal = (href: string) => {
+    return href.startsWith('http://') || href.startsWith('https://') || href.startsWith('//');
+  };
+
   return (
     <div className={`bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20 ${className}`}>
       <BlueAbstractBackground />
@@ -31,12 +35,16 @@ export default function AkademikCTA({
         <div className="flex w-full flex-col sm:w-auto sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
           <Link
             href={primaryHref}
+            target={isExternal(primaryHref) ? '_blank' : undefined}
+            rel={isExternal(primaryHref) ? 'noopener noreferrer' : undefined}
             className="w-full sm:w-48 text-center bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
           >
             {primaryLabel}
           </Link>
           <Link
             href={secondaryHref}
+            target={isExternal(secondaryHref) ? '_blank' : undefined}
+            rel={isExternal(secondaryHref) ? 'noopener noreferrer' : undefined}
             className="w-full sm:w-48 text-center border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
           >
             {secondaryLabel}
