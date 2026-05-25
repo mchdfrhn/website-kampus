@@ -357,9 +357,25 @@ async function seed() {
         { tahun: '2024', judul: 'Akreditasi Unggul', deskripsi: 'Meraih predikat Unggul.' }
       ],
       visi: 'Menjadi institusi vokasi terdepan di bidang pekerjaan umum.',
-      misi: [{ poin: 'Menyelenggarakan pendidikan berkualitas' }, { poin: 'Melakukan riset terapan' }]
+      misi: [{ poin: 'Menyelenggarakan pendidikan berkualitas' }, { poin: 'Melakukan riset terapan' }],
+      strukturCatatan: 'Catatan: Struktur Organisasi ini berdasarkan Keputusan Ketua STTPU Jakarta Nomor: Kep/012/STTPU/I/2026 tentang Susunan Organisasi dan Tata Kerja.',
+      strukturSenat: {
+        jabatan: 'Ketua Senat Akademik',
+        nama: 'Prof. Dr. Ir. Heru Pramono, M.Sc.',
+      },
+      strukturUPT: [
+        { unit: 'UPT Perpustakaan', kepala: 'Rina Kartika, S.I.Pust.' },
+        { unit: 'UPT Teknologi Informasi & Komunikasi', kepala: 'Fajar Nugroho, M.T.' },
+        { unit: 'UPT Laboratorium Terpadu', kepala: 'Dr. Ir. Eko Yulianto, M.T.' },
+        { unit: 'UPT Bahasa & Kerjasama Internasional', kepala: 'Dian Sastrowardoyo, M.A.' },
+      ],
+      strukturBagian: [
+        { bagian: 'Bagian Administrasi Akademik & Kemahasiswaan (BAAK)', kepala: 'Hendra Wijaya, S.Kom.' },
+        { bagian: 'Bagian Keuangan, Kepegawaian & Umum (BKKU)', kepala: 'Sri Wahyuni, S.E.' },
+        { bagian: 'Bagian Perencanaan & Hubungan Masyarakat', kepala: 'Budi Santoso, S.Sos.' },
+      ],
     },
-    ['overviewTitle', 'overviewDescription', 'overviewStats', 'sejarahDeskripsi', 'milestones', 'visi', 'misi'],
+    ['overviewTitle', 'overviewDescription', 'overviewStats', 'sejarahDeskripsi', 'milestones', 'visi', 'misi', 'strukturCatatan', 'strukturSenat', 'strukturUPT', 'strukturBagian'],
   );
 
   // Kalender Akademik
