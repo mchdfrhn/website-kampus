@@ -32,7 +32,7 @@ export const Hibah: CollectionConfig = {
     { name: 'urutan', type: 'number', label: 'Urutan Tampil', defaultValue: 0 },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/penelitian/hibah'])],
-    afterDelete: [revalidateDelete(['/penelitian/hibah'])],
+    afterChange: [revalidateCollection(['/lppm/pedoman'])],
+    afterDelete: [revalidateDelete(['/lppm/pedoman'])],
   },
 }

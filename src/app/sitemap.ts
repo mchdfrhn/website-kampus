@@ -3,7 +3,7 @@ import { getPayloadClient } from '@/lib/payload';
 import { defaultSections } from '@/lib/akademik-navigation';
 import {
   resolveKemahasiswaanSections,
-  resolvePenelitianSections,
+  resolveLppmSections,
   resolveTentangSections,
   type PayloadSectionMeta,
 } from '@/lib/frontend-section-routing';
@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/tentang',
     '/akademik',
     '/kemahasiswaan',
-    '/penelitian',
+    '/lppm',
     '/akademik/program-studi',
     '/akademik/dosen',
     '/akademik/kalender',
@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       galeri,
       tentangGlobal,
       kemahasiswaanGlobal,
-      penelitianGlobal,
+      lppmGlobal,
     ] = await Promise.all([
       payload.find({
         collection: 'berita',
@@ -80,7 +80,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }),
       payload.findGlobal({ slug: 'tentang-kami' }),
       payload.findGlobal({ slug: 'kemahasiswaan-page' as never }),
-      payload.findGlobal({ slug: 'penelitian-page' as never }),
+      payload.findGlobal({ slug: 'lppm-page' as never }),
     ]);
 
     const tentangSections = resolveTentangSections(
@@ -89,8 +89,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const kemahasiswaanSections = resolveKemahasiswaanSections(
       ((kemahasiswaanGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
     );
-    const penelitianSections = resolvePenelitianSections(
-      ((penelitianGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
+    const lppmSections = resolveLppmSections(
+      ((lppmGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
     );
 
     const beritaRoutes = berita.docs.map((doc) => ({
@@ -139,8 +139,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }));
 
-    const penelitianRoutes = penelitianSections.map((section) => ({
-      url: `${baseUrl}/penelitian/${section.slug}`,
+    const lppmRoutes = lppmSections.map((section) => ({
+      url: `${baseUrl}/lppm/${section.slug}`,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     }));
@@ -156,7 +156,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...akademikRoutes,
       ...tentangRoutes,
       ...kemahasiswaanRoutes,
-      ...penelitianRoutes,
+      ...lppmRoutes,
       ...programStudiRoutes,
       ...dosenRoutes,
       ...galeriRoutes,

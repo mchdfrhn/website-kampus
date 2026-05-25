@@ -22,10 +22,10 @@ export const publicPagePaths = [
   '/kemahasiswaan/prestasi',
   '/kemahasiswaan/layanan',
   '/kemahasiswaan/mahasiswa-baru',
-  '/penelitian',
-  '/penelitian/unit',
-  '/penelitian/publikasi',
-  '/penelitian/hibah',
+  '/lppm',
+  '/lppm/unit-penelitian',
+  '/lppm/publikasi',
+  '/lppm/pedoman',
   '/berita',
   '/berita/[slug]',
   '/galeri',
@@ -53,12 +53,6 @@ export const tentangPagePaths = [
 export const kemahasiswaanPagePaths = [
   '/kemahasiswaan',
   '/kemahasiswaan/[slug]',
-  '/sitemap.xml',
-] as const
-
-export const penelitianPagePaths = [
-  '/penelitian',
-  '/penelitian/[slug]',
   '/sitemap.xml',
 ] as const
 

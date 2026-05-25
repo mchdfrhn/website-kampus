@@ -510,6 +510,12 @@ async function seed() {
     'akademik-page',
     {
       sidebarTitle: 'Navigasi Akademik',
+      stats: [
+        { value: '3', label: 'Program Studi Aktif' },
+        { value: '35+', label: 'Dosen Pengampu' },
+        { value: '3.000+', label: 'Alumni' },
+        { value: '2025/2026', label: 'Tahun Akademik' }
+      ],
       sections: [
         { slug: 'program-studi', title: 'Program Studi', subtitle: 'Program studi unggulan STTPU Jakarta di bidang infrastruktur.', breadcrumb: 'Program Studi' },
         { slug: 'dosen', title: 'Direktori Dosen', subtitle: 'Tenaga pengajar profesional dan berpengalaman di STTPU Jakarta.', breadcrumb: 'Dosen' },
@@ -547,7 +553,7 @@ async function seed() {
         secondaryHref: '/akademik/beasiswa'
       }
     },
-    ['sidebarTitle', 'sections', 'programStudiContent', 'dosenContent', 'beasiswaContent', 'consultationCard']
+    ['sidebarTitle', 'stats', 'sections', 'programStudiContent', 'dosenContent', 'beasiswaContent', 'consultationCard']
   );
 
   // Kemahasiswaan Page
@@ -584,35 +590,6 @@ async function seed() {
     ['subpages', 'heroTitle', 'heroDescription', 'stats', 'introText', 'sections', 'sidebarTitle']
   );
 
-  // Penelitian Page
-  console.log('Seeding Penelitian Page...');
-  await seedGlobalIfEmpty(
-    payload,
-    'penelitian-page',
-    {
-      sidebarTitle: 'Navigasi Penelitian',
-      heroTitle: 'Penelitian & Pengabdian',
-      heroDescription: 'STTPU mendorong budaya riset terapan yang relevan dengan kebutuhan pembangunan infrastruktur dan pengelolaan sumber daya alam Indonesia.',
-      stats: [
-        { value: '42+', label: 'Peneliti Aktif' },
-        { value: '5', label: 'Unit Riset & Lab' },
-        { value: '120+', label: 'Publikasi (5 Tahun)' },
-        { value: '18', label: 'Hibah Diterima' }
-      ],
-      sections: [
-        { title: 'Unit Penelitian & Laboratorium', desc: 'Pusat riset terapan dan laboratorium penunjang yang mendukung kegiatan penelitian dosen dan mahasiswa STTPU.', cta: 'Lihat Unit & Lab', href: '/penelitian/unit' },
-        { title: 'Database Publikasi', desc: 'Kumpulan karya ilmiah, jurnal, prosiding, dan buku yang dihasilkan sivitas akademika STTPU.', cta: 'Lihat Publikasi', href: '/penelitian/publikasi' },
-        { title: 'Hibah & Pendanaan', desc: 'Informasi skema hibah penelitian dari Kemendikti, PUPR, dan mitra industri yang tersedia bagi dosen STTPU.', cta: 'Lihat Hibah', href: '/penelitian/hibah' }
-      ],
-      subpages: [
-        { slug: 'unit', title: 'Unit Penelitian & Laboratorium', subtitle: '5 unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.', breadcrumb: 'Unit Penelitian & Lab' },
-        { slug: 'publikasi', title: 'Database Publikasi', subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU — jurnal, prosiding, dan buku.', breadcrumb: 'Database Publikasi' },
-        { slug: 'hibah', title: 'Hibah & Pendanaan Penelitian', subtitle: 'Skema hibah dari Kemendikti, Kementerian PUPR, mitra industri, dan pendanaan internal LP3M STTPU.', breadcrumb: 'Hibah & Pendanaan' }
-      ]
-    },
-    ['subpages', 'heroTitle', 'heroDescription', 'stats', 'sections', 'sidebarTitle']
-  );
-
   // LPPM Page
   console.log('Seeding LPPM Page...');
   await seedGlobalIfEmpty(
@@ -620,13 +597,19 @@ async function seed() {
     'lppm-page',
     {
       sidebarTitle: 'Menu LPPM',
+      stats: [
+        { value: '3', label: 'Ruang Layanan' },
+        { value: '120+', label: 'Publikasi' },
+        { value: '5+', label: 'Fokus Riset' },
+        { value: '18', label: 'Hibah & Program' }
+      ],
       subpages: [
         { slug: 'unit-penelitian', title: 'Unit Penelitian', subtitle: 'Unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.', breadcrumb: 'Unit Penelitian' },
         { slug: 'publikasi', title: 'Publikasi', subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU, meliputi jurnal, prosiding, dan buku.', breadcrumb: 'Publikasi' },
         { slug: 'pedoman', title: 'Pedoman', subtitle: 'Acuan kegiatan penelitian, pengabdian kepada masyarakat, publikasi, dan etika riset LPPM STTPU.', breadcrumb: 'Pedoman' }
       ]
     },
-    ['sidebarTitle', 'subpages']
+    ['sidebarTitle', 'stats', 'subpages']
   );
 
   // LPMI Page
@@ -636,6 +619,12 @@ async function seed() {
     'lpmi-page',
     {
       sidebarTitle: 'Menu LPMI',
+      stats: [
+        { value: '5', label: 'Ruang Standar' },
+        { value: 'PPEPP', label: 'Siklus Mutu' },
+        { value: 'AMI', label: 'Audit Internal' },
+        { value: 'SPMI', label: 'Sistem Mutu' }
+      ],
       subpages: [
         {
           slug: 'kebijakan',
@@ -781,7 +770,7 @@ async function seed() {
         }
       ]
     },
-    ['sidebarTitle', 'subpages']
+    ['sidebarTitle', 'stats', 'subpages']
   );
 
   // Main Menu
@@ -807,7 +796,7 @@ async function seed() {
         },
         {
           label: 'Akademik',
-          href: '#',
+          href: '/akademik',
           children: [
             { label: 'Program Studi', href: '/akademik/program-studi' },
             { label: 'Dosen', href: '/akademik/dosen' },
@@ -827,13 +816,23 @@ async function seed() {
           ],
         },
         {
-          label: 'Penelitian',
-          href: '/penelitian',
+          label: 'LPPM',
+          href: '/lppm',
           children: [
-            { label: 'LPPM', href: '/lppm/unit-penelitian' },
-            { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
-            { label: 'Database Publikasi', href: '/penelitian/publikasi' },
-            { label: 'Hibah & Pendanaan', href: '/penelitian/hibah' },
+            { label: 'Unit Penelitian', href: '/lppm/unit-penelitian' },
+            { label: 'Publikasi', href: '/lppm/publikasi' },
+            { label: 'Pedoman', href: '/lppm/pedoman' },
+          ],
+        },
+        {
+          label: 'LPMI',
+          href: '/lpmi',
+          children: [
+            { label: 'Kebijakan', href: '/lpmi/kebijakan' },
+            { label: 'Pedoman', href: '/lpmi/pedoman' },
+            { label: 'Standar Pendidikan', href: '/lpmi/standar-pendidikan' },
+            { label: 'Standar Penelitian', href: '/lpmi/standar-penelitian' },
+            { label: 'Standar PKM', href: '/lpmi/standar-pkm' },
           ],
         },
         { label: 'Berita', href: '/berita' },

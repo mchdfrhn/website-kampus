@@ -15,11 +15,20 @@ export const AkademikPage: GlobalConfig = {
       type: 'text',
       label: 'Judul Sidebar',
     },
-        {
-          name: 'sections',
-          type: 'array',
-          label: 'Konfigurasi Subhalaman',
-          fields: [
+    {
+      name: 'stats',
+      type: 'array',
+      label: 'Statistik',
+      fields: [
+        { name: 'value', type: 'text', label: 'Nilai', required: true },
+        { name: 'label', type: 'text', label: 'Label', required: true },
+      ],
+    },
+    {
+      name: 'sections',
+      type: 'array',
+      label: 'Konfigurasi Subhalaman',
+      fields: [
         { name: 'slug', type: 'select', label: 'Slug', required: true, options: [...akademikSectionSlugOptions] },
         { name: 'title', type: 'text', label: 'Judul', required: true },
         { name: 'subtitle', type: 'textarea', label: 'Subtitle' },

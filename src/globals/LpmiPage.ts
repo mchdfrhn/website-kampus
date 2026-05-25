@@ -16,6 +16,15 @@ export const LpmiPage: GlobalConfig = {
       defaultValue: 'Menu LPMI',
     },
     {
+      name: 'stats',
+      type: 'array',
+      label: 'Statistik',
+      fields: [
+        { name: 'value', type: 'text', label: 'Nilai', required: true },
+        { name: 'label', type: 'text', label: 'Label', required: true },
+      ],
+    },
+    {
       name: 'subpages',
       type: 'array',
       label: 'Konfigurasi Subhalaman',

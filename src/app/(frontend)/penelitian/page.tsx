@@ -1,13 +1,5 @@
-import type { Metadata } from 'next';
-import PenelitianOverview from '@/components/sections/penelitian/PenelitianOverview';
-import { buildPageMetadata } from '@/lib/seo';
+import { redirect } from 'next/navigation';
 
-export const metadata: Metadata = buildPageMetadata({
-  title: 'Penelitian & Pengabdian | STTPU Jakarta',
-  description: 'Riset terapan, unit penelitian, database publikasi, dan hibah pendanaan di STTPU Jakarta.',
-  path: '/penelitian',
-});
-
-export default function PenelitianPage() {
-  return <PenelitianOverview />;
+export default function PenelitianRedirectPage() {
+  redirect('/lppm/unit-penelitian');
 }

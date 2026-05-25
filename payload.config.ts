@@ -37,7 +37,6 @@ import { PortalLinks } from "./src/globals/PortalLinks";
 import { MainMenu } from "./src/globals/MainMenu";
 import { PanduanMaba } from "./src/globals/PanduanMaba";
 import { KemahasiswaanPage } from "./src/globals/KemahasiswaanPage";
-import { PenelitianPage } from "./src/globals/PenelitianPage";
 import { KontakPage } from "./src/globals/KontakPage";
 import { AkademikPage } from "./src/globals/AkademikPage";
 import { BeritaPage } from "./src/globals/BeritaPage";
@@ -92,7 +91,6 @@ export default buildConfig({
     MainMenu,
     PanduanMaba,
     KemahasiswaanPage,
-    PenelitianPage,
     KontakPage,
     AkademikPage,
     BeritaPage,

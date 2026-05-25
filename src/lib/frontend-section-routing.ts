@@ -13,7 +13,6 @@ import LayananContent from '@/components/sections/kemahasiswaan/LayananContent';
 import MahasiswaBaruContent from '@/components/sections/kemahasiswaan/MahasiswaBaruContent';
 import UnitPenelitianContent from '@/components/sections/penelitian/UnitPenelitianContent';
 import PublikasiContent from '@/components/sections/penelitian/PublikasiContent';
-import HibahContent from '@/components/sections/penelitian/HibahContent';
 import PedomanContent from '@/components/sections/penelitian/PedomanContent';
 
 
@@ -226,43 +225,12 @@ const kemahasiswaanDefinitions: SectionDefinition[] = [
   },
 ];
 
-const penelitianDefinitions: SectionDefinition[] = [
-  {
-    key: 'unit',
-    defaultSlug: 'unit',
-    title: 'Unit Penelitian & Laboratorium',
-    subtitle: '5 unit riset dan laboratorium aktif yang mendukung kegiatan penelitian terapan sivitas akademika STTPU.',
-    breadcrumb: 'Unit Penelitian & Lab',
-    component: UnitPenelitianContent,
-  },
-  {
-    key: 'publikasi',
-    defaultSlug: 'publikasi',
-    title: 'Database Publikasi',
-    subtitle: 'Kumpulan karya ilmiah dosen dan mahasiswa STTPU — jurnal, prosiding, dan buku.',
-    breadcrumb: 'Database Publikasi',
-    component: PublikasiContent,
-  },
-  {
-    key: 'hibah',
-    defaultSlug: 'hibah',
-    title: 'Hibah & Pendanaan Penelitian',
-    subtitle: 'Skema hibah dari Kemendikti, Kementerian PUPR, mitra industri, dan pendanaan internal LP3M STTPU.',
-    breadcrumb: 'Hibah & Pendanaan',
-    component: HibahContent,
-  },
-];
-
 export function resolveTentangSections(payloadSections?: PayloadSectionMeta[]) {
   return resolvePayloadSections(tentangDefinitions, payloadSections);
 }
 
 export function resolveKemahasiswaanSections(payloadSections?: PayloadSectionMeta[]) {
   return resolvePayloadSections(kemahasiswaanDefinitions, payloadSections);
-}
-
-export function resolvePenelitianSections(payloadSections?: PayloadSectionMeta[]) {
-  return resolvePayloadSections(penelitianDefinitions, payloadSections);
 }
 
 const lppmDefinitions: SectionDefinition[] = [
@@ -295,4 +263,3 @@ const lppmDefinitions: SectionDefinition[] = [
 export function resolveLppmSections(payloadSections?: PayloadSectionMeta[]) {
   return resolvePayloadSections(lppmDefinitions, payloadSections);
 }
-

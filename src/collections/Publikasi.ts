@@ -39,7 +39,7 @@ export const Publikasi: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/penelitian/publikasi'])],
-    afterDelete: [revalidateDelete(['/penelitian/publikasi'])],
+    afterChange: [revalidateCollection(['/lppm/publikasi'])],
+    afterDelete: [revalidateDelete(['/lppm/publikasi'])],
   },
 }

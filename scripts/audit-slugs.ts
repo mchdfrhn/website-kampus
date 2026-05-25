@@ -3,7 +3,6 @@ import configPromise from '@payload-config';
 import { defaultSections } from '../src/lib/akademik-navigation';
 import {
   resolveKemahasiswaanSections,
-  resolvePenelitianSections,
   resolveTentangSections,
   type PayloadSectionMeta,
 } from '../src/lib/frontend-section-routing';
@@ -15,7 +14,7 @@ function unique<T>(items: T[]) {
 async function main() {
   const payload = await getPayload({ config: configPromise });
 
-  const [dosen, programStudi, berita, tentangGlobal, kemahasiswaanGlobal, penelitianGlobal, akademikGlobal] = await Promise.all([
+  const [dosen, programStudi, berita, tentangGlobal, kemahasiswaanGlobal, akademikGlobal] = await Promise.all([
     payload.find({
       collection: 'dosen',
       limit: 500,
@@ -36,7 +35,6 @@ async function main() {
     }),
     payload.findGlobal({ slug: 'tentang-kami' }),
     payload.findGlobal({ slug: 'kemahasiswaan-page' as never }),
-    payload.findGlobal({ slug: 'penelitian-page' as never }),
     payload.findGlobal({ slug: 'akademik-page' as never }),
   ]);
 
@@ -50,10 +48,6 @@ async function main() {
   const kemahasiswaanSections = resolveKemahasiswaanSections(
     ((kemahasiswaanGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
   );
-  const penelitianSections = resolvePenelitianSections(
-    ((penelitianGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
-  );
-
   const akademikSections = (((akademikGlobal as { sections?: { slug?: string | null }[] })?.sections) || []).map((section) => section.slug || '');
   const invalidAkademikSections = akademikSections.filter(
     (slug) => slug && !defaultSections.some((section) => section.slug === slug),
@@ -62,7 +56,6 @@ async function main() {
   const dynamicRouteSummary = {
     tentang: unique(tentangSections.map((section) => section.slug)),
     kemahasiswaan: unique(kemahasiswaanSections.map((section) => section.slug)),
-    penelitian: unique(penelitianSections.map((section) => section.slug)),
     akademik: unique(defaultSections.map((section) => section.slug)),
   };
 

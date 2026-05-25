@@ -23,7 +23,7 @@ export const UnitPenelitian: CollectionConfig = {
     { name: 'urutan', type: 'number', label: 'Urutan Tampil', defaultValue: 0 },
   ],
   hooks: {
-    afterChange: [revalidateCollection(['/penelitian/unit'])],
-    afterDelete: [revalidateDelete(['/penelitian/unit'])],
+    afterChange: [revalidateCollection(['/lppm/unit-penelitian'])],
+    afterDelete: [revalidateDelete(['/lppm/unit-penelitian'])],
   },
 }

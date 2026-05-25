@@ -6,10 +6,10 @@ import { getPayloadClient } from '@/lib/payload';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
 import {
   resolveKemahasiswaanSections,
-  resolvePenelitianSections,
   resolveTentangSections,
   resolveLppmSections,
   type PayloadSectionMeta,
+  type ResolvedSectionConfig,
 } from '@/lib/frontend-section-routing';
 import { synchronizeNavChildren } from '@/lib/section-links';
 import NavbarScrollWrapper from './NavbarScrollWrapper';
@@ -66,13 +66,23 @@ const fallbackNavItems: NavItem[] = [
     ],
   },
   {
-    label: 'Penelitian',
-    href: '#',
+    label: 'LPPM',
+    href: '/lppm',
     children: [
-      { label: 'LPPM', href: '/lppm/unit-penelitian' },
-      { label: 'Unit Penelitian & Lab', href: '/penelitian/unit' },
-      { label: 'Database Publikasi', href: '/penelitian/publikasi' },
-      { label: 'Hibah & Pendanaan', href: '/penelitian/hibah' },
+      { label: 'Unit Penelitian', href: '/lppm/unit-penelitian' },
+      { label: 'Publikasi', href: '/lppm/publikasi' },
+      { label: 'Pedoman', href: '/lppm/pedoman' },
+    ],
+  },
+  {
+    label: 'LPMI',
+    href: '/lpmi',
+    children: [
+      { label: 'Kebijakan', href: '/lpmi/kebijakan' },
+      { label: 'Pedoman', href: '/lpmi/pedoman' },
+      { label: 'Standar Pendidikan', href: '/lpmi/standar-pendidikan' },
+      { label: 'Standar Penelitian', href: '/lpmi/standar-penelitian' },
+      { label: 'Standar PKM', href: '/lpmi/standar-pkm' },
     ],
   },
   { label: 'Berita', href: '/berita' },
@@ -86,9 +96,8 @@ function synchronizeNavItems(
     tentangChildren: NavItem['children'];
     akademikChildren: NavItem['children'];
     kemahasiswaanChildren: NavItem['children'];
-    penelitianChildren: NavItem['children'];
-    lpmiHref: string;
-    lppmHref: string;
+    lppmChildren: NavItem['children'];
+    lpmiChildren: NavItem['children'];
   },
 ) {
   return navItems.map((item) => {
@@ -98,10 +107,10 @@ function synchronizeNavItems(
     let href = item.href;
     if (normalizedLabel === 'akademik') {
       href = '/akademik';
-    } else if (href.startsWith('/lpmi')) {
-      href = options.lpmiHref;
-    } else if (href.startsWith('/lppm')) {
-      href = options.lppmHref;
+    } else if (normalizedLabel === 'lppm' && (!href || href === '#' || href.startsWith('/lppm/'))) {
+      href = '/lppm';
+    } else if (normalizedLabel === 'lpmi' && (!href || href === '#' || href.startsWith('/lpmi/'))) {
+      href = '/lpmi';
     }
 
     let children = item.children;
@@ -111,24 +120,33 @@ function synchronizeNavItems(
       children = options.akademikChildren;
     } else if (normalizedHref === '/kemahasiswaan' || normalizedLabel === 'kemahasiswaan') {
       children = options.kemahasiswaanChildren;
-    } else if (normalizedHref === '/penelitian' || normalizedLabel === 'penelitian') {
-      children = options.penelitianChildren;
+    } else if (normalizedHref === '/lppm' || normalizedLabel === 'lppm') {
+      children = options.lppmChildren;
+    } else if (normalizedHref === '/lpmi' || normalizedLabel === 'lpmi') {
+      children = options.lpmiChildren;
     }
 
     if (children) {
       children = children.map((child) => {
-        let childHref = child.href;
-        if (childHref.startsWith('/lpmi')) {
-          childHref = options.lpmiHref;
-        } else if (childHref.startsWith('/lppm')) {
-          childHref = options.lppmHref;
+        if (child.label.trim().toLowerCase() === 'lppm' && child.href.startsWith('/lppm/')) {
+          return { ...child, href: '/lppm' };
         }
-        return { ...child, href: childHref };
+        if (child.label.trim().toLowerCase() === 'lpmi' && child.href.startsWith('/lpmi/')) {
+          return { ...child, href: '/lpmi' };
+        }
+        return child;
       });
     }
 
     return { ...item, href, children };
   });
+}
+
+function buildSectionNavChildren(routeBase: string, sections: (PayloadSectionMeta | ResolvedSectionConfig)[]) {
+  return sections.map((section) => ({
+    label: section.breadcrumb || section.title,
+    href: `${routeBase}/${section.slug}`,
+  }));
 }
 
 const getNavbarData = unstable_cache(
@@ -150,7 +168,6 @@ const getNavbarData = unstable_cache(
       siteSettings,
       tentangGlobal,
       kemahasiswaanGlobal,
-      penelitianGlobal,
       lppmGlobal,
       lpmiGlobal,
     ] = await Promise.all([
@@ -158,7 +175,6 @@ const getNavbarData = unstable_cache(
       payload.findGlobal({ slug: 'site-settings', depth: 1 }),
       payload.findGlobal({ slug: 'tentang-kami' }),
       payload.findGlobal({ slug: 'kemahasiswaan-page' as never }),
-      payload.findGlobal({ slug: 'penelitian-page' as never }),
       payload.findGlobal({ slug: 'lppm-page' as never }),
       payload.findGlobal({ slug: 'lpmi-page' as never }),
     ]);
@@ -169,18 +185,16 @@ const getNavbarData = unstable_cache(
     const kemahasiswaanSections = resolveKemahasiswaanSections(
       ((kemahasiswaanGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
     );
-    const penelitianSections = resolvePenelitianSections(
-      ((penelitianGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
-    );
     const lppmSections = resolveLppmSections(
       ((lppmGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [],
     );
 
-    const activeLpmiSlug = ((lpmiGlobal as { subpages?: { slug: string }[] })?.subpages)?.[0]?.slug || 'kebijakan';
-    const lpmiHref = `/lpmi/${activeLpmiSlug}`;
+    const lpmiSubpages = ((lpmiGlobal as { subpages?: PayloadSectionMeta[] })?.subpages) || [];
+    const lpmiChildren = lpmiSubpages.length > 0
+      ? buildSectionNavChildren('/lpmi', lpmiSubpages)
+      : fallbackNavItems[5].children || [];
 
-    const activeLppmSlug = lppmSections[0]?.slug || 'unit-penelitian';
-    const lppmHref = `/lppm/${activeLppmSlug}`;
+    const lppmChildren = buildSectionNavChildren('/lppm', lppmSections);
 
     const akademikNavigation = await getAkademikNavigation();
 
@@ -188,9 +202,8 @@ const getNavbarData = unstable_cache(
       tentangChildren: synchronizeNavChildren('/tentang', tentangSections, fallbackNavItems[1].children || []),
       akademikChildren: akademikNavigation.links.map((link) => ({ label: link.label, href: link.href })),
       kemahasiswaanChildren: synchronizeNavChildren('/kemahasiswaan', kemahasiswaanSections, fallbackNavItems[3].children || []),
-      penelitianChildren: synchronizeNavChildren('/penelitian', penelitianSections, fallbackNavItems[4].children || []),
-      lpmiHref,
-      lppmHref,
+      lppmChildren,
+      lpmiChildren,
     });
 
     if (menu.navItems && menu.navItems.length > 0) {
@@ -206,13 +219,8 @@ const getNavbarData = unstable_cache(
           kemahasiswaanSections,
           ((menu.navItems as NavItem[]).find((item) => item.href === '/kemahasiswaan' || item.label === 'Kemahasiswaan')?.children || fallbackNavItems[3].children || []),
         ),
-        penelitianChildren: synchronizeNavChildren(
-          '/penelitian',
-          penelitianSections,
-          ((menu.navItems as NavItem[]).find((item) => item.href === '/penelitian' || item.label === 'Penelitian')?.children || fallbackNavItems[4].children || []),
-        ),
-        lpmiHref,
-        lppmHref,
+        lppmChildren,
+        lpmiChildren,
       });
     } else {
       navItems = syncedFallbackNavItems;

@@ -44,6 +44,15 @@ type LpmiDocument = {
   } | string | number | null;
 };
 
+type StatItem = { value: string; label: string };
+
+const defaultStats: StatItem[] = [
+  { value: '5', label: 'Ruang Standar' },
+  { value: 'PPEPP', label: 'Siklus Mutu' },
+  { value: 'AMI', label: 'Audit Internal' },
+  { value: 'SPMI', label: 'Sistem Mutu' },
+];
+
 const defaultLpmiSections: LpmiSection[] = [
   {
     slug: 'kebijakan',
@@ -264,15 +273,16 @@ const defaultLpmiSections: LpmiSection[] = [
   },
 ];
 
-async function getLpmiSections(): Promise<{ subpages: LpmiSection[]; sidebarTitle: string }> {
+async function getLpmiSections(): Promise<{ subpages: LpmiSection[]; sidebarTitle: string; stats: StatItem[] }> {
   try {
     const payload = await getPayloadClient();
     const global = await payload.findGlobal({ slug: 'lpmi-page' as never });
-    const data = global as { subpages?: LpmiSection[]; sidebarTitle?: string };
+    const data = global as { subpages?: LpmiSection[]; sidebarTitle?: string; stats?: StatItem[] };
     if (data.subpages && data.subpages.length > 0) {
       return {
         subpages: data.subpages,
         sidebarTitle: data.sidebarTitle || 'Menu LPMI',
+        stats: Array.isArray(data.stats) && data.stats.length > 0 ? data.stats : defaultStats,
       };
     }
   } catch (error) {
@@ -281,6 +291,7 @@ async function getLpmiSections(): Promise<{ subpages: LpmiSection[]; sidebarTitl
   return {
     subpages: defaultLpmiSections,
     sidebarTitle: 'Menu LPMI',
+    stats: defaultStats,
   };
 }
 
@@ -368,7 +379,7 @@ export default async function LpmiSlugPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { subpages, sidebarTitle } = await getLpmiSections();
+  const { subpages, sidebarTitle, stats } = await getLpmiSections();
   const section = subpages.find((item) => item.slug === slug);
   if (!section) notFound();
   const documents = await fetchLpmiDocuments(section.slug);
@@ -402,6 +413,18 @@ export default async function LpmiSlugPage({
           { label: section.breadcrumb || section.title },
         ]}
       />
+      <section className="bg-white border-b border-gray-100 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4" aria-label="Statistik LPMI">
+            {stats.map((stat) => (
+              <li key={stat.label} className="text-center">
+                <p className="font-bold text-2xl sm:text-3xl text-brand-navy tracking-tight break-words">{stat.value}</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{stat.label}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">

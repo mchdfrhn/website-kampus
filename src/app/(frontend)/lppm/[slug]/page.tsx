@@ -8,6 +8,15 @@ import { resolveLppmSections, type PayloadSectionMeta } from '@/lib/frontend-sec
 import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
 import { getPromoCards, defaultPromoCards } from '@/lib/data/promo-cards';
 
+type StatItem = { value: string; label: string };
+
+const defaultStats: StatItem[] = [
+  { value: '3', label: 'Ruang Layanan' },
+  { value: '120+', label: 'Publikasi' },
+  { value: '5+', label: 'Fokus Riset' },
+  { value: '18', label: 'Hibah & Program' },
+];
+
 export async function generateStaticParams() {
   try {
     const payload = await getPayloadClient();
@@ -52,6 +61,7 @@ export default async function LppmSlugPage({ params }: { params: Promise<{ slug:
     href: `/lppm/${item.slug}`,
   }));
   let promo = defaultPromoCards;
+  let stats = defaultStats;
 
   try {
     const payload = await getPayloadClient();
@@ -60,9 +70,12 @@ export default async function LppmSlugPage({ params }: { params: Promise<{ slug:
       getPromoCards(),
     ]);
     promo = promoData;
-    const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string };
+    const data = global as { subpages?: PayloadSectionMeta[]; sidebarTitle?: string; stats?: StatItem[] };
     resolvedSections = resolveLppmSections(data.subpages || []);
     sidebarTitle = data.sidebarTitle || sidebarTitle;
+    if (Array.isArray(data.stats) && data.stats.length > 0) {
+      stats = data.stats;
+    }
     if (resolvedSections.length > 0) {
       sidebarLinks = resolvedSections.map((item) => ({
         label: item.breadcrumb || item.title,
@@ -97,6 +110,18 @@ export default async function LppmSlugPage({ params }: { params: Promise<{ slug:
           { label: section.breadcrumb || section.title, href: `/lppm/${section.slug}` },
         ]}
       />
+      <section className="bg-white border-b border-gray-100 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4" aria-label="Statistik LPPM">
+            {stats.map((stat) => (
+              <li key={stat.label} className="text-center">
+                <p className="font-bold text-2xl sm:text-3xl text-brand-navy tracking-tight break-words">{stat.value}</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{stat.label}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
           <div className="min-w-0">
