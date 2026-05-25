@@ -1,6 +1,7 @@
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import BeasiswaContent from '@/components/sections/akademik/BeasiswaContent';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
+import AkademikCTA from '@/components/sections/akademik/AkademikCTA';
 import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { buildPageMetadata } from '@/lib/seo';
 
@@ -29,6 +30,7 @@ export default async function BeasiswaPage() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
           <div className="min-w-0">
             <BeasiswaContent content={pageContent.beasiswaContent} />
+            <AkademikCTA card={pageContent.consultationCard} className="mt-12" />
           </div>
           <AkademikSidebar currentPath="/akademik/beasiswa" />
         </div>

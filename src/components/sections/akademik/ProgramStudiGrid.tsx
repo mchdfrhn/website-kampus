@@ -2,8 +2,7 @@ import Link from 'next/link';
 import type { ProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudiPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
-import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
+import { ArrowRight } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -47,14 +46,6 @@ export default function ProgramStudiGrid({
   const gridDescription =
     content?.gridDescription ||
     'STTPU Jakarta menawarkan kurikulum vokasi berbasis teknologi yang dirancang khusus untuk menghasilkan sarjana terapan yang kompeten di sektor infrastruktur dan pekerjaan umum nasional.';
-  const consultationTitle = content?.consultationTitle || 'Konsultasi Akademik';
-  const consultationDescription =
-    content?.consultationDescription ||
-    'Tim akademik kami siap membantu Anda memilih program studi yang paling sesuai dengan visi karir Anda.';
-  const primaryLabel = content?.consultationPrimaryLabel || 'Hubungi Kami';
-  const primaryHref = content?.consultationPrimaryHref || '/kontak';
-  const secondaryLabel = content?.consultationSecondaryLabel || 'Info Beasiswa';
-  const secondaryHref = content?.consultationSecondaryHref || '/akademik/beasiswa';
 
   return (
     <section className="py-10 sm:py-12">
@@ -123,32 +114,6 @@ export default function ProgramStudiGrid({
         })}
       </ul>
       )}
-
-      <div className="bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
-        <BlueAbstractBackground />
-        <div className="relative z-10 flex flex-col items-start gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-          <div className="max-w-2xl text-center lg:text-left">
-            <h3 className="font-bold text-2xl md:text-3xl mb-4 tracking-tight">{consultationTitle}</h3>
-            <p className="text-white/60 text-base md:text-lg font-medium leading-relaxed">
-              {consultationDescription}
-            </p>
-          </div>
-          <div className="flex w-full flex-col sm:w-auto sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
-            <Link
-              href={primaryHref}
-              className="w-full sm:w-auto text-center bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
-            >
-              {primaryLabel}
-            </Link>
-            <Link
-              href={secondaryHref}
-              className="w-full sm:w-auto text-center border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
-            >
-              {secondaryLabel}
-            </Link>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

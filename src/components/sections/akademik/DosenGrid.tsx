@@ -6,7 +6,6 @@ import type { Dosen } from '@/lib/data/dosen';
 import type { DosenPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { BookOpen, ChevronRight, Mail, Search, Users } from 'lucide-react';
-import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
 
 const jabatanLabel: Record<string, string> = {
@@ -320,34 +319,6 @@ export default function DosenGrid({
           </section>
         </div>
       ) : null}
-
-      <div className="mt-12 bg-brand-navy rounded-3xl p-6 sm:p-8 lg:p-16 text-white relative overflow-hidden shadow-2xl shadow-brand-navy/20">
-        <BlueAbstractBackground />
-        <div className="relative z-10 flex flex-col items-start gap-8 sm:gap-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
-          <div className="max-w-2xl text-center lg:text-left">
-            <h3 className="font-bold text-2xl md:text-3xl mb-4 tracking-tight">
-              {content?.ctaTitle || 'Konsultasi Akademik'}
-            </h3>
-            <p className="text-white/60 text-base md:text-lg font-medium leading-relaxed">
-              {content?.ctaDescription || 'Tim akademik kami siap membantu Anda menemukan dosen pembimbing, informasi program studi, dan jalur karir yang paling sesuai.'}
-            </p>
-          </div>
-          <div className="flex w-full flex-col sm:w-auto sm:flex-row flex-wrap justify-center lg:justify-end gap-3 sm:gap-4">
-            <Link
-              href={content?.ctaPrimaryHref || '/kontak'}
-              className="w-full sm:w-auto text-center bg-brand-gold text-brand-navy text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white transition-all shadow-xl shadow-brand-gold/10"
-            >
-              {content?.ctaPrimaryLabel || 'Hubungi Kami'}
-            </Link>
-            <Link
-              href={content?.ctaSecondaryHref || '/akademik/program-studi'}
-              className="w-full sm:w-auto text-center border-2 border-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-6 sm:px-8 py-4 rounded-xl hover:bg-white/10 transition-all"
-            >
-              {content?.ctaSecondaryLabel || 'Program Studi'}
-            </Link>
-          </div>
-        </div>
-      </div>
     </section>
   );
 }

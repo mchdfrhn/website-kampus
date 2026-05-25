@@ -1,6 +1,8 @@
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import KalenderContent from '@/components/sections/akademik/KalenderContent';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
+import AkademikCTA from '@/components/sections/akademik/AkademikCTA';
+import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { buildPageMetadata } from '@/lib/seo';
 
 
@@ -12,6 +14,8 @@ export const metadata = buildPageMetadata({
 });
 
 export default async function KalenderPage() {
+  const pageContent = await getAkademikPageContent();
+
   return (
     <>
       <AkademikPageHeader
@@ -26,6 +30,7 @@ export default async function KalenderPage() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
           <div className="min-w-0">
             <KalenderContent />
+            <AkademikCTA card={pageContent.consultationCard} className="mt-12" />
           </div>
           <AkademikSidebar currentPath="/akademik/kalender" />
         </div>

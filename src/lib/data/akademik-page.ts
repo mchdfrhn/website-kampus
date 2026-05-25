@@ -4,12 +4,6 @@ import { unstable_cache } from 'next/cache';
 export type ProgramStudiPageContent = {
   gridTitle?: string | null;
   gridDescription?: string | null;
-  consultationTitle?: string | null;
-  consultationDescription?: string | null;
-  consultationPrimaryLabel?: string | null;
-  consultationPrimaryHref?: string | null;
-  consultationSecondaryLabel?: string | null;
-  consultationSecondaryHref?: string | null;
   detailCareerTitle?: string | null;
   detailCareerDescription?: string | null;
   detailCareerButtonLabel?: string | null;
@@ -22,12 +16,6 @@ export type ProgramStudiPageContent = {
 
 export type DosenPageContent = {
   gridIntroText?: string | null;
-  ctaTitle?: string | null;
-  ctaDescription?: string | null;
-  ctaPrimaryLabel?: string | null;
-  ctaPrimaryHref?: string | null;
-  ctaSecondaryLabel?: string | null;
-  ctaSecondaryHref?: string | null;
 };
 
 export type BeasiswaPageContent = {
@@ -38,10 +26,20 @@ export type BeasiswaPageContent = {
   externalDescription?: string | null;
 };
 
+export type ConsultationCard = {
+  title?: string | null;
+  description?: string | null;
+  primaryLabel?: string | null;
+  primaryHref?: string | null;
+  secondaryLabel?: string | null;
+  secondaryHref?: string | null;
+};
+
 export type AkademikPageContent = {
   programStudiContent?: ProgramStudiPageContent | null;
   dosenContent?: DosenPageContent | null;
   beasiswaContent?: BeasiswaPageContent | null;
+  consultationCard?: ConsultationCard | null;
 };
 
 async function resolveAkademikPageContent(): Promise<AkademikPageContent> {
@@ -53,6 +51,7 @@ async function resolveAkademikPageContent(): Promise<AkademikPageContent> {
       programStudiContent: (global as AkademikPageContent).programStudiContent || null,
       dosenContent: (global as AkademikPageContent).dosenContent || null,
       beasiswaContent: (global as AkademikPageContent).beasiswaContent || null,
+      consultationCard: (global as AkademikPageContent).consultationCard || null,
     };
   } catch {
     return {};

@@ -3,6 +3,7 @@ import { unstable_cache } from 'next/cache';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import ProgramStudiGrid from '@/components/sections/akademik/ProgramStudiGrid';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
+import AkademikCTA from '@/components/sections/akademik/AkademikCTA';
 import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToProgramStudi } from '@/lib/data/program-studi';
 import type { ProgramStudi } from '@/lib/data/program-studi';
@@ -52,6 +53,7 @@ export default async function ProgramStudiPage() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_20rem] xl:grid-cols-[1fr_22rem]">
           <div className="min-w-0">
             <ProgramStudiGrid prodiList={prodiList} content={pageContent.programStudiContent} />
+            <AkademikCTA card={pageContent.consultationCard} className="mt-8" />
           </div>
           <AkademikSidebar currentPath="/akademik/program-studi" />
         </div>

@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import AkademikPageHeader from '@/components/sections/akademik/AkademikPageHeader';
 import DosenGrid from '@/components/sections/akademik/DosenGrid';
 import AkademikSidebar from '@/components/sections/akademik/AkademikSidebar';
+import AkademikCTA from '@/components/sections/akademik/AkademikCTA';
 import { getAkademikPageContent } from '@/lib/data/akademik-page';
 import { mapPayloadToDosen } from '@/lib/data/dosen';
 import type { Dosen } from '@/lib/data/dosen';
@@ -78,6 +79,7 @@ export default async function DosenPage() {
               programOrder={programOrder}
               content={pageContent.dosenContent}
             />
+            <AkademikCTA card={pageContent.consultationCard} className="mt-12" />
           </div>
           <AkademikSidebar currentPath="/akademik/dosen" />
         </div>
