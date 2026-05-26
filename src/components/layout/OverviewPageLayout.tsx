@@ -52,11 +52,11 @@ export default function OverviewPageLayout({
 
       <section className="border-b border-gray-100 bg-white px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4" aria-label={statsLabel}>
+          <ul className="grid grid-cols-4 gap-2 sm:gap-8" aria-label={statsLabel}>
             {stats.map((stat) => (
               <li key={stat.label} className="text-center">
-                <p className="break-words text-2xl font-bold tracking-tight text-brand-navy sm:text-3xl">{stat.value}</p>
-                <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">{stat.label}</p>
+                <p className="break-words text-base xs:text-lg sm:text-3xl font-bold tracking-tight text-brand-navy">{stat.value}</p>
+                <p className="mt-1 sm:mt-2 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 leading-tight">{stat.label}</p>
               </li>
             ))}
           </ul>

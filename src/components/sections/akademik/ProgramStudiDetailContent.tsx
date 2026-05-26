@@ -107,17 +107,17 @@ export default async function ProgramStudiDetailContent({
             </span>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="mt-8 grid grid-cols-4 gap-1.5 sm:gap-4">
             {overviewStats.map(({ icon: Icon, label, value }) => (
               <div
                 key={label}
-                className="rounded-xl border border-gray-100 bg-gray-50 p-4 transition-all duration-300 hover:-translate-y-1 hover:border-brand-navy/15 hover:bg-white hover:shadow-premium"
+                className="rounded-xl border border-gray-100 bg-gray-50 p-2 sm:p-4 transition-all duration-300 hover:-translate-y-1 hover:border-brand-navy/15 hover:bg-white hover:shadow-premium"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-navy text-white">
-                  <Icon size={17} aria-hidden="true" />
+                <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg sm:rounded-xl bg-brand-navy text-white">
+                  <Icon className="w-3.5 h-3.5 sm:w-[17px] sm:h-[17px]" aria-hidden="true" />
                 </div>
-                <p className="mt-4 whitespace-nowrap text-[9px] font-bold uppercase tracking-wide text-gray-400">{label}</p>
-                <p className="mt-2 text-sm font-bold leading-relaxed tracking-tight text-brand-navy">{value}</p>
+                <p className="mt-3 whitespace-nowrap text-[8px] sm:text-[9px] font-bold uppercase tracking-wide text-gray-400">{label}</p>
+                <p className="mt-1 text-xs sm:text-sm font-bold leading-relaxed tracking-tight text-brand-navy line-clamp-1">{value}</p>
               </div>
             ))}
           </div>

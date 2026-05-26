@@ -68,7 +68,7 @@ export default function StatsBar({ items }: { items?: { angka: string; label: st
     <div className="relative z-20 -mt-6 sm:-mt-10 lg:-mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <Reveal width="100%" yOffset={20}>
         <div className="bg-white rounded-2xl shadow-premium border border-brand-navy/5 overflow-hidden">
-          <div ref={containerRef} className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-brand-navy/5">
+          <div ref={containerRef} className="grid grid-cols-4 gap-px bg-brand-navy/5">
             {stats.map((stat) => (
               <StatItem key={stat.label} stat={stat} animated={animated} />
             ))}
