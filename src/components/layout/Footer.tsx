@@ -17,9 +17,8 @@ const quickLinks = [
 
 const studyPrograms = [
   { label: 'Teknik Sipil', href: '/akademik/program-studi/teknik-sipil' },
-  { label: 'Teknik Pengairan', href: '/akademik/program-studi/teknik-pengairan' },
   { label: 'Teknik Lingkungan', href: '/akademik/program-studi/teknik-lingkungan' },
-  { label: 'Manajemen Konstruksi', href: '/akademik/program-studi/manajemen-konstruksi' },
+  { label: 'Teknik Informatika', href: '/akademik/program-studi/teknik-informatika' },
 ];
 
 // Premium Brand Icons (SVG)

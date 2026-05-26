@@ -22,7 +22,7 @@ export const defaultSections: AkademikSectionMeta[] = [
     slug: 'program-studi',
     title: 'Program Studi',
     subtitle:
-      'Empat program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum dan infrastruktur nasional.',
+      'Tiga program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum, teknologi informasi, dan infrastruktur nasional.',
     breadcrumb: 'Program Studi',
   },
   {

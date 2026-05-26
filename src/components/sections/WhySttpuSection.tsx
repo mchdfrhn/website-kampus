@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import * as LucideIcons from 'lucide-react';
 import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { Reveal } from '@/components/ui/motion/Reveal';
+import { Reveal, StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 
 type WhyItem = {
   icon?: string | null;
@@ -101,47 +101,51 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
 
   if (backgroundUrl) {
     return (
-      <li className="group relative flex min-h-[280px] overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-brand-navy shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)] snap-start flex-none w-[85vw] sm:w-[320px] md:w-auto md:flex-initial">
-        <Image
-          src={backgroundUrl}
-          alt={backgroundAlt}
-          fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
-          className="object-cover opacity-0 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:opacity-100"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/78 to-brand-navy/32 opacity-0 backdrop-blur-none transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:backdrop-blur-[2px]" />
-        <div className="absolute inset-0 bg-brand-navy/12 opacity-0 backdrop-blur-none transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:backdrop-blur-[1px]" />
-        <div className="relative z-10 mt-auto transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-mist text-brand-navy ring-1 ring-brand-navy/5 transition-[background-color,color,box-shadow] duration-500 ease-out group-hover:bg-white/12 group-hover:text-brand-gold group-hover:ring-white/20 group-hover:backdrop-blur-sm">
-            <Icon size={20} aria-hidden="true" />
+      <StaggerItem className="snap-start flex-none w-[85vw] sm:w-[320px] md:w-auto md:flex-initial">
+        <div className="group relative flex min-h-[280px] h-full overflow-hidden rounded-xl border border-gray-200 bg-white p-5 text-brand-navy shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]">
+          <Image
+            src={backgroundUrl}
+            alt={backgroundAlt}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+            className="object-cover opacity-0 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:opacity-100"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/78 to-brand-navy/32 opacity-0 backdrop-blur-none transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:backdrop-blur-[2px]" />
+          <div className="absolute inset-0 bg-brand-navy/12 opacity-0 backdrop-blur-none transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:backdrop-blur-[1px]" />
+          <div className="relative z-10 mt-auto transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5">
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-mist text-brand-navy ring-1 ring-brand-navy/5 transition-[background-color,color,box-shadow] duration-500 ease-out group-hover:bg-white/12 group-hover:text-brand-gold group-hover:ring-white/20 group-hover:backdrop-blur-sm">
+              <Icon size={20} aria-hidden="true" />
+            </div>
+            <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
+              Alasan {index + 1}
+            </p>
+            <h3 className="text-lg font-bold leading-snug text-brand-navy transition-colors duration-500 group-hover:text-white">
+              {item.title}
+            </h3>
+            <p className="mt-2 text-sm leading-relaxed text-gray-500 transition-colors duration-500 group-hover:text-white/78">
+              {item.description}
+            </p>
           </div>
-          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
-            Alasan {index + 1}
-          </p>
-          <h3 className="text-lg font-bold leading-snug text-brand-navy transition-colors duration-500 group-hover:text-white">
-            {item.title}
-          </h3>
-          <p className="mt-2 text-sm leading-relaxed text-gray-500 transition-colors duration-500 group-hover:text-white/78">
-            {item.description}
-          </p>
         </div>
-      </li>
+      </StaggerItem>
     );
   }
 
   return (
-    <li className="group flex h-full gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)] snap-start flex-none w-[85vw] sm:w-[320px] md:w-auto md:flex-initial">
-      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-mist text-brand-navy transition-colors duration-500 ease-out group-hover:bg-brand-navy group-hover:text-brand-gold">
-        <Icon size={20} aria-hidden="true" />
+    <StaggerItem className="snap-start flex-none w-[85vw] sm:w-[320px] md:w-auto md:flex-initial">
+      <div className="group flex h-full gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-[0_10px_28px_rgba(15,23,42,0.05)] transition-[border-color,box-shadow,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-brand-gold/55 hover:shadow-[0_18px_38px_rgba(15,23,42,0.12)]">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-mist text-brand-navy transition-colors duration-500 ease-out group-hover:bg-brand-navy group-hover:text-brand-gold">
+          <Icon size={20} aria-hidden="true" />
+        </div>
+        <div>
+          <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
+            Alasan {index + 1}
+          </p>
+          <h3 className="text-base font-bold leading-snug text-brand-navy">{item.title}</h3>
+          <p className="mt-2 text-sm leading-relaxed text-gray-500">{item.description}</p>
+        </div>
       </div>
-      <div>
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-gold">
-          Alasan {index + 1}
-        </p>
-        <h3 className="text-base font-bold leading-snug text-brand-navy">{item.title}</h3>
-        <p className="mt-2 text-sm leading-relaxed text-gray-500">{item.description}</p>
-      </div>
-    </li>
+    </StaggerItem>
   );
 }
 
@@ -198,14 +202,15 @@ export default function WhySttpuSection({
           </div>
         </Reveal>
 
-        <div className="min-w-0">
-          <Reveal width="100%" yOffset={24} delay={0.1}>
-            <ul className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:grid md:grid-cols-2 md:gap-4 md:p-0 md:-mx-0 scrollbar-none" aria-label="Alasan memilih STTPU Jakarta">
-              {reasons.map((item, index) => (
-                <ReasonCard key={`${item.title}-${index}`} item={item} index={index} />
-              ))}
-            </ul>
-          </Reveal>
+        <div className="min-w-0" aria-label="Alasan memilih STTPU Jakarta">
+          <StaggerContainer
+            staggerChildren={0.06}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 -mx-4 px-4 md:grid md:grid-cols-2 md:gap-4 md:p-0 md:-mx-0 scrollbar-none"
+          >
+            {reasons.map((item, index) => (
+              <ReasonCard key={`${item.title}-${index}`} item={item} index={index} />
+            ))}
+          </StaggerContainer>
         </div>
       </div>
     </section>

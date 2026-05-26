@@ -259,16 +259,15 @@ Publikasi ini memperkuat posisi STTPU sebagai pusat riset terapan di bidang tekn
     slug: 'orientasi-mahasiswa-baru-sttpu-2025',
     judul: 'Orientasi Mahasiswa Baru 2025: Membangun Fondasi Akademik dan Karakter Sejak Hari Pertama',
     kategori: 'kemahasiswaan',
-    ringkasan: 'STTPU Jakarta sukses menyelenggarakan Orientasi Mahasiswa Baru (OMBA) 2025 selama tiga hari yang diikuti oleh 312 mahasiswa baru dari empat program studi.',
+    ringkasan: 'STTPU Jakarta sukses menyelenggarakan Orientasi Mahasiswa Baru (OMBA) 2025 selama tiga hari yang diikuti oleh 312 mahasiswa baru dari tiga program studi.',
     konten: `Sekolah Tinggi Teknologi Pekerjaan Umum (STTPU) Jakarta sukses menyelenggarakan Orientasi Mahasiswa Baru (OMBA) Tahun Akademik 2025/2026 selama tiga hari, 21–23 Juli 2025, di lingkungan kampus STTPU.
 
 **312 Mahasiswa Baru Bergabung**
 
-Sebanyak 312 mahasiswa baru dari empat program studi resmi menjadi bagian dari keluarga besar STTPU:
-- Teknik Sipil: 95 mahasiswa
-- Teknik Pengairan: 72 mahasiswa
-- Teknik Lingkungan: 78 mahasiswa
-- Manajemen Konstruksi: 67 mahasiswa
+Sebanyak 312 mahasiswa baru dari tiga program studi resmi menjadi bagian dari keluarga besar STTPU:
+- Teknik Sipil: 112 mahasiswa
+- Teknik Lingkungan: 98 mahasiswa
+- Teknik Informatika: 102 mahasiswa
 
 **Rangkaian Kegiatan OMBA**
 

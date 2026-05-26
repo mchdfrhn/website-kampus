@@ -14,7 +14,7 @@ import { buildPageMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildPageMetadata({
   title: 'Program Studi | STTPU Jakarta',
   description:
-    'Empat program studi D-IV unggulan di STTPU Jakarta: Teknik Sipil, Teknik Pengairan, Teknik Lingkungan, dan Manajemen Konstruksi.',
+    'Tiga program studi D-IV unggulan di STTPU Jakarta: Teknik Sipil, Teknik Lingkungan, dan Teknik Informatika.',
   path: '/akademik/program-studi',
 });
 
@@ -43,7 +43,7 @@ export default async function ProgramStudiPage() {
     <>
       <AkademikPageHeader
         title="Program Studi"
-        subtitle="Empat program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum dan infrastruktur nasional."
+        subtitle="Tiga program studi D-IV yang dirancang untuk menghasilkan sarjana terapan kompeten di sektor pekerjaan umum, teknologi informasi, dan infrastruktur nasional."
         breadcrumbs={[
           { label: 'Akademik', href: '/akademik' },
           { label: 'Program Studi', href: '/akademik/program-studi' },

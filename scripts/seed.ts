@@ -132,6 +132,9 @@ async function seed() {
       slug: 'teknik-sipil',
       nama: 'Teknik Sipil',
       jenjang: 'd4',
+      gelarLulusan: 'S.Tr.T.',
+      jumlahSKS: 144,
+      masaStudi: '4 Tahun (8 Semester)',
       akreditasi: 'unggul',
       deskripsiSingkat: 'Program studi yang menghasilkan ahli madya teknik sipil kompeten di bidang perencanaan, perancangan, dan pelaksanaan konstruksi infrastruktur.',
       visi: 'Menjadi program studi Teknik Sipil vokasi yang unggul dan terkemuka dalam menghasilkan sarjana terapan yang kompeten, inovatif, dan berdaya saing nasional di bidang konstruksi dan infrastruktur pada tahun 2030.',
@@ -142,27 +145,32 @@ async function seed() {
       status: 'aktif'
     },
     {
-      slug: 'teknik-pengairan',
-      nama: 'Teknik Pengairan',
-      jenjang: 'd4',
-      akreditasi: 'baik-sekali',
-      deskripsiSingkat: 'Program studi yang menghasilkan tenaga ahli pengelolaan sumber daya air, jaringan irigasi, drainase, dan bangunan air.',
-      status: 'aktif'
-    },
-    {
       slug: 'teknik-lingkungan',
       nama: 'Teknik Lingkungan',
       jenjang: 'd4',
+      gelarLulusan: 'S.Tr.T.',
+      jumlahSKS: 144,
+      masaStudi: '4 Tahun (8 Semester)',
       akreditasi: 'baik-sekali',
       deskripsiSingkat: 'Program studi yang menghasilkan ahli teknologi lingkungan kompeten di bidang pengelolaan air bersih, sanitasi, persampahan, dan kualitas udara.',
       status: 'aktif'
     },
     {
-      slug: 'manajemen-konstruksi',
-      nama: 'Manajemen Konstruksi',
+      slug: 'teknik-informatika',
+      nama: 'Teknik Informatika',
       jenjang: 'd4',
-      akreditasi: 'baik-sekali',
-      deskripsiSingkat: 'Program studi yang menghasilkan manajer konstruksi profesional yang kompeten dalam perencanaan, pengendalian biaya, waktu, mutu, dan K3 proyek.',
+      gelarLulusan: 'S.Tr.Kom.',
+      jumlahSKS: 144,
+      masaStudi: '4 Tahun (8 Semester)',
+      akreditasi: 'baik',
+      deskripsiSingkat: 'Menyelenggarakan pendidikan tinggi yang berfokus pada integrasi teoretis dan praktis dalam transformasi informasi digital melalui penguasaan algoritma, arsitektur sistem komputasi, dan keamanan siber.',
+      visi: 'Terwujudnya Program Studi Teknik Informatika Yang Berdaya Saing Di Tingkat Nasional Dalam Pengembangan Perangkat Lunak Dan Infrastruktur Teknologi Informasi Yang Berintegritas Profesional Dan Kompeten Pada Tahun 2040.',
+      misi: [
+        { poin: 'Menyelenggarakan pendidikan menghasilkan lulusan Sarjana Teknik Informatika yang memiliki kemampuan dalam bidang pengembangan perangkat lunak dan infrastruktur teknologi informasi.' },
+        { poin: 'Menyelenggarakan penelitian dan pengembangan keilmuan dalam bidang Informatika.' },
+        { poin: 'Menyelenggarakan pengabdian pada masyarakat untuk menerapkan IPTEK bidang Teknik Informatika.' },
+        { poin: 'Mengembangkan keilmuan Teknik Informatika bidang ke-PU-an.' },
+      ],
       status: 'aktif'
     }
   ] as const;
@@ -191,7 +199,7 @@ async function seed() {
       bidangKeahlian: [{ keahlian: 'Rekayasa Struktur' }, { keahlian: 'Manajemen Konstruksi' }],
       email: 'bambang.setiawan@sttpu.ac.id',
       bio: 'Profesor di bidang rekayasa struktur.',
-      programStudi: [prodiIds['teknik-sipil'], prodiIds['manajemen-konstruksi']].filter(Boolean),
+      programStudi: [prodiIds['teknik-sipil']].filter(Boolean),
     },
     {
       slug: 'siti-rahayu',
@@ -202,7 +210,7 @@ async function seed() {
       bidangKeahlian: [{ keahlian: 'Teknik Lingkungan' }, { keahlian: 'Pengelolaan SDA' }],
       email: 'siti.rahayu@sttpu.ac.id',
       bio: 'Pakar teknik lingkungan.',
-      programStudi: [prodiIds['teknik-lingkungan'], prodiIds['teknik-pengairan']].filter(Boolean),
+      programStudi: [prodiIds['teknik-lingkungan']].filter(Boolean),
     }
   ];
 

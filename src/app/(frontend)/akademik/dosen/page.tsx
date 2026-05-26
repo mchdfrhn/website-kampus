@@ -13,7 +13,7 @@ import { buildPageMetadata } from '@/lib/seo';
 export const metadata: Metadata = buildPageMetadata({
   title: 'Dosen | STTPU Jakarta',
   description:
-    'Direktori dosen STTPU Jakarta — tenaga pengajar berpengalaman dan berkualifikasi tinggi di bidang teknik sipil, pengairan, lingkungan, dan manajemen konstruksi.',
+    'Direktori dosen STTPU Jakarta — tenaga pengajar berpengalaman dan berkualifikasi tinggi di bidang teknik sipil, teknik lingkungan, dan teknik informatika.',
   path: '/akademik/dosen',
 });
 
