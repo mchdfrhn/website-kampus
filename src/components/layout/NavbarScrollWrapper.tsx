@@ -21,8 +21,8 @@ export default function NavbarScrollWrapper({ children }: { children: React.Reac
     <div
       className={`fixed inset-x-0 top-0 z-50 border-b transition-all duration-500 ${
         isTransparent
-          ? 'border-transparent'
-          : 'bg-brand-navy/95 backdrop-blur-md border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)]'
+          ? 'border-transparent py-2'
+          : 'bg-brand-navy/95 backdrop-blur-md border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.4)] py-0'
       }`}
     >
       {isTransparent && (

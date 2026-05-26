@@ -109,8 +109,8 @@ function ReasonCard({ item, index }: { item: WhyItem; index: number }) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
           className="object-cover opacity-0 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105 group-hover:opacity-100"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/72 to-brand-navy/28 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100" />
-        <div className="absolute inset-0 bg-brand-navy/12 opacity-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy via-brand-navy/78 to-brand-navy/32 opacity-0 backdrop-blur-none transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-brand-navy/12 opacity-0 backdrop-blur-none transition-[opacity,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-100 group-hover:backdrop-blur-[1px]" />
         <div className="relative z-10 mt-auto transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:-translate-y-0.5">
           <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-brand-mist text-brand-navy ring-1 ring-brand-navy/5 transition-[background-color,color,box-shadow] duration-500 ease-out group-hover:bg-white/12 group-hover:text-brand-gold group-hover:ring-white/20 group-hover:backdrop-blur-sm">
             <Icon size={20} aria-hidden="true" />

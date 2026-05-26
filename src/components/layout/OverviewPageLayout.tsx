@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
+import { StaggerContainer, StaggerItem } from '@/components/ui/motion/Reveal';
 
 type StatItem = {
   value: string;
@@ -52,14 +53,14 @@ export default function OverviewPageLayout({
 
       <section className="border-b border-gray-100 bg-white px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <ul className="grid grid-cols-4 gap-2 sm:gap-8" aria-label={statsLabel}>
+          <StaggerContainer className="grid grid-cols-4 gap-2 sm:gap-8" staggerChildren={0.06}>
             {stats.map((stat) => (
-              <li key={stat.label} className="text-center">
+              <StaggerItem key={stat.label} className="text-center">
                 <p className="break-words text-base xs:text-lg sm:text-3xl font-bold tracking-tight text-brand-navy">{stat.value}</p>
                 <p className="mt-1 sm:mt-2 text-[8px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400 leading-tight">{stat.label}</p>
-              </li>
+              </StaggerItem>
             ))}
-          </ul>
+          </StaggerContainer>
         </div>
       </section>
 
@@ -70,11 +71,11 @@ export default function OverviewPageLayout({
           </p>
         ) : null}
 
-        <ul className={`grid gap-4 sm:gap-5 ${gridClass}`} aria-label={`Navigasi ${title}`}>
+        <StaggerContainer className={`grid gap-4 sm:gap-5 ${gridClass}`}>
           {cards.map((card) => {
             const Icon = card.icon;
             return (
-              <li key={card.href}>
+              <StaggerItem key={card.href}>
                 <Link
                   href={card.href}
                   className="group flex h-full flex-col rounded-premium border border-gray-100 bg-white p-6 shadow-premium transition-all duration-300 hover:-translate-y-1 hover:border-brand-navy/20 hover:shadow-premium-hover sm:rounded-premium-lg sm:p-7"
@@ -101,10 +102,10 @@ export default function OverviewPageLayout({
                     <ChevronRight size={16} className="text-brand-gold transition-transform group-hover:translate-x-1" />
                   </span>
                 </Link>
-              </li>
+              </StaggerItem>
             );
           })}
-        </ul>
+        </StaggerContainer>
       </main>
     </>
   );

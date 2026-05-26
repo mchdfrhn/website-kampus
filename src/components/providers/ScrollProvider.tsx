@@ -2,8 +2,10 @@
 
 import { usePathname } from "next/navigation";
 import { ReactNode, useEffect, useRef } from "react";
+import { ReactLenis } from 'lenis/react';
 
 const NAVBAR_OFFSET = 96;
+
 
 function ScrollSync() {
   const pathname = usePathname();
@@ -74,9 +76,9 @@ function ScrollSync() {
 
 export default function ScrollProvider({ children }: { children: ReactNode }) {
   return (
-    <>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.2, smoothWheel: true }}>
       <ScrollSync />
       {children}
-    </>
+    </ReactLenis>
   );
 }
