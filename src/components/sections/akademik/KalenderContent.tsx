@@ -1,39 +1,20 @@
-import { Calendar, Download, AlertCircle } from 'lucide-react';
-import { getPayloadClient } from '@/lib/payload';
+'use client';
 
-type KegiatanItem = { kegiatan: string; tanggal: string; keterangan?: string }
-type KegiatanPenting = { nama: string; tanggal: string; keterangan?: string }
+import { useState } from 'react';
+import { Calendar, Download, AlertCircle, Search, Info, Grid, List, Sparkles } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const defaultSemesterGanjil = {
-  label: 'Semester Ganjil (Juli – Desember 2025)',
-  kegiatan: [
-    { kegiatan: 'Registrasi & Pengisian KRS Semester Ganjil', tanggal: '14 – 18 Juli 2025', keterangan: 'Online via SIAKAD' },
-    { kegiatan: 'Awal Perkuliahan Semester Ganjil', tanggal: '21 Juli 2025', keterangan: '-' },
-    { kegiatan: 'Batas Akhir Perubahan KRS', tanggal: '28 Juli – 1 Agustus 2025', keterangan: 'Maks 2 mata kuliah' },
-    { kegiatan: 'Ujian Tengah Semester (UTS)', tanggal: '22 – 26 September 2025', keterangan: 'Sesuai jadwal masing-masing prodi' },
-    { kegiatan: 'Ujian Akhir Semester (UAS)', tanggal: '1 – 5 Desember 2025', keterangan: 'Sesuai jadwal masing-masing prodi' },
-    { kegiatan: 'Libur Semester Ganjil', tanggal: '29 Desember 2025 – 16 Januari 2026', keterangan: '-' },
-  ] as KegiatanItem[],
-}
+type KegiatanItem = { kegiatan: string; tanggal: string; keterangan?: string };
+type KegiatanPenting = { nama: string; tanggal: string; keterangan?: string };
 
-const defaultSemesterGenap = {
-  label: 'Semester Genap (Januari – Juli 2026)',
-  kegiatan: [
-    { kegiatan: 'Registrasi & Pengisian KRS Semester Genap', tanggal: '12 – 16 Januari 2026', keterangan: 'Online via SIAKAD' },
-    { kegiatan: 'Awal Perkuliahan Semester Genap', tanggal: '19 Januari 2026', keterangan: '-' },
-    { kegiatan: 'Ujian Tengah Semester (UTS)', tanggal: '16 – 20 Maret 2026', keterangan: 'Sesuai jadwal masing-masing prodi' },
-    { kegiatan: 'Ujian Akhir Semester (UAS)', tanggal: '18 – 22 Mei 2026', keterangan: 'Sesuai jadwal masing-masing prodi' },
-    { kegiatan: 'Wisuda', tanggal: 'Juli 2026', keterangan: 'Jadwal dan lokasi menyusul' },
-    { kegiatan: 'Libur Semester Genap', tanggal: '15 Juni – 20 Juli 2026', keterangan: '-' },
-  ] as KegiatanItem[],
-}
-
-const defaultKegiatanPenting: KegiatanPenting[] = [
-  { nama: 'Pendaftaran PKL (Sem. 7)', tanggal: 'Juni 2026', keterangan: 'Syarat: lulus min. 100 SKS' },
-  { nama: 'Sidang Tugas Akhir (Sem. 8)', tanggal: 'Mei – Juni 2026', keterangan: 'Daftar ke prodi masing-masing' },
-  { nama: 'Wisuda Tahun Akademik 2025/2026', tanggal: 'Juli 2026', keterangan: 'Aula Serbaguna STTPU' },
-  { nama: 'Penerimaan Mahasiswa Baru 2026/2027', tanggal: 'Maret – Juli 2026', keterangan: 'Lihat website PMB' },
-]
+type KalenderData = {
+  tahunAkademik: string;
+  deskripsi: string;
+  pdfUrl?: string;
+  semesterGanjil: { label: string; kegiatan: KegiatanItem[] };
+  semesterGenap: { label: string; kegiatan: KegiatanItem[] };
+  kegiatanPenting: KegiatanPenting[];
+};
 
 function SectionCard({
   title,
@@ -56,117 +37,328 @@ function SectionCard({
   );
 }
 
-export default async function KalenderContent() {
-  let tahunAkademik = 'Tahun Akademik 2025/2026'
-  let deskripsi = 'Kalender akademik resmi yang telah ditetapkan oleh Bagian Akademik STTPU Jakarta.'
-  let pdfUrl: string | undefined
-  let semesterGanjil = defaultSemesterGanjil
-  let semesterGenap = defaultSemesterGenap
-  let kegiatanPenting: KegiatanPenting[] = defaultKegiatanPenting
+export default function KalenderContent({ data }: { data: KalenderData }) {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeSemester, setActiveSemester] = useState<'semua' | 'ganjil' | 'genap' | 'penting'>('semua');
+  const [viewMode, setViewMode] = useState<'list' | 'table'>('list');
 
-  try {
-    const payload = await getPayloadClient()
-    const global = await payload.findGlobal({ slug: 'kalender-akademik' })
-    const data = global as unknown as {
-      tahunAkademik?: string
-      deskripsi?: string
-      pdfUrl?: string
-      semesterGanjil?: { label?: string; kegiatan?: KegiatanItem[] }
-      semesterGenap?: { label?: string; kegiatan?: KegiatanItem[] }
-      kegiatanPenting?: KegiatanPenting[]
-    }
+  // Filter activities based on tab and search query
+  const matchesSearch = (text: string, query: string) => {
+    return text.toLowerCase().includes(query.toLowerCase());
+  };
 
-    if (data.tahunAkademik) tahunAkademik = data.tahunAkademik
-    if (data.deskripsi) deskripsi = data.deskripsi
-    if (data.pdfUrl) pdfUrl = data.pdfUrl
-    if (data.semesterGanjil?.kegiatan && data.semesterGanjil.kegiatan.length > 0) {
-      semesterGanjil = { label: data.semesterGanjil.label || defaultSemesterGanjil.label, kegiatan: data.semesterGanjil.kegiatan }
-    }
-    if (data.semesterGenap?.kegiatan && data.semesterGenap.kegiatan.length > 0) {
-      semesterGenap = { label: data.semesterGenap.label || defaultSemesterGenap.label, kegiatan: data.semesterGenap.kegiatan }
-    }
-    if (data.kegiatanPenting && data.kegiatanPenting.length > 0) kegiatanPenting = data.kegiatanPenting
-  } catch {
-    // DB unavailable — use defaults
-  }
+  const getFilteredKegiatan = (kegiatan: KegiatanItem[], type: 'ganjil' | 'genap') => {
+    return kegiatan.map((item, index) => ({ ...item, type, index })).filter((item) => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        matchesSearch(item.kegiatan, q) ||
+        matchesSearch(item.tanggal, q) ||
+        (item.keterangan ? matchesSearch(item.keterangan, q) : false)
+      );
+    });
+  };
+
+  const getFilteredPenting = (kegiatan: KegiatanPenting[]) => {
+    return kegiatan.map((item, index) => ({ ...item, type: 'penting', index })).filter((item) => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        matchesSearch(item.nama, q) ||
+        matchesSearch(item.tanggal, q) ||
+        (item.keterangan ? matchesSearch(item.keterangan, q) : false)
+      );
+    });
+  };
+
+  const ganjilEvents = getFilteredKegiatan(data.semesterGanjil.kegiatan, 'ganjil');
+  const genapEvents = getFilteredKegiatan(data.semesterGenap.kegiatan, 'genap');
+  const pentingEvents = getFilteredPenting(data.kegiatanPenting);
+
+  const hasNoResults =
+    (activeSemester === 'semua' && ganjilEvents.length === 0 && genapEvents.length === 0 && pentingEvents.length === 0) ||
+    (activeSemester === 'ganjil' && ganjilEvents.length === 0) ||
+    (activeSemester === 'genap' && genapEvents.length === 0) ||
+    (activeSemester === 'penting' && pentingEvents.length === 0);
 
   return (
-    <article className="py-10 sm:py-12 space-y-10 sm:space-y-12">
-      {pdfUrl && (
-        <div className="flex justify-end">
+    <article className="py-10 sm:py-12 space-y-8">
+      {/* Upper Control Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50 border border-gray-100 p-4 rounded-2xl">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-brand-navy/5 text-brand-navy rounded-xl">
+            <Calendar size={18} />
+          </div>
+          <div>
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Tahun Akademik</p>
+            <p className="text-sm font-bold text-brand-navy">{data.tahunAkademik}</p>
+          </div>
+        </div>
+
+        {data.pdfUrl && (
           <a
-            href={pdfUrl}
+            href={data.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-brand-navy text-white text-xs font-bold uppercase tracking-wider px-5 py-3.5 rounded-xl hover:bg-brand-gold hover:text-brand-navy transition-all shadow-md shrink-0"
+            className="inline-flex items-center justify-center gap-2 bg-brand-navy text-white text-[10px] font-bold uppercase tracking-wider px-5 py-3.5 rounded-xl hover:bg-brand-gold hover:text-brand-navy transition-all duration-300 shadow-md sm:w-auto"
           >
             <Download size={14} aria-hidden="true" />
-            Unduh PDF
+            Unduh PDF Resmi
           </a>
-        </div>
-      )}
+        )}
+      </div>
 
       <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex items-start gap-3 shadow-sm">
         <AlertCircle size={16} className="text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
         <p className="text-amber-800 text-xs sm:text-sm font-semibold leading-relaxed">
-          Jadwal dapat berubah sewaktu-waktu sesuai kebijakan institusi dan hari libur nasional.
-          Selalu cek SIAKAD dan pengumuman resmi untuk update terkini.
+          Jadwal dapat berubah sewaktu-waktu sesuai kebijakan institusi dan keputusan hari libur nasional.
+          Selalu pantau pengumuman di SIAKAD untuk update jadwal terbaru.
         </p>
       </div>
 
-      {[semesterGanjil, semesterGenap].map((sem, semIdx) => (
-        <SectionCard
-          key={semIdx}
-          title={sem.label}
-          eyebrow={semIdx === 0 ? "FALL SEMESTER" : "SPRING SEMESTER"}
-        >
-          <div className="overflow-x-auto rounded-2xl border border-gray-150 shadow-sm">
-            <table className="min-w-[640px] w-full text-sm">
-              <thead>
-                <tr className="bg-brand-navy text-white">
-                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider w-8 rounded-tl-2xl">No</th>
-                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Kegiatan</th>
-                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider whitespace-nowrap">Tanggal</th>
-                  <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider rounded-tr-2xl">Keterangan</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100 bg-white">
-                {sem.kegiatan.map((item, idx) => (
-                  <tr
-                    key={idx}
-                    className={`hover:bg-brand-mist/20 transition-colors duration-150 ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/10'}`}
-                  >
-                    <td className="px-5 py-4 text-gray-400 font-bold text-xs">{idx + 1}</td>
-                    <td className="px-5 py-4 font-bold text-brand-navy">{item.kegiatan}</td>
-                    <td className="px-5 py-4 text-gray-500 font-semibold whitespace-nowrap">{item.tanggal}</td>
-                    <td className="px-5 py-4 text-gray-400 font-semibold text-xs">{item.keterangan || '-'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      {/* Main Filter dashboard */}
+      <div className="space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          {/* Tab buttons */}
+          <div className="flex flex-wrap gap-1.5 p-1 bg-gray-100 rounded-xl" role="tablist">
+            {(['semua', 'ganjil', 'genap', 'penting'] as const).map((sem) => (
+              <button
+                key={sem}
+                role="tab"
+                aria-selected={activeSemester === sem}
+                onClick={() => setActiveSemester(sem)}
+                className={`px-4 py-2 text-xs font-bold transition-all rounded-lg ${
+                  activeSemester === sem ? 'bg-white text-brand-navy shadow-sm' : 'text-gray-500 hover:text-brand-navy'
+                }`}
+              >
+                {sem === 'semua' ? 'Semua Jadwal' : sem === 'ganjil' ? 'Ganjil' : sem === 'genap' ? 'Genap' : 'Penting'}
+              </button>
+            ))}
           </div>
-        </SectionCard>
-      ))}
 
-      <SectionCard title="Kegiatan Penting Lainnya" eyebrow="OTHER KEY EVENTS">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {kegiatanPenting.map((item, idx) => (
-            <li
-              key={idx}
-              className="flex items-start gap-4 p-5 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:border-brand-navy/10 hover:shadow-premium transition-all duration-300"
+          {/* Grid/List & Search Controls */}
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex border border-gray-200 rounded-xl p-1 bg-white">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 rounded-lg transition-all ${viewMode === 'list' ? 'bg-brand-navy text-white' : 'text-gray-400 hover:text-brand-navy'}`}
+                title="Tampilan List"
+              >
+                <List size={16} />
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`p-1.5 rounded-lg transition-all ${viewMode === 'table' ? 'bg-brand-navy text-white' : 'text-gray-400 hover:text-brand-navy'}`}
+                title="Tampilan Tabel"
+              >
+                <Grid size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Search input */}
+        <div className="relative">
+          <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" aria-hidden="true" />
+          <input
+            type="search"
+            placeholder="Cari kegiatan akademik (contoh: UTS, UAS, Libur, KRS)..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-navy/10 focus:border-brand-navy transition-all"
+            aria-label="Cari Jadwal Kegiatan"
+          />
+        </div>
+      </div>
+
+      {/* Events Container */}
+      <div className="mt-6">
+        <AnimatePresence mode="popLayout">
+          {hasNoResults ? (
+            <motion.div
+              layout
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="rounded-premium border border-dashed border-gray-200 p-12 text-center bg-white"
             >
-              <div className="w-10 h-10 bg-brand-navy/5 rounded-xl flex items-center justify-center flex-shrink-0" aria-hidden="true">
-                <Calendar size={18} className="text-brand-navy" />
-              </div>
-              <div>
-                <p className="font-bold text-brand-navy text-sm sm:text-base leading-snug">{item.nama}</p>
-                <p className="text-brand-gold text-xs font-bold mt-1.5 uppercase tracking-wider">{item.tanggal}</p>
-                {item.keterangan && <p className="text-gray-500 text-xs font-semibold mt-1">{item.keterangan}</p>}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </SectionCard>
+              <Sparkles className="mx-auto text-gray-300 mb-3" size={24} />
+              <p className="text-gray-400 font-semibold text-sm">Tidak ada kegiatan akademik yang cocok dengan pencarian Anda.</p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveSemester('semua');
+                }}
+                className="mt-4 text-xs font-bold text-brand-navy hover:text-brand-gold transition-colors"
+              >
+                Reset Filter
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div layout className="space-y-10">
+              {/* Semester Ganjil Section */}
+              {(activeSemester === 'semua' || activeSemester === 'ganjil') && ganjilEvents.length > 0 && (
+                <motion.div
+                  key="ganjil"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <SectionCard title={data.semesterGanjil.label} eyebrow="SEMESTER GANJIL">
+                    {viewMode === 'table' ? (
+                      <div className="overflow-x-auto rounded-2xl border border-gray-150 shadow-sm bg-white">
+                        <table className="min-w-[640px] w-full text-sm">
+                          <thead>
+                            <tr className="bg-brand-navy text-white">
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider w-16">No</th>
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Kegiatan</th>
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Tanggal</th>
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Keterangan</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {ganjilEvents.map((item, idx) => (
+                              <tr key={idx} className={`hover:bg-brand-mist/20 transition-all ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/5'}`}>
+                                <td className="px-5 py-4 text-gray-400 font-bold text-xs">{idx + 1}</td>
+                                <td className="px-5 py-4 font-bold text-brand-navy">{item.kegiatan}</td>
+                                <td className="px-5 py-4 text-gray-600 font-semibold">{item.tanggal}</td>
+                                <td className="px-5 py-4 text-gray-400 font-semibold text-xs">{item.keterangan || '-'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {ganjilEvents.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="p-5 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:border-brand-navy/15 hover:shadow-premium transition-all duration-300 flex flex-col justify-between"
+                          >
+                            <div>
+                              <span className="text-[9px] font-bold text-brand-navy/60 bg-brand-navy/5 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                Kegiatan {idx + 1}
+                              </span>
+                              <h4 className="font-bold text-brand-navy text-sm md:text-base leading-snug mt-2.5">{item.kegiatan}</h4>
+                            </div>
+                            <div className="mt-4 pt-4 border-t border-gray-100/50 flex flex-col gap-2">
+                              <p className="text-brand-gold text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <Calendar size={12} />
+                                {item.tanggal}
+                              </p>
+                              {item.keterangan && item.keterangan !== '-' && (
+                                <p className="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                  <Info size={12} className="text-gray-300" />
+                                  {item.keterangan}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </SectionCard>
+                </motion.div>
+              )}
+
+              {/* Semester Genap Section */}
+              {(activeSemester === 'semua' || activeSemester === 'genap') && genapEvents.length > 0 && (
+                <motion.div
+                  key="genap"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <SectionCard title={data.semesterGenap.label} eyebrow="SEMESTER GENAP">
+                    {viewMode === 'table' ? (
+                      <div className="overflow-x-auto rounded-2xl border border-gray-150 shadow-sm bg-white">
+                        <table className="min-w-[640px] w-full text-sm">
+                          <thead>
+                            <tr className="bg-brand-navy text-white">
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider w-16">No</th>
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Kegiatan</th>
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Tanggal</th>
+                              <th className="text-left px-5 py-4 font-bold text-xs uppercase tracking-wider">Keterangan</th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-100">
+                            {genapEvents.map((item, idx) => (
+                              <tr key={idx} className={`hover:bg-brand-mist/20 transition-all ${idx % 2 === 0 ? 'bg-white' : 'bg-brand-mist/5'}`}>
+                                <td className="px-5 py-4 text-gray-400 font-bold text-xs">{idx + 1}</td>
+                                <td className="px-5 py-4 font-bold text-brand-navy">{item.kegiatan}</td>
+                                <td className="px-5 py-4 text-gray-600 font-semibold">{item.tanggal}</td>
+                                <td className="px-5 py-4 text-gray-400 font-semibold text-xs">{item.keterangan || '-'}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {genapEvents.map((item, idx) => (
+                          <div
+                            key={idx}
+                            className="p-5 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:border-brand-navy/15 hover:shadow-premium transition-all duration-300 flex flex-col justify-between"
+                          >
+                            <div>
+                              <span className="text-[9px] font-bold text-brand-navy/60 bg-brand-navy/5 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                                Kegiatan {idx + 1}
+                              </span>
+                              <h4 className="font-bold text-brand-navy text-sm md:text-base leading-snug mt-2.5">{item.kegiatan}</h4>
+                            </div>
+                            <div className="mt-4 pt-4 border-t border-gray-100/50 flex flex-col gap-2">
+                              <p className="text-brand-gold text-xs font-bold uppercase tracking-wider flex items-center gap-1.5">
+                                <Calendar size={12} />
+                                {item.tanggal}
+                              </p>
+                              {item.keterangan && item.keterangan !== '-' && (
+                                <p className="text-gray-400 text-xs font-semibold flex items-center gap-1.5">
+                                  <Info size={12} className="text-gray-300" />
+                                  {item.keterangan}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </SectionCard>
+                </motion.div>
+              )}
+
+              {/* Kegiatan Penting Section */}
+              {(activeSemester === 'semua' || activeSemester === 'penting') && pentingEvents.length > 0 && (
+                <motion.div
+                  key="penting"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  <SectionCard title="Kegiatan Penting Lainnya" eyebrow="OTHER KEY EVENTS">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {pentingEvents.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-4 p-5 bg-gray-50 border border-gray-100 rounded-2xl hover:bg-white hover:border-brand-navy/15 hover:shadow-premium transition-all duration-300"
+                        >
+                          <div className="w-10 h-10 bg-brand-navy/5 rounded-xl flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                            <Calendar size={18} className="text-brand-navy" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-brand-navy text-sm sm:text-base leading-snug">{item.nama}</p>
+                            <p className="text-brand-gold text-xs font-bold mt-1.5 uppercase tracking-wider">{item.tanggal}</p>
+                            {item.keterangan && <p className="text-gray-400 text-xs font-semibold mt-1">{item.keterangan}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </SectionCard>
+                </motion.div>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </article>
   );
 }

@@ -18,6 +18,8 @@ import {
 import SectionPageHeader from '@/components/layout/SectionPageHeader';
 import { getPayloadClient } from '@/lib/payload';
 import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
+import AnimatedStats from '@/components/ui/AnimatedStats';
+import LpmiDocumentsList from '@/components/sections/lpmi/LpmiDocumentsList';
 
 type LpmiSection = {
   slug: string;
@@ -423,14 +425,7 @@ export default async function LpmiSlugPage({
       />
       <section className="bg-white border-b border-gray-100 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4" aria-label="Statistik LPMI">
-            {stats.map((stat) => (
-              <li key={stat.label} className="text-center">
-                <p className="font-bold text-2xl sm:text-3xl text-brand-navy tracking-tight break-words">{stat.value}</p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{stat.label}</p>
-              </li>
-            ))}
-          </ul>
+          <AnimatedStats stats={stats} ariaLabel="Statistik LPMI" />
         </div>
       </section>
 
@@ -527,49 +522,7 @@ export default async function LpmiSlugPage({
                 </p>
 
                 {documents.length > 0 ? (
-                  <div className="grid gap-4">
-                    {documents.map((document) => {
-                      const file = typeof document.file === 'object' ? document.file : null;
-                      const fileSize = formatFileSize(file?.filesize);
-                      return (
-                        <article
-                          key={document.id ?? document.judul}
-                          className="flex flex-col gap-4 rounded-2xl border border-gray-100 bg-brand-mist p-5 sm:flex-row sm:items-center sm:justify-between"
-                        >
-                          <div className="flex min-w-0 gap-4">
-                            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-white text-brand-navy shadow-sm">
-                              <FileText size={22} />
-                            </div>
-                            <div className="min-w-0">
-                              <h3 className="text-base font-black text-brand-navy">{document.judul}</h3>
-                              {document.deskripsi && (
-                                <p className="mt-1 text-sm font-medium leading-6 text-gray-500">
-                                  {document.deskripsi}
-                                </p>
-                              )}
-                              {(file?.filename || fileSize) && (
-                                <p className="mt-2 text-xs font-bold uppercase tracking-[0.08em] text-brand-navy/40">
-                                  {[file?.filename, fileSize].filter(Boolean).join(' - ')}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-
-                          {file?.url && (
-                            <Link
-                              href={file.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-2xl bg-brand-gold px-5 py-3 text-sm font-black text-brand-navy transition-all hover:bg-brand-navy hover:text-white"
-                            >
-                              <Download size={18} />
-                              Download
-                            </Link>
-                          )}
-                        </article>
-                      );
-                    })}
-                  </div>
+                  <LpmiDocumentsList documents={documents} />
                 ) : (
                   <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 p-6 text-sm font-semibold leading-7 text-gray-500">
                     Belum ada dokumen yang dipublikasikan untuk halaman ini. Admin dapat menambahkan dokumen melalui
@@ -595,10 +548,10 @@ export default async function LpmiSlugPage({
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className={`group flex items-center justify-between px-6 py-4 text-xs sm:text-sm font-semibold transition-all ${
+                          className={`group flex items-center justify-between py-4 text-xs sm:text-sm font-semibold transition-all border-l-4 ${
                             isActive
-                              ? 'bg-brand-navy/[0.02] text-brand-navy font-bold'
-                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy'
+                              ? 'bg-brand-navy/[0.03] text-brand-navy font-bold border-brand-gold pl-5 pr-6'
+                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy border-transparent hover:border-brand-gold/30 pl-5 pr-6'
                           }`}
                         >
                           <span className={`pr-4 leading-relaxed font-bold ${isActive ? 'text-brand-navy font-extrabold' : ''}`}>{link.label}</span>

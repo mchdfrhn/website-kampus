@@ -54,21 +54,29 @@ function SectionCard({
   );
 }
 
-export default async function BeasiswaContent({ content }: { content?: BeasiswaPageContent | null }) {
-  let beasiswaList: BeasiswaItem[] = []
+export default async function BeasiswaContent({ 
+  content,
+  beasiswaList: initialBeasiswaList
+}: { 
+  content?: BeasiswaPageContent | null;
+  beasiswaList?: BeasiswaItem[];
+}) {
+  let beasiswaList: BeasiswaItem[] = initialBeasiswaList || [];
 
-  try {
-    const payload = await getPayloadClient()
-    const result = await payload.find({
-      collection: 'beasiswa',
-      sort: 'urutan',
-      limit: 50,
-    })
-    if (result.docs.length > 0) {
-      beasiswaList = result.docs as unknown as BeasiswaItem[]
+  if (!initialBeasiswaList || initialBeasiswaList.length === 0) {
+    try {
+      const payload = await getPayloadClient()
+      const result = await payload.find({
+        collection: 'beasiswa',
+        sort: 'urutan',
+        limit: 50,
+      })
+      if (result.docs.length > 0) {
+        beasiswaList = result.docs as unknown as BeasiswaItem[]
+      }
+    } catch {
+      // DB unavailable
     }
-  } catch {
-    // DB unavailable
   }
 
   const internal = beasiswaList.filter((b) => b.tipe === 'internal')

@@ -137,10 +137,10 @@ export default async function TentangSlugPage({
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className={`group flex items-center justify-between px-6 py-4 text-xs sm:text-sm font-semibold transition-all ${
+                          className={`group flex items-center justify-between py-4 text-xs sm:text-sm font-semibold transition-all border-l-4 ${
                             isActive
-                              ? 'bg-brand-navy/[0.02] text-brand-navy font-bold'
-                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy'
+                              ? 'bg-brand-navy/[0.03] text-brand-navy font-bold border-brand-gold pl-5 pr-6'
+                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy border-transparent hover:border-brand-gold/30 pl-5 pr-6'
                           }`}
                         >
                           <span className={`pr-4 leading-relaxed font-bold ${isActive ? 'text-brand-navy font-extrabold' : ''}`}>{link.label}</span>

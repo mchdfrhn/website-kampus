@@ -7,6 +7,7 @@ import type { DosenPageContent } from '@/lib/data/akademik-page';
 import { resolveProgramStudiAccentColor } from '@/lib/data/program-studi';
 import { BookOpen, ChevronRight, Mail, Search, Users } from 'lucide-react';
 import ImageWithLoading from '@/components/ui/media/ImageWithLoading';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const jabatanLabel: Record<string, string> = {
   Profesor: 'Profesor',
@@ -221,6 +222,7 @@ export default function DosenGrid({
         </div>
       ) : activeGroup ? (
         <div className="mt-10 space-y-6">
+          {/* Tab navigation with layoutId indicator */}
           <div
             className="flex gap-3 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             role="tablist"
@@ -230,7 +232,7 @@ export default function DosenGrid({
               const isActive = group.program === activeGroup.program;
 
               return (
-              <button
+                <button
                   key={group.program}
                   type="button"
                   role="tab"
@@ -238,16 +240,26 @@ export default function DosenGrid({
                   id={`tab-${group.program.replace(/\s+/g, '-').toLowerCase()}`}
                   aria-controls={`panel-${group.program.replace(/\s+/g, '-').toLowerCase()}`}
                   onClick={() => { setActiveTab(group.program); setSearchQuery(''); }}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-3 text-sm font-bold transition-all duration-300 ${
+                  className={`relative inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold transition-all duration-300 ${
                     isActive
-                      ? 'border-brand-navy/10 bg-brand-navy text-white shadow-premium'
-                      : 'border-gray-200 bg-white text-gray-600 hover:border-brand-navy/20 hover:text-brand-navy'
+                      ? 'text-white'
+                      : 'text-gray-600 hover:text-brand-navy'
                   }`}
                 >
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeDosenTab"
+                      className="absolute inset-0 bg-brand-navy rounded-xl border border-brand-navy/10 shadow-premium -z-10"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  {!isActive && (
+                    <span className="absolute inset-0 rounded-xl border border-gray-200 -z-20 bg-white" />
+                  )}
                   <span>{group.program}</span>
                   <span
                     className={`rounded-lg px-2 py-0.5 text-[10px] font-bold ${
-                      isActive ? 'bg-white/14 text-white' : 'bg-gray-100 text-gray-500'
+                      isActive ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'
                     }`}
                   >
                     {group.dosen.length}
@@ -257,7 +269,8 @@ export default function DosenGrid({
             })}
           </div>
 
-          <section
+          <motion.section
+            layout
             className="rounded-premium border border-gray-100 bg-white p-6 shadow-premium sm:rounded-premium-lg sm:p-8 lg:p-10"
             role="tabpanel"
             id={`panel-${activeGroup.program.replace(/\s+/g, '-').toLowerCase()}`}
@@ -286,37 +299,55 @@ export default function DosenGrid({
                 placeholder="Cari dosen berdasarkan nama..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-navy/10 focus:border-brand-navy transition-all"
+                className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-navy/10 focus:border-brand-navy transition-all bg-gray-55"
                 aria-label="Cari nama dosen"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-              {(() => {
-                const displayedDosen = searchQuery.trim()
-                  ? activeGroup.dosen.filter((d) =>
-                      d.nama.toLowerCase().includes(searchQuery.toLowerCase())
-                    )
-                  : activeGroup.dosen;
-                return (
-                  <>
-                    {displayedDosen.map((dosen) => (
-                      <DosenCard
-                        key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`}
-                        dosen={dosen}
-                        accentColor={activeAccent}
-                      />
-                    ))}
-                    {displayedDosen.length === 0 && (
-                      <p className="col-span-full text-center py-12 text-gray-400 text-sm font-medium">
-                        Tidak ada dosen dengan nama tersebut.
-                      </p>
-                    )}
-                  </>
-                );
-              })()}
-            </div>
-          </section>
+            <motion.div 
+              layout 
+              className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6"
+            >
+              <AnimatePresence mode="popLayout">
+                {(() => {
+                  const displayedDosen = searchQuery.trim()
+                    ? activeGroup.dosen.filter((d) =>
+                        d.nama.toLowerCase().includes(searchQuery.toLowerCase())
+                      )
+                    : activeGroup.dosen;
+                  return (
+                    <>
+                      {displayedDosen.map((dosen, i) => (
+                        <motion.div
+                          key={`${activeGroup.program}-${dosen.slug || dosen.email || dosen.nama}`}
+                          layout
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ duration: 0.3, delay: Math.min(i * 0.05, 0.3) }}
+                        >
+                          <DosenCard
+                            dosen={dosen}
+                            accentColor={activeAccent}
+                          />
+                        </motion.div>
+                      ))}
+                      {displayedDosen.length === 0 && (
+                        <motion.p 
+                          layout
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="col-span-full text-center py-12 text-gray-400 text-sm font-medium"
+                        >
+                          Tidak ada dosen dengan nama tersebut.
+                        </motion.p>
+                      )}
+                    </>
+                  );
+                })()}
+              </AnimatePresence>
+            </motion.div>
+          </motion.section>
         </div>
       ) : null}
     </section>

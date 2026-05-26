@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { ArrowRight, AlertCircle, CheckCircle, Sparkles } from 'lucide-react';
+import { ArrowRight, AlertCircle, Sparkles } from 'lucide-react';
 import { getPayloadClient } from '@/lib/payload';
+import GrantsList from './GrantsList';
 
 type HibahItem = {
   id: string | number;
@@ -27,18 +28,6 @@ export default async function HibahContent() {
     console.error('Error fetching hibah:', error);
   }
 
-  const statusColor: Record<string, string> = {
-    buka: 'bg-green-50 text-green-700 border border-green-100',
-    tutup: 'bg-red-50 text-red-700 border border-red-100',
-    periodik: 'bg-blue-50 text-blue-700 border border-blue-100',
-  };
-
-  const statusLabel: Record<string, string> = {
-    buka: 'Pendaftaran Buka',
-    tutup: 'Pendaftaran Tutup',
-    periodik: 'Pendaftaran Periodik',
-  };
-
   return (
     <article className="space-y-10 sm:space-y-12">
       <section className="rounded-premium border border-gray-100 bg-white p-6 shadow-sm shadow-brand-navy/[0.04] sm:rounded-premium-lg sm:p-8 lg:p-10">
@@ -64,58 +53,8 @@ export default async function HibahContent() {
           <h3 className="text-xl font-bold tracking-tight text-brand-navy sm:text-2xl">Daftar Hibah</h3>
           <div className="mt-4 h-1 w-12 rounded-full bg-brand-gold" />
 
-          <div className="mt-8 space-y-6">
-            {hibahList.map((hibah) => (
-              <div
-                key={hibah.id}
-                className="bg-white border border-gray-100 rounded-2xl overflow-hidden hover:shadow-premium hover:border-brand-navy/10 transition-all duration-300 group"
-              >
-                <div className="px-6 py-5 border-b border-gray-50 flex flex-wrap items-start justify-between gap-4">
-                  <div>
-                    <h4 className="font-bold text-brand-navy text-sm sm:text-base group-hover:text-brand-gold transition-colors duration-300 leading-snug">{hibah.nama}</h4>
-                    <p className="text-[11px] font-semibold text-gray-400 mt-1">{hibah.penyelenggara}</p>
-                  </div>
-                  <span className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-md flex-shrink-0 ${statusColor[hibah.status || 'buka']}`}>
-                    {statusLabel[hibah.status || 'buka']}
-                  </span>
-                </div>
-
-                <div className="p-6 sm:p-8 space-y-5">
-                  <p className="text-gray-500 text-xs sm:text-sm font-semibold leading-relaxed">{hibah.deskripsi}</p>
-
-                  {hibah.persyaratan && hibah.persyaratan.length > 0 && (
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2">Persyaratan Utama</p>
-                      <ul className="space-y-2">
-                        {hibah.persyaratan.map((s: { poin?: string | null }, idx: number) => (
-                          <li key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm font-semibold text-gray-500">
-                            <CheckCircle size={14} className="text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                            <span>{s.poin}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-
-                  <div className="flex items-center justify-between flex-wrap gap-4 pt-5 border-t border-gray-50 text-xs text-gray-500 font-semibold">
-                    {hibah.deadline && (
-                      <div className="flex items-center gap-1.5">
-                        <span>🗓 <strong className="text-brand-navy">Deadline:</strong> {hibah.deadline}</span>
-                      </div>
-                    )}
-                    {hibah.url && (
-                      <Link
-                        href={hibah.url}
-                        className="inline-flex items-center gap-1.5 font-bold uppercase tracking-wider text-brand-navy hover:text-brand-gold transition-colors ml-auto"
-                        {...(hibah.url.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                      >
-                        Info lengkap <ArrowRight size={13} aria-hidden="true" />
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="mt-8">
+            <GrantsList hibahList={hibahList} />
           </div>
         </section>
       )}

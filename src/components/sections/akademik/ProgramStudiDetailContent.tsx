@@ -14,6 +14,7 @@ import {
 import BlueAbstractBackground from '@/components/ui/BlueAbstractBackground';
 import { cn } from '@/lib/utils';
 import { getAkademikNavigation } from '@/lib/akademik-navigation';
+import CurriculumAccordion from './CurriculumAccordion';
 
 const akreditasiColor: Record<string, string> = {
   Unggul: 'bg-green-50 text-green-700 border-green-200',
@@ -205,60 +206,7 @@ export default async function ProgramStudiDetailContent({
 
           {/* Kurikulum */}
           <SectionCard title="Struktur Kurikulum" eyebrow="Academic Plan">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {prodi.kurikulum.map((semester) => (
-                <details
-                  key={semester.semester}
-                  open={semester.semester <= 2}
-                  className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50 group"
-                >
-                  <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-5 transition-colors hover:bg-white sm:px-6">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">Semester</p>
-                      <p className="mt-1 text-base font-bold tracking-tight text-brand-navy">
-                        {semester.semester.toString().padStart(2, '0')}
-                      </p>
-                    </div>
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white group-open:rotate-90 transition-transform">
-                      <ChevronRight size={16} className="text-brand-navy" aria-hidden="true" />
-                    </div>
-                  </summary>
-                  <div className="border-t border-gray-100 px-5 py-5 sm:px-6">
-                    <ul className="space-y-3">
-                      {semester.mataKuliah.map((mataKuliah, index) => (
-                        <li key={index} className="flex items-start gap-3 text-sm font-medium leading-6 text-gray-600">
-                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-brand-gold" aria-hidden="true" />
-                          <span>{mataKuliah}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </details>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-col gap-4 rounded-3xl border border-gray-100 bg-gray-50 px-5 py-5 sm:px-6 md:flex-row md:items-center md:justify-between">
-              <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-gray-400">Catatan</p>
-                <p className="mt-2 text-sm font-medium leading-6 text-gray-600">
-                  Kurikulum disusun berbasis standar kompetensi nasional dan kebutuhan industri infrastruktur.
-                </p>
-              </div>
-              <a
-                href={prodi.kurikulumPdfUrl || '#'}
-                target={prodi.kurikulumPdfUrl ? '_blank' : undefined}
-                rel={prodi.kurikulumPdfUrl ? 'noopener noreferrer' : undefined}
-                className={cn(
-                  'inline-flex items-center justify-center gap-2 rounded-xl px-6 py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all',
-                  prodi.kurikulumPdfUrl
-                    ? 'bg-brand-navy text-white hover:bg-brand-navy/90'
-                    : 'cursor-not-allowed bg-gray-200 text-gray-500',
-                )}
-              >
-                <FileText size={14} aria-hidden="true" />
-                Unduh Kurikulum
-              </a>
-            </div>
+            <CurriculumAccordion kurikulum={prodi.kurikulum} kurikulumPdfUrl={prodi.kurikulumPdfUrl} />
           </SectionCard>
         </article>
 
@@ -278,10 +226,10 @@ export default async function ProgramStudiDetailContent({
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className={`group flex items-center justify-between px-6 py-4 text-xs sm:text-sm font-semibold transition-all ${
+                        className={`group flex items-center justify-between py-4 text-xs sm:text-sm font-semibold transition-all border-l-4 ${
                           isActive
-                            ? 'bg-brand-navy/[0.02] text-brand-navy font-bold'
-                            : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy'
+                            ? 'bg-brand-navy/[0.03] text-brand-navy font-bold border-brand-gold pl-5 pr-6'
+                            : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy border-transparent hover:border-brand-gold/30 pl-5 pr-6'
                         }`}
                       >
                         <span className={`pr-4 leading-relaxed font-bold ${isActive ? 'text-brand-navy font-extrabold' : ''}`}>
@@ -314,7 +262,7 @@ export default async function ProgramStudiDetailContent({
                   <li key={item.slug}>
                     <Link
                       href={`/akademik/program-studi/${item.slug}`}
-                      className="group flex items-center justify-between px-6 py-4 text-xs sm:text-sm font-semibold text-gray-500 transition-all hover:bg-gray-50 hover:text-brand-navy"
+                      className="group flex items-center justify-between py-4 text-xs sm:text-sm font-semibold text-gray-500 transition-all border-l-4 border-transparent hover:border-brand-gold/30 hover:bg-gray-50 hover:text-brand-navy pl-5 pr-6"
                     >
                       <span className="pr-4 leading-relaxed font-bold">{item.nama}</span>
                       <ChevronRight

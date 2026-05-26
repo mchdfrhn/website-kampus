@@ -7,6 +7,7 @@ import { getPayloadClient } from '@/lib/payload';
 import { resolveLppmSections, type PayloadSectionMeta } from '@/lib/frontend-section-routing';
 import { buildBreadcrumbJsonLd, buildPageMetadata } from '@/lib/seo';
 import { getPromoCards, defaultPromoCards } from '@/lib/data/promo-cards';
+import AnimatedStats from '@/components/ui/AnimatedStats';
 
 type StatItem = { value: string; label: string };
 
@@ -112,14 +113,7 @@ export default async function LppmSlugPage({ params }: { params: Promise<{ slug:
       />
       <section className="bg-white border-b border-gray-100 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <ul className="grid grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4" aria-label="Statistik LPPM">
-            {stats.map((stat) => (
-              <li key={stat.label} className="text-center">
-                <p className="font-bold text-2xl sm:text-3xl text-brand-navy tracking-tight break-words">{stat.value}</p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-2">{stat.label}</p>
-              </li>
-            ))}
-          </ul>
+          <AnimatedStats stats={stats} ariaLabel="Statistik LPPM" />
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -143,10 +137,10 @@ export default async function LppmSlugPage({ params }: { params: Promise<{ slug:
                       <li key={link.href}>
                         <Link
                           href={link.href}
-                          className={`group flex items-center justify-between px-6 py-4 text-xs sm:text-sm font-semibold transition-all ${
+                          className={`group flex items-center justify-between py-4 text-xs sm:text-sm font-semibold transition-all border-l-4 ${
                             isActive
-                              ? 'bg-brand-navy/[0.02] text-brand-navy font-bold'
-                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy'
+                              ? 'bg-brand-navy/[0.03] text-brand-navy font-bold border-brand-gold pl-5 pr-6'
+                              : 'text-gray-500 hover:bg-gray-50 hover:text-brand-navy border-transparent hover:border-brand-gold/30 pl-5 pr-6'
                           }`}
                         >
                           <span className={`pr-4 leading-relaxed font-bold ${isActive ? 'text-brand-navy font-extrabold' : ''}`}>{link.label}</span>
