@@ -198,7 +198,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, duration: 0.8 }}
-                            className="text-white text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.15] md:leading-[1.1] mb-5 md:mb-8 tracking-tight"
+                            className="text-white text-2xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.15] md:leading-[1.1] mb-5 md:mb-8 tracking-tight"
                           >
                             {slide.judul}
                           </motion.h1>
@@ -209,7 +209,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2, duration: 0.8 }}
-                            className="text-white/80 text-sm xs:text-base md:text-xl leading-relaxed mb-8 md:mb-12 max-w-2xl font-medium"
+                            className="text-white/80 text-sm sm:text-base md:text-xl leading-relaxed mb-8 md:mb-12 max-w-2xl font-medium"
                           >
                             {slide.subjudul}
                           </motion.p>
@@ -220,14 +220,14 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3, duration: 0.8 }}
-                            className="flex flex-col xs:flex-row gap-3 sm:gap-4"
+                            className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4"
                           >
                             {slide.cta1Teks && (
                               <Link
                                 href={slide.cta1Href || '#'}
                                 target={cta1External ? '_blank' : undefined}
                                 rel={cta1External ? 'noopener noreferrer' : undefined}
-                                className="group relative bg-brand-gold text-brand-navy font-bold text-[10px] sm:text-[11px] uppercase tracking-widest px-6 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl shadow-2xl hover:shadow-brand-gold/40 hover:-translate-y-1 transition-all duration-500 overflow-hidden text-center"
+                                className="group relative w-full max-w-[280px] sm:w-auto bg-brand-gold text-brand-navy font-bold text-[10px] sm:text-[11px] uppercase tracking-widest px-6 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl shadow-2xl hover:shadow-brand-gold/40 hover:-translate-y-1 transition-all duration-500 overflow-hidden text-center"
                               >
                                 <span className="relative z-10 flex items-center justify-center gap-2">
                                   {slide.cta1Teks}
@@ -241,7 +241,7 @@ export default function HeroSection({ data }: { data?: HeroData }) {
                                 href={slide.cta2Href || '#'}
                                 target={cta2External ? '_blank' : undefined}
                                 rel={cta2External ? 'noopener noreferrer' : undefined}
-                                className="group border border-white/20 text-white font-bold text-[10px] sm:text-[11px] uppercase tracking-widest px-6 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl hover:bg-white hover:text-brand-navy transition-all duration-500 backdrop-blur-md text-center"
+                                className="group w-full max-w-[280px] sm:w-auto border border-white/20 text-white font-bold text-[10px] sm:text-[11px] uppercase tracking-widest px-6 py-4 sm:px-10 sm:py-5 rounded-xl sm:rounded-2xl hover:bg-white hover:text-brand-navy transition-all duration-500 backdrop-blur-md text-center"
                               >
                                 {slide.cta2Teks}
                               </Link>
