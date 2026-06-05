@@ -4,6 +4,7 @@ import path from "path";
 import { buildConfig } from "payload";
 import { fileURLToPath } from "url";
 import { s3Storage } from "@payloadcms/storage-s3";
+import { NodeHttpHandler } from "@smithy/node-http-handler";
 
 import { Berita } from "./src/collections/Berita";
 import { Dosen } from "./src/collections/Dosen";
@@ -46,6 +47,15 @@ import { LppmPage } from "./src/globals/LppmPage";
 
 const filename = fileURLToPath(import.meta.url);
 const dirname = path.dirname(filename);
+
+const parsePositiveInteger = (value: string | undefined, fallback: number) => {
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const s3ConnectionTimeoutMs = parsePositiveInteger(process.env.S3_CONNECTION_TIMEOUT_MS, 10_000);
+const s3RequestTimeoutMs = parsePositiveInteger(process.env.S3_REQUEST_TIMEOUT_MS, 60_000);
 
 export default buildConfig({
   admin: {
@@ -130,6 +140,10 @@ export default buildConfig({
         region: (process.env.S3_REGION || "us-east-1").split('#')[0].trim(),
         endpoint: process.env.S3_ENDPOINT ? process.env.S3_ENDPOINT.split('#')[0].trim() : undefined,
         forcePathStyle: true,
+        requestHandler: new NodeHttpHandler({
+          connectionTimeout: s3ConnectionTimeoutMs,
+          requestTimeout: s3RequestTimeoutMs,
+        }),
       },
     }),
   ],

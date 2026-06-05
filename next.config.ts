@@ -7,8 +7,25 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   generateBuildId: async () => {
-    // Memaksa Next.js menggunakan ID Build yang konsisten di server Zeabur.
-    return process.env.ZEABUR_DEPLOYMENT_ID || 'production-build-id';
+    const buildId =
+      process.env.NEXT_BUILD_ID ||
+      process.env.ZEABUR_GIT_COMMIT_SHA ||
+      process.env.ZEABUR_DEPLOYMENT_ID ||
+      process.env.GITHUB_SHA ||
+      process.env.VERCEL_GIT_COMMIT_SHA ||
+      process.env.SOURCE_VERSION;
+
+    if (buildId) {
+      return buildId;
+    }
+
+    if (process.env.NODE_ENV === "production" || process.env.CI === "true") {
+      throw new Error(
+        "Missing production build id. Set NEXT_BUILD_ID, ZEABUR_GIT_COMMIT_SHA, ZEABUR_DEPLOYMENT_ID, GITHUB_SHA, VERCEL_GIT_COMMIT_SHA, or SOURCE_VERSION before running next build."
+      );
+    }
+
+    return "development-build-id";
   },
   async headers() {
     return [
