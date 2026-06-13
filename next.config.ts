@@ -1,6 +1,11 @@
 import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
+// Ensure a consistent encryption key for Server Actions between build and runtime
+if (!process.env.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY) {
+  process.env.NEXT_SERVER_ACTIONS_ENCRYPTION_KEY = 'ciYNR/t1hjCQzmw9QS5scY/xKmMSy4Y0b2C1fjpiTqQ=';
+}
+
 const nextConfig: NextConfig = {
   // Required for Docker: bundles the server and its deps into
   // .next/standalone so the runner stage needs no node_modules.
