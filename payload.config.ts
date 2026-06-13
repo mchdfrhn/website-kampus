@@ -109,6 +109,37 @@ export default buildConfig({
   ],
   editor: lexicalEditor(),
   debug: process.env.NODE_ENV !== 'production',
+  logger: {
+    options: {
+      hooks: {
+        logMethod(args: any[], method: any, level: number) {
+          let is403 = false;
+          for (const arg of args) {
+            if (arg && typeof arg === 'object') {
+              if (
+                arg.status === 403 ||
+                arg.message?.includes('You are not allowed') ||
+                arg.err?.message?.includes('You are not allowed') ||
+                arg.err?.status === 403
+              ) {
+                is403 = true;
+                break;
+              }
+            } else if (typeof arg === 'string' && arg.includes('You are not allowed')) {
+              is403 = true;
+              break;
+            }
+          }
+
+          if (is403) {
+            // Demote 403 auth errors from ERROR to INFO to keep server error logs clean
+            return this.info.apply(this, args as any);
+          }
+          return method.apply(this, args as any);
+        }
+      }
+    }
+  },
   secret: process.env.PAYLOAD_SECRET as string,
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),

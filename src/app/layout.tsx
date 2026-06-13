@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+import BuildSyncProvider from "@/components/providers/BuildSyncProvider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="id">
       <body className={`${plusJakartaSans.variable} antialiased font-sans`}>
-        {children}
+        <BuildSyncProvider>
+          {children}
+        </BuildSyncProvider>
       </body>
     </html>
   );
